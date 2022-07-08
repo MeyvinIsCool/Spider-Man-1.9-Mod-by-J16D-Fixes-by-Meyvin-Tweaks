@@ -17,7 +17,7 @@ Things I Fixed And Added On This Mod :
 - Restored Screwball PhotoBomb Challange (This Is Still Ment To Create For 1080p Resolution , Sadly Using Other Resolution Will Make The Bar Overlap....But I Managed To   Fix That For 720p Resolution Too ....Use These Files From The "Use This If You Are Using 720p Resolution" Folder To Fix It !)
 - Added More Reservoirs
 - Added New Screwball Mission (It Is Merged So You Can Try Both Of The Original And My Custom Made Mission)
-- Added Remade Pizza Time Mission by MeyvinIsCool (Mission v2) (Thanks For Mr.Genos Cyborg For Giving Me The Source Code)
+- Added Remade Pizza Time Mission by MeyvinIsCool (Mission v2) (Thanks For Mr.Demon "Genos" Cyborg For Giving Me The Source Code)
 - Added Hit Counter (v2) (Still Need Some Improvements As Its Wont Detect The Suit Powers And And May Have Some Bugs !!)
 - And MORE ....
 
