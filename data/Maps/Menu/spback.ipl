@@ -1,0 +1,25 @@
+#IPL file generated from Kam's GTA Map IO
+inst
+6012, spback, 14, 0.0, 0.0, 1100.0, 0.0, 0.0, 0.0, 1.0, -1
+end
+cull
+0.0, 0.0, 1085.0, 0.0, 15.0, 1085.0, 15.0, 0.0, -1115.0, 10240, 0
+end
+path
+end
+grge
+end
+enex
+end
+pick
+end
+cars
+end
+jump
+end
+tcyc
+end
+auzo
+end
+mult
+end

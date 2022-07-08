@@ -1,0 +1,3 @@
+COLFILE 0 DATA\MAPS\sp_addons.col
+IDE DATA\MAPS\sp_addons.IDE
+IDE DATA\MAPS\hier_objs.IDE
