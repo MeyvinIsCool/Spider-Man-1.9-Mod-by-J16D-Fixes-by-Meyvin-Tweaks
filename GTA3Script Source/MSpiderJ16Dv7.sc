@@ -1709,7 +1709,7 @@ ProcessGame_and_DrawMenu_MAP_Legend_A:
     yCoord = 82.5
     iRow = 170
     WHILE 174 >= iRow
-        CLEO_CALL GUI_DrawBoxOutline_WithText 0 (100.0 yCoord) (150.0 25.0) (19 77 88 50) (0.5) (0 0 1 0) (25 255 251 200) iRow 17 (-45.0 0.0) //text
+        CLEO_CALL GUI_DrawBoxOutline_WithText 0 (100.0 yCoord) (150.0 25.0) (19 77 88 50) (0.55) (0 0 1 0) (25 255 251 200) iRow 17 (-45.0 0.0) //text
         SWITCH iRow
             CASE 170
                 USE_TEXT_COMMANDS FALSE
@@ -1744,7 +1744,7 @@ RETURN
 
 ProcessGame_and_DrawMenu_MAP_Legend_Settings:
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (320.0 229.0) (640.0 398.0) (0 0 0 200) (0.5) (0 0 0 0) (236 255 255 0) -1 -1 (0.0 0.0)   //BLACK_BACKGROUND
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (320.0 100.0) (150.0 40.0) (19 77 88 0) (0.25) (0 0 1 0) (0 125 180 200) 177 13 (0.0 0.0)    //TITLE MAP LEGEND
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (320.0 100.0) (150.0 40.0) (19 77 88 0) (0.4) (0 0 1 0) (0 125 180 200) 177 13 (0.0 0.0)    //TITLE MAP LEGEND
 
     //CLEO_CALL GUI_DrawBoxOutline_WithText 0 (320.0 229.0) (320.0 200.0) (14 20 32 50) (0.5) (1 1 1 1) (0 125 180 10) -1 -1 (0.0 0.0)    //BLUE_BACKGROUND
     //id - 170 - 174
@@ -1755,7 +1755,7 @@ ProcessGame_and_DrawMenu_MAP_Legend_Settings:
         IF iRow = iActiveRow  //Active Item
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (xCoord yCoord) (320.0 25.0) (225 225 225 60) (0.25) (1 1 1 1) (0 125 180 50) -1 -1 (0.0 0.0)   //WHITE_BACKGROUND
         ENDIF
-        CLEO_CALL GUI_DrawBoxOutline_WithText 0 (xCoord yCoord) (320.0 25.0) (19 77 88 10) (0.25) (0 0 1 0) (25 255 251 15) iRow 17 (-110.0 0.0) //text
+        CLEO_CALL GUI_DrawBoxOutline_WithText 0 (xCoord yCoord) (320.0 25.0) (19 77 88 10) (0.65) (0 0 1 0) (25 255 251 15) iRow 17 (-110.0 0.0) //text
         GET_FIXED_XY_ASPECT_RATIO 25.0 25.0 (x y)
         SWITCH iRow
             CASE 170
