@@ -2,7 +2,7 @@
 // Main swing script
 // Fixes by MeyvinIsCool
 // Spider-Man Mod for GTA SA c.2018 - 2021
-// You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
+/ You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
 //Size
