@@ -69,7 +69,7 @@ LVAR_INT flag_player_on_mission
 LVAR_INT iEventBlip 
 LVAR_INT deliver iObj[6]
 LVAR_INT cust1 cust2 cust3 cust4 cust5
-LVAR_INT iCust
+LVAR_INT iCust i
 LVAR_INT sfx
 
 GET_PLAYER_CHAR 0 player_actor
@@ -126,6 +126,7 @@ GOSUB sub_FadeOut_700ms
 WAIT 1
 GOSUB sub_FadeIn_700ms
 GOSUB create_customer1
+GOSUB create_pizza
 
 deliver = 0
 iTime =  125000  // 125 sec    
@@ -219,6 +220,14 @@ sub_FadeIn_700ms:
         WAIT 0
     ENDWHILE
     PRINT_NOW PIZZA0 3000 1 
+RETURN
+
+create_pizza:
+    i = 0
+    REQUEST_MODEL 2814
+    LOAD_ALL_MODELS_NOW
+    DELETE_RENDER_OBJECT i
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.1) (0.0 0.0 0.0) i     // Attach Pizza On Player Hand
 RETURN
 
 create_customer1:
@@ -397,6 +406,7 @@ attach_pizza_5:
     SET_OBJECT_COLLISION iObj[5] 0 
     SET_OBJECT_PROOFS iObj[5] 1 1 1 1 1 
     TASK_PICK_UP_OBJECT cust5 iObj[5] 0.0 0.0 0.0 5 16 NULL NULL -1
+    DELETE_RENDER_OBJECT i
 RETURN
  
 mission_passed:
