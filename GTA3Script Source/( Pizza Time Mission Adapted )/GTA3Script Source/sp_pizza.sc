@@ -472,6 +472,7 @@ mission_failed:
     REMOVE_CHAR_ELEGANTLY cust4
     REMOVE_CHAR_ELEGANTLY cust5
     REMOVE_BLIP iCust  
+    DELETE_RENDER_OBJECT i
     WAIT delay_restart_mission   
 GOTO start
 
