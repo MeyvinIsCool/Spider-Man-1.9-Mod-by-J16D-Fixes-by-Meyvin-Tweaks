@@ -68,7 +68,7 @@ LVAR_INT iRandomVal2 iTotalTime cTimerb_A iMinutes iSeconds iTime iExtraTimeScor
 LVAR_INT flag_player_on_mission 
 LVAR_INT iEventBlip 
 LVAR_INT deliver iObj[6]
-LVAR_INT cust1 cust2 cust3 cust4 cust5
+LVAR_INT cust
 LVAR_INT iCust i
 LVAR_INT sfx
 
@@ -129,7 +129,7 @@ GOSUB create_customer1
 GOSUB create_pizza
 
 deliver = 0
-iTime =  125000  // 125 sec    
+iTime =  145000  // 145 sec    
 timerb = 0    
             
 main_loop:
@@ -156,8 +156,12 @@ main_loop:
             IF deliver = 4
                 GOSUB draw_timer
                 GOSUB deliver_customer5
-            ENDIF            
-            IF deliver >= 5
+            ENDIF    
+            IF deliver = 5
+                GOSUB draw_timer
+                GOSUB deliver_customer6
+            ENDIF                     
+            IF deliver >= 6
                 GOSUB mission_passed
             ENDIF                           
             IF timerb > iTime
@@ -179,6 +183,10 @@ main_loop:
                     WAIT 0
                 ENDWHILE
                 WAIT 1000
+                USE_TEXT_COMMANDS FALSE
+                WAIT 0
+                GOSUB mission_cleanup
+                WAIT 2000                
             ENDIF
         ELSE
             USE_TEXT_COMMANDS FALSE
@@ -227,7 +235,7 @@ create_pizza:
     REQUEST_MODEL 2814
     LOAD_ALL_MODELS_NOW
     DELETE_RENDER_OBJECT i
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.1) (0.0 0.0 0.0) i     // Attach Pizza On Player Hand
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.1) (0.0 0.0 0.0) i
 RETURN
 
 create_customer1:
@@ -236,11 +244,11 @@ create_customer1:
         WAIT 0
     ENDWHILE
     WAIT 1
-    CREATE_CHAR 5 SBFYRI -1929.76 1189.325 45.445 (cust1)
-	SET_CHAR_HEADING cust1 183.0 
+    CREATE_CHAR 5 SBFYRI -1929.76 1189.325 45.445 (cust)
+	SET_CHAR_HEADING cust 183.0 
 	ADD_BLIP_FOR_COORD -1929.76 1187.325 45.445 (iCust)
 	CHANGE_BLIP_DISPLAY iCust BLIP_ONLY
-	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust1 "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
+	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer1:
@@ -263,7 +271,7 @@ attach_pizza_1:
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj[1] 
     SET_OBJECT_COLLISION iObj[1] 0 
     SET_OBJECT_PROOFS iObj[1] 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust1 iObj[1] 0.0 0.0 0.0 5 16 NULL NULL -1
+    TASK_PICK_UP_OBJECT cust iObj[1] 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
 
 create_customer2:
@@ -272,11 +280,11 @@ create_customer2:
         WAIT 0
     ENDWHILE
     WAIT 1
-    CREATE_CHAR 5 OFYST -1605.929 788.125 6.63 (cust2)
-	SET_CHAR_HEADING cust2 348.0 
+    CREATE_CHAR 5 OFYST -1605.929 788.125 6.63 (cust)
+	SET_CHAR_HEADING cust 348.0 
 	ADD_BLIP_FOR_COORD -1605.571 788.315 6.82 (iCust)
 	CHANGE_BLIP_DISPLAY iCust BLIP_ONLY
-	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust1 "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
+	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer2:
@@ -299,7 +307,7 @@ attach_pizza_2:
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj[2] 
     SET_OBJECT_COLLISION iObj[2] 0 
     SET_OBJECT_PROOFS iObj[2] 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust2 iObj[2] 0.0 0.0 0.0 5 16 NULL NULL -1
+    TASK_PICK_UP_OBJECT cust iObj[2] 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
 
 create_customer3:
@@ -308,11 +316,11 @@ create_customer3:
         WAIT 0
     ENDWHILE
     WAIT 1
-    CREATE_CHAR 5 HECK1 -1875.622 1125.53 46.445 (cust3)
-	SET_CHAR_HEADING cust3 90.0 
+    CREATE_CHAR 5 HECK1 -1875.622 1125.53 46.445 (cust)
+	SET_CHAR_HEADING cust 90.0 
 	ADD_BLIP_FOR_COORD -1875.622 1125.53 45.445 (iCust)
 	CHANGE_BLIP_DISPLAY iCust BLIP_ONLY
-	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust1 "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
+	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer3:
@@ -335,7 +343,7 @@ attach_pizza_3:
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj[3] 
     SET_OBJECT_COLLISION iObj[3] 0 
     SET_OBJECT_PROOFS iObj[3] 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust3 iObj[3] 0.0 0.0 0.0 5 16 NULL NULL -1
+    TASK_PICK_UP_OBJECT cust iObj[3] 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
 
 create_customer4:
@@ -344,11 +352,11 @@ create_customer4:
         WAIT 0
     ENDWHILE
     WAIT 1
-    CREATE_CHAR 5 HMYRI -2016.397 784.54 45.445 (cust4)
-	SET_CHAR_HEADING cust4 270.0 
+    CREATE_CHAR 5 HMYRI -2016.397 784.54 45.445 (cust)
+	SET_CHAR_HEADING cust 270.0 
 	ADD_BLIP_FOR_COORD -2014.835 785.569 45.445 (iCust)
 	CHANGE_BLIP_DISPLAY iCust BLIP_ONLY
-	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust1 "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
+	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer4:
@@ -371,20 +379,19 @@ attach_pizza_4:
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj[4] 
     SET_OBJECT_COLLISION iObj[4] 0 
     SET_OBJECT_PROOFS iObj[4] 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust4 iObj[4] 0.0 0.0 0.0 5 16 NULL NULL -1
+    TASK_PICK_UP_OBJECT cust iObj[4] 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
-
+ 
 create_customer5:
     REQUEST_MODEL BFYST
     WHILE NOT HAS_MODEL_LOADED BFYST
         WAIT 0
     ENDWHILE
-    WAIT 1
-    CREATE_CHAR 5 BFYST -2200.741 645.785 49.437 (cust5)
-	SET_CHAR_HEADING cust5 181.0 
+    CREATE_CHAR 5 BFYST -2200.741 645.785 49.437 (cust)
+	SET_CHAR_HEADING cust 180.0 
 	ADD_BLIP_FOR_COORD -2200.657 644.987 49.437 (iCust)
 	CHANGE_BLIP_DISPLAY iCust BLIP_ONLY
-	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust1 "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
+	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer5:
@@ -393,11 +400,13 @@ deliver_customer5:
         LOAD_AUDIO_STREAM "CLEO\audio\Talk 5.MP3" sfx
         SET_AUDIO_STREAM_STATE sfx 1
         REMOVE_BLIP iCust
-        PRINT_NOW TEXT5 3000 1
-        WAIT 3000
+        PRINT_NOW TEXT6 3000 1
+        WAIT 3500
         deliver += 1
         MARK_MODEL_AS_NO_LONGER_NEEDED BFYST
         PRINT_FORMATTED_NOW "Pizza Number %i Delivered" 2222 deliver
+        WAIT 300
+        GOSUB create_customer6
     ENDIF
 RETURN
 
@@ -405,10 +414,44 @@ attach_pizza_5:
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj[5] 
     SET_OBJECT_COLLISION iObj[5] 0 
     SET_OBJECT_PROOFS iObj[5] 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust5 iObj[5] 0.0 0.0 0.0 5 16 NULL NULL -1
+    TASK_PICK_UP_OBJECT cust iObj[5] 0.0 0.0 0.0 5 16 NULL NULL -1
+RETURN
+
+create_customer6:
+    REQUEST_MODEL BMYAP
+    WHILE NOT HAS_MODEL_LOADED BMYAP
+        WAIT 0
+    ENDWHILE
+    WAIT 1
+    CREATE_CHAR 5 BMYAP -2111.448730 329.202972 35.164063 (cust)
+	SET_CHAR_HEADING cust 180.0 
+	ADD_BLIP_FOR_COORD -2111.440674 327.662842 35.164063 (iCust)
+	CHANGE_BLIP_DISPLAY iCust BLIP_ONLY
+	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
+RETURN 
+
+deliver_customer6:
+    IF LOCATE_CHAR_ANY_MEANS_3D player_actor -2111.440674 327.662842 35.164063 1.2 1.2 1.4 FALSE
+        GOSUB attach_pizza_6
+        LOAD_AUDIO_STREAM "CLEO\audio\Talk 3.MP3" sfx
+        SET_AUDIO_STREAM_STATE sfx 1
+        REMOVE_BLIP iCust
+        PRINT_NOW TEXT5 3000 1
+        WAIT 3000
+        deliver += 1
+        MARK_MODEL_AS_NO_LONGER_NEEDED BMYAP
+        PRINT_FORMATTED_NOW "Pizza Number %i Delivered" 2222 deliver
+    ENDIF
+RETURN
+
+attach_pizza_6:
+    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj[5] 
+    SET_OBJECT_COLLISION iObj[5] 0 
+    SET_OBJECT_PROOFS iObj[5] 1 1 1 1 1 
+    TASK_PICK_UP_OBJECT cust iObj[5] 0.0 0.0 0.0 5 16 NULL NULL -1
     DELETE_RENDER_OBJECT i
 RETURN
- 
+
 mission_passed:
     flag_player_on_mission = 0
 	WRITE_MEMORY 0xA476AC 4 (flag_player_on_mission) FALSE 	// $ONMISSION = 0
@@ -422,21 +465,21 @@ mission_passed:
     iTotalTime -= timerb
 
     IF iTotalTime > 40000  // 40 sec
-        iExtraTimeScore = 350
+        iExtraTimeScore = 150
     ELSE
         IF iTotalTime > 30000  // 30 sec
-            iExtraTimeScore = 250
+            iExtraTimeScore = 100
         ELSE
             IF iTotalTime > 20000  // 20 sec
-                iExtraTimeScore = 150
+                iExtraTimeScore = 50
             ELSE
                 iExtraTimeScore = 0
             ENDIF        
         ENDIF
     ENDIF 
 
-    IF deliver = 5
-        iExperienceReward += 250
+    IF deliver = 6
+        iExperienceReward += 150
     ENDIF
 
     iRandomVal2 = 0
@@ -450,12 +493,17 @@ mission_passed:
     ENDIF    
 
     WAIT 7000
-    REMOVE_CHAR_ELEGANTLY cust1
-    REMOVE_CHAR_ELEGANTLY cust2
-    REMOVE_CHAR_ELEGANTLY cust3
-    REMOVE_CHAR_ELEGANTLY cust4
-    REMOVE_CHAR_ELEGANTLY cust5
+
+    REMOVE_CHAR_ELEGANTLY cust
+    REMOVE_CHAR_ELEGANTLY cust
+    REMOVE_CHAR_ELEGANTLY cust
+    REMOVE_CHAR_ELEGANTLY cust
+    REMOVE_CHAR_ELEGANTLY cust
     REMOVE_BLIP iCust  
+    REMOVE_BLIP iCust
+    REMOVE_BLIP iCust
+    REMOVE_BLIP iCust
+    REMOVE_BLIP iCust
     WAIT delay_restart_mission
 GOTO start
 
@@ -464,15 +512,7 @@ mission_failed:
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 3  //{id}
         WAIT 2000
     ENDIF
-    flag_player_on_mission = 0
-    SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
-    REMOVE_CHAR_ELEGANTLY cust1
-    REMOVE_CHAR_ELEGANTLY cust2
-    REMOVE_CHAR_ELEGANTLY cust3
-    REMOVE_CHAR_ELEGANTLY cust4
-    REMOVE_CHAR_ELEGANTLY cust5
-    REMOVE_BLIP iCust  
-    DELETE_RENDER_OBJECT i
+    GOSUB mission_cleanup
     WAIT delay_restart_mission   
 GOTO start
 
@@ -485,12 +525,17 @@ mission_cleanup:
     REMOVE_ANIMATION "mweb"    
     WAIT 0    
     REMOVE_TEXTURE_DICTIONARY
-    REMOVE_CHAR_ELEGANTLY cust1
-    REMOVE_CHAR_ELEGANTLY cust2
-    REMOVE_CHAR_ELEGANTLY cust3
-    REMOVE_CHAR_ELEGANTLY cust4
-    REMOVE_CHAR_ELEGANTLY cust5
-    REMOVE_BLIP iCust       
+    DELETE_RENDER_OBJECT i
+    REMOVE_CHAR_ELEGANTLY cust
+    REMOVE_CHAR_ELEGANTLY cust
+    REMOVE_CHAR_ELEGANTLY cust
+    REMOVE_CHAR_ELEGANTLY cust
+    REMOVE_CHAR_ELEGANTLY cust
+    REMOVE_BLIP iCust    
+    REMOVE_BLIP iCust
+    REMOVE_BLIP iCust
+    REMOVE_BLIP iCust
+    REMOVE_BLIP iCust   
 GOTO start
 
 loadGeneralFiles:
