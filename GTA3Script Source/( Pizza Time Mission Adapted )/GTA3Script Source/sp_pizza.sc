@@ -124,9 +124,16 @@ GOSUB loadGeneralFiles
 
 GOSUB sub_FadeOut_700ms
 WAIT 1
-GOSUB sub_FadeIn_700ms
-GOSUB create_customer1
+CLEO_CALL SetCharPosSimple 0 player_actor (-1713.323975 1359.68843 17.25)
+SET_CHAR_HEADING player_actor 136.0
+WAIT 1
+IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
+	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 8 0 815 816 //{id} {mission_id} {text1_id} {text2_id}
+ENDIF
 GOSUB create_pizza
+GOSUB sub_FadeIn_700ms
+WAIT 3000
+GOSUB create_customer1
 
 deliver = 0
 iTime =  145000  // 145 sec    
@@ -186,7 +193,7 @@ main_loop:
                 USE_TEXT_COMMANDS FALSE
                 WAIT 0
                 GOSUB mission_cleanup
-                WAIT 2000                
+                WAIT 1000                              
             ENDIF
         ELSE
             USE_TEXT_COMMANDS FALSE
@@ -208,7 +215,6 @@ sub_FadeOut_700ms:
     CLEAR_HELP
     USE_TEXT_COMMANDS FALSE
     SWITCH_WIDESCREEN FALSE
-    RESTORE_CAMERA_JUMPCUT
     SET_FADING_COLOUR 0 0 0 
     DO_FADE 700 FADE_OUT
     WHILE GET_FADING_STATUS
@@ -227,7 +233,6 @@ sub_FadeIn_700ms:
     WHILE GET_FADING_STATUS
         WAIT 0
     ENDWHILE
-    PRINT_NOW PIZZA0 3000 1 
 RETURN
 
 create_pizza:
@@ -693,6 +698,23 @@ GUI_TextFormat_TitleScoreMedium_Colour:
     SET_TEXT_COLOUR 6 253 244 200  
     SET_TEXT_EDGE 1 (0 0 0 100)
 RETURN
+{
+//CLEO_CALL SetCharPosSimple 0 (char x y z)()
+SetCharPosSimple:
+    LVAR_INT hChar // In
+    LVAR_FLOAT x y z // In
+    LVAR_INT pPed pMatrix pCoord
+    GET_PED_POINTER hChar pPed
+    pMatrix = pPed + 0x14
+    READ_MEMORY pMatrix 4 FALSE (pMatrix)
+    pCoord = pMatrix + 0x30
+    WRITE_MEMORY pCoord 4 (x) FALSE
+    pCoord += 0x4 
+    WRITE_MEMORY pCoord 4 (y) FALSE
+    pCoord += 0x4
+    WRITE_MEMORY pCoord 4 (z) FALSE
+CLEO_RETURN 0 ()
+}
 {
 //CLEO_CALL getCurrentResolution 0 (fX fY)
 getCurrentResolution:

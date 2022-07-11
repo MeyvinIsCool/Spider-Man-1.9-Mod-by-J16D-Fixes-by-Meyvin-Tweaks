@@ -26,6 +26,10 @@ FORMAT:
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {total xp} {mission xp} {combat xp}
     ID:6
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {total xp} {mission xp} {combat xp}
+    ID:7
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {total xp} {mission xp} {extra time xp}
+    ID:8
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {mission id} {text1_id} {text2_id}       
 
 */
 
@@ -52,7 +56,7 @@ LVAR_INT iTempVar2 iTempVar3 iTempVar4      //in
 //---
 LVAR_INT toggleSpiderMod isInMainMenu
 LVAR_INT counter idPowers sfx r g b iTempVar
-LVAR_FLOAT sx sy
+LVAR_FLOAT sx sy px py
 
 USE_TEXT_COMMANDS TRUE
 SWITCH idVar
@@ -245,7 +249,21 @@ SWITCH idVar
             ENDIF
             WAIT 0
         ENDWHILE
-        BREAK        
+        BREAK    
+    CASE 8  //ID:8  || Main Mission label
+        // IN: {id} {mission_id} {text1_id} {text2_id}
+        GOSUB load_textures_mission_label
+        timera = 0
+        WHILE TRUE
+            px = 568.0
+            py = 120.0
+            GOSUB draw_mission_labels
+            IF timera > 6000
+                BREAK
+            ENDIF
+            WAIT 0
+        ENDWHILE
+        BREAK            
     DEFAULT
         BREAK
 ENDSWITCH
@@ -764,7 +782,50 @@ draw_pizza_time_mission_succesful:
     DRAW_SPRITE tPBBackInfo (79.0 165.0) (sx sy) (255 255 255 235)
 RETURN
 
+load_textures_mission_label:
+    IF DOES_DIRECTORY_EXIST "CLEO\SpiderJ16D"
+        LOAD_TEXTURE_DICTIONARY spsams
+        LOAD_SPRITE idMainMission "m_main"
+        LOAD_SPRITE idSideMission "m_side"
+    ELSE
+        PRINT_STRING_NOW "~r~ERROR: 'CLEO\SpiderJ16D' folder not found!" 6000
+        timera = 0
+        WHILE 5500 > timera
+            WAIT 0
+        ENDWHILE
+        TERMINATE_THIS_CUSTOM_SCRIPT
+    ENDIF
+RETURN
 
+draw_mission_labels:
+    // IN: {id} {mission_id} {text1_id} {text2_id}
+    //iTempVar2 = mission_id
+    //iTempVar3 = text1_id
+    //iTempVar4 = text2_id
+    sx = 140.0
+    sy = 90.0
+    SWITCH iTempVar2    //mission_id
+        CASE 0  //Main Mission
+            USE_TEXT_COMMANDS FALSE
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_SPRITE idMainMission (px py) (sx sy) (255 255 255 250)
+            BREAK
+        CASE 1  //Side Mission
+            USE_TEXT_COMMANDS FALSE
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_SPRITE idSideMission (px py) (sx sy) (255 255 255 250)
+            BREAK
+    ENDSWITCH
+    px = 568.0
+    py = 106.0
+    GET_FIXED_XY_ASPECT_RATIO 140.0 20.0 (sx sy)
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (px py) (sx sy) (0 0 0 0) (1.0) (0 0 0 0) (255 255 253 230) iTempVar3 19 0.0 0.0
+    USE_TEXT_COMMANDS FALSE
+    px = 560.0
+    py = 127.5
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (px py) (sx sy) (0 0 0 0) (1.0) (0 0 0 0) (255 255 253 230) iTempVar4 15 -30.0 0.0
+    USE_TEXT_COMMANDS FALSE
+RETURN
 //-+-----------------------------------
 
 }
@@ -1404,3 +1465,5 @@ CONST_INT idBP8 39
 CONST_INT idBP9 40
 CONST_INT idBP10 41
 
+CONST_INT idMainMission 42
+CONST_INT idSideMission 43
