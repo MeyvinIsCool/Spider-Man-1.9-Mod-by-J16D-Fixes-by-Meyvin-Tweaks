@@ -397,12 +397,13 @@ CMB_1 COMBO
 CMB_2 x~1~
 CMB_3 --
 
-PIZZA0 Deliver These Pizzas To Customer Or No Salary Today !
-
 J16D811 Pizza Time
 J16D812 Delivery
 J16D813 Delivery Time
 J16D814 Extra Time
+
+J16D815 Pizza Time !
+J16D816 Deliver The Pizza To Customers
 
 TEXT1 ~z~~b~~h~Customer:~w~ Thanks Spider-Man
 TEXT2 ~z~~b~~h~Customer:~w~ GRACIAS
