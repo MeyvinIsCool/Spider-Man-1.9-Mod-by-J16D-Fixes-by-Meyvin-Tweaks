@@ -633,11 +633,15 @@ mission_failed:
             DELETE_CHECKPOINT iCheckpoint[counter]
         ENDIF
         counter += 1
-    ENDWHILE
+    ENDWHILE    
 	MISSION_HAS_FINISHED
 	WHILE NOT IS_PLAYER_PLAYING player_actor
 		WAIT 0
 	ENDWHILE
+    WAIT 5000   
+    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_res.cs"
+	    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_res.cs"     
+    ENDIF     
 RETURN
 //-+-----------------------------------------------------------------------------------------
 
@@ -1672,7 +1676,6 @@ SetCharPosSimple:
     WRITE_MEMORY pCoord 4 (z) FALSE
 CLEO_RETURN 0 ()
 }
-
 {
 //CLEO_CALL addForceToChar 0 player_actor /*xVel*/0.0 /*yVel*/1.0 /*zVel*/1.0 /*amp*/20.0
 addForceToChar:
