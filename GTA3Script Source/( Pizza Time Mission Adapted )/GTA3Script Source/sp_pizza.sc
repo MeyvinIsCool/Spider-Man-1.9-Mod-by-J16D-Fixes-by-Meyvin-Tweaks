@@ -67,9 +67,9 @@ LVAR_INT toggleSpiderMod isInMainMenu
 LVAR_INT iRandomVal2 iTotalTime cTimerb_A iMinutes iSeconds iTime iExtraTimeScore
 LVAR_INT flag_player_on_mission 
 LVAR_INT iEventBlip 
-LVAR_INT deliver iObj[6]
+LVAR_INT deliver iObj
 LVAR_INT cust
-LVAR_INT iCust i
+LVAR_INT iCust i[6]
 LVAR_INT sfx
 
 GET_PLAYER_CHAR 0 player_actor
@@ -130,7 +130,7 @@ WAIT 1
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
 	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 8 0 815 816 //{id} {mission_id} {text1_id} {text2_id}
 ENDIF
-GOSUB create_pizza
+GOSUB create_pizzaStack
 GOSUB sub_FadeIn_700ms
 WAIT 3000
 GOSUB create_customer1
@@ -235,12 +235,27 @@ sub_FadeIn_700ms:
     ENDWHILE
 RETURN
 
-create_pizza:
-    i = 0
+create_pizzaStack:
+    i[0] = 0
+    i[1] = 0
+    i[2] = 0
+    i[3] = 0
+    i[4] = 0
+    i[5] = 0
     REQUEST_MODEL 2814
     LOAD_ALL_MODELS_NOW
-    DELETE_RENDER_OBJECT i
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.1) (0.0 0.0 0.0) i
+    DELETE_RENDER_OBJECT i[0]
+    DELETE_RENDER_OBJECT i[1]
+    DELETE_RENDER_OBJECT i[2]
+    DELETE_RENDER_OBJECT i[3]
+    DELETE_RENDER_OBJECT i[4]
+    DELETE_RENDER_OBJECT i[5]
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.3) (0.0 0.0 0.0) i[0]
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.25) (0.0 0.0 0.0) i[1]    
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.2) (0.0 0.0 0.0) i[2] 
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.15) (0.0 0.0 0.0) i[3] 
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.1) (0.0 0.0 0.0) i[4]  
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.05) (0.0 0.0 0.0) i[5]  
 RETURN
 
 create_customer1:
@@ -273,10 +288,11 @@ deliver_customer1:
 RETURN
 
 attach_pizza_1:
-    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj[1] 
-    SET_OBJECT_COLLISION iObj[1] 0 
-    SET_OBJECT_PROOFS iObj[1] 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust iObj[1] 0.0 0.0 0.0 5 16 NULL NULL -1
+    DELETE_RENDER_OBJECT i[0]
+    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj
+    SET_OBJECT_COLLISION iObj 0 
+    SET_OBJECT_PROOFS iObj 1 1 1 1 1 
+    TASK_PICK_UP_OBJECT cust iObj 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
 
 create_customer2:
@@ -309,10 +325,11 @@ deliver_customer2:
 RETURN
 
 attach_pizza_2:
-    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj[2] 
-    SET_OBJECT_COLLISION iObj[2] 0 
-    SET_OBJECT_PROOFS iObj[2] 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust iObj[2] 0.0 0.0 0.0 5 16 NULL NULL -1
+    DELETE_RENDER_OBJECT i[1]
+    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj
+    SET_OBJECT_COLLISION iObj 0 
+    SET_OBJECT_PROOFS iObj 1 1 1 1 1 
+    TASK_PICK_UP_OBJECT cust iObj 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
 
 create_customer3:
@@ -345,10 +362,11 @@ deliver_customer3:
 RETURN
 
 attach_pizza_3:
-    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj[3] 
-    SET_OBJECT_COLLISION iObj[3] 0 
-    SET_OBJECT_PROOFS iObj[3] 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust iObj[3] 0.0 0.0 0.0 5 16 NULL NULL -1
+    DELETE_RENDER_OBJECT i[2]
+    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj 
+    SET_OBJECT_COLLISION iObj 0 
+    SET_OBJECT_PROOFS iObj 1 1 1 1 1 
+    TASK_PICK_UP_OBJECT cust iObj 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
 
 create_customer4:
@@ -381,10 +399,11 @@ deliver_customer4:
 RETURN
     
 attach_pizza_4:
-    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj[4] 
-    SET_OBJECT_COLLISION iObj[4] 0 
-    SET_OBJECT_PROOFS iObj[4] 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust iObj[4] 0.0 0.0 0.0 5 16 NULL NULL -1
+    DELETE_RENDER_OBJECT i[3]
+    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj 
+    SET_OBJECT_COLLISION iObj 0 
+    SET_OBJECT_PROOFS iObj 1 1 1 1 1 
+    TASK_PICK_UP_OBJECT cust iObj 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
  
 create_customer5:
@@ -416,10 +435,11 @@ deliver_customer5:
 RETURN
 
 attach_pizza_5:
-    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj[5] 
-    SET_OBJECT_COLLISION iObj[5] 0 
-    SET_OBJECT_PROOFS iObj[5] 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust iObj[5] 0.0 0.0 0.0 5 16 NULL NULL -1
+    DELETE_RENDER_OBJECT i[4]
+    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj 
+    SET_OBJECT_COLLISION iObj 0 
+    SET_OBJECT_PROOFS iObj 1 1 1 1 1 
+    TASK_PICK_UP_OBJECT cust iObj 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
 
 create_customer6:
@@ -450,11 +470,11 @@ deliver_customer6:
 RETURN
 
 attach_pizza_6:
-    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj[5] 
-    SET_OBJECT_COLLISION iObj[5] 0 
-    SET_OBJECT_PROOFS iObj[5] 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust iObj[5] 0.0 0.0 0.0 5 16 NULL NULL -1
-    DELETE_RENDER_OBJECT i
+    DELETE_RENDER_OBJECT i[5]
+    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj 
+    SET_OBJECT_COLLISION iObj 0 
+    SET_OBJECT_PROOFS iObj 1 1 1 1 1 
+    TASK_PICK_UP_OBJECT cust iObj 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
 
 mission_passed:
@@ -530,7 +550,12 @@ mission_cleanup:
     REMOVE_ANIMATION "mweb"    
     WAIT 0    
     REMOVE_TEXTURE_DICTIONARY
-    DELETE_RENDER_OBJECT i
+    DELETE_RENDER_OBJECT i[0]
+    DELETE_RENDER_OBJECT i[1]
+    DELETE_RENDER_OBJECT i[2]
+    DELETE_RENDER_OBJECT i[3]
+    DELETE_RENDER_OBJECT i[4]
+    DELETE_RENDER_OBJECT i[5]
     REMOVE_CHAR_ELEGANTLY cust
     REMOVE_CHAR_ELEGANTLY cust
     REMOVE_CHAR_ELEGANTLY cust
