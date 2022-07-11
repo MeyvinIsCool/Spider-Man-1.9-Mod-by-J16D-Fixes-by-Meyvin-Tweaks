@@ -633,11 +633,15 @@ mission_failed:
             DELETE_CHECKPOINT iCheckpoint[counter]
         ENDIF
         counter += 1
-    ENDWHILE
+    ENDWHILE    
 	MISSION_HAS_FINISHED
 	WHILE NOT IS_PLAYER_PLAYING player_actor
 		WAIT 0
 	ENDWHILE
+    WAIT 5000   
+    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_res.cs"
+	    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_res.cs"     
+    ENDIF     
 RETURN
 //-+-----------------------------------------------------------------------------------------
 
@@ -789,8 +793,8 @@ animSequence:
                     CLEO_CALL linearInterpolation 0 (0.444 0.556 currentTime) (0.0 2500.0) (fScoreCounter)
                     CLEO_CALL barFunc 0 fScoreCounter v1 (szBarX szBarY)
                     SET_SPRITES_DRAW_BEFORE_FADE FALSE
-                    DRAW_RECT (v1 129.75) (szBarX 8.45) (205 61 155 235)  // - 1280 x 720
-                    //DRAW_RECT (v1 129.75) (szBarX 6.45) (205 61 155 235)    // - 1980 x 1080
+                    //DRAW_RECT (v1 129.75) (szBarX 8.45) (205 61 155 235)  // - 1280 x 720
+                    DRAW_RECT (v1 129.75) (szBarX 6.45) (205 61 155 235)    // - 1980 x 1080
                     USE_TEXT_COMMANDS FALSE
                     //PRINT_FORMATTED_NOW "pos:%f.00 xs:%f.00 ys:%f.00" 100 v1 sizeX sizeY  //debug
 
@@ -832,8 +836,8 @@ animSequence:
                                 GOSUB draw_screen_counter
                             ENDIF
                             USE_TEXT_COMMANDS FALSE
-                            //DRAW_RECT (v1 129.75) (szBarX 8.45) (205 61 155 235)  // - 1280 x 720
-                            DRAW_RECT (v1 129.75) (szBarX 6.45) (205 61 155 235)    // - 1980 x 1080
+                            DRAW_RECT (v1 129.75) (szBarX 8.45) (205 61 155 235)  // - 1280 x 720
+                            //DRAW_RECT (v1 129.75) (szBarX 6.45) (205 61 155 235)    // - 1980 x 1080
                             //PRINT_FORMATTED_NOW "TIMEB:%i" 1 timera  //debug
                             WAIT 0
                         ENDWHILE
@@ -1672,7 +1676,6 @@ SetCharPosSimple:
     WRITE_MEMORY pCoord 4 (z) FALSE
 CLEO_RETURN 0 ()
 }
-
 {
 //CLEO_CALL addForceToChar 0 player_actor /*xVel*/0.0 /*yVel*/1.0 /*zVel*/1.0 /*amp*/20.0
 addForceToChar:
