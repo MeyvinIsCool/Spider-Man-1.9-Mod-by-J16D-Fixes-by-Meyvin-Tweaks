@@ -24,7 +24,7 @@ WAIT 0
 WAIT 0
 WAIT 0
 LVAR_INT player_actor toggleSpiderMod flag_player_on_mission isInMainMenu
-LVAR_INT iDecisionHate iBlip iEventBlip
+LVAR_INT iDecisionHate iBlip iEventBlip flag_player_hit_counter
 LVAR_INT char_thug counter kills_counter iRandomVal iRandomVal2
 LVAR_FLOAT fPedMass
 
@@ -65,6 +65,8 @@ ENDWHILE
 //start mission
 flag_player_on_mission = 3  //3:criminal
 SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
+flag_player_hit_counter = 0
+SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON
 
 GOSUB sub_Fade_600ms_and_Lock_Controls
 GOSUB create_enemys
@@ -93,6 +95,8 @@ SKIP_CUTSCENE_END
 GOSUB sub_Fade_out_500ms
 GOSUB sub_Fade_500ms_and_Restore_Controls
 kills_counter = 0
+flag_player_hit_counter = 1
+SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON
 
 main_loop:
     IF IS_PLAYER_PLAYING 0
@@ -810,6 +814,8 @@ CONST_INT varIdWebWeapon        32    //sp_mm     || 1-8 weap
 CONST_INT varWeapAmmo           33    //sp_wep    ||store current weap ammo
 CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 - 12
 CONST_INT varPowersProgress     35    //sp_po     || current power progress
+CONST_INT varHitCount           36    //sp_hit    || hitcounting
+CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
