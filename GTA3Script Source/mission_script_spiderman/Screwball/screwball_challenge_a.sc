@@ -637,11 +637,7 @@ mission_failed:
 	MISSION_HAS_FINISHED
 	WHILE NOT IS_PLAYER_PLAYING player_actor
 		WAIT 0
-	ENDWHILE
-    WAIT 5000   
-    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_res.cs"
-	    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_res.cs"     
-    ENDIF     
+	ENDWHILE    
 RETURN
 //-+-----------------------------------------------------------------------------------------
 
