@@ -16,6 +16,7 @@ LVAR_INT player_actor toggleSpiderMod isInMainMenu toggleHUD hud_mode is_in_inte
 LVAR_INT iTempVar iTempVar2 iTempVar3 counter is_hud_enabled is_opening_door
 LVAR_FLOAT x y z 
 LVAR_INT eventArgVar iChar iPed iHitCounter iLastCount pEntity iEntityType j
+LVAR_INT flag_player_hit_counter
 
 GET_PLAYER_CHAR 0 player_actor
 is_opening_door = FALSE
@@ -26,6 +27,8 @@ GOSUB REQUEST_Animations
 iHitCounter = 0
 iLastCount = 0
 timera = 0
+flag_player_hit_counter = 1
+SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter
 SET_CLEO_SHARED_VAR varHitCount iHitCounter
 
 main_loop:
@@ -65,6 +68,7 @@ main_loop:
                             GOSUB drawHitCounter    // Hit Counting Starts
                         ENDIF      
  
+                        GET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter
                         GET_CLEO_SHARED_VAR varHitCount iHitCounter     // Checks For Increase Value From Other Scripts
                         IF NOT iHitCounter = iLastCount
                             timera = 0                                  // Resets The Hit Counting Timer
@@ -137,11 +141,13 @@ drawHitCounter:
         iHitCounter = 0
         SET_CLEO_SHARED_VAR varHitCount iHitCounter
     ENDIF
-    IF iHitCounter > 0
-        //CLEO_CALL GUI_display_text 0 40.0 140.0 1 2    //PARAMS: posX posY id_text id_format_text
-        CLEO_CALL GUI_display_number 0 39.35 49.45 2 1 iHitCounter  //PARAMS: posX posY id_text id_format iNumber
-    ELSE
-        CLEO_CALL GUI_display_text 0 39.35 49.85 3 1    //PARAMS: posX posY id_text id_format_text
+    IF flag_player_hit_counter = 1
+        IF iHitCounter > 0
+            //CLEO_CALL GUI_display_text 0 40.0 140.0 1 2    //PARAMS: posX posY id_text id_format_text
+            CLEO_CALL GUI_display_number 0 39.35 49.45 2 1 iHitCounter  //PARAMS: posX posY id_text id_format iNumber
+        ELSE
+            CLEO_CALL GUI_display_text 0 39.35 49.85 3 1    //PARAMS: posX posY id_text id_format_text
+        ENDIF
     ENDIF 
     WAIT 0
 RETURN
@@ -409,6 +415,7 @@ CONST_INT varWeapAmmo           33    //sp_wep    ||store current weap ammo
 CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 - 12
 CONST_INT varPowersProgress     35    //sp_po     || current power progress
 CONST_INT varHitCount           36    //sp_hit    || hitcounting
+CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
