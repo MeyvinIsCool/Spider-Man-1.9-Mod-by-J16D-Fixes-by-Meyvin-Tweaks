@@ -193,6 +193,8 @@ ADD_SPHERE (-2120.938 529.5803 79.1693) 1.0 (iEventBlip2)
 
 mission_part1_A:
 	IF LOCATE_STOPPED_CHAR_ON_FOOT_3D player_actor (-2120.938 529.5803 79.1693) (1.0 1.0 1.0) FALSE 
+		flag_player_hit_counter = 0
+		SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter       // 0:OFF || 1:ON	
 		REMOVE_BLIP iEventBlip
 		REMOVE_SPHERE iEventBlip2
 		GOSUB sub_lock_player_controls
@@ -212,6 +214,8 @@ mission_part1_A:
 						GOSUB state_play_sfx_bar_progress
 						WAIT 0
 						GOSUB sub_unlock_player_controls
+						flag_player_hit_counter = 1
+						SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter       // 0:OFF || 1:ON	
 						GOTO init_part2
 					ENDIF
 					GOSUB draw_tower_interface
@@ -229,7 +233,7 @@ mission_part1_A:
 			CLEO_CALL GUI_DrawBoxOutline_WithText 0 (463.5 218.0) (164.5 20.0) (0 0 0 0) (1.0) (0 0 0 0) (255 255 253 230) 602 2 0.0 0.0	//SE DETECT� SE�AL CORRUPTA
 			GOSUB draw_key_press_tower
 			WAIT 0
-		ENDWHILE
+		ENDWHILE		
 	ENDIF
 	WAIT 0
 GOTO mission_part1_A
@@ -289,6 +293,8 @@ ADD_SPHERE (-1747.211 769.5076 167.6536) 1.0 (iEventBlip2)
 
 mission_part2_A:
 	IF LOCATE_STOPPED_CHAR_ON_FOOT_3D player_actor (-1747.211 769.5076 167.6536) (1.0 1.0 1.0) FALSE 
+		flag_player_hit_counter = 0
+		SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter       // 0:OFF || 1:ON			
 		REMOVE_BLIP iEventBlip
 		REMOVE_SPHERE iEventBlip2
 		GOSUB sub_lock_player_controls
@@ -308,6 +314,8 @@ mission_part2_A:
 						GOSUB state_play_sfx_bar_progress
 						WAIT 0
 						GOSUB sub_unlock_player_controls
+						flag_player_hit_counter = 1
+						SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter       // 0:OFF || 1:ON							
 						GOTO init_part3
 					ENDIF
 					GOSUB draw_tower_interface
@@ -385,6 +393,8 @@ ADD_SPHERE (-2563.371 488.4675 47.7812) 1.0 (iEventBlip2)
 
 mission_part3_A:
 	IF LOCATE_STOPPED_CHAR_ON_FOOT_3D player_actor (-2563.371 488.4675 47.7812) (1.0 1.0 1.0) FALSE
+		flag_player_hit_counter = 0
+		SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter       // 0:OFF || 1:ON		
 		REMOVE_BLIP iEventBlip
 		REMOVE_SPHERE iEventBlip2
 		GOSUB sub_lock_player_controls
@@ -404,6 +414,8 @@ mission_part3_A:
 						GOSUB state_play_sfx_bar_progress
 						WAIT 0
 						GOSUB sub_unlock_player_controls
+						flag_player_hit_counter = 1
+						SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter       // 0:OFF || 1:ON							
 						GOTO init_part4
 					ENDIF
 					GOSUB draw_tower_interface
