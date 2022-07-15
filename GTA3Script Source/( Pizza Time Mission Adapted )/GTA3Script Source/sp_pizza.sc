@@ -102,7 +102,6 @@ flag_player_on_mission = 1  //3:criminal
 SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
 flag_player_hit_counter = 0
 SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON
-REGISTER_MISSION_GIVEN
 WAIT 1
 GOSUB loadGeneralFiles
 
