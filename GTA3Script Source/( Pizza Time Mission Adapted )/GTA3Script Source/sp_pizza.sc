@@ -4,24 +4,6 @@
 // Remade Mission by MeyvinIsCool - GTA3Script
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
-//GLOBAL_CLEO_SHARED_VARS
-CONST_INT varStatusSpiderMod     0
-CONST_INT varOnmission          11    //0:Off ||1:on mission || 2:car chase || 3:thug hidouts || 4:street crimes || 5:boss2
-CONST_INT varCrimesProgress     12    //for stadistics ||MSpiderJ16Dv7
-CONST_INT varPcampProgress      13    //for stadistics ||MSpiderJ16Dv7
-CONST_INT varCarChaseProgress   14    //for stadistics ||MSpiderJ16Dv7
-CONST_INT varScrewBallProgress  15    //for stadistics ||MSpiderJ16Dv7
-CONST_INT varBackpacksProgress  16    //for stadistics ||MSpiderJ16Dv7
-CONST_INT varLandmarksProgress  17    //for stadistics ||MSpiderJ16Dv7 
-CONST_INT varAlternativeSwing   20    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-CONST_INT varSwingBuilding      21    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-CONST_INT varFixGround          22    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-CONST_INT varMouseControl       23    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-CONST_INT varAimSetup           24    // 0:Manual Aim || 1:Auto Aim //sp_dw
-CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-CONST_INT varStatusLevelChar    31
 //-+---CONSTANTS--------------------
 //Size
 CONST_INT BYTE                 1
@@ -65,7 +47,7 @@ LVAR_INT player_actor
 LVAR_FLOAT sizeX sizeY
 LVAR_INT toggleSpiderMod isInMainMenu
 LVAR_INT iRandomVal2 iTotalTime cTimerb_A iMinutes iSeconds iTime iExtraTimeScore
-LVAR_INT flag_player_on_mission 
+LVAR_INT flag_player_on_mission flag_player_hit_counter
 LVAR_INT iEventBlip 
 LVAR_INT deliver iObj
 LVAR_INT cust
@@ -118,19 +100,19 @@ ENDWHILE
 //start mission
 flag_player_on_mission = 1  //3:criminal
 SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
+flag_player_hit_counter = 0
+SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON
 REGISTER_MISSION_GIVEN
 WAIT 1
 GOSUB loadGeneralFiles
 
-GOSUB sub_FadeOut_700ms
-WAIT 1
-//CLEO_CALL SetCharPosSimple 0 player_actor (-1713.323975 1359.68843 17.25)
 GOSUB sub_lock_player_controls
-SET_CHAR_COORDINATES_NO_OFFSET player_actor -1704.237061 1368.487305 17.25
+GOSUB sub_FadeOut_700ms
+//CLEO_CALL SetCharPosSimple 0 player_actor (-1713.323975 1359.68843 17.25)
+SET_CHAR_COORDINATES_NO_OFFSET player_actor -1702.237061 1368.487305 17.25
 SET_CHAR_HEADING player_actor 136.0
-WAIT 1
 GOSUB create_pizzaStack
-RESTORE_CAMERA_JUMPCUT
+TASK_GO_STRAIGHT_TO_COORD player_actor (-1712.651611 1360.4712290 17.25) 4 -2	//walk
 CAMERA_RESET_NEW_SCRIPTABLES
 CAMERA_RESET_NEW_SCRIPTABLES
 CAMERA_PERSIST_TRACK TRUE
@@ -138,20 +120,17 @@ CAMERA_PERSIST_POS TRUE
 CAMERA_SET_VECTOR_MOVE (-1709.414 1367.774 17.25) (-1711.415 1359.423 17.25) 13000 0
 CAMERA_SET_VECTOR_TRACK (-1715.190 1360.011 17.25) (-1715.615 1359.423 17.25) 13000 0
 CAMERA_SET_SHAKE_SIMULATION_SIMPLE 1 7000.0 2.0
-TASK_GO_STRAIGHT_TO_COORD player_actor (-1712.651611 1360.4712290 17.25) 4 -2	//walk
 GOSUB sub_FadeIn_700ms
-WAIT 500
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
 	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 8 0 815 816 //{id} {mission_id} {text1_id} {text2_id}
 ENDIF
 WAIT 8000
+GOSUB sub_unlock_player_controls
 CAMERA_PERSIST_TRACK FALSE
 CAMERA_PERSIST_POS FALSE
 CAMERA_RESET_NEW_SCRIPTABLES
 CAMERA_RESET_NEW_SCRIPTABLES
 GOSUB create_customer1
-WAIT 5
-GOSUB sub_unlock_player_controls
 
 deliver = 0
 iTime =  145000  // 145 sec    
@@ -232,19 +211,17 @@ sub_FadeOut_700ms:
     CLEAR_PRINTS 
     CLEAR_HELP
     USE_TEXT_COMMANDS FALSE
-    SWITCH_WIDESCREEN FALSE
     SET_FADING_COLOUR 0 0 0 
     DO_FADE 700 FADE_OUT
     WHILE GET_FADING_STATUS
         WAIT 0
-    ENDWHILE
+    ENDWHILE   
 RETURN
 
 sub_FadeIn_700ms:
     CLEAR_PRINTS 
     CLEAR_HELP
     USE_TEXT_COMMANDS FALSE
-    SWITCH_WIDESCREEN FALSE
     SET_FADING_COLOUR 0 0 0 
     DO_FADE 700 FADE_IN
     WHILE GET_FADING_STATUS
@@ -253,19 +230,26 @@ sub_FadeIn_700ms:
 RETURN
 
 sub_lock_player_controls:
+    SWITCH_WIDESCREEN TRUE
+    RESTORE_CAMERA_JUMPCUT
 	CLEAR_CHAR_TASKS player_actor
-	SET_PLAYER_CONTROL player FALSE
-	SET_EVERYONE_IGNORE_PLAYER player TRUE 
-	SWITCH_WIDESCREEN TRUE
+	SET_PLAYER_CONTROL 0 FALSE
+    SET_PLAYER_JUMP_BUTTON 0 FALSE
+    SET_PLAYER_CYCLE_WEAPON_BUTTON 0 FALSE
+	SET_EVERYONE_IGNORE_PLAYER 0 TRUE 
 RETURN
 
 sub_unlock_player_controls:
+    SWITCH_WIDESCREEN FALSE
+    flag_player_hit_counter = 1
+    SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON     
 	RESTORE_CAMERA_JUMPCUT 
 	SET_CAMERA_BEHIND_PLAYER
 	CLEAR_CHAR_TASKS player_actor
-	SET_PLAYER_CONTROL player TRUE
-	SET_EVERYONE_IGNORE_PLAYER player FALSE 
-	SWITCH_WIDESCREEN FALSE
+	SET_PLAYER_CONTROL 0 TRUE
+    SET_PLAYER_JUMP_BUTTON 0 TRUE
+    SET_PLAYER_CYCLE_WEAPON_BUTTON 0 TRUE
+	SET_EVERYONE_IGNORE_PLAYER 0 FALSE
 RETURN
 
 create_pizzaStack:
@@ -1148,3 +1132,59 @@ GUI_TextFormat_TextReward3_Colour:     //15    format rewards square indicator
 RETURN
 }
 
+//-+---CONSTANTS--------------------
+//GLOBAL_CLEO_SHARED_VARS
+//100 slots - range 0 to 99
+CONST_INT varStatusSpiderMod    0     //1= Mod activated || 0= Mod Deactivated
+CONST_INT varHUD                1     //1= Activated     || 0= Deactivated
+CONST_INT varMusic              2     //1= Music On	    || 0= Music Off
+
+CONST_INT varHudRadar           3     //sp_hud - MSpiderJ16Dv7
+CONST_INT varHudHealth          4     //sp_hud    ||1= Activated     || 0= Deactivated
+CONST_INT varHudAmmo            5     //sp_hud    ||1= Activated     || 0= Deactivated
+CONST_INT varHudMoney           6     //sp_hud    ||1= Activated     || 0= Deactivated
+CONST_INT varHudTime            7     //sp_hud    ||1= Activated     || 0= Deactivated
+CONST_INT varHudBreath          8     //sp_hud    ||1= Activated     || 0= Deactivated
+CONST_INT varHudArmour          9     //sp_hud    ||1= Activated     || 0= Deactivated
+CONST_INT varHudWantedS         10    //sp_hud    ||1= Activated     || 0= Deactivated
+
+CONST_INT varOnmission          11    //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
+CONST_INT varCrimesProgress     12    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varPcampProgress      13    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varCarChaseProgress   14    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varScrewBallProgress  15    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varBackpacksProgress  16    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varLandmarksProgress  17    //for stadistics ||MSpiderJ16Dv7
+
+CONST_INT varAlternativeSwing   20    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varSwingBuilding      21    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varFixGround          22    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varMouseControl       23    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varAimSetup           24    // 0:Manual Aim || 1:Auto Aim //sp_dw
+CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+
+CONST_INT varLevelChar          30    //sp_lvl    || Level
+CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)
+
+CONST_INT varIdWebWeapon        32    //sp_mm     || 1-8 weap
+CONST_INT varWeapAmmo           33    //sp_wep    ||store current weap ammo
+CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 - 12
+CONST_INT varPowersProgress     35    //sp_po     || current power progress
+CONST_INT varHitCount           36    //sp_hit    || hitcounting
+CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
+
+CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
+CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
+CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
+
+CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
+CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated
+CONST_INT varSkill2a            52    //sp_ev    ||1= Activated     || 0= Deactivated
+CONST_INT varSkill3             53    //sp_me    ||1= Activated     || 0= Deactivated
+CONST_INT varSkill3a            54    //sp_ml    ||1= Activated     || 0= Deactivated
+CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deactivated
+CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
+CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
+CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
