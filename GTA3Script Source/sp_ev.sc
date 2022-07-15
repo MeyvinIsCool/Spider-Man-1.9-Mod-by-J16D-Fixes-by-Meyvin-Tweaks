@@ -413,10 +413,7 @@ playWebShootSfx:
     IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\wshot1.mp3" (sfx_B)
         SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx_B player_actor
         SET_AUDIO_STREAM_STATE sfx_B PLAY
-    ENDIF
-    GET_CLEO_SHARED_VAR varHitCount iHitCounter
-    iHitCounter ++
-    SET_CLEO_SHARED_VAR varHitCount iHitCounter    
+    ENDIF    
 RETURN
 //---------------------------------------------------------
 
