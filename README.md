@@ -27,5 +27,7 @@ I Had So Much Fun Time Making These Fixes And Also Thanks To These People Who He
 - The Rahijo
 - Junior Djjr
 - Mr.Demon "Genos" Cyborg
+- Krats18
+- Aperture Gamer
 
 Sorry If I Missed Somebody .... Thank You !
