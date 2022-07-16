@@ -27,38 +27,6 @@ J16D22 SUIT
 J16D23 SUIT POWER
 J16D24 SUIT MODS
 
-J16D25 Advanced Suit
-J16D26 Classic Suit (Damaged)
-J16D27 Classic Suit (Repaired)
-J16D28 Noir Suit
-J16D29 Scarlet Spider Suit
-J16D30 Spider Armour - MK II Suit
-J16D31 Secret War Suit
-J16D32 Stark Suit
-J16D33 Negative Suit
-J16D34 Electrically Insulated Suit
-J16D35 Spider-Punk
-J16D36 Wrestler Suit
-J16D37 Fear Itself
-J16D38 Stealth "Big Time" Suit
-J16D39 Spider Armor - MK III Suit
-J16D40 Spider-Man 2099 Black Suit
-J16D41 Cyborg Spider-Man Suit
-J16D42 Bombastic Bag-Man Suit
-J16D43 Spider Armour - MK IV Suit
-J16D44 Spirit Spider
-J16D45 Spider-Man 2099 White Suit
-J16D46 Vintage Comic Book Suit
-J16D47 Last Stand Suit
-J16D48 Undies
-J16D49 Aaron Aikman Armor Suit
-J16D50 Anti-Ock Suit
-J16D51 Dark Suit
-J16D52 Spider-UK
-J16D53 Iron Spider Armor
-J16D54 Webbed Suit
-
-J16D59 ???????
 J16D60 ~r~WARNING!
 J16D61 You need to turn on this mod before change character!
 
@@ -368,6 +336,45 @@ J16D644 Quick Recovery
 J16D645 Press ~k~~PED_JUMPING~ during a roll ~n~after landing to launch back ~n~into the air.
 J16D646 Charge Jump
 J16D647 Hold ~k~~PED_SPRINT~ to build up ~n~charge then press ~k~~PED_JUMPING~ for a ~n~huge leap.
+
+J16D648 Advanced Suit
+J16D649 Classic Suit (Damaged)
+J16D650 Classic Suit (Repaired)
+J16D651 Noir Suit
+J16D652 Scarlet Spider Suit
+J16D653 Spider Armour - MK II Suit
+J16D654 Secret War Suit
+J16D655 Stark Suit
+J16D656 Negative Suit
+J16D657 Electrically Insulated Suit
+J16D658 Spider-Punk
+J16D659 Wrestler Suit
+J16D660 Fear Itself
+J16D661 Stealth "Big Time" Suit
+J16D662 Spider Armor - MK III Suit
+J16D663 Spider-Man 2099 Black Suit
+J16D664 Cyborg Spider-Man Suit
+J16D665 Bombastic Bag-Man Suit
+J16D666 Spider Armour - MK IV Suit
+J16D667 Spirit Spider
+J16D668 Spider-Man 2099 White Suit
+J16D669 Vintage Comic Book Suit
+J16D670 Last Stand Suit
+J16D671 Undies
+J16D672 Aaron Aikman Armor Suit
+J16D673 Anti-Ock Suit
+J16D674 Dark Suit
+J16D675 Spider-UK
+J16D676 Iron Spider Armor
+J16D677 Webbed Suit
+
+J16D678 Upgraded Suit
+J16D679 Velocity Suit
+J16D680 Black And Gold Suit
+J16D681 Comic Suit 2
+J16D682 No Way Home Suit
+
+J16D785 ???????
 
 SP650 ~k~~VEHICLE_ENTER_EXIT~ ~s~Web Backpack
 SP651 ~h~F ~s~Web Backpack
