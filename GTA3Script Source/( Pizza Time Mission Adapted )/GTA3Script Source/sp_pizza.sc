@@ -125,6 +125,8 @@ IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
 ENDIF
 WAIT 8000
 GOSUB sub_unlock_player_controls
+flag_player_hit_counter = 1
+SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON     
 CAMERA_PERSIST_TRACK FALSE
 CAMERA_PERSIST_POS FALSE
 CAMERA_RESET_NEW_SCRIPTABLES
@@ -234,20 +236,16 @@ sub_lock_player_controls:
 	CLEAR_CHAR_TASKS player_actor
 	SET_PLAYER_CONTROL 0 FALSE
     SET_PLAYER_JUMP_BUTTON 0 FALSE
-    SET_PLAYER_CYCLE_WEAPON_BUTTON 0 FALSE
 	SET_EVERYONE_IGNORE_PLAYER 0 TRUE 
 RETURN
 
 sub_unlock_player_controls:
-    SWITCH_WIDESCREEN FALSE
-    flag_player_hit_counter = 1
-    SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON     
+    SWITCH_WIDESCREEN FALSE   
 	RESTORE_CAMERA_JUMPCUT 
 	SET_CAMERA_BEHIND_PLAYER
 	CLEAR_CHAR_TASKS player_actor
 	SET_PLAYER_CONTROL 0 TRUE
     SET_PLAYER_JUMP_BUTTON 0 TRUE
-    SET_PLAYER_CYCLE_WEAPON_BUTTON 0 TRUE
 	SET_EVERYONE_IGNORE_PLAYER 0 FALSE
 RETURN
 
@@ -275,6 +273,7 @@ create_pizzaStack:
 RETURN
 
 create_customer1:
+    WAIT 1
     REQUEST_MODEL SBFYRI
     WHILE NOT HAS_MODEL_LOADED SBFYRI
         WAIT 0
@@ -312,6 +311,7 @@ attach_pizza_1:
 RETURN
 
 create_customer2:
+    WAIT 1
     REQUEST_MODEL OFYST
     WHILE NOT HAS_MODEL_LOADED OFYST
         WAIT 0
@@ -349,6 +349,7 @@ attach_pizza_2:
 RETURN
 
 create_customer3:
+    WAIT 1
     REQUEST_MODEL HECK1
     WHILE NOT HAS_MODEL_LOADED HECK1
         WAIT 0
@@ -386,6 +387,7 @@ attach_pizza_3:
 RETURN
 
 create_customer4:
+    WAIT 1
     REQUEST_MODEL HMYRI
     WHILE NOT HAS_MODEL_LOADED HMYRI
         WAIT 0
@@ -423,6 +425,7 @@ attach_pizza_4:
 RETURN
  
 create_customer5:
+    WAIT 1
     REQUEST_MODEL BFYST
     WHILE NOT HAS_MODEL_LOADED BFYST
         WAIT 0
@@ -459,6 +462,7 @@ attach_pizza_5:
 RETURN
 
 create_customer6:
+    WAIT 1
     REQUEST_MODEL BMYAP
     WHILE NOT HAS_MODEL_LOADED BMYAP
         WAIT 0
