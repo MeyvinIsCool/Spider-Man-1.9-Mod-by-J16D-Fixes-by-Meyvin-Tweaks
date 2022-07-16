@@ -48,10 +48,10 @@ LVAR_FLOAT sizeX sizeY
 LVAR_INT toggleSpiderMod isInMainMenu
 LVAR_INT iRandomVal2 iTotalTime cTimerb_A iMinutes iSeconds iTime iExtraTimeScore
 LVAR_INT flag_player_on_mission flag_player_hit_counter
-LVAR_INT iEventBlip 
+LVAR_INT iEventBlip iEventBlip2
 LVAR_INT deliver iObj
 LVAR_INT cust
-LVAR_INT iCust i[6]
+LVAR_INT i[6]
 LVAR_INT sfx
 
 GET_PLAYER_CHAR 0 player_actor
@@ -111,26 +111,27 @@ GOSUB sub_FadeOut_700ms
 SET_CHAR_COORDINATES_NO_OFFSET player_actor -1702.237061 1368.487305 17.25
 SET_CHAR_HEADING player_actor 136.0
 GOSUB create_pizzaStack
-TASK_GO_STRAIGHT_TO_COORD player_actor (-1712.651611 1360.4712290 17.25) 4 -2	//walk
+//TASK_GO_STRAIGHT_TO_COORD player_actor (-1712.651611 1360.4712290 17.25) 4 -2	//walk
+TASK_GO_STRAIGHT_TO_COORD player_actor (-1714.191 1358.952 17.25) 4 -2	//walk
 CAMERA_RESET_NEW_SCRIPTABLES
 CAMERA_RESET_NEW_SCRIPTABLES
 CAMERA_PERSIST_TRACK TRUE
 CAMERA_PERSIST_POS TRUE
 CAMERA_SET_VECTOR_MOVE (-1709.414 1367.774 17.25) (-1711.415 1359.423 17.25) 13000 0
 CAMERA_SET_VECTOR_TRACK (-1715.190 1360.011 17.25) (-1715.615 1359.423 17.25) 13000 0
-CAMERA_SET_SHAKE_SIMULATION_SIMPLE 1 7000.0 2.0
+CAMERA_SET_SHAKE_SIMULATION_SIMPLE 1 8500.0 2.0
 GOSUB sub_FadeIn_700ms
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
-	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 8 0 815 816 //{id} {mission_id} {text1_id} {text2_id}
+	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 8 1 815 816 //{id} {mission_id} {text1_id} {text2_id}
 ENDIF
-WAIT 8000
+WAIT 13200
 GOSUB sub_unlock_player_controls
-flag_player_hit_counter = 1
-SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON     
+RESTORE_CAMERA
 CAMERA_PERSIST_TRACK FALSE
 CAMERA_PERSIST_POS FALSE
-CAMERA_RESET_NEW_SCRIPTABLES
-CAMERA_RESET_NEW_SCRIPTABLES
+SET_CAMERA_BEHIND_PLAYER   
+flag_player_hit_counter = 1
+SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON     
 GOSUB create_customer1
 
 deliver = 0
@@ -281,17 +282,19 @@ create_customer1:
     WAIT 1
     CREATE_CHAR 5 SBFYRI -1929.76 1189.325 45.445 (cust)
 	SET_CHAR_HEADING cust 183.0 
-	ADD_BLIP_FOR_COORD -1929.76 1187.325 45.445 (iCust)
-	CHANGE_BLIP_DISPLAY iCust BLIP_ONLY
+	//ADD_BLIP_FOR_COORD -1929.76 1187.325 45.445 (iEventBlip)
+    ADD_SPRITE_BLIP_FOR_COORD (-1929.76 1187.325 45.445) RADAR_SPRITE_WAYPOINT (iEventBlip)
+    ADD_SPHERE (-1929.76 1187.325 45.445) 1.0 (iEventBlip2)    
 	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer1:
     IF LOCATE_CHAR_ANY_MEANS_3D player_actor -1929.76 1187.325 45.445 1.2 1.2 1.4 FALSE
+        REMOVE_BLIP iEventBlip
+		REMOVE_SPHERE iEventBlip2
         GOSUB attach_pizza_1
         LOAD_AUDIO_STREAM "CLEO\audio\Talk 1.MP3" sfx
         SET_AUDIO_STREAM_STATE sfx 1
-        REMOVE_BLIP iCust
         PRINT_NOW TEXT1 3000 1 
         WAIT 3000
         deliver += 1
@@ -319,17 +322,19 @@ create_customer2:
     WAIT 1
     CREATE_CHAR 5 OFYST -1605.929 788.125 6.63 (cust)
 	SET_CHAR_HEADING cust 348.0 
-	ADD_BLIP_FOR_COORD -1605.571 788.315 6.82 (iCust)
-	CHANGE_BLIP_DISPLAY iCust BLIP_ONLY
+	//ADD_BLIP_FOR_COORD -1605.571 788.315 6.82 (iEventBlip)
+    ADD_SPRITE_BLIP_FOR_COORD (-1605.571 788.315 6.82) RADAR_SPRITE_WAYPOINT (iEventBlip)
+    ADD_SPHERE (-1605.571 788.315 6.82) 1.0 (iEventBlip2)  
 	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer2:
     IF LOCATE_CHAR_ANY_MEANS_3D player_actor -1605.571 788.315 6.82 1.2 1.2 1.4 FALSE
+        REMOVE_BLIP iEventBlip
+		REMOVE_SPHERE iEventBlip2    
         GOSUB attach_pizza_2
         LOAD_AUDIO_STREAM "CLEO\audio\Talk 1.MP3" sfx
         SET_AUDIO_STREAM_STATE sfx 1
-        REMOVE_BLIP iCust
         PRINT_NOW TEXT2 3000 1
         WAIT 3000
         deliver += 1
@@ -357,17 +362,19 @@ create_customer3:
     WAIT 1
     CREATE_CHAR 5 HECK1 -1875.622 1125.53 46.445 (cust)
 	SET_CHAR_HEADING cust 90.0 
-	ADD_BLIP_FOR_COORD -1875.622 1125.53 45.445 (iCust)
-	CHANGE_BLIP_DISPLAY iCust BLIP_ONLY
+	//ADD_BLIP_FOR_COORD -1875.622 1125.53 45.445 (iEventBlip)
+    ADD_SPRITE_BLIP_FOR_COORD (-1875.622 1125.53 45.445) RADAR_SPRITE_WAYPOINT (iEventBlip)
+    ADD_SPHERE (-1875.622 1125.53 45.445) 1.0 (iEventBlip2)     
 	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer3:
     IF LOCATE_CHAR_ANY_MEANS_3D player_actor -1875.622 1125.53 45.445 1.2 1.2 1.4 FALSE
+        REMOVE_BLIP iEventBlip
+        REMOVE_SPHERE iEventBlip2
         GOSUB attach_pizza_3
         LOAD_AUDIO_STREAM "CLEO\audio\Talk 3.MP3" sfx
         SET_AUDIO_STREAM_STATE sfx 1
-        REMOVE_BLIP iCust
         PRINT_NOW TEXT3 3000 1
         WAIT 3000
         deliver += 1
@@ -395,17 +402,19 @@ create_customer4:
     WAIT 1
     CREATE_CHAR 5 HMYRI -2016.397 784.54 45.445 (cust)
 	SET_CHAR_HEADING cust 270.0 
-	ADD_BLIP_FOR_COORD -2014.835 785.569 45.445 (iCust)
-	CHANGE_BLIP_DISPLAY iCust BLIP_ONLY
+	//ADD_BLIP_FOR_COORD -2014.835 785.569 45.445 (iEventBlip)
+    ADD_SPRITE_BLIP_FOR_COORD (-2014.835 785.569 45.445) RADAR_SPRITE_WAYPOINT (iEventBlip)
+    ADD_SPHERE (-2014.835 785.569 45.445) 1.0 (iEventBlip2)    
 	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer4:
     IF LOCATE_CHAR_ANY_MEANS_3D player_actor -2014.835 785.569 45.445 1.2 1.2 1.4 FALSE
+        REMOVE_BLIP iEventBlip
+        REMOVE_SPHERE iEventBlip2
         GOSUB attach_pizza_4
         LOAD_AUDIO_STREAM "CLEO\audio\Talk 4.MP3" sfx
         SET_AUDIO_STREAM_STATE sfx 1
-        REMOVE_BLIP iCust
         PRINT_NOW TEXT4 3000 1
         WAIT 3000
         deliver += 1
@@ -432,17 +441,19 @@ create_customer5:
     ENDWHILE
     CREATE_CHAR 5 BFYST -2200.741 645.785 49.437 (cust)
 	SET_CHAR_HEADING cust 180.0 
-	ADD_BLIP_FOR_COORD -2200.657 644.987 49.437 (iCust)
-	CHANGE_BLIP_DISPLAY iCust BLIP_ONLY
+	//ADD_BLIP_FOR_COORD -2200.657 644.987 49.437 (iEventBlip)
+    ADD_SPRITE_BLIP_FOR_COORD (-2200.657 644.987 49.437) RADAR_SPRITE_WAYPOINT (iEventBlip)
+    ADD_SPHERE (-2200.657 644.987 49.437) 1.0 (iEventBlip2)    
 	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer5:
     IF LOCATE_CHAR_ANY_MEANS_3D player_actor -2200.657 644.987 49.437 1.2 1.2 1.4 FALSE
+        REMOVE_BLIP iEventBlip
+        REMOVE_SPHERE iEventBlip2    
         GOSUB attach_pizza_5
         LOAD_AUDIO_STREAM "CLEO\audio\Talk 5.MP3" sfx
         SET_AUDIO_STREAM_STATE sfx 1
-        REMOVE_BLIP iCust
         PRINT_NOW TEXT6 3000 1
         WAIT 3500
         deliver += 1
@@ -470,17 +481,19 @@ create_customer6:
     WAIT 1
     CREATE_CHAR 5 BMYAP -2111.448730 329.202972 35.164063 (cust)
 	SET_CHAR_HEADING cust 180.0 
-	ADD_BLIP_FOR_COORD -2111.440674 327.662842 35.164063 (iCust)
-	CHANGE_BLIP_DISPLAY iCust BLIP_ONLY
+	//ADD_BLIP_FOR_COORD -2111.440674 327.662842 35.164063 (iEventBlip)
+    ADD_SPRITE_BLIP_FOR_COORD (-2111.440674 327.662842 35.164063) RADAR_SPRITE_WAYPOINT (iEventBlip)
+    ADD_SPHERE (-2111.440674 327.662842 35.164063) 1.0 (iEventBlip2)      
 	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer6:
     IF LOCATE_CHAR_ANY_MEANS_3D player_actor -2111.440674 327.662842 35.164063 1.2 1.2 1.4 FALSE
+        REMOVE_BLIP iEventBlip
+        REMOVE_SPHERE iEventBlip2        
         GOSUB attach_pizza_6
         LOAD_AUDIO_STREAM "CLEO\audio\Talk 3.MP3" sfx
         SET_AUDIO_STREAM_STATE sfx 1
-        REMOVE_BLIP iCust
         PRINT_NOW TEXT5 3000 1
         WAIT 3000
         deliver += 1
@@ -544,11 +557,16 @@ mission_passed:
     REMOVE_CHAR_ELEGANTLY cust
     REMOVE_CHAR_ELEGANTLY cust
     REMOVE_CHAR_ELEGANTLY cust
-    REMOVE_BLIP iCust  
-    REMOVE_BLIP iCust
-    REMOVE_BLIP iCust
-    REMOVE_BLIP iCust
-    REMOVE_BLIP iCust
+    REMOVE_BLIP iEventBlip  
+    REMOVE_BLIP iEventBlip
+    REMOVE_BLIP iEventBlip
+    REMOVE_BLIP iEventBlip
+    REMOVE_BLIP iEventBlip
+    REMOVE_BLIP iEventBlip2  
+    REMOVE_BLIP iEventBlip2
+    REMOVE_BLIP iEventBlip2
+    REMOVE_BLIP iEventBlip2
+    REMOVE_BLIP iEventBlip2    
     WAIT delay_restart_mission
 GOTO start
 
@@ -581,11 +599,16 @@ mission_cleanup:
     REMOVE_CHAR_ELEGANTLY cust
     REMOVE_CHAR_ELEGANTLY cust
     REMOVE_CHAR_ELEGANTLY cust
-    REMOVE_BLIP iCust    
-    REMOVE_BLIP iCust
-    REMOVE_BLIP iCust
-    REMOVE_BLIP iCust
-    REMOVE_BLIP iCust   
+    REMOVE_BLIP iEventBlip  
+    REMOVE_BLIP iEventBlip
+    REMOVE_BLIP iEventBlip
+    REMOVE_BLIP iEventBlip
+    REMOVE_BLIP iEventBlip
+    REMOVE_BLIP iEventBlip2  
+    REMOVE_BLIP iEventBlip2
+    REMOVE_BLIP iEventBlip2
+    REMOVE_BLIP iEventBlip2
+    REMOVE_BLIP iEventBlip2     
 GOTO start
 
 loadGeneralFiles:
