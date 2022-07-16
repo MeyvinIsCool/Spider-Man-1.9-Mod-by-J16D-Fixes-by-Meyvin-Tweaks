@@ -2296,7 +2296,6 @@ DrawCheckMarks_SUITS:
         counter = 1
     ELSE
         IF iMinRowSuitQuantity = 6
-            PRINT_FORMATTED_NOW "Checking For 7th Row" 1000 
             counter = 5
         ENDIF
     ENDIF    
@@ -2931,8 +2930,8 @@ ProcessGame_and_DrawItems_POWER_SUITS:
     xSize = 41.25
     ySize = 51.33
     //1st Row
-    iMaxRowQuantity = 75
-    idTexture = 71
+    iMaxRowQuantity = 103
+    idTexture = 99
     xCoord = 115.0
     yCoord = 120.0
     WHILE iMaxRowQuantity >= idTexture
@@ -2945,7 +2944,7 @@ ProcessGame_and_DrawItems_POWER_SUITS:
             USE_TEXT_COMMANDS FALSE
             DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (2 254 252 255)
         ELSE
-            IF idTexture = 80   //Iron Arms Power (Temporary locked, isn't ready)
+            IF idTexture = 108   //Iron Arms Power (Temporary locked, isn't ready)
                 USE_TEXT_COMMANDS FALSE
                 DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)
             ELSE
@@ -2957,13 +2956,13 @@ ProcessGame_and_DrawItems_POWER_SUITS:
         xCoord += 50.0
         //115 - 165 - 215 - 265 - 315
         SWITCH idTexture
-            CASE 76  //2nd Row
-                iMaxRowQuantity = 80
+            CASE 104  //2nd Row
+                iMaxRowQuantity = 108
                 xCoord = 115.0
                 yCoord += 50.0
             BREAK
-            CASE 81 //3rd Row
-                iMaxRowQuantity = 82
+            CASE 109 //3rd Row
+                iMaxRowQuantity = 110
                 xCoord = 115.0
                 yCoord += 50.0
             BREAK
@@ -2975,40 +2974,40 @@ RETURN
 get_power_id_by_selected_item:
     SWITCH iSelectedPower
         CASE 1
-            iTempVar = 71
+            iTempVar = 99
             BREAK
         CASE 2
-            iTempVar = 72
+            iTempVar = 100
             BREAK
         CASE 3
-            iTempVar = 73
+            iTempVar = 101
             BREAK
         CASE 4
-            iTempVar = 74
+            iTempVar = 102
             BREAK
         CASE 5
-            iTempVar = 75
+            iTempVar = 103
             BREAK
         CASE 6
-            iTempVar = 76
+            iTempVar = 104
             BREAK
         CASE 7
-            iTempVar = 77
+            iTempVar = 105
             BREAK 
         CASE 8
-            iTempVar = 78
+            iTempVar = 106
             BREAK
         CASE 9
-            iTempVar = 79
+            iTempVar = 107
             BREAK
         CASE 10
-            iTempVar = 80
+            iTempVar = 108
             BREAK
         CASE 11
-            iTempVar = 81
+            iTempVar = 109
             BREAK
         CASE 12
-            iTempVar = 82
+            iTempVar = 110
             BREAK
         DEFAULT
             iTempVar = pow_null
@@ -3824,13 +3823,13 @@ ProcessGame_and_DrawItems_CHARACTERS:
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (542.0 229.0) (196.0 398.0) (14 20 32 255) (0.5) (0 1 0 1) (0 125 180 150) -1 -1 (-1.0 0.0)   //BLUE_BACKGROUND_RIGHT
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (542.0 229.0) (196.0 50.0) (14 37 48 200) (0.5) (1 0 1 0) (19 247 232 200) -1 -1 (0.0 0.0)   //BACK_BLUE_FOR_NAMES_WITH_SIDES
     //matrix 5x2=10
-    CONST_INT idMinRowCharacterQuantity 40  // Min id Texture
+    CONST_INT idMinRowCharacterQuantity 68  // Min id Texture
     //Draw image spiderman
     //GET_FIXED_XY_ASPECT_RATIO (37.34 37.5) (xSize ySize) //28.0 35.0
     xSize = 28.00
     ySize = 35.00
     //1st Row
-    iMaxRowQuantity = 44    // Max id Texture
+    iMaxRowQuantity = 72    // Max id Texture
     idTexture = idMinRowCharacterQuantity
     xCoord = 478.0
     yCoord = 90.0    
@@ -3841,8 +3840,8 @@ ProcessGame_and_DrawItems_CHARACTERS:
         xCoord += 34.0
         //498 - 528 - 558 - 588 - 618
         SWITCH idTexture
-            CASE 45  //2nd Row
-                iMaxRowQuantity = 49
+            CASE 73  //2nd Row
+                iMaxRowQuantity = 77
                 xCoord = 478.0
                 yCoord += 42.0
             BREAK
@@ -4597,87 +4596,97 @@ load_all_needed_files:
         CONST_INT suit28 28 
         CONST_INT suit29 29 
         CONST_INT suit30 30 
+        CONST_INT suit31 31
+        CONST_INT suit32 32
+        CONST_INT suit33 33
+        CONST_INT suit34 34
+        CONST_INT suit35 35
+        CONST_INT suit36 36
+        CONST_INT suit37 37
+        CONST_INT suit38 38
+        CONST_INT suit39 39
+        CONST_INT suit40 40        
 
-        CONST_INT idMapIcon0    33
-        CONST_INT idMapIcon1    34
-        CONST_INT idMapIcon2    35
-        CONST_INT idMapIcon3    36
-        CONST_INT idMapIcon4    37
-        CONST_INT idMapIcon5    38
-        CONST_INT idMapIcon6    39
+        CONST_INT idMapIcon0    61
+        CONST_INT idMapIcon1    62
+        CONST_INT idMapIcon2    63
+        CONST_INT idMapIcon3    64
+        CONST_INT idMapIcon4    65
+        CONST_INT idMapIcon5    66
+        CONST_INT idMapIcon6    67
 
-        CONST_INT tMenuChar1    40
-        CONST_INT tMenuChar2    41
-        CONST_INT tMenuChar3    42
-        CONST_INT tMenuChar4    43
-        CONST_INT tMenuChar5    44
-        CONST_INT tMenuChar6    45
-        CONST_INT tMenuChar7    46
-        CONST_INT tMenuChar8    47
-        CONST_INT tMenuChar9    48
-        CONST_INT tMenuChar10   49
-        CONST_INT tMenuCharB1   50
-        CONST_INT tMenuCharB2   51
-        CONST_INT tMenuCharB3   52
-        CONST_INT tMenuCharB4   53
-        CONST_INT tMenuCharB5   54
-        CONST_INT tMenuCharB6   55
-        CONST_INT tMenuCharB7   56
-        CONST_INT tMenuCharB8   57
-        CONST_INT tMenuCharB9   58
-        CONST_INT tMenuCharB10  59
+        CONST_INT tMenuChar1    68
+        CONST_INT tMenuChar2    69
+        CONST_INT tMenuChar3    70
+        CONST_INT tMenuChar4    71
+        CONST_INT tMenuChar5    72
+        CONST_INT tMenuChar6    73
+        CONST_INT tMenuChar7    74
+        CONST_INT tMenuChar8    75
+        CONST_INT tMenuChar9    76
+        CONST_INT tMenuChar10   77
+        CONST_INT tMenuCharB1   78
+        CONST_INT tMenuCharB2   79
+        CONST_INT tMenuCharB3   80
+        CONST_INT tMenuCharB4   81
+        CONST_INT tMenuCharB5   82
+        CONST_INT tMenuCharB6   83
+        CONST_INT tMenuCharB7   84
+        CONST_INT tMenuCharB8   85
+        CONST_INT tMenuCharB9   86
+        CONST_INT tMenuCharB10  87
 
-        CONST_INT selectSuit26  60 
-        CONST_INT customSuit27  61
-        CONST_INT successIcon28 62
-        CONST_INT successIconE  63
-        CONST_INT unknownSuit29 64
-        CONST_INT turnOn30      65
-        CONST_INT turnOff31     66
-        CONST_INT idMapTexture  67
-        CONST_INT idConfSuitBck 68
+        CONST_INT selectSuit26  88 
+        CONST_INT customSuit27  89
+        CONST_INT successIcon28 90
+        CONST_INT successIconE  91
+        CONST_INT unknownSuit29 92
+        CONST_INT turnOn30      93
+        CONST_INT turnOff31     94
+        CONST_INT idMapTexture  95
+        CONST_INT idConfSuitBck 96
 
-        CONST_INT pow_background 69
-        CONST_INT pow_null 70
-        CONST_INT pow71 71
-        CONST_INT pow72 72
-        CONST_INT pow73 73
-        CONST_INT pow74 74
-        CONST_INT pow75 75
-        CONST_INT pow76 76
-        CONST_INT pow77 77
-        CONST_INT pow78 78
-        CONST_INT pow79 79
-        CONST_INT pow80 80
-        CONST_INT pow81 81
-        CONST_INT pow82 82
+        CONST_INT pow_background 97
+        CONST_INT pow_null 98
+        CONST_INT pow71 99
+        CONST_INT pow72 100
+        CONST_INT pow73 101
+        CONST_INT pow74 102
+        CONST_INT pow75 103
+        CONST_INT pow76 104
+        CONST_INT pow77 105
+        CONST_INT pow78 106
+        CONST_INT pow79 107
+        CONST_INT pow80 108
+        CONST_INT pow81 109
+        CONST_INT pow82 110
 
-        CONST_INT idPrimaryControls 83
+        CONST_INT idPrimaryControls 111
 
-        CONST_INT idLogoSP 89
-        CONST_INT idBackgroundSett 90
-        CONST_INT idSpiderIcon 91
-        CONST_INT idBackgroundArrows 92
+        CONST_INT idLogoSP 112
+        CONST_INT idBackgroundSett 113
+        CONST_INT idSpiderIcon 114
+        CONST_INT idBackgroundArrows 115
 
-        CONST_INT idSkill1 96
-        CONST_INT idSkill2 97
-        CONST_INT idSkill2a 98
-        CONST_INT idSkill3 99
-        CONST_INT idSkill3a 100
-        CONST_INT idSkill3b 101
-        CONST_INT idSkill3c 102
-        CONST_INT idSkill3c1 103
-        CONST_INT idSkill3c2 104
+        CONST_INT idSkill1 116
+        CONST_INT idSkill2 117
+        CONST_INT idSkill2a 118
+        CONST_INT idSkill3 119
+        CONST_INT idSkill3a 120
+        CONST_INT idSkill3b 121
+        CONST_INT idSkill3c 122
+        CONST_INT idSkill3c1 123
+        CONST_INT idSkill3c2 124
 
-        CONST_INT idhsk01 110
-        CONST_INT idhsk02 111
-        CONST_INT idhsk02a 112
-        CONST_INT idhsk03 113
-        CONST_INT idhsk03a 114
-        CONST_INT idhsk03b 115
-        CONST_INT idhsk03c 116
-        CONST_INT idhsk03c1 117
-        CONST_INT idhsk03c2 118
+        CONST_INT idhsk01 125
+        CONST_INT idhsk02 126
+        CONST_INT idhsk02a 127
+        CONST_INT idhsk03 128
+        CONST_INT idhsk03a 129
+        CONST_INT idhsk03b 130
+        CONST_INT idhsk03c 131
+        CONST_INT idhsk03c1 132
+        CONST_INT idhsk03c2 133
 
         CONST_INT bck300 300
         CONST_INT bck301 301
@@ -4747,6 +4756,11 @@ load_all_needed_files:
         LOAD_SPRITE suit28 "suit28"
         LOAD_SPRITE suit29 "suit29"
         LOAD_SPRITE suit30 "suit30"
+        LOAD_SPRITE suit31 "suit31"
+        LOAD_SPRITE suit32 "suit32"
+        LOAD_SPRITE suit33 "suit33"
+        LOAD_SPRITE suit34 "suit34"
+        LOAD_SPRITE suit35 "suit35"
 
         LOAD_SPRITE idLogoSP "splogo"
         LOAD_SPRITE idBackgroundSett "bckstt"
