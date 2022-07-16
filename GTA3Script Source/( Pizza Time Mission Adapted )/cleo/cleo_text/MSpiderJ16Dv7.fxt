@@ -403,3 +403,18 @@ NMB_1 ~1~
 CMB_1 COMBO
 CMB_2 x~1~
 CMB_3 --
+
+J16D811 Pizza Time
+J16D812 Delivery
+J16D813 Delivery Time
+J16D814 Extra Time
+
+J16D815 Pizza Time !
+J16D816 Deliver The Pizza To Customers
+
+TEXT1 ~z~~b~~h~Customer:~w~ Thanks Spider-Man
+TEXT2 ~z~~b~~h~Customer:~w~ GRACIAS
+TEXT3 ~z~~b~~h~J.J News Supporter:~w~ Really a menace
+TEXT4 ~z~~b~~h~Oscorp Employee:~w~ Thank You So Much Spidey !
+TEXT5 ~z~~b~~h~Customer:~w~ You did a good job today , Respect For You Spider-Man
+TEXT6 ~z~~b~~h~Customer:~w~ You came very far for me,Love You Spidey
