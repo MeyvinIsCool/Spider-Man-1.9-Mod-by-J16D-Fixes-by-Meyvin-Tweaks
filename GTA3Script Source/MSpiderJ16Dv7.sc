@@ -625,7 +625,7 @@ show_menu:
                         SWITCH iActive
                             CASE menSelSuit
                                 iPanelB = menSelSuit
-                                IF iMinRowSuitQuantity = 6      // This Is To Make Sure That When Closing The Suit Selection The Suit Menu Reset Itself
+                                IF iMinRowSuitQuantity >= 6      // This Is To Make Sure That When Closing The Suit Selection The Suit Menu Reset Itself
                                     iActiveRow = 1
                                     iMinRowSuitQuantity = 1
                                     iMaxRowQuantity = 6   
