@@ -3,7 +3,7 @@ I Made These Fixes On These Scripts And Also Improvements In Order To Make This 
 
 Things I Fixed And Added On This Mod :
 
-- Added Functional Scrolling System On Menu + 10 New Suits Added ! (You Will Need To Reach Level 48 In Order To Unlock All 40 Suits)
+- Added Functional Scrolling System On Menu + 15 New Suits Added ! (You Will Need To Reach Level 48 In Order To Unlock All 45 Suits)
 - Cinimatic Jump Restored
 - A Web Swinging Animation Restored
 - Falling Animations Restored
