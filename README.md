@@ -30,5 +30,6 @@ I Had So Much Fun Time Making These Fixes And Also Thanks To These People Who He
 - Mr.Demon "Genos" Cyborg
 - Krats18
 - Aperture Gamer
+- Teo
 
 Sorry If I Missed Somebody .... Thank You !
