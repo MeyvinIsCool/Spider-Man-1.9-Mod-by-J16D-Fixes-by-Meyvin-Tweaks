@@ -162,12 +162,8 @@ main_loop:
             IF deliver = 4
                 GOSUB draw_timer
                 GOSUB deliver_customer5
-            ENDIF    
-            IF deliver = 5
-                GOSUB draw_timer
-                GOSUB deliver_customer6
-            ENDIF                     
-            IF deliver >= 6
+            ENDIF                      
+            IF deliver >= 5
                 GOSUB mission_passed
             ENDIF                           
             IF timerb > iTime
@@ -264,13 +260,11 @@ create_pizzaStack:
     DELETE_RENDER_OBJECT i[2]
     DELETE_RENDER_OBJECT i[3]
     DELETE_RENDER_OBJECT i[4]
-    DELETE_RENDER_OBJECT i[5]
     CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.3) (0.0 0.0 0.0) i[0]
     CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.25) (0.0 0.0 0.0) i[1]    
     CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.2) (0.0 0.0 0.0) i[2] 
     CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.15) (0.0 0.0 0.0) i[3] 
     CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.1) (0.0 0.0 0.0) i[4]  
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.05) (0.0 0.0 0.0) i[5]  
 RETURN
 
 create_customer1:
@@ -320,7 +314,7 @@ create_customer2:
         WAIT 0
     ENDWHILE
     WAIT 1
-    CREATE_CHAR 5 OFYST -1605.929 788.125 6.63 (cust)
+    CREATE_CHAR 5 OFYST -1605.929 788.125 7.63 (cust)
 	SET_CHAR_HEADING cust 348.0 
 	//ADD_BLIP_FOR_COORD -1605.571 788.315 6.82 (iEventBlip)
     ADD_SPRITE_BLIP_FOR_COORD (-1605.571 788.315 6.82) RADAR_SPRITE_WAYPOINT (iEventBlip)
@@ -360,7 +354,7 @@ create_customer3:
         WAIT 0
     ENDWHILE
     WAIT 1
-    CREATE_CHAR 5 HECK1 -1875.622 1125.53 46.445 (cust)
+    CREATE_CHAR 5 HECK1 -1875.622 1125.53 47.145 (cust)
 	SET_CHAR_HEADING cust 90.0 
 	//ADD_BLIP_FOR_COORD -1875.622 1125.53 45.445 (iEventBlip)
     ADD_SPRITE_BLIP_FOR_COORD (-1875.622 1125.53 45.445) RADAR_SPRITE_WAYPOINT (iEventBlip)
@@ -400,7 +394,7 @@ create_customer4:
         WAIT 0
     ENDWHILE
     WAIT 1
-    CREATE_CHAR 5 HMYRI -2016.397 784.54 45.445 (cust)
+    CREATE_CHAR 5 HMYRI -2016.397 784.54 46.245 (cust)
 	SET_CHAR_HEADING cust 270.0 
 	//ADD_BLIP_FOR_COORD -2014.835 785.569 45.445 (iEventBlip)
     ADD_SPRITE_BLIP_FOR_COORD (-2014.835 785.569 45.445) RADAR_SPRITE_WAYPOINT (iEventBlip)
@@ -432,54 +426,15 @@ attach_pizza_4:
     SET_OBJECT_PROOFS iObj 1 1 1 1 1 
     TASK_PICK_UP_OBJECT cust iObj 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
- 
+
 create_customer5:
-    WAIT 1
-    REQUEST_MODEL BFYST
-    WHILE NOT HAS_MODEL_LOADED BFYST
-        WAIT 0
-    ENDWHILE
-    CREATE_CHAR 5 BFYST -2200.741 645.785 49.437 (cust)
-	SET_CHAR_HEADING cust 180.0 
-	//ADD_BLIP_FOR_COORD -2200.657 644.987 49.437 (iEventBlip)
-    ADD_SPRITE_BLIP_FOR_COORD (-2200.657 644.987 49.437) RADAR_SPRITE_WAYPOINT (iEventBlip)
-    ADD_SPHERE (-2200.657 644.987 49.437) 1.0 (iEventBlip2)    
-	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
-RETURN 
-
-deliver_customer5:
-    IF LOCATE_CHAR_ANY_MEANS_3D player_actor -2200.657 644.987 49.437 1.2 1.2 1.4 FALSE
-        REMOVE_BLIP iEventBlip
-        REMOVE_SPHERE iEventBlip2    
-        GOSUB attach_pizza_5
-        LOAD_AUDIO_STREAM "CLEO\audio\Talk 5.MP3" sfx
-        SET_AUDIO_STREAM_STATE sfx 1
-        PRINT_NOW TEXT6 3000 1
-        WAIT 3500
-        deliver += 1
-        MARK_MODEL_AS_NO_LONGER_NEEDED BFYST
-        PRINT_FORMATTED_NOW "Pizza Number %i Delivered" 2222 deliver
-        WAIT 300
-        GOSUB create_customer6
-    ENDIF
-RETURN
-
-attach_pizza_5:
-    DELETE_RENDER_OBJECT i[4]
-    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj 
-    SET_OBJECT_COLLISION iObj 0 
-    SET_OBJECT_PROOFS iObj 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust iObj 0.0 0.0 0.0 5 16 NULL NULL -1
-RETURN
-
-create_customer6:
     WAIT 1
     REQUEST_MODEL BMYAP
     WHILE NOT HAS_MODEL_LOADED BMYAP
         WAIT 0
     ENDWHILE
     WAIT 1
-    CREATE_CHAR 5 BMYAP -2111.448730 329.202972 35.164063 (cust)
+    CREATE_CHAR 5 BMYAP -2111.448730 329.202972 36.164063 (cust)
 	SET_CHAR_HEADING cust 180.0 
 	//ADD_BLIP_FOR_COORD -2111.440674 327.662842 35.164063 (iEventBlip)
     ADD_SPRITE_BLIP_FOR_COORD (-2111.440674 327.662842 35.164063) RADAR_SPRITE_WAYPOINT (iEventBlip)
@@ -487,11 +442,11 @@ create_customer6:
 	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
-deliver_customer6:
+deliver_customer5:
     IF LOCATE_CHAR_ANY_MEANS_3D player_actor -2111.440674 327.662842 35.164063 1.2 1.2 1.4 FALSE
         REMOVE_BLIP iEventBlip
         REMOVE_SPHERE iEventBlip2        
-        GOSUB attach_pizza_6
+        GOSUB attach_pizza_5
         LOAD_AUDIO_STREAM "CLEO\audio\Talk 3.MP3" sfx
         SET_AUDIO_STREAM_STATE sfx 1
         PRINT_NOW TEXT5 3000 1
@@ -502,8 +457,8 @@ deliver_customer6:
     ENDIF
 RETURN
 
-attach_pizza_6:
-    DELETE_RENDER_OBJECT i[5]
+attach_pizza_5:
+    DELETE_RENDER_OBJECT i[4]
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj 
     SET_OBJECT_COLLISION iObj 0 
     SET_OBJECT_PROOFS iObj 1 1 1 1 1 
@@ -536,7 +491,7 @@ mission_passed:
         ENDIF
     ENDIF 
 
-    IF deliver = 6
+    IF deliver = 5
         iExperienceReward += 150
     ENDIF
 
@@ -595,7 +550,6 @@ mission_cleanup:
     DELETE_RENDER_OBJECT i[2]
     DELETE_RENDER_OBJECT i[3]
     DELETE_RENDER_OBJECT i[4]
-    DELETE_RENDER_OBJECT i[5]
     REMOVE_CHAR_ELEGANTLY cust
     REMOVE_CHAR_ELEGANTLY cust
     REMOVE_CHAR_ELEGANTLY cust
