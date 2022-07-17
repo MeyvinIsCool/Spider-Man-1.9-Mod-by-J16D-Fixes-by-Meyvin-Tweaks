@@ -122,7 +122,7 @@ CAMERA_SET_VECTOR_TRACK (-1715.190 1360.011 17.25) (-1715.615 1359.423 17.25) 13
 CAMERA_SET_SHAKE_SIMULATION_SIMPLE 1 8500.0 2.0
 GOSUB sub_FadeIn_700ms
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
-	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 8 1 815 816 //{id} {mission_id} {text1_id} {text2_id}
+	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 8 0 815 816 //{id} {mission_id} {text1_id} {text2_id}
 ENDIF
 WAIT 13200
 GOSUB sub_unlock_player_controls
@@ -557,16 +557,18 @@ mission_passed:
     REMOVE_CHAR_ELEGANTLY cust
     REMOVE_CHAR_ELEGANTLY cust
     REMOVE_CHAR_ELEGANTLY cust
+    REMOVE_BLIP iEventBlip 
     REMOVE_BLIP iEventBlip  
     REMOVE_BLIP iEventBlip
     REMOVE_BLIP iEventBlip
     REMOVE_BLIP iEventBlip
     REMOVE_BLIP iEventBlip
-    REMOVE_BLIP iEventBlip2  
-    REMOVE_BLIP iEventBlip2
-    REMOVE_BLIP iEventBlip2
-    REMOVE_BLIP iEventBlip2
-    REMOVE_BLIP iEventBlip2    
+    REMOVE_SPHERE iEventBlip2
+    REMOVE_SPHERE iEventBlip2
+    REMOVE_SPHERE iEventBlip2
+    REMOVE_SPHERE iEventBlip2
+    REMOVE_SPHERE iEventBlip2     
+    REMOVE_SPHERE iEventBlip2  
     WAIT delay_restart_mission
 GOTO start
 
@@ -599,16 +601,18 @@ mission_cleanup:
     REMOVE_CHAR_ELEGANTLY cust
     REMOVE_CHAR_ELEGANTLY cust
     REMOVE_CHAR_ELEGANTLY cust
+    REMOVE_BLIP iEventBlip 
     REMOVE_BLIP iEventBlip  
     REMOVE_BLIP iEventBlip
     REMOVE_BLIP iEventBlip
     REMOVE_BLIP iEventBlip
     REMOVE_BLIP iEventBlip
-    REMOVE_BLIP iEventBlip2  
-    REMOVE_BLIP iEventBlip2
-    REMOVE_BLIP iEventBlip2
-    REMOVE_BLIP iEventBlip2
-    REMOVE_BLIP iEventBlip2     
+    REMOVE_SPHERE iEventBlip2
+    REMOVE_SPHERE iEventBlip2
+    REMOVE_SPHERE iEventBlip2
+    REMOVE_SPHERE iEventBlip2
+    REMOVE_SPHERE iEventBlip2     
+    REMOVE_SPHERE iEventBlip2
 GOTO start
 
 loadGeneralFiles:
