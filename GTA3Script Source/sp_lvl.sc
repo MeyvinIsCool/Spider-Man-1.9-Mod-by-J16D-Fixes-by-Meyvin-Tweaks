@@ -766,6 +766,7 @@ unlock_spiderman_suits:
             CASE 36 //Group #11 ID: 24-25
                 WRITE_INT_TO_INI_FILE 7319 "CLEO\SpiderJ16D\config.ini" "CODE" "suit24"
                 WRITE_INT_TO_INI_FILE 6731 "CLEO\SpiderJ16D\config.ini" "CODE" "suit25"
+                WRITE_INT_TO_INI_FILE 6731 "CLEO\SpiderJ16D\config.ini" "CODE" "suit45"
                 BREAK
             CASE 38 //Group #12 ID: 26-27   //extra
                 WRITE_INT_TO_INI_FILE 1973 "CLEO\SpiderJ16D\config.ini" "CODE" "suit26"
@@ -775,6 +776,7 @@ unlock_spiderman_suits:
                 WRITE_INT_TO_INI_FILE 1917 "CLEO\SpiderJ16D\config.ini" "CODE" "suit28"
                 WRITE_INT_TO_INI_FILE 3734 "CLEO\SpiderJ16D\config.ini" "CODE" "suit29"
                 WRITE_INT_TO_INI_FILE 4913 "CLEO\SpiderJ16D\config.ini" "CODE" "suit30"
+                WRITE_INT_TO_INI_FILE 1232 "CLEO\SpiderJ16D\config.ini" "CODE" "suit44"
                 BREAK
             CASE 42 //Group #14 ID: 30-33   //extra
                 WRITE_INT_TO_INI_FILE 1232 "CLEO\SpiderJ16D\config.ini" "CODE" "suit31"
@@ -785,6 +787,7 @@ unlock_spiderman_suits:
                 WRITE_INT_TO_INI_FILE 2846 "CLEO\SpiderJ16D\config.ini" "CODE" "suit34"
                 WRITE_INT_TO_INI_FILE 4913 "CLEO\SpiderJ16D\config.ini" "CODE" "suit35"
                 WRITE_INT_TO_INI_FILE 9369 "CLEO\SpiderJ16D\config.ini" "CODE" "suit36"
+                WRITE_INT_TO_INI_FILE 6743 "CLEO\SpiderJ16D\config.ini" "CODE" "suit43"
                 BREAK      
             CASE 46 //Group #16 ID: 37-39   //extra
                 WRITE_INT_TO_INI_FILE 6743 "CLEO\SpiderJ16D\config.ini" "CODE" "suit37"
@@ -793,6 +796,8 @@ unlock_spiderman_suits:
                 BREAK        
             CASE 48 //Group #17 ID: 40   //extra
                 WRITE_INT_TO_INI_FILE 7319 "CLEO\SpiderJ16D\config.ini" "CODE" "suit40"
+                WRITE_INT_TO_INI_FILE 8319 "CLEO\SpiderJ16D\config.ini" "CODE" "suit41"
+                WRITE_INT_TO_INI_FILE 4913 "CLEO\SpiderJ16D\config.ini" "CODE" "suit42"
                 BREAK                                               
             DEFAULT
                 BREAK

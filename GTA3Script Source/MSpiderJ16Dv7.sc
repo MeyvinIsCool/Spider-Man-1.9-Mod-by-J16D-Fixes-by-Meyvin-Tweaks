@@ -2107,7 +2107,14 @@ ProcessGame_and_DrawItems_SUITS:
             iMinRowSuitQuantity = 6
             iMaxRowQuantity = 10   //2nd Row
         ENDIF
-    ENDIF       
+    ENDIF  
+    IF iActiveRow = 0
+        IF iMinRowSuitQuantity = 16
+            iActiveRow = 1
+            iMinRowSuitQuantity = 11
+            iMaxRowQuantity = 15   //3nd Row
+        ENDIF
+    ENDIF          
     IF iMinRowSuitQuantity = 1
         IF iActiveRow = 7
             iActiveRow = 6
@@ -2115,13 +2122,20 @@ ProcessGame_and_DrawItems_SUITS:
             iMaxRowQuantity = 10   //7th Row
         ENDIF    
     ENDIF   
-    IF iMinRowSuitQuantity >= 6
+    IF iMinRowSuitQuantity = 6
         IF iActiveRow = 7
             iActiveRow = 6
             iMinRowSuitQuantity = 11
             iMaxRowQuantity = 15   //8th Row
         ENDIF
-    ENDIF             
+    ENDIF           
+    IF iMinRowSuitQuantity >= 11
+        IF iActiveRow = 7
+            iActiveRow = 6
+            iMinRowSuitQuantity = 16
+            iMaxRowQuantity = 20   //9th Row
+        ENDIF
+    ENDIF       
     //SUIT MENU
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (215.0 234.0) (260.0 337.5) (2 40 49 150) (0.5) (1 1 1 1) (0 125 180 200) -1 -1 (0.0 0.0)   //BLUE_BACK_MAIN_SUITS
     iTempVar = idSuit_l
@@ -2192,7 +2206,16 @@ ProcessGame_and_DrawItems_SUITS:
                     yCoord += 50.0
                 BREAK      
             ENDSWITCH
-        ENDIF          
+        ENDIF    
+        IF iMinRowSuitQuantity >= 16
+            SWITCH idTexture
+                CASE 41  //9th Row
+                    iMaxRowQuantity = 45
+                    xCoord = 115.0
+                    yCoord += 50.0
+                BREAK      
+            ENDSWITCH
+        ENDIF               
     ENDWHILE
     USE_TEXT_COMMANDS FALSE
 RETURN
@@ -2318,7 +2341,22 @@ get_unlock_code_suit:
             BREAK  
         CASE 40
             iTempVar = 7319
-            BREAK                                                                                                                
+            BREAK 
+        CASE 41
+            iTempVar = 8319
+            BREAK        
+        CASE 42
+            iTempVar = 4913
+            BREAK  
+        CASE 43
+            iTempVar = 6743
+            BREAK  
+        CASE 44
+            iTempVar = 1232
+            BREAK    
+        CASE 45
+            iTempVar = 6731
+            BREAK                                                                                                                                                            
     ENDSWITCH
     CLEO_CALL getSuitInfoUnclock 0 idTexture (pUnlockCode)
 RETURN
@@ -2342,6 +2380,9 @@ DrawCheckMarks_SUITS:
     IF iMinRowSuitQuantity = 11
         counter = 10
     ENDIF  
+    IF iMinRowSuitQuantity = 16
+        counter = 15
+    ENDIF     
     
     WHILE iMaxRowQuantity >= counter    
         IF iTempVar = counter
@@ -2448,7 +2489,48 @@ DrawCheckMarks_SUITS:
                     yCoord += 50.0
                 BREAK                  
             ENDSWITCH
-        ENDIF            
+        ENDIF    
+        IF iMinRowSuitQuantity = 16
+            SWITCH counter                       
+                CASE 6  //2nd Row
+                    iMaxRowQuantity = 10
+                    xCoord = 134.0
+                BREAK            
+                CASE 11 //3rd Row
+                    iMaxRowQuantity = 15
+                    xCoord = 134.0
+                BREAK
+                CASE 16 //4th Row
+                    iMaxRowQuantity = 20
+                    xCoord = 134.0
+                BREAK
+                CASE 21 //5th Row
+                    iMaxRowQuantity = 25
+                    xCoord = 134.0
+                    yCoord += 50.0
+                BREAK     
+                CASE 26 //5th Row
+                    iMaxRowQuantity = 30
+                    xCoord = 134.0
+                    yCoord += 50.0
+                BREAK                        
+                CASE 31  //6th Row
+                    iMaxRowQuantity = 35
+                    xCoord = 134.0
+                    yCoord += 50.0
+                BREAK      
+                CASE 36  //8th Row
+                    iMaxRowQuantity = 40
+                    xCoord = 134.0
+                    yCoord += 50.0
+                BREAK       
+                CASE 41  //8th Row
+                    iMaxRowQuantity = 45
+                    xCoord = 134.0
+                    yCoord += 50.0
+                BREAK                           
+            ENDSWITCH
+        ENDIF                 
     ENDWHILE
 RETURN
 
@@ -2952,12 +3034,178 @@ DrawSelector_SUITS:
             ENDSWITCH
         BREAK
     ENDSWITCH    
-    ENDIF      
+    ENDIF  
+    IF iMinRowSuitQuantity = 16
+    SWITCH iActiveRow  //Vertical movement
+        CASE 1
+            SWITCH iActiveCol   //Horizontal movement
+                //x->|| 115 - 165 - 215 - 265 - 315
+                //y->|| 100 - 155 - 210 - 265 - 320
+                //y->|| 120 - 170 - 220 - 270 - 320 
+                CASE 1
+                    iSelectedSuit = 16
+                    DRAW_SPRITE selectSuit26 (115.0 120.0) (xSize ySize) (255 255 255 255)        //Image SQUARE selector
+                    BREAK
+                CASE 2
+                    iSelectedSuit = 17
+                    DRAW_SPRITE selectSuit26 (165.0 120.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 3
+                    iSelectedSuit = 18
+                    DRAW_SPRITE selectSuit26 (215.0 120.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 4
+                    iSelectedSuit = 19
+                    DRAW_SPRITE selectSuit26 (265.0 120.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 5
+                    iSelectedSuit = 20
+                    DRAW_SPRITE selectSuit26 (315.0 120.0) (xSize ySize) (255 255 255 255)
+                BREAK
+            ENDSWITCH
+        BREAK
+        CASE 2
+            SWITCH iActiveCol   //Horizontal movement
+                //x->|| 115 - 165 - 215 - 265 - 315
+                //y->|| 100 - 155 - 210 - 265 - 320
+                //y->|| 120 - 170 - 220 - 270 - 320           
+                CASE 1
+                    iSelectedSuit = 21
+                    DRAW_SPRITE selectSuit26 (115.0 170.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 2
+                    iSelectedSuit = 22
+                    DRAW_SPRITE selectSuit26 (165.0 170.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 3
+                    iSelectedSuit = 23
+                    DRAW_SPRITE selectSuit26 (215.0 170.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 4
+                    iSelectedSuit = 24
+                    DRAW_SPRITE selectSuit26 (265.0 170.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 5
+                    iSelectedSuit = 25
+                    DRAW_SPRITE selectSuit26 (315.0 170.0) (xSize ySize) (255 255 255 255)
+                BREAK
+            ENDSWITCH
+        BREAK
+        CASE 3
+            SWITCH iActiveCol   //Horizontal movement
+                //x->|| 115 - 165 - 215 - 265 - 315
+                //y->|| 100 - 155 - 210 - 265 - 320
+                //y->|| 120 - 170 - 220 - 270 - 320
+                CASE 1
+                    iSelectedSuit = 26
+                    DRAW_SPRITE selectSuit26 (115.0 220.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 2
+                    iSelectedSuit = 27
+                    DRAW_SPRITE selectSuit26 (165.0 220.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 3
+                    iSelectedSuit = 28
+                    DRAW_SPRITE selectSuit26 (215.0 220.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 4
+                    iSelectedSuit = 29
+                    DRAW_SPRITE selectSuit26 (265.0 220.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 5
+                    iSelectedSuit = 30
+                    DRAW_SPRITE selectSuit26 (315.0 220.0) (xSize ySize) (255 255 255 255)
+                BREAK
+            ENDSWITCH
+        BREAK
+        CASE 4
+            SWITCH iActiveCol   //Horizontal movement
+                //x->|| 115 - 165 - 215 - 265 - 315
+                //y->|| 100 - 155 - 210 - 265 - 320
+                //y->|| 120 - 170 - 220 - 270 - 320 
+                CASE 1
+                    iSelectedSuit = 31
+                    DRAW_SPRITE selectSuit26 (115.0 270.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 2
+                    iSelectedSuit = 32
+                    DRAW_SPRITE selectSuit26 (165.0 270.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 3
+                    iSelectedSuit = 33
+                    DRAW_SPRITE selectSuit26 (215.0 270.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 4
+                    iSelectedSuit = 34
+                    DRAW_SPRITE selectSuit26 (265.0 270.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 5
+                    iSelectedSuit = 35
+                    DRAW_SPRITE selectSuit26 (315.0 270.0) (xSize ySize) (255 255 255 255)
+                BREAK
+            ENDSWITCH
+        BREAK
+        CASE 5 
+            SWITCH iActiveCol   //Horizontal movement
+                //x->|| 115 - 165 - 215 - 265 - 315
+                //y->|| 100 - 155 - 210 - 265 - 320
+                //y->|| 120 - 170 - 220 - 270 - 320
+                CASE 1
+                    iSelectedSuit = 36
+                    DRAW_SPRITE selectSuit26 (115.0 320.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 2
+                    iSelectedSuit = 37
+                    DRAW_SPRITE selectSuit26 (165.0 320.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 3
+                    iSelectedSuit = 38
+                    DRAW_SPRITE selectSuit26 (215.0 320.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 4
+                    iSelectedSuit = 39
+                    DRAW_SPRITE selectSuit26 (265.0 320.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 5
+                    iSelectedSuit = 40
+                    DRAW_SPRITE selectSuit26 (315.0 320.0) (xSize ySize) (255 255 255 255)
+                BREAK
+            ENDSWITCH
+        BREAK
+        CASE 6 
+            SWITCH iActiveCol   //Horizontal movement
+                //x->|| 115 - 165 - 215 - 265 - 315
+                //y->|| 100 - 155 - 210 - 265 - 320
+                //y->|| 120 - 170 - 220 - 270 - 320
+                CASE 1
+                    iSelectedSuit = 41
+                    DRAW_SPRITE selectSuit26 (115.0 370.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 2
+                    iSelectedSuit = 42
+                    DRAW_SPRITE selectSuit26 (165.0 370.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 3
+                    iSelectedSuit = 43
+                    DRAW_SPRITE selectSuit26 (215.0 370.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 4
+                    iSelectedSuit = 44
+                    DRAW_SPRITE selectSuit26 (265.0 370.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 5
+                    iSelectedSuit = 45
+                    DRAW_SPRITE selectSuit26 (315.0 370.0) (xSize ySize) (255 255 255 255)
+                BREAK
+            ENDSWITCH
+        BREAK
+    ENDSWITCH    
+    ENDIF        
 RETURN
 
 DrawInfo_SUITS:
     counter = 1
-    WHILE 40 >= counter
+    WHILE 45 >= counter
         IF iSelectedSuit = counter
             SWITCH iSelectedSuit
                 CASE 1
@@ -3119,7 +3367,27 @@ DrawInfo_SUITS:
                 CASE 40
                     iTempVar = 7319
                     idTexture = idSuit40_l
-                    BREAK                                                                                                                                         
+                    BREAK   
+                CASE 41
+                    iTempVar = 8319
+                    idTexture = idSuit41_l
+                    BREAK   
+                CASE 42
+                    iTempVar = 4913
+                    idTexture = idSuit42_l
+                    BREAK 
+                CASE 43
+                    iTempVar = 6743
+                    idTexture = idSuit43_l
+                    BREAK 
+                CASE 44
+                    iTempVar = 1232
+                    idTexture = idSuit44_l
+                    BREAK  
+                CASE 45
+                    iTempVar = 6731
+                    idTexture = idSuit45_l
+                    BREAK                                                                                                                                                                                                                                   
             ENDSWITCH
             //GET_FIXED_XY_ASPECT_RATIO (55.0 55.0) (xSize ySize) //40.0 35.0
             xSize = 41.25
@@ -3680,7 +3948,22 @@ get_text_name_id_from_selected_SUIT:
             BREAK   
         CASE 40
             idTexture = idSuit40_l
-            BREAK                                       
+            BREAK    
+        CASE 41
+            idTexture = idSuit41_l
+            BREAK  
+        CASE 42
+            idTexture = idSuit42_l
+            BREAK  
+        CASE 43
+            idTexture = idSuit43_l
+            BREAK  
+        CASE 44
+            idTexture = idSuit44_l
+            BREAK  
+        CASE 45
+            idTexture = idSuit45_l
+            BREAK                                                                                                 
     ENDSWITCH
 RETURN
 
@@ -4538,7 +4821,7 @@ renderChar:
     IF NOT iSelectedSuit = isCharRendered
         GOSUB deleteChar
         counter = 1
-        WHILE 40 >= counter
+        WHILE 45 >= counter
             IF iSelectedSuit = counter
                 /*idTexture = counter 
                 GOSUB get_unlock_code_suit
@@ -4622,7 +4905,7 @@ RETURN
 
 setSkin:
     counter = 1
-    WHILE 40 >= counter
+    WHILE 45 >= counter
         IF iSelectedSuit = counter
             SWITCH iSelectedSuit
                 CASE 1
@@ -4744,7 +5027,22 @@ setSkin:
                     BREAK  
                 CASE 40
                     iTempVar = 7319
-                    BREAK                                                           
+                    BREAK         
+                CASE 41
+                    iTempVar = 8319
+                    BREAK        
+                CASE 42
+                    iTempVar = 4913
+                    BREAK  
+                CASE 43
+                    iTempVar = 6743
+                    BREAK  
+                CASE 44
+                    iTempVar = 1232
+                    BREAK    
+                CASE 45
+                    iTempVar = 6731
+                    BREAK                                                                          
             ENDSWITCH
             CLEO_CALL getSuitInfoUnclock 0 counter (pUnlockCode)
             IF pUnlockCode = iTempVar
@@ -4901,7 +5199,12 @@ load_all_needed_files:
         CONST_INT suit37 37
         CONST_INT suit38 38
         CONST_INT suit39 39
-        CONST_INT suit40 40        
+        CONST_INT suit40 40       
+        CONST_INT suit41 41
+        CONST_INT suit42 42 
+        CONST_INT suit43 43 
+        CONST_INT suit44 44 
+        CONST_INT suit45 45                   
 
         CONST_INT idMapIcon0    61
         CONST_INT idMapIcon1    62
@@ -5062,6 +5365,11 @@ load_all_needed_files:
         LOAD_SPRITE suit38 "suit38"
         LOAD_SPRITE suit39 "suit39"
         LOAD_SPRITE suit40 "suit40"
+        LOAD_SPRITE suit41 "suit41"
+        LOAD_SPRITE suit42 "suit42"
+        LOAD_SPRITE suit43 "suit43"
+        LOAD_SPRITE suit44 "suit44"
+        LOAD_SPRITE suit45 "suit45"
 
         LOAD_SPRITE idLogoSP "splogo"
         LOAD_SPRITE idBackgroundSett "bckstt"
@@ -5553,7 +5861,7 @@ suitUnlock:
     LVAR_TEXT_LABEL lSuitName
     LVAR_INT iTempUnlockCode counter
     counter = 1
-    WHILE 40 >= counter
+    WHILE 45 >= counter
         STRING_FORMAT (lSuitName)"suit%i" counter
         READ_INT_FROM_INI_FILE "cleo\SpiderJ16D\config.ini" "CODE" $lSuitName (iTempUnlockCode)
         CLEO_CALL storeSuitInfoUnclock 0 counter iTempUnlockCode
@@ -7186,6 +7494,12 @@ DUMP    // 124 bytes
 00 00 00 00
 00 00 00 00
 00 00 00 00
+
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
 ENDDUMP
 
 GUI_Memory_SuitItem:
@@ -7356,4 +7670,9 @@ CONST_INT idSuit37_l            684
 CONST_INT idSuit38_l            685
 CONST_INT idSuit39_l            686
 CONST_INT idSuit40_l            687
+CONST_INT idSuit41_l            688
+CONST_INT idSuit42_l            689
+CONST_INT idSuit43_l            690
+CONST_INT idSuit44_l            691
+CONST_INT idSuit45_l            692
 CONST_INT idSuitUnknown_l       785
