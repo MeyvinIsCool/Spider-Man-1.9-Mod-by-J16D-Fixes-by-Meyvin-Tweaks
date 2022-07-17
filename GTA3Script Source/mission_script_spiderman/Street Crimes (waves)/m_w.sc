@@ -3,6 +3,7 @@
 // Format:
 //      STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_w.cs"
 // Spider-Man Mod for GTA SA c.2018 - 2021
+// Fixes by MeyvinIsCool
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
@@ -74,6 +75,7 @@ WHILE TRUE
                         timerb = 0  //reset timer
                     ENDIF
                 ENDIF
+                GET_CLEO_SHARED_VAR varOnmission flag_player_on_mission
                 IF is_random_event_available = EVENT_AVAILABLE
                     IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[2] y[2] z[2] 20.0
                         IF flag_player_on_mission = 0
