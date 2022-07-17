@@ -3,6 +3,7 @@ I Made These Fixes On These Scripts And Also Improvements In Order To Make This 
 
 Things I Fixed And Added On This Mod :
 
+- Added Function Scrolling System On Menu + 10 New Suits Added !
 - Cinimatic Jump Restored
 - A Web Swinging Animation Restored
 - Falling Animations Restored
