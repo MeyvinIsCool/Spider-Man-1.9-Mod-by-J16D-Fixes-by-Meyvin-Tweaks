@@ -629,7 +629,7 @@ show_menu:
                                     iActiveRow = 1
                                     iMinRowSuitQuantity = 1
                                     iMaxRowQuantity = 6   
-                                ENDIF                                 
+                                ENDIF                                                                 
                                 BREAK
                             CASE menPowerSuit
                                 iPanelB = menPowerSuit
@@ -2290,34 +2290,34 @@ get_unlock_code_suit:
             iTempVar = 4913
             BREAK
         CASE 31
-            iTempVar = 4913
+            iTempVar = 1232
             BREAK
         CASE 32
-            iTempVar = 4913
+            iTempVar = 7319
             BREAK
         CASE 33
-            iTempVar = 4913
+            iTempVar = 8319
             BREAK
         CASE 34
-            iTempVar = 4913
+            iTempVar = 2846
             BREAK
         CASE 35
             iTempVar = 4913
             BREAK          
         CASE 36
-            iTempVar = 4913
+            iTempVar = 9369
             BREAK  
         CASE 37
-            iTempVar = 4913
+            iTempVar = 6743
             BREAK  
         CASE 38
-            iTempVar = 4913
+            iTempVar = 9999
             BREAK  
         CASE 39
-            iTempVar = 4913
+            iTempVar = 9369
             BREAK  
         CASE 40
-            iTempVar = 4913
+            iTempVar = 7319
             BREAK                                                                                                                
     ENDSWITCH
     CLEO_CALL getSuitInfoUnclock 0 idTexture (pUnlockCode)
@@ -3081,19 +3081,19 @@ DrawInfo_SUITS:
                     idTexture = idSuit30_l
                     BREAK
                 CASE 31
-                    iTempVar = 4913
+                    iTempVar = 1232
                     idTexture = idSuit31_l
                     BREAK                    
                 CASE 32
-                    iTempVar = 4913
+                    iTempVar = 7319
                     idTexture = idSuit32_l
                     BREAK
                 CASE 33
-                    iTempVar = 4913
+                    iTempVar = 8319
                     idTexture = idSuit33_l
                     BREAK                                        
                 CASE 34
-                    iTempVar = 4913
+                    iTempVar = 2846
                     idTexture = idSuit34_l
                     BREAK
                 CASE 35
@@ -3101,23 +3101,23 @@ DrawInfo_SUITS:
                     idTexture = idSuit35_l
                     BREAK    
                 CASE 36
-                    iTempVar = 4913
+                    iTempVar = 9369
                     idTexture = idSuit36_l
                     BREAK 
                 CASE 37
-                    iTempVar = 4913
+                    iTempVar = 6743
                     idTexture = idSuit37_l
                     BREAK 
                 CASE 38
-                    iTempVar = 4913
+                    iTempVar = 9999
                     idTexture = idSuit38_l
                     BREAK 
                 CASE 39
-                    iTempVar = 4913
+                    iTempVar = 9369
                     idTexture = idSuit39_l
                     BREAK 
                 CASE 40
-                    iTempVar = 4913
+                    iTempVar = 7319
                     idTexture = idSuit40_l
                     BREAK                                                                                                                                         
             ENDSWITCH
@@ -4716,35 +4716,35 @@ setSkin:
                     iTempVar = 4913
                     BREAK
                 CASE 31
-                    iTempVar = 4913
+                    iTempVar = 1232
                     BREAK
                 CASE 32
-                    iTempVar = 4913
+                    iTempVar = 7319
                     BREAK
                 CASE 33
-                    iTempVar = 4913
-                    BREAK                                                            
+                    iTempVar = 8319
+                    BREAK
                 CASE 34
-                    iTempVar = 4913
+                    iTempVar = 2846
                     BREAK
                 CASE 35
                     iTempVar = 4913
-                    BREAK  
+                    BREAK          
                 CASE 36
-                    iTempVar = 4913
-                    BREAK
+                    iTempVar = 9369
+                    BREAK  
                 CASE 37
-                    iTempVar = 4913
-                    BREAK                                                                              
+                    iTempVar = 6743
+                    BREAK  
                 CASE 38
-                    iTempVar = 4913
-                    BREAK
+                    iTempVar = 9999
+                    BREAK  
                 CASE 39
-                    iTempVar = 4913
-                    BREAK
+                    iTempVar = 9369
+                    BREAK  
                 CASE 40
-                    iTempVar = 4913
-                    BREAK                                                            
+                    iTempVar = 7319
+                    BREAK                                                           
             ENDSWITCH
             CLEO_CALL getSuitInfoUnclock 0 counter (pUnlockCode)
             IF pUnlockCode = iTempVar
