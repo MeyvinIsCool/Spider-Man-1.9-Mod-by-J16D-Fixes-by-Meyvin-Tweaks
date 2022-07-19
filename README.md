@@ -11,7 +11,7 @@ Things I Fixed And Added On This Mod :
 - Fixed Money Bar Not Visible
 - Fixed Webshooters Textures
 - Fixed Menu Rendering Issues Whenever Using Lower Resolutions
-- Fixed A Bug When Web Zipping Tower After Doing Side Wall Running
+- Fixed Some Bugs With The Reservoir Scripts
 - Added Web Zip While Wall Running (COMPLETED !!)
 - Added GInput (Recommended If You Are Using Controller)
 - Remade Screwball Trigger Now With 3D Blips - GTA3Script 
