@@ -51,14 +51,16 @@ WHILE TRUE
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
         GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
-        IF toggleSpiderMod = 0 //FALSE
-            REMOVE_ANIMATION "spider"
-            REMOVE_ANIMATION "mweb"
-            USE_TEXT_COMMANDS FALSE
-            WAIT 0
-            REMOVE_TEXTURE_DICTIONARY
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT
+        IF toggleSpiderMod = 1 //TRUE
+            IF isInMainMenu = 1 //TRUE
+                 REMOVE_ANIMATION "spider"
+                 REMOVE_ANIMATION "mweb"
+                 USE_TEXT_COMMANDS FALSE
+                 WAIT 0
+                 REMOVE_TEXTURE_DICTIONARY
+                 WAIT 50
+                 TERMINATE_THIS_CUSTOM_SCRIPT
+            ENDIF
         ENDIF
     ENDIF
     WAIT 0
