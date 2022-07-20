@@ -24,12 +24,12 @@ Things I Fixed And Added On This Mod :
 
 I Had So Much Fun Time Making These Fixes And Also Thanks To These People Who Helped Me A Lot !
 
-- J16D or jayd00 On GitHub
-- The Rahijo
-- Junior Djjr
-- Mr.Demon "Genos" Cyborg
-- Krats18
-- Aperture Gamer
-- Teo
+- J16D or jayd00 On GitHub (Coding)
+- The Rahijo (Retexturing)
+- Junior Djjr (Coding + Tips And Code Optimizations)
+- Mr.Demon "Genos" Cyborg (Pizza Time Mission Source Code And Audio Collecting)
+- Krats18 (Normal Mapped Suits Rigged From The PS4 Game)
+- Aperture Gamer (Help To Make Additional Features On The Mod)
+- Teo (Collecting Suits And Suit Chest)
 
 Sorry If I Missed Somebody .... Thank You !
