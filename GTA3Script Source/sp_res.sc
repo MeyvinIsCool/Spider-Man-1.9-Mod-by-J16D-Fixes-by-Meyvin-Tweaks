@@ -12,12 +12,8 @@ CONST_INT player 0
 SCRIPT_START
 {
 SCRIPT_NAME sp_res
-WAIT 0
-WAIT 0
-WAIT 0
-WAIT 0
-WAIT 0
-LVAR_INT player_actor toggleSpiderMod isInMainMenu rwCrosshair
+WAIT 1000
+LVAR_INT player_actor toggleSpiderMod isInMainMenu rwCrosshair sfx
 
 GET_PLAYER_CHAR 0 player_actor
 REQUEST_ANIMATION "spider"
@@ -51,17 +47,18 @@ WHILE TRUE
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
         GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
-        IF toggleSpiderMod = 1 //TRUE
+        //IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 1 //TRUE
-                 REMOVE_ANIMATION "spider"
-                 REMOVE_ANIMATION "mweb"
-                 USE_TEXT_COMMANDS FALSE
-                 WAIT 0
-                 REMOVE_TEXTURE_DICTIONARY
-                 WAIT 50
-                 TERMINATE_THIS_CUSTOM_SCRIPT
+                REMOVE_ANIMATION "spider"
+                REMOVE_ANIMATION "mweb"
+                REMOVE_AUDIO_STREAM sfx
+                USE_TEXT_COMMANDS FALSE
+                WAIT 0
+                REMOVE_TEXTURE_DICTIONARY
+                WAIT 50
+                TERMINATE_THIS_CUSTOM_SCRIPT
             ENDIF
-        ENDIF
+        //ENDIF
     ENDIF
     WAIT 0
 ENDWHILE
@@ -85,8 +82,8 @@ WHILE TRUE
     IF IS_PLAYER_PLAYING player 
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
         GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
-        GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
+            GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
             IF isInMainMenu = 0     //1:true 0: false
                 READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
@@ -139,13 +136,8 @@ WHILE TRUE
                         ENDIF
                     ENDIF
                 ENDIF
+            ENDIF            
             ENDIF
-            ENDIF
-        ELSE
-            REMOVE_AUDIO_STREAM sfx
-            USE_TEXT_COMMANDS FALSE
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT
         ENDIF
     WAIT 0
 ENDWHILE
@@ -414,11 +406,6 @@ WHILE TRUE
                 ENDIF
             ENDIF
             ENDIF
-        ELSE
-            REMOVE_AUDIO_STREAM sfx
-            USE_TEXT_COMMANDS FALSE
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT
         ENDIF
     WAIT 0
 ENDWHILE
@@ -692,11 +679,6 @@ WHILE TRUE
                 ENDIF
             ENDIF
             ENDIF
-        ELSE
-            REMOVE_AUDIO_STREAM sfx
-            USE_TEXT_COMMANDS FALSE
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT
         ENDIF
     WAIT 0
 ENDWHILE
@@ -971,11 +953,6 @@ WHILE TRUE
                 ENDIF
             ENDIF
             ENDIF
-        ELSE
-            REMOVE_AUDIO_STREAM sfx
-            USE_TEXT_COMMANDS FALSE
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT
         ENDIF
     WAIT 0
 ENDWHILE
@@ -1249,11 +1226,6 @@ WHILE TRUE
                 ENDIF
             ENDIF
             ENDIF
-        ELSE
-            REMOVE_AUDIO_STREAM sfx
-            USE_TEXT_COMMANDS FALSE
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT
         ENDIF
     WAIT 0
 ENDWHILE
@@ -1529,11 +1501,6 @@ WHILE TRUE
                 ENDIF
             ENDIF
             ENDIF
-        ELSE
-            REMOVE_AUDIO_STREAM sfx
-            USE_TEXT_COMMANDS FALSE
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT
         ENDIF
     WAIT 0
 ENDWHILE
@@ -1809,11 +1776,6 @@ WHILE TRUE
                 ENDIF
             ENDIF
             ENDIF
-        ELSE
-            REMOVE_AUDIO_STREAM sfx
-            USE_TEXT_COMMANDS FALSE
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT
         ENDIF
     WAIT 0
 ENDWHILE
@@ -2089,11 +2051,6 @@ WHILE TRUE
                 ENDIF
             ENDIF
             ENDIF
-        ELSE
-            REMOVE_AUDIO_STREAM sfx
-            USE_TEXT_COMMANDS FALSE
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT
         ENDIF
     WAIT 0
 ENDWHILE
@@ -2369,11 +2326,6 @@ WHILE TRUE
                 ENDIF
             ENDIF
             ENDIF
-        ELSE
-            REMOVE_AUDIO_STREAM sfx
-            USE_TEXT_COMMANDS FALSE
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT
         ENDIF
     WAIT 0
 ENDWHILE
@@ -2703,15 +2655,12 @@ CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deacti
 tw_a1
 -2192.0 389.789 64.624
 90.9726
-
 tw_a2
 -1873.89 900.735 65.2756
 359.9484
-
 tw_a3
 -1812.37 1039.22 82.0859
 270.9562
-
 tw_a4
 -1589.35 951.715 34.5971
 179.9319
