@@ -11,7 +11,6 @@ SCRIPT_START
 {
 NOP
 SCRIPT_NAME sp_hit
-WAIT 0
 LVAR_INT player_actor toggleSpiderMod isInMainMenu toggleHUD hud_mode is_in_interior
 LVAR_INT iTempVar iTempVar2 iTempVar3 counter is_hud_enabled is_opening_door
 LVAR_FLOAT x y z 
