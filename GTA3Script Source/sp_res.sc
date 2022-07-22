@@ -1,7 +1,7 @@
 // by J16D
 // Reservoir Scripts
 // Spider-Man Mod for GTA SA c.2018 - 2021
-// Custom Added Reservoirs By MeyvinIsCool
+// Fixes And Custom Reservoirs By MeyvinIsCool
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
@@ -137,8 +137,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF            
-            ENDIF
         ENDIF
+    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -405,8 +405,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
-            ENDIF
         ENDIF
+    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -678,8 +678,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
-            ENDIF
         ENDIF
+    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -952,8 +952,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
-            ENDIF
         ENDIF
+    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -1225,8 +1225,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
-            ENDIF
         ENDIF
+    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -1500,8 +1500,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
-            ENDIF
         ENDIF
+    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -1775,8 +1775,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
-            ENDIF
         ENDIF
+    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -2050,8 +2050,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
-            ENDIF
         ENDIF
+    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -2325,8 +2325,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
-            ENDIF
         ENDIF
+    ENDIF
     WAIT 0
 ENDWHILE
 
