@@ -117,9 +117,9 @@ ENDIF
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_scrb.cs"     // Screwball Mission Trigger
     ENDIF    
     // Pizza Time Mission
-    //IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_pizza.cs"
-        //STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_pizza.cs"     // Pizza Time Mission
-    //ENDIF        
+    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_pizza.cs"
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_pizza.cs"     // Pizza Time Mission
+    ENDIF        
 
 //-+-- Start Internal Threads
     STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_cam_internalThread   // Camera Script
