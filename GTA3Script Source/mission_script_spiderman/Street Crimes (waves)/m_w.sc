@@ -133,7 +133,7 @@ SET_RELATIONSHIP 0 PEDTYPE_MISSION1 PEDTYPE_MISSION1
 
 GOSUB load_all_needed_models
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
-    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 2 802 808    //{id} {mission_id} {text1_id} {text2_id}
+    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 802 808    //{id} {mission_id} {text1_id} {text2_id}
 ENDIF    
 
 PRINT_FORMATTED_NOW "Get Ready! WAVE %d" 3000 counter_wave
