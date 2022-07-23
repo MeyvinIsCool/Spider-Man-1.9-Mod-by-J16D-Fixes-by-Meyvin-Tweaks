@@ -82,7 +82,7 @@ main_loop:
                     ENDIF
                     WAIT 0
                 ENDWHILE
-                CLAMP_INT iSavedLevel 1 50 (iSavedLevel)    // Max LVL 50
+                CLAMP_INT iSavedLevel 1 52 (iSavedLevel)    // Max LVL 50
                 //CLEO_CALL limit_max_min_value_int 0 iSavedLevel 50 1 (iSavedLevel)   // Max LVL 50
                 WRITE_INT_TO_INI_FILE iSavedLevel "CLEO\SpiderJ16D\config.ini" "config" "setA"
                 WRITE_FLOAT_TO_INI_FILE fCurrentLevel "CLEO\SpiderJ16D\config.ini" "config" "setB"
@@ -798,7 +798,12 @@ unlock_spiderman_suits:
                 WRITE_INT_TO_INI_FILE 7319 "CLEO\SpiderJ16D\config.ini" "CODE" "suit40"
                 WRITE_INT_TO_INI_FILE 8319 "CLEO\SpiderJ16D\config.ini" "CODE" "suit41"
                 WRITE_INT_TO_INI_FILE 4913 "CLEO\SpiderJ16D\config.ini" "CODE" "suit42"
-                BREAK                                               
+                BREAK     
+            CASE 52 //Group #17 ID: 40   //extra
+                WRITE_INT_TO_INI_FILE 2846 "CLEO\SpiderJ16D\config.ini" "CODE" "suit46"
+                WRITE_INT_TO_INI_FILE 1985 "CLEO\SpiderJ16D\config.ini" "CODE" "suit47"
+                WRITE_INT_TO_INI_FILE 6744 "CLEO\SpiderJ16D\config.ini" "CODE" "suit48"
+                BREAK                                                          
             DEFAULT
                 BREAK
         ENDSWITCH
