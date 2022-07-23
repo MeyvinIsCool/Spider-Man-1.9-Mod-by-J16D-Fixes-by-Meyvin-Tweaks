@@ -22,7 +22,7 @@ LVAR_INT LRStick UDStick iRandomVal
 LVAR_INT flag_enemy1_killed flag_enemy2_killed enemys_kills_counter iTempVar
 
 GET_PLAYER_CHAR 0 player_actor
-USE_TEXT_COMMANDS FALSE
+USE_TEXT_COMMANDS FALSE  
 GOSUB REQUEST_Animations
 GOSUB REQUEST_Web_Animations
 GOSUB load_and_create_entities
@@ -30,9 +30,6 @@ GOSUB load_and_create_entities
 WHILE IS_CAR_WAITING_FOR_WORLD_COLLISION veh
     WAIT 0
 ENDWHILE
-IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_cd.cs"
-    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_cd.cs" veh char[0] char[1]  // police_chase
-ENDIF
 flag_enemy1_killed = FALSE
 flag_enemy2_killed = FALSE
 
@@ -1654,7 +1651,7 @@ load_and_create_entities:
     MARK_MODEL_AS_NO_LONGER_NEEDED MICRO_UZI
     MARK_MODEL_AS_NO_LONGER_NEEDED MP5LNG
     MARK_MODEL_AS_NO_LONGER_NEEDED TEC9
-    //REMOVE_DECISION_MAKER iTempVar
+    //REMOVE_DECISION_MAKER iTempVar     
 RETURN
 
 generate_random_weapon:
