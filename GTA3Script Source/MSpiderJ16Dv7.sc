@@ -2152,7 +2152,7 @@ ProcessGame_and_DrawItems_SUITS:
             iMaxRowQuantity = 25   //10th Row 
         ENDIF   
     ENDIF  
-    IF iMaxRowQuantity >= 20
+    IF iMinRowSuitQuantity >= 21
         IF iActiveRow = 6
             CLAMP_INT iActiveCol 1 3 (iActiveCol)   //Limit 3 suits selection on 10th Row
         ENDIF  
