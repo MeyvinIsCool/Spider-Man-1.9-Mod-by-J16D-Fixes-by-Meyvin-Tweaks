@@ -98,7 +98,7 @@ kills_counter = 0
 flag_player_hit_counter = 1
 SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
-    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 2 803 808    //{id} {mission_id} {text1_id} {text2_id}
+    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 803 808    //{id} {mission_id} {text1_id} {text2_id}
 ENDIF   
 
 main_loop:
