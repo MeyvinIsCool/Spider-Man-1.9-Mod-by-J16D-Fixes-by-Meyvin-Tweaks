@@ -860,17 +860,7 @@ draw_crime_mission_labels:
     sx = 140.0
     sy = 90.0
     SWITCH iTempVar2    //mission_id
-        CASE 0  //Main Mission
-            USE_TEXT_COMMANDS FALSE
-            SET_SPRITES_DRAW_BEFORE_FADE TRUE
-            DRAW_SPRITE idMainMission (px py) (sx sy) (255 255 255 250)
-            BREAK
-        CASE 1  //Side Mission
-            USE_TEXT_COMMANDS FALSE
-            SET_SPRITES_DRAW_BEFORE_FADE TRUE
-            DRAW_SPRITE idSideMission (px py) (sx sy) (255 255 255 250)
-            BREAK
-        CASE 2  //Crime Alert
+        CASE 0  //Crime Alert
             USE_TEXT_COMMANDS FALSE
             SET_SPRITES_DRAW_BEFORE_FADE TRUE
             DRAW_SPRITE idCrimeReport (px py) (sx sy) (255 255 255 250)

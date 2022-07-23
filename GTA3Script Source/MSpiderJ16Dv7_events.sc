@@ -109,7 +109,7 @@ car_chase_event:
                 ADD_SPRITE_BLIP_FOR_COORD x[1] y[1] z[1] RADAR_SPRITE_ENEMYATTACK (iEventBlip)
                 GOSUB play_sfx_start_event_alert
                 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
-                    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 2 801 808    //{id} {mission_id} {text1_id} {text2_id}
+                    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 801 808    //{id} {mission_id} {text1_id} {text2_id}
                 ENDIF                
 
                 WHILE idZone[1] = idZone[0]
@@ -136,7 +136,7 @@ car_chase_event:
                                 STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_cc.cs" x[1] y[1] z[1] // car_chase_mission
                             ENDIF
                             IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
-                                STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 2 801 808    //{id} {mission_id} {text1_id} {text2_id}
+                                STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 801 808    //{id} {mission_id} {text1_id} {text2_id}
                             ENDIF                             
                             WAIT 1000
                             WHILE flag_player_on_mission > 0
