@@ -871,7 +871,7 @@ draw_crime_mission_labels:
     GET_FIXED_XY_ASPECT_RATIO 140.0 20.0 (sx sy)
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (px py) (sx sy) (0 0 0 0) (1.0) (0 0 0 0) (255 255 253 230) iTempVar3 19 0.0 0.0
     USE_TEXT_COMMANDS FALSE
-    px = 580.0
+    px = 578.0
     py = 127.5
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (px py) (sx sy) (0 0 0 0) (1.0) (0 0 0 0) (255 255 253 230) iTempVar4 15 -30.0 0.0
     USE_TEXT_COMMANDS FALSE

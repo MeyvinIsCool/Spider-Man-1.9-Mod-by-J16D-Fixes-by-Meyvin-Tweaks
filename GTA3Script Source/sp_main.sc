@@ -71,8 +71,6 @@ CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deacti
 
 CONST_INT player 0
 
-
-
 SCRIPT_START
 {
 SCRIPT_NAME sp_main
@@ -149,7 +147,7 @@ main_loop:
                 WHILE CLEO_CALL isActorInWater 0 player_actor
                     WAIT 0
                 ENDWHILE
-            ENDIF
+            ENDIF              
 
             IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -5.0) (1 1 0 0 0)
                 //fix
@@ -175,6 +173,7 @@ main_loop:
                         ENDIF
                     ENDIF
                 ENDIF
+                
                 //-+-- Wall Check
                 IF CLEO_CALL isClearInSight 0 player_actor (0.0 1.5 0.0) (1 0 0 0 0)    //Front
                     IF CLEO_CALL is_Collision_wall_found 0 player_actor 1 (1 0 0 0 0) // 0:center || 1:left || 2:right
@@ -470,6 +469,7 @@ main_loop:
     ENDIF
 
     WAIT 0
+
 GOTO main_loop
 
 does_skill_Air_Tricks_enabled:
@@ -1089,28 +1089,23 @@ destroyWeb:
 RETURN
 
 createWeb_Wall:
-    IF NOT DOES_CHAR_EXIST iWebActor              // LOAD FOR THE MODELS
+    IF NOT DOES_CHAR_EXIST iWebActor         // LOAD FOR THE MODELS
     AND NOT DOES_CHAR_EXIST iWebActorR
     AND NOT DOES_OBJECT_EXIST baseObject
     AND NOT DOES_OBJECT_EXIST baseObjectR
-        REQUEST_MODEL 1598  
+        REQUEST_MODEL 1598
         LOAD_SPECIAL_CHARACTER 9 wmt
         LOAD_ALL_MODELS_NOW
-        CREATE_OBJECT 1598 0.0 0.0 0.0 baseObject
-    	SET_OBJECT_PROOFS baseObject 1 1 1 1 1
-	    SET_OBJECT_COLLISION baseObject 0
-	    SET_OBJECT_SCALE baseObject 0.01
+        CREATE_OBJECT_NO_SAVE 1598 0.0 0.0 0.0 FALSE FALSE (baseObject)
+        SET_OBJECT_COLLISION baseObject FALSE
+        SET_OBJECT_RECORDS_COLLISIONS baseObject FALSE
+        SET_OBJECT_SCALE baseObject 0.01
         SET_OBJECT_PROOFS baseObject (1 1 1 1 1)
-        MARK_MODEL_AS_NO_LONGER_NEEDED 1598
-        REQUEST_MODEL 1598  
-        LOAD_SPECIAL_CHARACTER 9 wmt
-        LOAD_ALL_MODELS_NOW       
         CREATE_OBJECT 1598 0.0 0.0 0.0 baseObjectR
     	SET_OBJECT_PROOFS baseObjectR 1 1 1 1 1
 	    SET_OBJECT_COLLISION baseObjectR 0
 	    SET_OBJECT_SCALE baseObjectR 0.01
-        SET_OBJECT_PROOFS baseObjectR (1 1 1 1 1)        
-        MARK_MODEL_AS_NO_LONGER_NEEDED 1598
+        SET_OBJECT_PROOFS baseObjectR (1 1 1 1 1)          
         CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (0.0 0.0 -10.0) iWebActor        // CREATES THE WEBS
         CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (0.0 0.0 -10.0) iWebActorR
         SET_CHAR_COLLISION iWebActor 0
@@ -1120,7 +1115,8 @@ createWeb_Wall:
         UNLOAD_SPECIAL_CHARACTER 9
         ATTACH_CHAR_TO_OBJECT iWebActor baseObject 0.0 0.0 0.0 0 0.0 0
         ATTACH_CHAR_TO_OBJECT iWebActorR baseObjectR 0.0 0.0 0.0 0 0.0 0
-
+        MARK_MODEL_AS_NO_LONGER_NEEDED 1598
+        UNLOAD_SPECIAL_CHARACTER 9
     ENDIF
 RETURN
 
@@ -2296,30 +2292,31 @@ spideyFrontWall:
         ENDIF
 
         // Web Zip While Wall Running (COMPLETED) - Scripted By MeyvinIsCool
+        IF NOT CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 15.0) (1 0 0 0 0)
             IF NOT IS_CHAR_PLAYING_ANIM player_actor "zip_point_wall_run_up"
             AND IS_BUTTON_PRESSED PAD1 CROSS
             AND IS_BUTTON_JUST_PRESSED PAD1 CIRCLE // ~k~~PED_FIREWEAPON~
             AND NOT IS_BUTTON_PRESSED PAD1 SQUARE // ~k~~PED_JUMPING~
             AND 0 > UDStick  //Up
-
-                TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "zip_point_wall_run_up" "spider" 25.0 (1 1 1 0) -2
-                WAIT 0
-                SET_CHAR_ANIM_SPEED player_actor "zip_point_wall_run_up" 1.35
                 GOSUB REQUEST_webAnimations
                 GOSUB destroyWeb_Wall
                 GOSUB createWeb_Wall
-                TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("LA_airToLampA" "mweb") 44.0 (0 1 1 1) -2
-                TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("SH_airToLampA" "mweb") 44.0 (0 1 1 1) -2
+                TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "zip_point_wall_run_up" "spider" 25.0 (1 1 1 0) -2
                 WAIT 0
-                SET_CHAR_ANIM_SPEED iWebActor "LA_airToLampA" 0.76     
-                SET_CHAR_ANIM_SPEED iWebActorR "SH_airToLampA" 0.76           
+                SET_CHAR_ANIM_SPEED player_actor "zip_point_wall_run_up" 1.35
+                TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("w_front_veh" "mweb") 57.0 (0 1 1 1) -1
+                TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("w_front_veh" "mweb") 57.0 (0 1 1 1) -1
+                WAIT 0
+                SET_CHAR_ANIM_SPEED iWebActor "w_front_veh" 2.35      
+                SET_CHAR_ANIM_SPEED iWebActorR "w_front_veh" 2.35    
                 GOSUB playWebSound
                 timera = 0
                 WHILE 500 > timera
                     CLEO_CALL addForceToChar 0 player_actor 0.0 -2.0 1.2 10.0
                     IF DOES_OBJECT_EXIST baseObject
-                        ATTACH_OBJECT_TO_CHAR baseObject player_actor (-0.26 -0.26 0.0) (77.5 0.0 10.0)
-                        ATTACH_OBJECT_TO_CHAR baseObjectR player_actor (0.0 -0.26 0.0) (77.5 0.0 -10.0)
+                    AND DOES_OBJECT_EXIST baseObjectR
+                        ATTACH_OBJECT_TO_CHAR baseObject player_actor (-0.75 4.5 6.7) (75.0 0.0 0.0)
+                        ATTACH_OBJECT_TO_CHAR baseObjectR player_actor (0.3 4.5 6.7) (75.0 0.0 0.0)
                     ENDIF                                    
                     WAIT 0
                 ENDWHILE
@@ -2327,6 +2324,7 @@ spideyFrontWall:
                 WHILE 500 > timera
                     CLEO_CALL addForceToChar 0 player_actor 0.0 1.6 2.0 22.0
                     IF DOES_OBJECT_EXIST baseObject
+                    AND DOES_OBJECT_EXIST baseObjectR
                         DETACH_OBJECT baseObject (0.0 0.0 0.0) 0
                         DETACH_OBJECT baseObjectR (0.0 0.0 0.0) 0
                     ENDIF
@@ -2349,7 +2347,10 @@ spideyFrontWall:
                     FREEZE_CHAR_POSITION player_actor FALSE
                 ENDIF
             ENDIF
-
+        ELSE
+            // do nothing
+        
+        ENDIF
         //reset
         IF IS_KEY_PRESSED VK_TAB
         AND IS_KEY_PRESSED VK_SPACE
