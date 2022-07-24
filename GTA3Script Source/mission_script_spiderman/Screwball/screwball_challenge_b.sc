@@ -2,6 +2,7 @@
 // Custom Mission (CM)
 // Spider-Man Mod for GTA SA c.2022
 // ScrewBall Challenge PEM
+// Fixes by MeyvinIsCool
 // Original Version: Shine GUI - CLEO - Sanny Builder for Tuning Mod V2
 // Official Page: https://forum.mixmods.com.br/f16-utilidades/t694-shine-gui-crie-interfaces-personalizadas
 // Edited by MeyvinIsCool Version: CLEO - gta3script
@@ -91,7 +92,7 @@ LVAR_INT randomVal
 LVAR_INT flag_photo_mode flag_was_key_pressed
 LVAR_INT iLanguage
 LVAR_INT iSfx[3]
-LVAR_FLOAT fScoreCounter
+LVAR_FLOAT fScoreCounter sx sy
 LVAR_INT iScoreCounter
 LVAR_INT counter
 LVAR_FLOAT cx[7] cy[7] cz[7] czAngle[13]
@@ -791,7 +792,7 @@ mission_failed:
 	MISSION_HAS_FINISHED
 	WHILE NOT IS_PLAYER_PLAYING player_actor
 		WAIT 0
-	ENDWHILE     
+	ENDWHILE    
 RETURN
 //-+-----------------------------------------------------------------------------------------
 
@@ -940,12 +941,9 @@ animSequence:
                 ENDIF
 
                 IF flag_was_key_pressed = 0 // 0:false||1:true
-                    CLEO_CALL linearInterpolation 0 (0.444 0.556 currentTime) (0.0 2500.0) (fScoreCounter)
-                    CLEO_CALL barFunc 0 fScoreCounter v1 (szBarX szBarY)
-                    SET_SPRITES_DRAW_BEFORE_FADE FALSE
-                    //DRAW_RECT (v1 129.75) (szBarX 8.45) (205 61 155 235)  // - 1280 x 720
-                    DRAW_RECT (v1 129.75) (szBarX 6.45) (205 61 155 235)    // - 1980 x 1080
-                    USE_TEXT_COMMANDS FALSE
+                    CLEO_CALL linearInterpolation 0 (0.444 0.556 currentTime) (0.0 2500.0) (fScoreCounter)                        
+                    CLEO_CALL barFunc 0 fScoreCounter 176.5 129.65 v1 v2 szBarX szBarY   // Compatible With Every Resolution
+                    fScoreCounter +=@ 2.5     
                     //PRINT_FORMATTED_NOW "pos:%f.00 xs:%f.00 ys:%f.00" 100 v1 sizeX sizeY  //debug
 
                     IF  IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~
@@ -966,8 +964,7 @@ animSequence:
                             GOSUB draw_screen_items
                             GOSUB draw_screen_counter
                             USE_TEXT_COMMANDS FALSE
-                            //DRAW_RECT (v1 129.75) (szBarX 8.45) (205 61 155 235)  // - 1280 x 720
-                            DRAW_RECT (v1 129.75) (szBarX 6.45) (205 61 155 235)    // - 1980 x 1080        
+                            DRAW_RECT (v1 v2) (szBarX szBarY) (205 61 155 235)  
                             //PRINT_FORMATTED_NOW "TIMEA:%i" 1 timera  //debug                  
                             WAIT 0
                         ENDWHILE
@@ -986,8 +983,7 @@ animSequence:
                                 GOSUB draw_screen_counter
                             ENDIF
                             USE_TEXT_COMMANDS FALSE
-                            DRAW_RECT (v1 129.75) (szBarX 8.45) (205 61 155 235)  // - 1280 x 720
-                            //DRAW_RECT (v1 129.75) (szBarX 6.45) (205 61 155 235)    // - 1980 x 1080
+                            DRAW_RECT (v1 v2) (szBarX szBarY) (205 61 155 235)
                             //PRINT_FORMATTED_NOW "TIMEB:%i" 1 timera  //debug
                             WAIT 0
                         ENDWHILE
@@ -1197,11 +1193,12 @@ draw_indicator:
 RETURN
 
 draw_screen_items:
+    sx = 450.0
+    sy = 100.0
     CLEO_CALL getCurrentResolution 0 (sizeX sizeY)
     CLEO_CALL GetXYSizeInScreenScaleByUserResolution 0 (sizeX sizeY) (sizeX sizeY)
     DRAW_SPRITE tPBback (320.0 224.0) (sizeX sizeY) (255 255 255 235)
-    CLEO_CALL GetXYSizeInScreenScaleByUserResolution 0 (900.0 180.0) (sizeX sizeY)
-    DRAW_SPRITE tPBbar0 (320.0 130.0) (sizeX sizeY) (255 255 255 235)
+    DRAW_SPRITE tPBbar0 (320.0 130.0) (sx sy) (255 255 255 235)
     USE_TEXT_COMMANDS FALSE
 RETURN
 
@@ -1946,21 +1943,20 @@ getCurrentResolution:
 CLEO_RETURN 0 (fresX fresY)
 }
 {
-//CLEO_CALL barFunc 0 /*size*/1000.0 /*pos*/posX (/*size*/sizeX sizeY)
+//CLEO_CALL barFunc 0 fSize posx posy v1 v2 szBarX szBarY	//max size 2500.0       
 barFunc:
-    LVAR_FLOAT sizeBar   // In
-    LVAR_FLOAT var[2]
-    LVAR_FLOAT xSize ySize
-    //LVAR_FLOAT fresX fresY
-    //CLEO_CALL getCurrentResolution 0 (fresX fresY)
-    var[1] = sizeBar
-    var[1] /= 2500.0 //fresX
-    var[1] *= 668.0
-    CLEO_CALL GetXYSizeInScreenScaleByUserResolution 0 (var[1] 181.0) (xSize ySize)
-    var[0] = xSize
-    var[0] /= 2.0
-    var[0] += 224.0                                // 177.0 - 1280 x 720  //192.5 - 1440 x 900 224.0 - 1980 x 1080
-CLEO_RETURN 0 var[0] xSize ySize
+    LVAR_FLOAT sizeBar posx posy  // In
+    LVAR_FLOAT copyPosX xSize ySize
+    xSize = sizeBar
+    xSize /= 2500.0 	//fresX
+    xSize *= 333.0
+    ySize = 8.3
+    copyPosX = xSize
+    copyPosX /= 2.0
+    copyPosX += posx 	//270+(120/2)= 330
+	USE_TEXT_COMMANDS FALSE
+    DRAW_RECT (copyPosX posy) (xSize ySize) (205 61 155 235)
+CLEO_RETURN 0 copyPosX posy xSize ySize                         // Compatible With Every Resolution
 }
 {
 //CLEO_CALL max_min_value_float 0 fValue fMax fMin (fValue) 
