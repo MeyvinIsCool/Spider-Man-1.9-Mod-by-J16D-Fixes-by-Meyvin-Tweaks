@@ -1,7 +1,7 @@
 // by J16D
 // Reservoir Scripts
 // Spider-Man Mod for GTA SA c.2018 - 2021
-// Fixes And Custom Reservoirs By MeyvinIsCool
+// Custom Added Reservoirs By MeyvinIsCool
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
@@ -82,9 +82,10 @@ WHILE TRUE
     IF IS_PLAYER_PLAYING player 
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
         GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
+        GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
-            GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
             IF isInMainMenu = 0     //1:true 0: false
+                GET_CLEO_SHARED_VAR varOnmission (onmission)
                 READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
@@ -137,8 +138,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF            
+            ENDIF
         ENDIF
-    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -353,6 +354,7 @@ WHILE TRUE
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
+                GET_CLEO_SHARED_VAR varOnmission (onmission)
                 READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
@@ -405,8 +407,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
+            ENDIF
         ENDIF
-    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -626,6 +628,7 @@ WHILE TRUE
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
+                GET_CLEO_SHARED_VAR varOnmission (onmission)
                 READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
@@ -678,8 +681,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
+            ENDIF
         ENDIF
-    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -900,6 +903,7 @@ WHILE TRUE
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
+                GET_CLEO_SHARED_VAR varOnmission (onmission)
                 READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
@@ -952,8 +956,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
+            ENDIF
         ENDIF
-    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -1173,6 +1177,7 @@ WHILE TRUE
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
+                GET_CLEO_SHARED_VAR varOnmission (onmission)
                 READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
@@ -1225,8 +1230,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
+            ENDIF
         ENDIF
-    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -1448,6 +1453,7 @@ WHILE TRUE
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
+                GET_CLEO_SHARED_VAR varOnmission (onmission)
                 READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
@@ -1500,8 +1506,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
+            ENDIF
         ENDIF
-    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -1723,6 +1729,7 @@ WHILE TRUE
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
+                GET_CLEO_SHARED_VAR varOnmission (onmission)
                 READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
@@ -1775,8 +1782,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
+            ENDIF
         ENDIF
-    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -1998,6 +2005,7 @@ WHILE TRUE
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
+                GET_CLEO_SHARED_VAR varOnmission (onmission)
                 READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
@@ -2050,8 +2058,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
+            ENDIF
         ENDIF
-    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -2273,6 +2281,7 @@ WHILE TRUE
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
+                GET_CLEO_SHARED_VAR varOnmission (onmission)
                 READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
@@ -2325,8 +2334,8 @@ WHILE TRUE
                     ENDIF
                 ENDIF
             ENDIF
+            ENDIF
         ENDIF
-    ENDIF
     WAIT 0
 ENDWHILE
 
@@ -2593,7 +2602,6 @@ addForceToChar:
     SET_CHAR_VELOCITY scplayer x[1] y[1] z[1]
 CLEO_RETURN 0
 }
-
 
 //-+---CONSTANTS--------------------
 //GLOBAL_CLEO_SHARED_VARS
