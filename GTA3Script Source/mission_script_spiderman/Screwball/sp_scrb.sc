@@ -159,13 +159,13 @@ WHILE TRUE
                                             WAIT 0
                                         ENDWHILE
                                         WAIT 0
-                                        GENERATE_RANDOM_INT_IN_RANGE 1 3 iMissionVal
+                                        //GENERATE_RANDOM_INT_IN_RANGE 1 3 iMissionVal      // Removed A Mission
+                                        GENERATE_RANDOM_INT_IN_RANGE 1 2 iMissionVal        // Only Mission 1 Going To Start !
                                         //PRINT_FORMATTED_NOW "iMissionVal %i" 1000 iMissionVal // DEBUG TO CHECK MISSION VARIATION
                                         USE_TEXT_COMMANDS TRUE
                                         USE_TEXT_COMMANDS FALSE
                                         IF iMissionVal = 1
                                             IF DOES_FILE_EXIST "CLEO\SpiderJ16D\Screwball Missions\screwball_challenge_a.cm"
-
                                                 WAIT 100
                                                 flag_player_on_mission = 1
                                                 WRITE_MEMORY 0xA476AC 4 flag_player_on_mission FALSE 	// $ONMISSION = 1
@@ -179,22 +179,7 @@ WHILE TRUE
                                             WAIT 1000
                                         ENDIF
                                     ENDIF
-                                    IF iMissionVal = 2
-                                        IF DOES_FILE_EXIST "CLEO\SpiderJ16D\Screwball Missions\screwball_challenge_b.cm"
-
-                                            WAIT 100
-                                            flag_player_on_mission = 1
-                                            WRITE_MEMORY 0xA476AC 4 flag_player_on_mission FALSE 	// $ONMISSION = 1
-                                            WAIT 0
-                                            LOAD_AND_LAUNCH_CUSTOM_MISSION "SpiderJ16D\Screwball Missions\screwball_challenge_b"
-                                            //PRINT_FORMATTED_NOW "Mission 2!" 1000 //DEBUG
-                                        ELSE
-                                            PRINT_FORMATTED_NOW "~r~Error! Mission 2 Not Found! Re-Install Spider-Man Mod!" 1500
-                                            iMissionVal = 0
-                                        ENDIF
-                                        WAIT 1000  
-                                    ENDIF 
-                                    // Third Mission
+                                    // Second Challange
                                 ENDIF                        
                             ENDWHILE
                         ELSE
