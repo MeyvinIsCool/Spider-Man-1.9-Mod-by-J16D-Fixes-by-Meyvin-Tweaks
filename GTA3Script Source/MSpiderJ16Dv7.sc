@@ -4293,7 +4293,7 @@ ProcessGame_and_DrawItems_SKILLS:
     xCoord = 412.5
     yCoord = 175.0
     USE_TEXT_COMMANDS FALSE
-    DRAW_RECT (xCoord yCoord) (0.25 20.0) (255 255 255 180) //center
+    DRAW_RECT (xCoord yCoord) (0.5 20.0) (255 255 255 180) //center
     xCoord = 412.5
     yCoord = 175.0
     USE_TEXT_COMMANDS FALSE
@@ -4302,11 +4302,11 @@ ProcessGame_and_DrawItems_SKILLS:
     xCoord = 376.0
     yCoord = 180.0
     USE_TEXT_COMMANDS FALSE
-    DRAW_RECT (xCoord yCoord) (0.25 10.0) (255 255 255 180) //left
+    DRAW_RECT (xCoord yCoord) (0.5 10.0) (255 255 255 180) //left
     xCoord = 449.0
     yCoord = 180.0
     USE_TEXT_COMMANDS FALSE
-    DRAW_RECT (xCoord yCoord) (0.25 10.0) (255 255 255 180) //right
+    DRAW_RECT (xCoord yCoord) (0.5 10.0) (255 255 255 180) //right
 
     xCoord = 412.5
     yCoord = 150.0
