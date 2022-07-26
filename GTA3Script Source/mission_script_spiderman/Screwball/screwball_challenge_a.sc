@@ -826,7 +826,7 @@ animSequence:
 
                 IF flag_was_key_pressed = 0 // 0:false||1:true
                     CLEO_CALL linearInterpolation 0 (0.444 0.556 currentTime) (0.0 2500.0) (fScoreCounter)                        
-                    CLEO_CALL barFunc 0 fScoreCounter 176.5 129.65 v1 v2 szBarX szBarY   // Compatible With Every Resolution
+                    CLEO_CALL barFunc 0 fScoreCounter 175.5 129.65 v1 v2 szBarX szBarY   // Compatible With Every Resolution
                     fScoreCounter +=@ 2.5     
                     //PRINT_FORMATTED_NOW "pos:%f.00 xs:%f.00 ys:%f.00" 100 v1 sizeX sizeY  //debug
 
@@ -1077,7 +1077,7 @@ draw_indicator:
 RETURN
 
 draw_screen_items:
-    sx = 450.0
+    sx = 453.0
     sy = 100.0
     CLEO_CALL getCurrentResolution 0 (sizeX sizeY)
     CLEO_CALL GetXYSizeInScreenScaleByUserResolution 0 (sizeX sizeY) (sizeX sizeY)
@@ -1246,7 +1246,7 @@ draw_interact_key_press:
         ENDIF
     ENDIF
     //SET_SPRITES_DRAW_BEFORE_FADE TRUE
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (520.0 128.75) (0.0 0.0) (0 0 0 0) (1.0) (0 0 0 0) (255 255 253 230) idGXT 8 0.0
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (537.0 128.45) (0.0 0.0) (0 0 0 0) (1.0) (0 0 0 0) (255 255 253 230) idGXT 8 0.0
     USE_TEXT_COMMANDS FALSE
 RETURN
 
