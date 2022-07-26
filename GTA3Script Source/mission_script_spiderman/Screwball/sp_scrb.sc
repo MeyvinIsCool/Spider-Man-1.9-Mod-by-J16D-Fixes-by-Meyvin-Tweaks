@@ -268,7 +268,7 @@ draw_key_press:
     ELSE
         IF inputType = MOUSE
         
-            idGXT = 161 // k~~VEHICLE_ENTER_EXIT~
+            idGXT = 161 // ~t~
         ENDIF
     ENDIF
     CLEO_CALL GetXYSizeInScreen4x3ScaleBy640x480 0 167.0 20.0 xSize ySize
