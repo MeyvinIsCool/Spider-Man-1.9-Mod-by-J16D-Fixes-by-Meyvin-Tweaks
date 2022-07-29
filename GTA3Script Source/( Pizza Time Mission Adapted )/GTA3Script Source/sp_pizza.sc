@@ -63,9 +63,6 @@ WAIT 0
 WAIT 0
 WAIT 0
 
-flag_player_on_mission = 0
-WRITE_MEMORY 0xA476AC 4 flag_player_on_mission FALSE 	// $ONMISSION = 0
-
 start:
 ADD_SPRITE_BLIP_FOR_COORD -1721.506 1354.953 7.186 RADAR_SPRITE_CASH (iEventBlip) //RADAR_SPRITE_WAYPOINT
 
@@ -74,7 +71,7 @@ WHILE TRUE
         GOSUB readVars
         IF toggleSpiderMod = 1  //TRUE
             IF isInMainMenu = 0     //1:true 0: false
-                IF LOCATE_CHAR_ANY_MEANS_3D player_actor -1721.506 1354.953 7.186 1.25 1.25 1.25 TRUE
+                IF LOCATE_STOPPED_CHAR_ANY_MEANS_3D player_actor -1721.506 1354.953 7.186 1.25 1.25 1.25 TRUE
                 //IF LOCATE_STOPPED_CHAR_ANY_MEANS_3D player_actor 0.0 0.0 0.0 1.25 1.25 1.25 TRUE
                     IF flag_player_on_mission = 0
                         REMOVE_BLIP iEventBlip
@@ -133,7 +130,7 @@ SET_CAMERA_BEHIND_PLAYER
 flag_player_hit_counter = 1
 SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON  
 deliver = 0
-iTime =  145000  // 145 sec    
+iTime =  165000  // 165 sec    
 timerb = 0   
 GOSUB create_customer1 
             
@@ -265,10 +262,10 @@ create_pizzaStack:
     DELETE_RENDER_OBJECT i[4]
     DELETE_RENDER_OBJECT i[5]
     CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.35) (0.0 0.0 0.0) i[0]
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.2) (0.0 0.0 0.0) i[1]    
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.3) (0.0 0.0 0.0) i[1]    
     CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.25) (0.0 0.0 0.0) i[2] 
     CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.2) (0.0 0.0 0.0) i[3] 
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.16) (0.0 0.0 0.0) i[4]  
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.15) (0.0 0.0 0.0) i[4]  
     CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.1) (0.0 0.0 0.0) i[5]  
 RETURN
 
@@ -291,7 +288,7 @@ create_customer1:
 RETURN 
 
 deliver_customer1:
-    IF LOCATE_CHAR_ANY_MEANS_3D player_actor -1929.76 1187.325 45.445 1.2 1.2 1.4 FALSE
+    IF LOCATE_STOPPED_CHAR_ANY_MEANS_3D player_actor -1929.76 1187.325 45.445 1.2 1.2 1.4 TRUE
         REMOVE_BLIP iEventBlip
 		REMOVE_SPHERE iEventBlip2
         GOSUB attach_pizza_1
@@ -334,7 +331,7 @@ create_customer2:
 RETURN 
 
 deliver_customer2:
-    IF LOCATE_CHAR_ANY_MEANS_3D player_actor -1605.571 788.315 6.82 1.2 1.2 1.4 TRUE
+    IF LOCATE_STOPPED_CHAR_ANY_MEANS_3D player_actor -1605.571 788.315 6.82 1.2 1.2 1.4 TRUE
         REMOVE_BLIP iEventBlip
 		REMOVE_SPHERE iEventBlip2    
         GOSUB attach_pizza_2
@@ -376,7 +373,7 @@ create_customer3:
 RETURN 
 
 deliver_customer3:
-    IF LOCATE_CHAR_ANY_MEANS_3D player_actor -1875.622 1125.53 45.445 1.2 1.2 1.4 FALSE
+    IF LOCATE_STOPPED_CHAR_ANY_MEANS_3D player_actor -1875.622 1125.53 45.445 1.2 1.2 1.4 TRUE
         REMOVE_BLIP iEventBlip
         REMOVE_SPHERE iEventBlip2
         GOSUB attach_pizza_3
@@ -418,7 +415,7 @@ create_customer4:
 RETURN 
 
 deliver_customer4:
-    IF LOCATE_CHAR_ANY_MEANS_3D player_actor -2014.835 785.569 45.445 1.2 1.2 1.4 FALSE
+    IF LOCATE_STOPPED_CHAR_ANY_MEANS_3D player_actor -2014.835 785.569 45.445 1.2 1.2 1.4 TRUE
         REMOVE_BLIP iEventBlip
         REMOVE_SPHERE iEventBlip2
         GOSUB attach_pizza_4
@@ -460,7 +457,7 @@ create_customer5:
 RETURN 
 
 deliver_customer5:
-    IF LOCATE_CHAR_ANY_MEANS_3D player_actor -2111.440674 327.662842 35.164063 1.2 1.2 1.4 FALSE
+    IF LOCATE_STOPPED_CHAR_ANY_MEANS_3D player_actor -2111.440674 327.662842 35.164063 1.2 1.2 1.4 TRUE
         REMOVE_BLIP iEventBlip
         REMOVE_SPHERE iEventBlip2        
         GOSUB attach_pizza_5
@@ -502,7 +499,7 @@ create_customer6:
 RETURN 
 
 deliver_customer6:
-    IF LOCATE_CHAR_ANY_MEANS_3D player_actor -1705.179 785.739 24.890 1.2 1.2 1.4 FALSE
+    IF LOCATE_STOPPED_CHAR_ANY_MEANS_3D player_actor -1705.179 785.739 24.890 1.2 1.2 1.4 TRUE
         REMOVE_BLIP iEventBlip
         REMOVE_SPHERE iEventBlip2        
         GOSUB attach_pizza_6
