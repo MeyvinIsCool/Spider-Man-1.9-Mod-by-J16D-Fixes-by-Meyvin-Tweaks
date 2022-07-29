@@ -50,7 +50,7 @@ LVAR_INT iRandomVal2 iTotalTime cTimerb_A iMinutes iSeconds iTime iExtraTimeScor
 LVAR_INT flag_player_on_mission flag_player_hit_counter
 LVAR_INT iEventBlip iEventBlip2
 LVAR_INT deliver iObj
-LVAR_INT cust
+LVAR_INT cust1 cust2 cust3 cust4 cust5 cust6
 LVAR_INT i[6]
 LVAR_INT sfx
 
@@ -131,12 +131,11 @@ CAMERA_PERSIST_TRACK FALSE
 CAMERA_PERSIST_POS FALSE
 SET_CAMERA_BEHIND_PLAYER   
 flag_player_hit_counter = 1
-SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON     
-GOSUB create_customer1
-
+SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON  
 deliver = 0
 iTime =  145000  // 145 sec    
-timerb = 0    
+timerb = 0   
+GOSUB create_customer1 
             
 main_loop:
     IF IS_PLAYER_PLAYING 0
@@ -162,8 +161,12 @@ main_loop:
             IF deliver = 4
                 GOSUB draw_timer
                 GOSUB deliver_customer5
-            ENDIF                      
-            IF deliver >= 5
+            ENDIF    
+            IF deliver = 5
+                GOSUB draw_timer
+                GOSUB deliver_customer6
+            ENDIF                               
+            IF deliver >= 6
                 GOSUB mission_passed
             ENDIF                           
             IF timerb > iTime
@@ -260,26 +263,31 @@ create_pizzaStack:
     DELETE_RENDER_OBJECT i[2]
     DELETE_RENDER_OBJECT i[3]
     DELETE_RENDER_OBJECT i[4]
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.3) (0.0 0.0 0.0) i[0]
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.25) (0.0 0.0 0.0) i[1]    
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.2) (0.0 0.0 0.0) i[2] 
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.15) (0.0 0.0 0.0) i[3] 
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.1) (0.0 0.0 0.0) i[4]  
+    DELETE_RENDER_OBJECT i[5]
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.35) (0.0 0.0 0.0) i[0]
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.2) (0.0 0.0 0.0) i[1]    
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.25) (0.0 0.0 0.0) i[2] 
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.2) (0.0 0.0 0.0) i[3] 
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.16) (0.0 0.0 0.0) i[4]  
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.1) (0.0 0.0 0.0) i[5]  
 RETURN
 
 create_customer1:
-    WAIT 1
-    REQUEST_MODEL SBFYRI
-    WHILE NOT HAS_MODEL_LOADED SBFYRI
+    ADD_SPRITE_BLIP_FOR_COORD (-1929.76 1187.325 45.445) RADAR_SPRITE_WAYPOINT (iEventBlip)
+    ADD_SPHERE (-1929.76 1187.325 45.445) 1.0 (iEventBlip2) 
+    WHILE NOT LOCATE_CHAR_ANY_MEANS_3D player_actor -1929.76 1187.325 45.445 125.5 125.5 125.5 FALSE
+        GOSUB draw_timer
         WAIT 0
     ENDWHILE
-    WAIT 1
-    CREATE_CHAR 5 SBFYRI -1929.76 1189.325 45.445 (cust)
-	SET_CHAR_HEADING cust 183.0 
-	//ADD_BLIP_FOR_COORD -1929.76 1187.325 45.445 (iEventBlip)
-    ADD_SPRITE_BLIP_FOR_COORD (-1929.76 1187.325 45.445) RADAR_SPRITE_WAYPOINT (iEventBlip)
-    ADD_SPHERE (-1929.76 1187.325 45.445) 1.0 (iEventBlip2)    
-	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
+    REQUEST_MODEL SBFYRI
+    WHILE NOT HAS_MODEL_LOADED SBFYRI
+        GOSUB draw_timer
+        WAIT 0
+    ENDWHILE
+    CREATE_CHAR 5 SBFYRI -1929.76 1189.325 45.445 (cust1)
+	SET_CHAR_HEADING cust1 183.0 
+	//ADD_BLIP_FOR_COORD -1929.76 1187.325 45.445 (iEventBlip)  
+	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust1 "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer1:
@@ -304,26 +312,29 @@ attach_pizza_1:
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj
     SET_OBJECT_COLLISION iObj 0 
     SET_OBJECT_PROOFS iObj 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust iObj 0.0 0.0 0.0 5 16 NULL NULL -1
+    TASK_PICK_UP_OBJECT cust1 iObj 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
 
 create_customer2:
-    WAIT 1
-    REQUEST_MODEL OFYST
-    WHILE NOT HAS_MODEL_LOADED OFYST
-        WAIT 0
-    ENDWHILE
-    WAIT 1
-    CREATE_CHAR 5 OFYST -1605.929 788.125 7.63 (cust)
-	SET_CHAR_HEADING cust 348.0 
-	//ADD_BLIP_FOR_COORD -1605.571 788.315 6.82 (iEventBlip)
     ADD_SPRITE_BLIP_FOR_COORD (-1605.571 788.315 6.82) RADAR_SPRITE_WAYPOINT (iEventBlip)
     ADD_SPHERE (-1605.571 788.315 6.82) 1.0 (iEventBlip2)  
-	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
+    WHILE NOT LOCATE_CHAR_ANY_MEANS_3D player_actor -1605.571 788.315 6.82 125.5 125.5 125.5 FALSE
+        GOSUB draw_timer
+        WAIT 0
+    ENDWHILE
+    REQUEST_MODEL OFYST
+    WHILE NOT HAS_MODEL_LOADED OFYST
+        GOSUB draw_timer
+        WAIT 0
+    ENDWHILE
+    CREATE_CHAR 5 OFYST -1605.929 786.825 7.63 (cust2)
+	SET_CHAR_HEADING cust2 348.0 
+	//ADD_BLIP_FOR_COORD -1605.571 788.315 6.82 (iEventBlip)
+	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust2 "WOMAN_IDLESTANCE" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer2:
-    IF LOCATE_CHAR_ANY_MEANS_3D player_actor -1605.571 788.315 6.82 1.2 1.2 1.4 FALSE
+    IF LOCATE_CHAR_ANY_MEANS_3D player_actor -1605.571 788.315 6.82 1.2 1.2 1.4 TRUE
         REMOVE_BLIP iEventBlip
 		REMOVE_SPHERE iEventBlip2    
         GOSUB attach_pizza_2
@@ -334,7 +345,6 @@ deliver_customer2:
         deliver += 1
         MARK_MODEL_AS_NO_LONGER_NEEDED OFYST
         PRINT_FORMATTED_NOW "Pizza Number %i Delivered" 2222 deliver
-        WAIT 300
         GOSUB create_customer3
     ENDIF
 RETURN
@@ -344,22 +354,25 @@ attach_pizza_2:
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj
     SET_OBJECT_COLLISION iObj 0 
     SET_OBJECT_PROOFS iObj 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust iObj 0.0 0.0 0.0 5 16 NULL NULL -1
+    TASK_PICK_UP_OBJECT cust2 iObj 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
 
 create_customer3:
-    WAIT 1
+    ADD_SPRITE_BLIP_FOR_COORD (-1875.622 1125.53 45.445) RADAR_SPRITE_WAYPOINT (iEventBlip)
+    ADD_SPHERE (-1875.622 1125.53 45.445) 1.0 (iEventBlip2) 
+    WHILE NOT LOCATE_CHAR_ANY_MEANS_3D player_actor -1875.622 1125.53 45.445 125.5 125.5 125.5 FALSE
+        GOSUB draw_timer
+        WAIT 0
+    ENDWHILE    
     REQUEST_MODEL HECK1
     WHILE NOT HAS_MODEL_LOADED HECK1
+        GOSUB draw_timer
         WAIT 0
     ENDWHILE
-    WAIT 1
-    CREATE_CHAR 5 HECK1 -1875.622 1125.53 47.145 (cust)
-	SET_CHAR_HEADING cust 90.0 
+    CREATE_CHAR 5 HECK1 -1874.622 1125.53 47.145 (cust3)
+	SET_CHAR_HEADING cust3 90.0 
 	//ADD_BLIP_FOR_COORD -1875.622 1125.53 45.445 (iEventBlip)
-    ADD_SPRITE_BLIP_FOR_COORD (-1875.622 1125.53 45.445) RADAR_SPRITE_WAYPOINT (iEventBlip)
-    ADD_SPHERE (-1875.622 1125.53 45.445) 1.0 (iEventBlip2)     
-	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
+	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust3 "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer3:
@@ -374,7 +387,6 @@ deliver_customer3:
         deliver += 1
         MARK_MODEL_AS_NO_LONGER_NEEDED HECK1
         PRINT_FORMATTED_NOW "Pizza Number %i Delivered" 2222 deliver
-        WAIT 300
         GOSUB create_customer4
     ENDIF
 RETURN
@@ -384,22 +396,25 @@ attach_pizza_3:
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj 
     SET_OBJECT_COLLISION iObj 0 
     SET_OBJECT_PROOFS iObj 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust iObj 0.0 0.0 0.0 5 16 NULL NULL -1
+    TASK_PICK_UP_OBJECT cust3 iObj 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
 
 create_customer4:
-    WAIT 1
-    REQUEST_MODEL HMYRI
-    WHILE NOT HAS_MODEL_LOADED HMYRI
-        WAIT 0
-    ENDWHILE
-    WAIT 1
-    CREATE_CHAR 5 HMYRI -2016.397 784.54 46.245 (cust)
-	SET_CHAR_HEADING cust 270.0 
-	//ADD_BLIP_FOR_COORD -2014.835 785.569 45.445 (iEventBlip)
     ADD_SPRITE_BLIP_FOR_COORD (-2014.835 785.569 45.445) RADAR_SPRITE_WAYPOINT (iEventBlip)
     ADD_SPHERE (-2014.835 785.569 45.445) 1.0 (iEventBlip2)    
-	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
+    WHILE NOT LOCATE_CHAR_ANY_MEANS_3D player_actor -2014.835 785.569 45.445 125.5 125.5 125.5 FALSE
+        GOSUB draw_timer
+        WAIT 0
+    ENDWHILE      
+    REQUEST_MODEL HMYRI
+    WHILE NOT HAS_MODEL_LOADED HMYRI
+        GOSUB draw_timer
+        WAIT 0
+    ENDWHILE
+    CREATE_CHAR 5 HMYRI -2016.397 785.54 45.445 (cust4)
+	SET_CHAR_HEADING cust4 270.0 
+	//ADD_BLIP_FOR_COORD -2014.835 785.569 45.445 (iEventBlip)
+	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust4 "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer4:
@@ -414,7 +429,6 @@ deliver_customer4:
         deliver += 1
         MARK_MODEL_AS_NO_LONGER_NEEDED HMYRI
         PRINT_FORMATTED_NOW "Pizza Number %i Delivered" 2222 deliver
-        WAIT 300
         GOSUB create_customer5
     ENDIF
 RETURN
@@ -424,22 +438,25 @@ attach_pizza_4:
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj 
     SET_OBJECT_COLLISION iObj 0 
     SET_OBJECT_PROOFS iObj 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust iObj 0.0 0.0 0.0 5 16 NULL NULL -1
+    TASK_PICK_UP_OBJECT cust4 iObj 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
 
 create_customer5:
-    WAIT 1
+    ADD_SPRITE_BLIP_FOR_COORD (-2111.440674 327.662842 35.164063) RADAR_SPRITE_WAYPOINT (iEventBlip)
+    ADD_SPHERE (-2111.440674 327.662842 35.164063) 1.0 (iEventBlip2)
+    WHILE NOT LOCATE_CHAR_ANY_MEANS_3D player_actor (-2111.440674 327.662842 35.164063 125.5 125.5 125.5 FALSE
+        GOSUB draw_timer
+        WAIT 0
+    ENDWHILE       
     REQUEST_MODEL BMYAP
     WHILE NOT HAS_MODEL_LOADED BMYAP
+        GOSUB draw_timer
         WAIT 0
     ENDWHILE
-    WAIT 1
-    CREATE_CHAR 5 BMYAP -2111.448730 329.202972 36.164063 (cust)
-	SET_CHAR_HEADING cust 180.0 
-	//ADD_BLIP_FOR_COORD -2111.440674 327.662842 35.164063 (iEventBlip)
-    ADD_SPRITE_BLIP_FOR_COORD (-2111.440674 327.662842 35.164063) RADAR_SPRITE_WAYPOINT (iEventBlip)
-    ADD_SPHERE (-2111.440674 327.662842 35.164063) 1.0 (iEventBlip2)      
-	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
+    CREATE_CHAR 5 BMYAP -2111.448730 329.202972 36.164063 (cust5)
+	SET_CHAR_HEADING cust5 180.0 
+	//ADD_BLIP_FOR_COORD -2111.440674 327.662842 35.164063 (iEventBlip)      
+	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust5 "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
 RETURN 
 
 deliver_customer5:
@@ -454,6 +471,7 @@ deliver_customer5:
         deliver += 1
         MARK_MODEL_AS_NO_LONGER_NEEDED BMYAP
         PRINT_FORMATTED_NOW "Pizza Number %i Delivered" 2222 deliver
+        GOSUB create_customer6
     ENDIF
 RETURN
 
@@ -462,7 +480,48 @@ attach_pizza_5:
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj 
     SET_OBJECT_COLLISION iObj 0 
     SET_OBJECT_PROOFS iObj 1 1 1 1 1 
-    TASK_PICK_UP_OBJECT cust iObj 0.0 0.0 0.0 5 16 NULL NULL -1
+    TASK_PICK_UP_OBJECT cust5 iObj 0.0 0.0 0.0 5 16 NULL NULL -1
+RETURN
+
+create_customer6:
+    ADD_SPRITE_BLIP_FOR_COORD (-1705.179 785.739 24.890) RADAR_SPRITE_WAYPOINT (iEventBlip)
+    ADD_SPHERE (-1705.179 785.739 24.890) 1.0 (iEventBlip2)
+    WHILE NOT LOCATE_CHAR_ANY_MEANS_3D player_actor (-1705.179 785.739 24.890) 125.5 125.5 125.5 FALSE
+        GOSUB draw_timer
+        WAIT 0
+    ENDWHILE       
+    REQUEST_MODEL BFYST
+    WHILE NOT HAS_MODEL_LOADED BFYST
+        GOSUB draw_timer
+        WAIT 0
+    ENDWHILE
+    CREATE_CHAR 5 BFYST -1704.413 785.818 25.400 (cust6)
+	SET_CHAR_HEADING cust6 90.0 
+	//-1705.179 785.739 24.890 (iEventBlip)      
+	TASK_PLAY_ANIM_NON_INTERRUPTABLE cust6 "IDLE_GANG1" "PED" 4.0 1 0 0 0 -1 
+RETURN 
+
+deliver_customer6:
+    IF LOCATE_CHAR_ANY_MEANS_3D player_actor -1705.179 785.739 24.890 1.2 1.2 1.4 FALSE
+        REMOVE_BLIP iEventBlip
+        REMOVE_SPHERE iEventBlip2        
+        GOSUB attach_pizza_6
+        LOAD_AUDIO_STREAM "CLEO\audio\Talk 5.MP3" sfx
+        SET_AUDIO_STREAM_STATE sfx 1
+        PRINT_NOW TEXT6 3000 1
+        WAIT 3000
+        deliver += 1
+        MARK_MODEL_AS_NO_LONGER_NEEDED BFYST
+        PRINT_FORMATTED_NOW "Pizza Number %i Delivered" 2222 deliver
+    ENDIF
+RETURN
+
+attach_pizza_6:
+    DELETE_RENDER_OBJECT i[5]
+    CREATE_OBJECT 2814 0.0 0.0 0.0 iObj 
+    SET_OBJECT_COLLISION iObj 0 
+    SET_OBJECT_PROOFS iObj 1 1 1 1 1 
+    TASK_PICK_UP_OBJECT cust6 iObj 0.0 0.0 0.0 5 16 NULL NULL -1
 RETURN
 
 mission_passed:
@@ -491,7 +550,7 @@ mission_passed:
         ENDIF
     ENDIF 
 
-    IF deliver = 5
+    IF deliver = 6
         iExperienceReward += 150
     ENDIF
 
@@ -507,11 +566,12 @@ mission_passed:
 
     WAIT 7000
 
-    REMOVE_CHAR_ELEGANTLY cust
-    REMOVE_CHAR_ELEGANTLY cust
-    REMOVE_CHAR_ELEGANTLY cust
-    REMOVE_CHAR_ELEGANTLY cust
-    REMOVE_CHAR_ELEGANTLY cust
+    REMOVE_CHAR_ELEGANTLY cust1
+    REMOVE_CHAR_ELEGANTLY cust2
+    REMOVE_CHAR_ELEGANTLY cust3
+    REMOVE_CHAR_ELEGANTLY cust4
+    REMOVE_CHAR_ELEGANTLY cust5
+    REMOVE_CHAR_ELEGANTLY cust6
     REMOVE_BLIP iEventBlip 
     REMOVE_BLIP iEventBlip  
     REMOVE_BLIP iEventBlip
@@ -550,11 +610,13 @@ mission_cleanup:
     DELETE_RENDER_OBJECT i[2]
     DELETE_RENDER_OBJECT i[3]
     DELETE_RENDER_OBJECT i[4]
-    REMOVE_CHAR_ELEGANTLY cust
-    REMOVE_CHAR_ELEGANTLY cust
-    REMOVE_CHAR_ELEGANTLY cust
-    REMOVE_CHAR_ELEGANTLY cust
-    REMOVE_CHAR_ELEGANTLY cust
+    DELETE_RENDER_OBJECT i[5]
+    REMOVE_CHAR_ELEGANTLY cust1
+    REMOVE_CHAR_ELEGANTLY cust2
+    REMOVE_CHAR_ELEGANTLY cust3
+    REMOVE_CHAR_ELEGANTLY cust4
+    REMOVE_CHAR_ELEGANTLY cust5
+    REMOVE_CHAR_ELEGANTLY cust6
     REMOVE_BLIP iEventBlip 
     REMOVE_BLIP iEventBlip  
     REMOVE_BLIP iEventBlip
