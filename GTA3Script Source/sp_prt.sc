@@ -834,12 +834,7 @@ draw_mission_labels:
             USE_TEXT_COMMANDS FALSE
             SET_SPRITES_DRAW_BEFORE_FADE TRUE
             DRAW_SPRITE idSideMission (px py) (sx sy) (255 255 255 250)
-            BREAK
-        CASE 2  //Crime Alert
-            USE_TEXT_COMMANDS FALSE
-            SET_SPRITES_DRAW_BEFORE_FADE TRUE
-            DRAW_SPRITE idCrimeReport (px py) (sx sy) (255 255 255 250)
-            BREAK            
+            BREAK           
     ENDSWITCH
     px = 568.0
     py = 106.0
