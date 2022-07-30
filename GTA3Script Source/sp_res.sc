@@ -14,6 +14,7 @@ SCRIPT_START
 SCRIPT_NAME sp_res
 WAIT 1000
 LVAR_INT player_actor toggleSpiderMod isInMainMenu rwCrosshair sfx
+LVAR_INT onmission
 
 GET_PLAYER_CHAR 0 player_actor
 REQUEST_ANIMATION "spider"
@@ -79,7 +80,7 @@ WHILE TRUE
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
-                GET_CLEO_SHARED_VAR varOnmission (onmission)
+                GET_CLEO_SHARED_VAR varReservoirInactive (onmission)
                 IF onmission = 0 
                     //Tower
                     x[1] = -2022.26
@@ -339,6 +340,7 @@ LVAR_FLOAT v1 v2 sizeX sizeY fCharSpeed currentTime zAngle fFov
 LVAR_INT randomVal 
 GET_PLAYER_CHAR 0 player_actor
 flag_photo_mode = 0     // 0:false||1:true
+onmission = 0 
 
 WHILE TRUE
     IF IS_PLAYER_PLAYING player 
@@ -347,7 +349,7 @@ WHILE TRUE
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
-                GET_CLEO_SHARED_VAR varOnmission (onmission)
+                GET_CLEO_SHARED_VAR varReservoirInactive (onmission)
                 IF onmission = 0 
                     //Tower
                     x[1] = -2192.0 
@@ -612,6 +614,7 @@ LVAR_FLOAT v1 v2 sizeX sizeY fCharSpeed currentTime zAngle fFov
 LVAR_INT randomVal 
 GET_PLAYER_CHAR 0 player_actor
 flag_photo_mode = 0     // 0:false||1:true
+onmission = 0 
 
 WHILE TRUE
     IF IS_PLAYER_PLAYING player 
@@ -620,7 +623,7 @@ WHILE TRUE
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
-                GET_CLEO_SHARED_VAR varOnmission (onmission)
+                GET_CLEO_SHARED_VAR varReservoirInactive (onmission)
                 IF onmission = 0 
                     //Tower
                     x[1] = -1873.89
@@ -886,6 +889,7 @@ LVAR_FLOAT v1 v2 sizeX sizeY fCharSpeed currentTime zAngle fFov
 LVAR_INT randomVal 
 GET_PLAYER_CHAR 0 player_actor
 flag_photo_mode = 0     // 0:false||1:true
+onmission = 0 
 
 WHILE TRUE
     IF IS_PLAYER_PLAYING player 
@@ -894,7 +898,7 @@ WHILE TRUE
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
-                GET_CLEO_SHARED_VAR varOnmission (onmission)
+                GET_CLEO_SHARED_VAR varReservoirInactive (onmission)
                 IF onmission = 0 
                     //Tower
                     x[1] = -1812.37 
@@ -1159,6 +1163,7 @@ LVAR_FLOAT v1 v2 sizeX sizeY fCharSpeed currentTime zAngle fFov
 LVAR_INT randomVal 
 GET_PLAYER_CHAR 0 player_actor
 flag_photo_mode = 0     // 0:false||1:true
+onmission = 0 
 
 WHILE TRUE
     IF IS_PLAYER_PLAYING player 
@@ -1167,7 +1172,7 @@ WHILE TRUE
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
-                GET_CLEO_SHARED_VAR varOnmission (onmission)
+                GET_CLEO_SHARED_VAR varReservoirInactive (onmission)
                 IF onmission = 0 
                     //Tower
                     x[1] = -1589.35
@@ -1434,6 +1439,7 @@ LVAR_FLOAT v1 v2 sizeX sizeY fCharSpeed currentTime zAngle fFov
 LVAR_INT randomVal 
 GET_PLAYER_CHAR 0 player_actor
 flag_photo_mode = 0     // 0:false||1:true
+onmission = 0 
 
 WHILE TRUE
     IF IS_PLAYER_PLAYING player 
@@ -1442,7 +1448,7 @@ WHILE TRUE
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
-                GET_CLEO_SHARED_VAR varOnmission (onmission)
+                GET_CLEO_SHARED_VAR varReservoirInactive (onmission)
                 IF onmission = 0 
                     //Tower
                     x[1] = -1878.5557 
@@ -1454,7 +1460,7 @@ WHILE TRUE
                     z[0] = z[1] - 0.70
                     IF IS_CHAR_REALLY_IN_AIR player_actor
                         IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
-                            GOSUB draw_indicator_r7
+                            GOSUB draw_indicator_r6
                             IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
                             AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
                             AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -1462,11 +1468,11 @@ WHILE TRUE
                             AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
                                 zAngle = 180.0
                                 SET_CHAR_HEADING player_actor zAngle
-                                GOSUB destroyTwoWebs_r7
-                                GOSUB createTwoWebs_r7
+                                GOSUB destroyTwoWebs_r6
+                                GOSUB createTwoWebs_r6
                                     zAngle = 180.0
-                                    GOSUB animSequence_r7
-                                GOSUB destroyTwoWebs_r7
+                                    GOSUB animSequence_r6
+                                GOSUB destroyTwoWebs_r6
                                 WAIT 500     
                             ENDIF
                         ELSE
@@ -1474,7 +1480,7 @@ WHILE TRUE
                             y[0] = y[1] - 9.982       
                             z[0] = z[1] - 0.70
                             IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
-                                GOSUB draw_indicator_r7
+                                GOSUB draw_indicator_r6
                                 IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
                                 AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
                                 AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -1482,11 +1488,11 @@ WHILE TRUE
                                 AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
                                     zAngle = 360.0
                                     SET_CHAR_HEADING player_actor zAngle
-                                    GOSUB destroyTwoWebs_r7
-                                    GOSUB createTwoWebs_r7
+                                    GOSUB destroyTwoWebs_r6
+                                    GOSUB createTwoWebs_r6
                                         zAngle = 360.0
-                                        GOSUB animSequence_r7
-                                    GOSUB destroyTwoWebs_r7
+                                        GOSUB animSequence_r6
+                                    GOSUB destroyTwoWebs_r6
                                     WAIT 500
                                 ENDIF
                             ENDIF
@@ -1499,7 +1505,7 @@ WHILE TRUE
     WAIT 0
 ENDWHILE
 
-animSequence_r7:
+animSequence_r6:
     GET_CHAR_SPEED player_actor (fCharSpeed)
     WAIT 0
     SET_CHAR_COLLISION player_actor FALSE
@@ -1528,7 +1534,7 @@ animSequence_r7:
         CLAMP_FLOAT fCharSpeed 7.0 13.0 (fCharSpeed)
     ENDIF
     WAIT 0     
-    GOSUB playWebSound_r7
+    GOSUB playWebSound_r6
     TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "t_tower_A" "spider" 91.0 (0 1 1 0) -2
     IF DOES_CHAR_EXIST iWebActor
     AND DOES_CHAR_EXIST iWebActorR
@@ -1571,9 +1577,9 @@ animSequence_r7:
                     //CAMERA_SET_LERP_FOV 105.0 fFov 5 FALSE
                     DETACH_OBJECT baseObject (0.0 0.0 0.0) FALSE
                     SET_OBJECT_COORDINATES baseObject (x[0] y[0] z[0])
-                    GOSUB playSFXSound_r7
+                    GOSUB playSFXSound_r6
                 ENDIF
-                GOSUB add_force_to_char_r7
+                GOSUB add_force_to_char_r6
                 IF  currentTime > 0.778     //frame 70/90
                     BREAK
                 ENDIF
@@ -1585,7 +1591,7 @@ animSequence_r7:
     RESTORE_CAMERA_JUMPCUT
 RETURN
 
-add_force_to_char_r7:
+add_force_to_char_r6:
     IF  0.722 > currentTime     //frame 65/90
         CLEO_CALL addForceToChar 0 player_actor 0.0 1.0 0.0 fCharSpeed
         fCharSpeed -=@ 0.1 //0.01
@@ -1600,7 +1606,7 @@ add_force_to_char_r7:
     ENDIF
 RETURN
 
-draw_indicator_r7:
+draw_indicator_r6:
     IF flag_photo_mode = 0  // 0:false||1:true
         IF IS_POINT_ON_SCREEN (x[1] y[1] z[1]) 0.5
             CONVERT_3D_TO_SCREEN_2D (x[1] y[1] z[1]) TRUE TRUE (v1 v2) (sizeX sizeY)
@@ -1610,7 +1616,7 @@ draw_indicator_r7:
     ENDIF
 RETURN
 
-createTwoWebs_r7:
+createTwoWebs_r6:
     IF NOT DOES_CHAR_EXIST iWebActor
     AND NOT DOES_CHAR_EXIST iWebActorR
     AND NOT DOES_OBJECT_EXIST baseObject
@@ -1644,7 +1650,7 @@ createTwoWebs_r7:
     ENDIF
 RETURN
 
-destroyTwoWebs_r7:
+destroyTwoWebs_r6:
     IF DOES_CHAR_EXIST iWebActor
         DELETE_CHAR iWebActor
     ENDIF
@@ -1656,7 +1662,7 @@ destroyTwoWebs_r7:
     ENDIF
 RETURN
 
-playSFXSound_r7:
+playSFXSound_r6:
     REMOVE_AUDIO_STREAM sfx
     IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\web1_f.mp3" (sfx)
         SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
@@ -1665,7 +1671,7 @@ playSFXSound_r7:
     ENDIF
 RETURN
 
-playWebSound_r7:
+playWebSound_r6:
     REMOVE_AUDIO_STREAM sfx
     GENERATE_RANDOM_INT_IN_RANGE 0 4 (randomVal)
     SWITCH randomVal
@@ -1803,6 +1809,9 @@ CONST_INT varIdWebWeapon        32    //sp_mm     || 1-8 weap
 CONST_INT varWeapAmmo           33    //sp_wep    ||store current weap ammo
 CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 - 12
 CONST_INT varPowersProgress     35    //sp_po     || current power progress
+CONST_INT varHitCount           36    //sp_hit    || hitcounting
+CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
+CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
