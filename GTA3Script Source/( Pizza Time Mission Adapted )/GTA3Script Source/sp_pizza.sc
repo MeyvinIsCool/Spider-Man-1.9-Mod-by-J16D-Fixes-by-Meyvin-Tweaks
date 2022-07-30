@@ -51,7 +51,7 @@ LVAR_INT flag_player_on_mission flag_player_hit_counter
 LVAR_INT iEventBlip iEventBlip2
 LVAR_INT deliver iObj
 LVAR_INT cust1 cust2 cust3 cust4 cust5 cust6
-LVAR_INT i[6]
+LVAR_INT i
 LVAR_INT sfx
 
 GET_PLAYER_CHAR 0 player_actor
@@ -248,26 +248,12 @@ sub_unlock_player_controls:
 RETURN
 
 create_pizzaStack:
-    i[0] = 0
-    i[1] = 0
-    i[2] = 0
-    i[3] = 0
-    i[4] = 0
-    i[5] = 0
+    i = 0
     REQUEST_MODEL 2814
     LOAD_ALL_MODELS_NOW
-    DELETE_RENDER_OBJECT i[0]
-    DELETE_RENDER_OBJECT i[1]
-    DELETE_RENDER_OBJECT i[2]
-    DELETE_RENDER_OBJECT i[3]
-    DELETE_RENDER_OBJECT i[4]
-    DELETE_RENDER_OBJECT i[5]
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.35) (0.0 0.0 0.0) i[0]
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.3) (0.0 0.0 0.0) i[1]    
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.25) (0.0 0.0 0.0) i[2] 
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.2) (0.0 0.0 0.0) i[3] 
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.15) (0.0 0.0 0.0) i[4]  
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.1) (0.0 0.0 0.0) i[5]  
+    DELETE_RENDER_OBJECT i
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 2814 35 (-0.1 0.0 -0.0) (0.0 0.0 0.0) i
+    SET_RENDER_OBJECT_ROTATION i (90.0 0.0 -0.0)
 RETURN
 
 create_customer1:
@@ -306,7 +292,6 @@ deliver_customer1:
 RETURN
 
 attach_pizza_1:
-    DELETE_RENDER_OBJECT i[0]
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj
     SET_OBJECT_COLLISION iObj 0 
     SET_OBJECT_PROOFS iObj 1 1 1 1 1 
@@ -348,7 +333,6 @@ deliver_customer2:
 RETURN
 
 attach_pizza_2:
-    DELETE_RENDER_OBJECT i[1]
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj
     SET_OBJECT_COLLISION iObj 0 
     SET_OBJECT_PROOFS iObj 1 1 1 1 1 
@@ -390,7 +374,6 @@ deliver_customer3:
 RETURN
 
 attach_pizza_3:
-    DELETE_RENDER_OBJECT i[2]
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj 
     SET_OBJECT_COLLISION iObj 0 
     SET_OBJECT_PROOFS iObj 1 1 1 1 1 
@@ -432,7 +415,6 @@ deliver_customer4:
 RETURN
     
 attach_pizza_4:
-    DELETE_RENDER_OBJECT i[3]
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj 
     SET_OBJECT_COLLISION iObj 0 
     SET_OBJECT_PROOFS iObj 1 1 1 1 1 
@@ -474,7 +456,6 @@ deliver_customer5:
 RETURN
 
 attach_pizza_5:
-    DELETE_RENDER_OBJECT i[4]
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj 
     SET_OBJECT_COLLISION iObj 0 
     SET_OBJECT_PROOFS iObj 1 1 1 1 1 
@@ -515,7 +496,7 @@ deliver_customer6:
 RETURN
 
 attach_pizza_6:
-    DELETE_RENDER_OBJECT i[5]
+    DELETE_RENDER_OBJECT i
     CREATE_OBJECT 2814 0.0 0.0 0.0 iObj 
     SET_OBJECT_COLLISION iObj 0 
     SET_OBJECT_PROOFS iObj 1 1 1 1 1 
@@ -603,12 +584,7 @@ mission_cleanup:
     REMOVE_ANIMATION "mweb"    
     WAIT 0    
     REMOVE_TEXTURE_DICTIONARY
-    DELETE_RENDER_OBJECT i[0]
-    DELETE_RENDER_OBJECT i[1]
-    DELETE_RENDER_OBJECT i[2]
-    DELETE_RENDER_OBJECT i[3]
-    DELETE_RENDER_OBJECT i[4]
-    DELETE_RENDER_OBJECT i[5]
+    DELETE_RENDER_OBJECT i
     REMOVE_CHAR_ELEGANTLY cust1
     REMOVE_CHAR_ELEGANTLY cust2
     REMOVE_CHAR_ELEGANTLY cust3
@@ -1218,6 +1194,7 @@ CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 
 CONST_INT varPowersProgress     35    //sp_po     || current power progress
 CONST_INT varHitCount           36    //sp_hit    || hitcounting
 CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
+CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
