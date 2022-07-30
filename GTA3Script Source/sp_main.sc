@@ -54,6 +54,9 @@ CONST_INT varIdWebWeapon        32    //sp_mm     || 1-8 weap
 CONST_INT varWeapAmmo           33    //sp_wep    ||store current weap ammo
 CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 - 12
 CONST_INT varPowersProgress     35    //sp_po     || current power progress
+CONST_INT varHitCount           36    //sp_hit    || hitcounting
+CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
+CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
@@ -117,9 +120,9 @@ ENDIF
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_scrb.cs"     // Screwball Mission Trigger
     ENDIF    
     // Pizza Time Mission
-    //IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_pizza.cs"
-        //STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_pizza.cs"     // Pizza Time Mission
-    //ENDIF        
+    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_pizza.cs"
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_pizza.cs"     // Pizza Time Mission (Only If The Mission Is Installed !)
+    ENDIF        
 
 //-+-- Start Internal Threads
     STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_cam_internalThread   // Camera Script

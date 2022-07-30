@@ -420,4 +420,6 @@ is_char_gang_ped:
 CLEO_RETURN 0
 }
 
-CONST_INT varHitCount           36    //sp_hit    || hit count
+CONST_INT varHitCount           36    //sp_hit    || hitcounting
+CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
+CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
