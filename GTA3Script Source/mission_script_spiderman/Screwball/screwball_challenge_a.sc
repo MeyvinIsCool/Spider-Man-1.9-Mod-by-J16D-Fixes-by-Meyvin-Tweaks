@@ -781,6 +781,12 @@ animSequence:
     fScoreCounter = 0.0
     GET_CHAR_SPEED player_actor (fCharSpeed)
     WAIT 0
+    SET_CHAR_COLLISION player_actor FALSE
+    WAIT 1
+    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
+    WAIT 0
+    SET_CHAR_COLLISION player_actor TRUE
+    WAIT 0    
     CLEO_CALL SetCharPosSimple 0 player_actor (x[0] y[0] z[0])
 
     IF flag_photo_mode = 0    
@@ -790,6 +796,7 @@ animSequence:
         fCharSpeed += 13.0
         CLEO_CALL max_min_value_float 0 fCharSpeed 13.0 7.0 (fCharSpeed) 
     ENDIF
+    WAIT 0
 
     TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "t_tower_A" "spider" 91.0 (0 1 1 0) -2
     TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("w_tower_L_A" "mweb") 91.0 (0 1 1 1) -2
