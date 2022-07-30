@@ -80,7 +80,6 @@ WHILE TRUE
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
                 GET_CLEO_SHARED_VAR varOnmission (onmission)
-                READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
                     x[1] = -2022.26
@@ -349,7 +348,6 @@ WHILE TRUE
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
                 GET_CLEO_SHARED_VAR varOnmission (onmission)
-                READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
                     x[1] = -2192.0 
@@ -623,7 +621,6 @@ WHILE TRUE
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
                 GET_CLEO_SHARED_VAR varOnmission (onmission)
-                READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
                     x[1] = -1873.89
@@ -898,7 +895,6 @@ WHILE TRUE
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
                 GET_CLEO_SHARED_VAR varOnmission (onmission)
-                READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
                     x[1] = -1812.37 
@@ -1172,7 +1168,6 @@ WHILE TRUE
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
                 GET_CLEO_SHARED_VAR varOnmission (onmission)
-                READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
                     x[1] = -1589.35
@@ -1448,7 +1443,6 @@ WHILE TRUE
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
                 GET_CLEO_SHARED_VAR varOnmission (onmission)
-                READ_MEMORY 0xA476AC 4 FALSE (onmission)
                 IF onmission = 0 
                     //Tower
                     x[1] = -1878.5557 
