@@ -27,9 +27,6 @@ CONST_INT STOP      0
 CONST_INT PLAY      1
 CONST_INT PAUSE     2
 CONST_INT RESUME    3
-//-+---CONSTANTS--------------------
-//GLOBAL_CLEO_SHARED_VARS
-//100 slots - range 0 to 99
 CONST_INT varStatusSpiderMod    0     //1= Mod activated || 0= Mod Deactivated
 CONST_INT varHUD                1     //1= Activated     || 0= Deactivated
 CONST_INT varMusic              2     //1= Music On	    || 0= Music Off
@@ -148,14 +145,14 @@ LVAR_INT toggleMusic
 
 mission_start_init:
 // Set
+GET_CLEO_SHARED_VAR varOnmission (flag_player_on_mission) 
 flag_player_on_mission = 1
-SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON     // Inactivates The Reservoir And Missions Script
+SET_CLEO_SHARED_VAR varOnmission (flag_player_on_mission)  // Inactivates The Reservoir And Missions Script
 REGISTER_MISSION_GIVEN
 WAIT 0
 
 SCRIPT_NAME pem
 
-WRITE_MEMORY 0xA476AC 4 (flag_player_on_mission) FALSE 	// $ONMISSION = 1
 GET_PLAYER_CHAR 0 player_actor
 flag_photo_mode = 1     // 0:false||1:true
 flag_was_key_pressed = 0    // 0:false||1:true
@@ -197,8 +194,11 @@ READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "config" "LANG" (iLanguage) 
     // add marker and check point
     counter = 0
     GOSUB addRaceCheckpoint
+    SWITCH_WIDESCREEN TRUE      // To Fix Checkpoint Not Visible
     WAIT 0
     DO_FADE 1000 FADE_IN
+    WAIT 1
+    SWITCH_WIDESCREEN FALSE     // To Fix Checkpoint Not Visible
     WHILE GET_FADING_STATUS
         WAIT 0
     ENDWHILE
@@ -825,8 +825,10 @@ animSequence:
                 ENDIF
 
                 IF flag_was_key_pressed = 0 // 0:false||1:true
-                    CLEO_CALL linearInterpolation 0 (0.444 0.556 currentTime) (0.0 2500.0) (fScoreCounter)                        
-                    CLEO_CALL barFunc 0 fScoreCounter 175.5 129.65 v1 v2 szBarX szBarY   // Compatible With Every Resolution
+                    CLEO_CALL linearInterpolation 0 (0.444 0.556 currentTime) (0.0 2500.0) (fScoreCounter)    
+
+                    //CLEO_CALL barFunc 0 fSize posx posy v1 v2 szBarX szBarY	//max size 2500.0                    
+                    CLEO_CALL barFunc 0 fScoreCounter 175.4 129.65 v1 v2 szBarX szBarY   // Compatible With Every Resolution
                     fScoreCounter +=@ 2.5     
                     //PRINT_FORMATTED_NOW "pos:%f.00 xs:%f.00 ys:%f.00" 100 v1 sizeX sizeY  //debug
 
