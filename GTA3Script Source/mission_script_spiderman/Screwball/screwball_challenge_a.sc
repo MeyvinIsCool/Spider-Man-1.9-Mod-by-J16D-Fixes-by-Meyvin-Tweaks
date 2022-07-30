@@ -27,6 +27,8 @@ CONST_INT STOP      0
 CONST_INT PLAY      1
 CONST_INT PAUSE     2
 CONST_INT RESUME    3
+//GLOBAL_CLEO_SHARED_VARS
+//100 slots - range 0 to 99
 CONST_INT varStatusSpiderMod    0     //1= Mod activated || 0= Mod Deactivated
 CONST_INT varHUD                1     //1= Activated     || 0= Deactivated
 CONST_INT varMusic              2     //1= Music On	    || 0= Music Off
@@ -66,6 +68,7 @@ CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 
 CONST_INT varPowersProgress     35    //sp_po     || current power progress
 CONST_INT varHitCount           36    //sp_hit    || hitcounting
 CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
+CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
@@ -145,9 +148,9 @@ LVAR_INT toggleMusic
 
 mission_start_init:
 // Set
-GET_CLEO_SHARED_VAR varOnmission (flag_player_on_mission) 
 flag_player_on_mission = 1
-SET_CLEO_SHARED_VAR varOnmission (flag_player_on_mission)  // Inactivates The Reservoir And Missions Script
+SET_CLEO_SHARED_VAR varOnmission (flag_player_on_mission)  // Inactivates Main / Side Missions
+SET_CLEO_SHARED_VAR varReservoirInactive (flag_player_on_mission)  // Inactivates The Reservoir And Missions Script
 REGISTER_MISSION_GIVEN
 WAIT 0
 
@@ -686,6 +689,7 @@ mission_cleanup:
 	flag_player_on_mission = 0
 	WRITE_MEMORY 0xA476AC 4 (flag_player_on_mission) FALSE 	// $ONMISSION = 0
     SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission  
+    SET_CLEO_SHARED_VAR varReservoirInactive (flag_player_on_mission)  
     SET_PLAYER_JUMP_BUTTON player FALSE      
     REMOVE_ANIMATION "spider"
     REMOVE_ANIMATION "mweb"
