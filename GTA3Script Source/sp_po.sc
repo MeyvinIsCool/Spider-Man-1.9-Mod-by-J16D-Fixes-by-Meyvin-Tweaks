@@ -1517,7 +1517,7 @@ RETURN
 //------------------------------------------------------------
 
 //------------------------------------------------------------
-assign_iron_arms:               //On Development Stage!! Not Functional Yet !!
+assign_iron_arms:               // Version 1 .... Will Improve In Future !!
     //max_time = 9000    //ms
     timera = 0
     iTempVar = 0
