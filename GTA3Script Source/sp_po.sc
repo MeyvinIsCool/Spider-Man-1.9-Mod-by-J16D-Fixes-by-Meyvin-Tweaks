@@ -192,7 +192,7 @@ get_power_max_time:
     SWITCH idPowers
         CASE web_blossom    //id:1
             max_time = 10000        //none
-            cool_down_time = 90000  //1:30
+            cool_down_time = 90000  //1:30     
             BREAK
         CASE holo_decoy     //id:2
             max_time = 30000        //0:30 
@@ -208,15 +208,15 @@ get_power_max_time:
             BREAK
         CASE negative_shockwave   //id:5
             max_time = 10000    //none
-            cool_down_time = 60000  //1:00
+            cool_down_time = 60000  //1:00      
             BREAK
         CASE electric_punch     //id:6
             max_time = 20000    //0:20
-            cool_down_time = 90000  //1:30
+            cool_down_time = 90000  //1:30      
             BREAK
         CASE rock_out       //id:7
             max_time = 10000    //none
-            cool_down_time = 60000  //1:00
+            cool_down_time = 60000  //1:00    
             BREAK
         CASE blur_projector //id:8
             max_time = 15000    //0:15
@@ -272,6 +272,9 @@ assign_web_blossom:    //id:1
                         IF IS_CHAR_ON_SCREEN iChar 
                             IF GOSUB is_not_playing_anim_a
                                 GOSUB task_play_hit_blossom
+                                GET_CLEO_SHARED_VAR varHitCount counter       
+                                counter ++
+                                SET_CLEO_SHARED_VAR varHitCount counter                                                           
                             ENDIF
                         ENDIF
                     ENDIF
@@ -328,10 +331,10 @@ task_play_hit_blossom:
         ENDWHILE
         CREATE_FX_SYSTEM_ON_CHAR SP_WEB_G iChar (0.0 0.0 -0.75) 1 (fx_system)
         PLAY_AND_KILL_FX_SYSTEM fx_system
-    ENDIF
+    ENDIF    
     IF DOES_CHAR_EXIST iChar
         IF IS_CHAR_SCRIPT_CONTROLLED iChar
-            MARK_CHAR_AS_NO_LONGER_NEEDED iChar
+            MARK_CHAR_AS_NO_LONGER_NEEDED iChar          
         ENDIF
     ENDIF
     WAIT 0
@@ -879,6 +882,9 @@ assign_task_kill:
                     ADD_BIG_GUN_FLASH (x[0] y[0] z[0]) (x[1] y[1] z[1])
                     FIRE_SINGLE_BULLET (x[0] y[0] z[0]) (x[1] y[1] z[1]) 10
                     timerb = 0
+                    GET_CLEO_SHARED_VAR varHitCount counter
+                    counter ++
+                    SET_CLEO_SHARED_VAR varHitCount counter
                 ENDIF
                 GET_DISTANCE_BETWEEN_COORDS_3D x[1] y[1] z[1] x[0] y[0] z[0] (fDistance)
                 IF fDistance > 10.0
@@ -986,6 +992,9 @@ assign_negative_shockwave:  //id:5
                                     IF LOCATE_CHAR_DISTANCE_TO_CHAR player_actor iChar 8.0
                                         IF GOSUB is_not_playing_anim_b
                                             GOSUB assign_task_hit_negative_shockwave
+                                            GET_CLEO_SHARED_VAR varHitCount counter
+                                            counter ++
+                                            SET_CLEO_SHARED_VAR varHitCount counter                                            
                                         ENDIF
                                     ENDIF
                                 ENDIF
@@ -1102,17 +1111,17 @@ assign_electric_punch:
                             IF GOSUB is_playing_hit_anim
                                 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\we_1.cs"
                                     STREAM_CUSTOM_SCRIPT "SpiderJ16D\we_1.cs" iChar
-                                    WAIT 50
-                                ENDIF
+                                    WAIT 50                                     
+                                ENDIF                                 
                             ENDIF
-                        ENDIF
+                        ENDIF                        
 
                     ENDIF
                 ENDIF
             ENDIF
         ENDWHILE
         WAIT 0
-    ENDWHILE
+    ENDWHILE   
     KILL_FX_SYSTEM_NOW lvar[0]
     KILL_FX_SYSTEM_NOW lvar[1]
     REMOVE_AUDIO_STREAM sfx
@@ -1214,6 +1223,9 @@ assign_rock_out:    //id:7
                                     IF NOT IS_CHAR_PLAYING_ANIM iChar ("pow_rock_out_h1")  //hit complete sequence
                                     AND NOT IS_CHAR_PLAYING_ANIM iChar ("pow_rock_out_h2")  //hit half sequence
                                         GOSUB assign_new_task_throw_away_anim
+                                        GET_CLEO_SHARED_VAR varHitCount counter
+                                        counter ++
+                                        SET_CLEO_SHARED_VAR varHitCount counter                                           
                                     ENDIF
                                 ELSE
                                     IF fRandomVal[0] >= 0.323  //frame 20/70    //20
@@ -1510,41 +1522,16 @@ assign_iron_arms:               //On Development Stage!! Not Functional Yet !!
     timera = 0
     iTempVar = 0
     GOSUB play_sfx_general_sfx
-
+    GOSUB attachIronArms
     WAIT 10
-    CLEAR_CHAR_TASKS player_actor
-    CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
+    //CLEAR_CHAR_TASKS player_actor
+    //CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
     TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("iron_armsA" "spider") 61.0 (0 1 1 0) -1
     WAIT 0
     SET_CHAR_ANIM_SPEED player_actor "iron_armsA" 0.65
 
     WHILE max_time >= timera
         CLEO_CALL set_current_power_progress 0 max_time timera
-
-
-        // Create The Codes
-
-
-    
-
-
-        //GOSUB REQUEST_Animations
-        //GOSUB createIronArms
-        //GOSUB attachIronArms
-        //IF DOES_OBJECT_EXIST iObj
-            //PLAY_OBJECT_ANIM iObj ("iron_armsB" "spider") 60.0 1 0
-            //SET_OBJECT_ANIM_SPEED iObj "iron_armsB" 0.0
-        //ENDIF  
-        //GOSUB destroyIronArms  
-
-
-
-
-
-
-
-        // End Your Codes = Deadline Of The Code
-
 
         // break loop
         GOSUB readVars
@@ -1561,38 +1548,21 @@ assign_iron_arms:               //On Development Stage!! Not Functional Yet !!
 
         WAIT 0
     ENDWHILE
+    DELETE_RENDER_OBJECT i
     REMOVE_AUDIO_STREAM sfx
 
 RETURN    
 
 attachIronArms:
-    IF DOES_OBJECT_EXIST iObj
-        PLAY_OBJECT_ANIM iObj ("iron_armsB" "spider") 60.0 1 0
-        SET_OBJECT_ANIM_SPEED iObj "iron_armsB" 0.0
-    ENDIF
-RETURN
-
-createIronArms:
-    REQUEST_MODEL 6011              //ID_OBJECT //Iron Spider Arms
+    i = 0
+    REQUEST_MODEL 6025
     LOAD_ALL_MODELS_NOW
-    IF NOT DOES_OBJECT_EXIST iObj
-        GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 2.0 -30.0 (x[0] y[0] z[0])
-        CREATE_OBJECT_NO_SAVE 6011 (x[0] y[0] z[0]) FALSE FALSE (iObj)
-        SET_OBJECT_COLLISION iObj FALSE
-        SET_OBJECT_RECORDS_COLLISIONS iObj FALSE
-        SET_OBJECT_PROOFS iObj (1 1 1 1 1)
-    ENDIF
-    MARK_MODEL_AS_NO_LONGER_NEEDED 6011 //ID_OBJECT
+    WAIT 1
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 6025 4 (0.0 0.0 0.0) (0.0 0.0 0.0) i
+    SET_RENDER_OBJECT_ROTATION i (165.0 0.0 0.0)
+    SET_RENDER_OBJECT_POSITION i (-0.2 0.2 0.36)
 RETURN
 
-destroyIronArms:
-    IF DOES_OBJECT_EXIST iObj
-        DETACH_OBJECT iObj (0.0 0.0 0.0) 0
-        SET_OBJECT_COORDINATES iObj (0.0 0.0 -15.0)
-        DELETE_OBJECT iObj
-        CLEAR_CHAR_TASKS player_actor
-    ENDIF
-RETURN
 //------------------------------------------------------------
 
 //------------------------------------------------------------
@@ -1668,8 +1638,11 @@ assign_spirit_fire:
                 AND NOT IS_INT_LVAR_EQUAL_TO_INT_LVAR player_actor iChar
                     IF IS_CHAR_ON_SCREEN iChar 
                         IF LOCATE_CHAR_DISTANCE_TO_CHAR player_actor iChar 2.0
-                            DAMAGE_CHAR iChar 1 TRUE
-                            WAIT 5
+                            DAMAGE_CHAR iChar 1 TRUE                            
+                            WAIT 1000
+                            GET_CLEO_SHARED_VAR varHitCount counter
+                            counter ++
+                            SET_CLEO_SHARED_VAR varHitCount counter                              
                         ENDIF
                     ENDIF
                 ENDIF

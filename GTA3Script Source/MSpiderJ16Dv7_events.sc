@@ -134,10 +134,7 @@ car_chase_event:
                             SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
                             IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_cc.cs"
                                 STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_cc.cs" x[1] y[1] z[1] // car_chase_mission
-                            ENDIF
-                            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
-                                STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 801 808    //{id} {mission_id} {text1_id} {text2_id}
-                            ENDIF                             
+                            ENDIF                          
                             WAIT 1000
                             WHILE flag_player_on_mission > 0
                                 GOSUB readVars

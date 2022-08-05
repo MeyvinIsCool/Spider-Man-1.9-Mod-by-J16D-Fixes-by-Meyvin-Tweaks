@@ -673,11 +673,11 @@ show_menu:
                         CLAMP_INT iActiveCol 1 2 (iActiveCol)   //Limit 2 power on 3rd row
                     ENDIF
                     IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                        IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                        //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
                             CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
                             CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
                             SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
-                        ENDIF
+                        //ENDIF
                         WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                             GOSUB drawItems
                         ENDWHILE
@@ -3738,13 +3738,13 @@ ProcessGame_and_DrawItems_POWER_SUITS:
             USE_TEXT_COMMANDS FALSE
             DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (2 254 252 255)
         ELSE
-            IF idTexture = 108   //Iron Arms Power (Temporary locked, isn't ready)
-                USE_TEXT_COMMANDS FALSE
-                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)
-            ELSE
+            //IF idTexture = 108   //Iron Arms Power (Temporary locked, isn't ready)
+                //USE_TEXT_COMMANDS FALSE
+                //DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)
+            //ELSE
                 USE_TEXT_COMMANDS FALSE
                 DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)
-            ENDIF
+            //ENDIF
         ENDIF
         idTexture ++
         xCoord += 50.0
