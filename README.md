@@ -3,7 +3,7 @@ I Made These Fixes On These Scripts And Also Improvements In Order To Make This 
 
 Things I Fixed And Added On This Mod :
 
-- Added Functional Scrolling System On Menu + 18 New Suits Added ! (You Will Need To Reach Level 52 In Order To Unlock All 45 Suits)
+- Added Functional Scrolling System On Menu + 19 New Suits Added ! (You Will Need To Reach Level 52 In Order To Unlock All 45 Suits)
 - Cinimatic Jump Restored
 - A Web Swinging Animation Restored
 - Falling Animations Restored
@@ -20,6 +20,7 @@ Things I Fixed And Added On This Mod :
 - Added New Screwball Mission (It Is Merged So You Can Try Both Of The Original And My Custom Made Mission)
 - Added Remade Pizza Time Mission by MeyvinIsCool (Mission v2) (Thanks For Mr.Demon "Genos" Cyborg For Giving Me The Source Code)
 - Added Hit Counter (v2) (Still Need Some Improvements As It's Wont Detect The Suit Powers And May Have Some Bugs !!)
+- Added Iron Arms Suit Power (Version 1.0)
 - And MORE ....
 
 I Had So Much Fun Time Making These Fixes And Also Thanks To These People Who Helped Me A Lot !
