@@ -2149,7 +2149,7 @@ ProcessGame_and_DrawItems_SUITS:
     ENDIF   
     IF iMinRowSuitQuantity >= 16
         IF iActiveRow = 7
-            //CLAMP_INT iActiveCol 1 3 (iActiveCol)   //Limit 3 suits selection on 10th Row
+            //CLAMP_INT iActiveCol 1 3 (iActiveCol)   //Limit 4 suits selection on 10th Row
             iActiveRow = 6
             iMinRowSuitQuantity = 21
             iMaxRowQuantity = 25   //10th Row 
@@ -2157,7 +2157,7 @@ ProcessGame_and_DrawItems_SUITS:
     ENDIF  
     IF iMinRowSuitQuantity >= 21
         IF iActiveRow = 6
-            CLAMP_INT iActiveCol 1 3 (iActiveCol)   //Limit 3 suits selection on 10th Row
+            CLAMP_INT iActiveCol 1 4 (iActiveCol)   //Limit 3 suits selection on 10th Row
         ENDIF  
     ENDIF              
     //SUIT MENU
@@ -2243,7 +2243,7 @@ ProcessGame_and_DrawItems_SUITS:
         IF iMinRowSuitQuantity >= 21
             SWITCH idTexture
                 CASE 46  //9th Row
-                    iMaxRowQuantity = 48
+                    iMaxRowQuantity = 49
                     xCoord = 115.0
                     yCoord += 50.0
                 BREAK      
@@ -2398,7 +2398,10 @@ get_unlock_code_suit:
             BREAK 
         CASE 48
             iTempVar = 6744
-            BREAK                                                                                                                                                                      
+            BREAK         
+        CASE 49
+            iTempVar = 8319
+            BREAK                                                                                                                                                                            
     ENDSWITCH
     CLEO_CALL getSuitInfoUnclock 0 idTexture (pUnlockCode)
 RETURN
@@ -2615,7 +2618,7 @@ DrawCheckMarks_SUITS:
                     yCoord += 50.0
                 BREAK 
                 CASE 46  
-                    iMaxRowQuantity = 48
+                    iMaxRowQuantity = 49
                     xCoord = 134.0
                     yCoord += 50.0
                 BREAK                                          
@@ -3445,6 +3448,10 @@ DrawSelector_SUITS:
                     iSelectedSuit = 48
                     DRAW_SPRITE selectSuit26 (215.0 370.0) (xSize ySize) (255 255 255 255)
                 BREAK
+                CASE 4
+                    iSelectedSuit = 49
+                    DRAW_SPRITE selectSuit26 (265.0 370.0) (xSize ySize) (255 255 255 255)
+                BREAK                
             ENDSWITCH
         BREAK
     ENDSWITCH    
@@ -3453,7 +3460,7 @@ RETURN
 
 DrawInfo_SUITS:
     counter = 1
-    WHILE 48 >= counter
+    WHILE 49 >= counter
         IF iSelectedSuit = counter
             SWITCH iSelectedSuit
                 CASE 1
@@ -3647,7 +3654,11 @@ DrawInfo_SUITS:
                 CASE 48
                     iTempVar = 6744
                     idTexture = idSuit48_l
-                    BREAK                                                                                                                                                                                                                                                                                           
+                    BREAK        
+                CASE 49
+                    iTempVar = 8319
+                    idTexture = idSuit49_l
+                    BREAK                                                                                                                                                                                                                                                                                                         
             ENDSWITCH
             //GET_FIXED_XY_ASPECT_RATIO (55.0 55.0) (xSize ySize) //40.0 35.0
             xSize = 41.25
@@ -4232,7 +4243,10 @@ get_text_name_id_from_selected_SUIT:
             BREAK  
         CASE 48
             idTexture = idSuit48_l
-            BREAK                                                                                                                                    
+            BREAK                   
+        CASE 49
+            idTexture = idSuit49_l
+            BREAK                                                                                                                              
     ENDSWITCH
 RETURN
 
@@ -5090,7 +5104,7 @@ renderChar:
     IF NOT iSelectedSuit = isCharRendered
         GOSUB deleteChar
         counter = 1
-        WHILE 48 >= counter
+        WHILE 49 >= counter
             IF iSelectedSuit = counter
                 /*idTexture = counter 
                 GOSUB get_unlock_code_suit
@@ -5174,7 +5188,7 @@ RETURN
 
 setSkin:
     counter = 1
-    WHILE 48 >= counter
+    WHILE 49 >= counter
         IF iSelectedSuit = counter
             SWITCH iSelectedSuit
                 CASE 1
@@ -5320,7 +5334,10 @@ setSkin:
                     BREAK 
                 CASE 48
                     iTempVar = 6744
-                    BREAK    
+                    BREAK   
+                CASE 49
+                    iTempVar = 8319
+                    BREAK                      
             ENDSWITCH
             CLEO_CALL getSuitInfoUnclock 0 counter (pUnlockCode)
             IF pUnlockCode = iTempVar
@@ -5485,7 +5502,8 @@ load_all_needed_files:
         CONST_INT suit45 45    
         CONST_INT suit46 46 
         CONST_INT suit47 47 
-        CONST_INT suit48 48                
+        CONST_INT suit48 48   
+        CONST_INT suit49 49              
 
         CONST_INT idMapIcon0    61
         CONST_INT idMapIcon1    62
@@ -5654,6 +5672,7 @@ load_all_needed_files:
         LOAD_SPRITE suit46 "suit46"
         LOAD_SPRITE suit47 "suit47"
         LOAD_SPRITE suit48 "suit48"
+        LOAD_SPRITE suit49 "suit49"
 
         LOAD_SPRITE idLogoSP "splogo"
         LOAD_SPRITE idBackgroundSett "bckstt"
@@ -6145,7 +6164,7 @@ suitUnlock:
     LVAR_TEXT_LABEL lSuitName
     LVAR_INT iTempUnlockCode counter
     counter = 1
-    WHILE 48 >= counter
+    WHILE 49 >= counter
         STRING_FORMAT (lSuitName)"suit%i" counter
         READ_INT_FROM_INI_FILE "cleo\SpiderJ16D\config.ini" "CODE" $lSuitName (iTempUnlockCode)
         CLEO_CALL storeSuitInfoUnclock 0 counter iTempUnlockCode
@@ -7788,6 +7807,7 @@ DUMP    // 124 bytes
 00 00 00 00
 00 00 00 00
 00 00 00 00
+00 00 00 00
 ENDDUMP
 
 GUI_Memory_SuitItem:
@@ -7966,4 +7986,5 @@ CONST_INT idSuit45_l            692
 CONST_INT idSuit46_l            693
 CONST_INT idSuit47_l            694
 CONST_INT idSuit48_l            695
+CONST_INT idSuit49_l            696
 CONST_INT idSuitUnknown_l       785
