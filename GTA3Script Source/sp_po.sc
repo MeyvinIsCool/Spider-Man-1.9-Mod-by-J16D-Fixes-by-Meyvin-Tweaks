@@ -1517,12 +1517,12 @@ RETURN
 //------------------------------------------------------------
 
 //------------------------------------------------------------
-assign_iron_arms:               // Version 1 .... Will Improve In Future !!
+assign_iron_arms:               
     //max_time = 9000    //ms
     timera = 0
     iTempVar = 0
     GOSUB play_sfx_general_sfx
-    GOSUB attachIronArms
+    GOSUB create_iron_arms
     WAIT 10
     //CLEAR_CHAR_TASKS player_actor
     //CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
@@ -1553,14 +1553,15 @@ assign_iron_arms:               // Version 1 .... Will Improve In Future !!
 
 RETURN    
 
-attachIronArms:
+create_iron_arms:
     i = 0
     REQUEST_MODEL 6025
     LOAD_ALL_MODELS_NOW
     WAIT 1
     CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 6025 4 (0.0 0.0 0.0) (0.0 0.0 0.0) i
-    SET_RENDER_OBJECT_ROTATION i (165.0 0.0 0.0)
-    SET_RENDER_OBJECT_POSITION i (-0.2 0.2 0.36)
+    SET_RENDER_OBJECT_ROTATION i (83.0 90.0 90.0)
+    //SET_RENDER_OBJECT_POSITION i (-0.2 0.2 0.36)
+    SET_RENDER_OBJECT_POSITION i (-0.65 0.2 0.01)
 RETURN
 
 //------------------------------------------------------------
