@@ -29,6 +29,7 @@ I Had So Much Fun Time Making These Fixes And Also Thanks To These People Who He
 - The Rahijo (Retexturing)
 - Junior Djjr (Coding + Tips And Code Optimizations)
 - Mr.Demon "Genos" Cyborg (Pizza Time Mission Source Code And Audio Collecting)
+- Andy Gustin (Audio Collecting)
 - Krats18 (Normal Mapped Suits Rigged From The PS4 Game)
 - Aperture Gamer (Help To Make Additional Features On The Mod)
 - Teo (Collecting Suits And Suit Chest)
