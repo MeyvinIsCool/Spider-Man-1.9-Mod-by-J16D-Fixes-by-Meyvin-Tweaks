@@ -26,6 +26,7 @@ CONST_INT low_gravity 9
 CONST_INT iron_arms 10
 CONST_INT defence_shield 11
 CONST_INT spirit_fire 12
+CONST_INT quips 13
 
 CONST_INT player 0
 
@@ -439,7 +440,8 @@ loadHudTextures:
     CONST_INT idSPPowerSB 66
     CONST_INT idSPPowerSF 67
     CONST_INT idSPPowerWB 68
-    CONST_INT idSPPowerNULL 69
+    CONST_INT idSPPowerQS 69
+    CONST_INT idSPPowerNULL 70
     //Armour Power Circle
     CONST_INT idPowerBar1 75
     CONST_INT idPowerBar2 76
@@ -508,6 +510,7 @@ loadHudTextures:
         LOAD_SPRITE idSPPowerIA "p_ia"
         LOAD_SPRITE idSPPowerDS "p_ds"
         LOAD_SPRITE idSPPowerSF "p_sf"
+        LOAD_SPRITE idSPPowerQS "p_qs"
         LOAD_SPRITE idSPPowerNULL "p_null"
         //Armour Power Circle
         LOAD_SPRITE idPowerBar1 "c_b_1"
@@ -929,6 +932,11 @@ drawCurrentPower:
             SET_SPRITES_DRAW_BEFORE_FADE TRUE
             DRAW_SPRITE idSPPowerSF (535.0 50.0) (sx sy) (255 255 255 255)
             BREAK
+        CASE quips
+            USE_TEXT_COMMANDS FALSE
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_SPRITE idSPPowerQS (535.0 50.0) (sx sy) (255 255 255 255)
+            BREAK            
         DEFAULT
             USE_TEXT_COMMANDS FALSE
             SET_SPRITES_DRAW_BEFORE_FADE TRUE

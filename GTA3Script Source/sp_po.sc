@@ -17,6 +17,7 @@ CONST_INT low_gravity 9
 CONST_INT iron_arms 10
 CONST_INT defence_shield 11
 CONST_INT spirit_fire 12
+CONST_INT quips 13
 
 CONST_INT player 0
 
@@ -95,6 +96,20 @@ main_loop:
                                 GOSUB get_power_max_time
                                 GOSUB assign_low_gravity
                             ENDIF
+                            IF idPowers = 13     //quips    //id:13
+                                CREATE_FX_SYSTEM_ON_CHAR SP_POWERS player_actor (0.0 0.0 0.15) 4 (fx_system)
+                                PLAY_AND_KILL_FX_SYSTEM fx_system
+                                WAIT 0
+                                GOSUB get_power_max_time
+                                GOSUB assign_quips
+                            ENDIF             
+                            IF idPowers = 10     //iron_arms    //id:10
+                                CREATE_FX_SYSTEM_ON_CHAR SP_POWERS player_actor (0.0 0.0 0.15) 4 (fx_system)
+                                PLAY_AND_KILL_FX_SYSTEM fx_system
+                                WAIT 0
+                                GOSUB get_power_max_time
+                                GOSUB assign_iron_arms
+                            ENDIF                                            
                         ENDIF
                     ENDIF
 
@@ -109,7 +124,7 @@ main_loop:
                             GOSUB get_power_max_time
                             GET_CLEO_SHARED_VAR varIdPowers (idPowers)
                             IF idPowers >= 1
-                            AND 12 >= idPowers
+                            AND 13 >= idPowers
                                 CREATE_FX_SYSTEM_ON_CHAR SP_POWERS player_actor (0.0 0.0 0.15) 4 (fx_system)
                                 PLAY_AND_KILL_FX_SYSTEM fx_system
                                 CLEAR_CHAR_SECONDARY_TASKS player_actor
@@ -154,6 +169,9 @@ main_loop:
                                 CASE spirit_fire    //id:12
                                     GOSUB assign_spirit_fire
                                     BREAK
+                                CASE quips    //id:13
+                                    GOSUB assign_quips
+                                    BREAK                                    
                                 DEFAULT
                                     WAIT 500
                                     BREAK
@@ -238,6 +256,10 @@ get_power_max_time:
             max_time = 15000    //0:10
             cool_down_time = 180000  //3:00
             BREAK
+        CASE quips    //id:12
+            max_time = 6500    //0:10
+            cool_down_time = 120000  //3:00
+            BREAK            
     ENDSWITCH
 RETURN
 //------------------------------------------------------------
@@ -1672,6 +1694,148 @@ assign_spirit_fire:
     WAIT 50
 RETURN
 //------------------------------------------------------------
+
+//------------------------------------------------------------
+assign_quips:
+    //max_time = 6500    //ms
+    timera = 0
+    iTempVar = 0
+    GOSUB play_sfx_general_sfx
+    GENERATE_RANDOM_INT_IN_RANGE 1 11 (iTempVar)
+    GOSUB playQuips
+    WAIT 0
+
+    WHILE max_time >= timera
+        CLEO_CALL set_current_power_progress 0 max_time timera
+
+
+        // break loop
+        GOSUB readVars
+        IF toggleSpiderMod = 0  //FALSE
+        OR isInMainMenu = 1     //1:true 0:false
+            BREAK
+        ENDIF
+        IF NOT IS_PLAYER_PLAYING player
+            BREAK
+        ENDIF
+        IF IS_CHAR_IN_ANY_CAR player_actor
+            BREAK
+        ENDIF
+
+        WAIT 0
+    ENDWHILE
+    KILL_FX_SYSTEM fx_system
+    REMOVE_ALL_SCRIPT_FIRES
+
+    REMOVE_AUDIO_STREAM sfx
+    SET_CHAR_PROOFS player_actor FALSE FALSE FALSE TRUE FALSE   //bullet|fire|explosion|collision|melee
+    WAIT 50
+RETURN
+
+playQuips:
+    SWITCH iTempVar
+        CASE 1  //in
+            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\powers_q_1.mp3"
+                LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\powers_q_1.mp3" (sfx)
+                SET_AUDIO_STREAM_STATE sfx 1    //play
+                //SET_AUDIO_STREAM_VOLUME sfx 0.8
+                GET_AUDIO_SFX_VOLUME (fRandomVal[1])
+                fRandomVal[1] *= 0.8
+                SET_AUDIO_STREAM_VOLUME sfx fRandomVal[1]
+            ENDIF
+        BREAK
+        CASE 2
+            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\powers_q_2.mp3"
+                LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\powers_q_2.mp3" (sfx)
+                SET_AUDIO_STREAM_STATE sfx 1    //play
+                //SET_AUDIO_STREAM_VOLUME sfx 1.0
+                GET_AUDIO_SFX_VOLUME (fRandomVal[1])
+                SET_AUDIO_STREAM_VOLUME sfx fRandomVal[1]
+            ENDIF
+        BREAK
+        CASE 3
+            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\powers_q_3.mp3"
+                LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\powers_q_3.mp3" (sfx)
+                SET_AUDIO_STREAM_STATE sfx 1    //play
+                //SET_AUDIO_STREAM_VOLUME sfx 1.0
+                GET_AUDIO_SFX_VOLUME (fRandomVal[1])
+                SET_AUDIO_STREAM_VOLUME sfx fRandomVal[1]
+            ENDIF
+        BREAK
+        CASE 4
+            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\powers_q_4.mp3"
+                LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\powers_q_4.mp3" (sfx)
+                SET_AUDIO_STREAM_STATE sfx 1    //play
+                //SET_AUDIO_STREAM_VOLUME sfx 1.0
+                GET_AUDIO_SFX_VOLUME (fRandomVal[1])
+                SET_AUDIO_STREAM_VOLUME sfx fRandomVal[1]
+            ENDIF
+        BREAK
+        CASE 5
+            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\powers_q_5.mp3"
+                LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\powers_q_5.mp3" (sfx)
+                SET_AUDIO_STREAM_STATE sfx 1    //play
+                //SET_AUDIO_STREAM_VOLUME sfx 1.0
+                GET_AUDIO_SFX_VOLUME (fRandomVal[1])
+                SET_AUDIO_STREAM_VOLUME sfx fRandomVal[1]
+            ENDIF
+        BREAK                 
+        CASE 6
+            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\powers_q_6.mp3"
+                LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\powers_q_6.mp3" (sfx)
+                SET_AUDIO_STREAM_STATE sfx 1    //play
+                //SET_AUDIO_STREAM_VOLUME sfx 1.0
+                GET_AUDIO_SFX_VOLUME (fRandomVal[1])
+                SET_AUDIO_STREAM_VOLUME sfx fRandomVal[1]
+            ENDIF
+        BREAK  
+        CASE 7
+            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\powers_q_7.mp3"
+                LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\powers_q_7.mp3" (sfx)
+                SET_AUDIO_STREAM_STATE sfx 1    //play
+                //SET_AUDIO_STREAM_VOLUME sfx 1.0
+                GET_AUDIO_SFX_VOLUME (fRandomVal[1])
+                SET_AUDIO_STREAM_VOLUME sfx fRandomVal[1]
+            ENDIF
+        BREAK  
+        CASE 8
+            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\powers_q_8.mp3"
+                LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\powers_q_8.mp3" (sfx)
+                SET_AUDIO_STREAM_STATE sfx 1    //play
+                //SET_AUDIO_STREAM_VOLUME sfx 1.0
+                GET_AUDIO_SFX_VOLUME (fRandomVal[1])
+                SET_AUDIO_STREAM_VOLUME sfx fRandomVal[1]
+            ENDIF
+        BREAK  
+        CASE 9
+            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\powers_q_9.mp3"
+                LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\powers_q_9.mp3" (sfx)
+                SET_AUDIO_STREAM_STATE sfx 1    //play
+                //SET_AUDIO_STREAM_VOLUME sfx 1.0
+                GET_AUDIO_SFX_VOLUME (fRandomVal[1])
+                SET_AUDIO_STREAM_VOLUME sfx fRandomVal[1]
+            ENDIF
+        BREAK  
+        CASE 10
+            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\powers_q_10.mp3"
+                LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\powers_q_10.mp3" (sfx)
+                SET_AUDIO_STREAM_STATE sfx 1    //play
+                //SET_AUDIO_STREAM_VOLUME sfx 1.0
+                GET_AUDIO_SFX_VOLUME (fRandomVal[1])
+                SET_AUDIO_STREAM_VOLUME sfx fRandomVal[1]
+            ENDIF
+        BREAK  
+        CASE 11
+            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\powers_q_11.mp3"
+                LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\powers_q_11.mp3" (sfx)
+                SET_AUDIO_STREAM_STATE sfx 1    //play
+                //SET_AUDIO_STREAM_VOLUME sfx 1.0
+                GET_AUDIO_SFX_VOLUME (fRandomVal[1])
+                SET_AUDIO_STREAM_VOLUME sfx fRandomVal[1]
+            ENDIF
+        BREAK                                                         
+    ENDSWITCH
+RETURN
 
 //------------------GENERAL-----------------------------------
 assign_char_reference:

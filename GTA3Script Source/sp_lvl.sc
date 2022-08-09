@@ -804,6 +804,7 @@ unlock_spiderman_suits:
                 WRITE_INT_TO_INI_FILE 2846 "CLEO\SpiderJ16D\config.ini" "CODE" "suit46"
                 WRITE_INT_TO_INI_FILE 1985 "CLEO\SpiderJ16D\config.ini" "CODE" "suit47"
                 WRITE_INT_TO_INI_FILE 6744 "CLEO\SpiderJ16D\config.ini" "CODE" "suit48"
+                WRITE_INT_TO_INI_FILE 3734 "CLEO\SpiderJ16D\config.ini" "CODE" "suit50"
                 BREAK                                                          
             DEFAULT
                 BREAK
