@@ -1922,8 +1922,102 @@ ProcessGame_and_DrawMenu_RightPanel_SUITS:
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (633.75 105.0) (12.5 15.0) (16 43 52 0) (0.5) (1 0 0 0) (31 181 240 200) -1 -1 (0.0 0.0)   //LINE_RIGHT
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (597.5 97.5) (60.0 15.0) (16 43 52 0) (0.5) (1 1 1 1) (31 181 240 200) -1 -1 (0.0 0.0)   //SIDES_LINES
 
-    iTempVar = idNoPowerText_l    
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //NO ASSOCIATED SUIT POWER
+    IF iSelectedSuit = 3
+        iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+        CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+        iSelectedPower = 1
+        GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel   
+    ELSE    
+        IF iSelectedSuit = 5
+            iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+            CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+            iSelectedPower = 2
+            GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel
+        ELSE
+            IF iSelectedSuit = 6
+                iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+                CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+                iSelectedPower = 3
+                GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel
+            ELSE         
+                IF iSelectedSuit = 8
+                    iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+                    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+                    iSelectedPower = 4
+                    GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel          
+                ELSE     
+                    IF iSelectedSuit = 9
+                        iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+                        CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+                        iSelectedPower = 5
+                        GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel        
+                    ELSE       
+                        IF iSelectedSuit = 10
+                            iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+                            CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+                            iSelectedPower = 6
+                            GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel  
+                        ELSE
+                            IF iSelectedSuit = 11
+                                iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+                                CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+                                iSelectedPower = 7
+                                GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel 
+                            ELSE
+                                IF iSelectedSuit = 14
+                                    iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+                                    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+                                    iSelectedPower = 8
+                                    GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel     
+                                ELSE
+                                    IF iSelectedSuit = 16
+                                        iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+                                        CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+                                        iSelectedPower = 9
+                                        GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel  
+                                    ELSE                                  
+                                        IF iSelectedSuit = 19
+                                            iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+                                            CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+                                            iSelectedPower = 11
+                                            GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel   
+                                        ELSE
+                                            IF iSelectedSuit = 20
+                                                iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+                                                CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+                                                iSelectedPower = 12
+                                                GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel  
+                                            ELSE        
+                                                IF iSelectedSuit = 22
+                                                    iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+                                                    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+                                                    iSelectedPower = 13
+                                                    GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel   
+                                                ELSE      
+                                                    IF iSelectedSuit = 29
+                                                        iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+                                                        CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+                                                        iSelectedPower = 10
+                                                        GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel     
+                                                    ELSE
+                                                        iTempVar = idNoPowerText_l    
+                                                        CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //NO ASSOCIATED SUIT POWER
+                                                    ENDIF
+                                                ENDIF
+                                            ENDIF
+                                        ENDIF
+                                    ENDIF
+                                ENDIF
+                            ENDIF
+                        ENDIF
+                    ENDIF                                                                                                                                                                 
+                ENDIF
+            ENDIF        
+        ENDIF
+    ENDIF
+
+//iTempVar = idNoPowerText_l    
+//CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //NO ASSOCIATED SUIT POWER 
 
     GOSUB DrawInfo_SUITS
     USE_TEXT_COMMANDS FALSE
@@ -3944,6 +4038,29 @@ DrawCheckMarks_POWER_SUITS:
     ENDWHILE
 RETURN
 
+DrawInfo_Suit_Unlocked_Power_RightPanel:
+    //DRAW POWER SUIT IMAGE
+    //GET_FIXED_XY_ASPECT_RATIO (55.0 50.0) (xSize ySize)
+    xSize = 41.25
+    ySize = 56.67
+    GOSUB get_texture_helper_id_by_selected_power    
+    USE_TEXT_COMMANDS FALSE
+    DRAW_SPRITE pow_background (530.0 158.5) (xSize ySize) (255 255 255 200)    //IMAGE_SUIT-RIGHT_PANEL-BACKGROUND
+    GOSUB get_power_id_by_selected_item
+
+    //GET_FIXED_XY_ASPECT_RATIO (55.0 55.0) (xSize ySize)
+    xSize = 41.25
+    ySize = 51.33
+    USE_TEXT_COMMANDS FALSE
+    DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)    //IMAGE_POWER_SUIT-RIGHT_PANEL  
+    
+    //DRAW POWER SUIT NAME
+    GOSUB get_text_id_by_selected_power
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (597.5 149.75) (85.0 17.5) (31 181 240 0) (0.5) (0 0 1 0) (0 125 180 150) iTempVar 6 (-42.5 0.0)   //NAME_SUIT (25-49)
+    //Text Description
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.0 192.0) (136.0 30.0) (255 255 255 0) (0.5) (0 0 0 0) (31 181 240 200) counter 7 (0.0 0.0)   //Power Description
+RETURN
+
 DrawInfo_POWER_SUITS_RightPanel:
     // DRAW IMAGE HELPER
     //GET_FIXED_XY_ASPECT_RATIO (181.0 181.0) (xSize ySize)
@@ -3984,7 +4101,7 @@ RETURN
 DrawInfo_SUITS_RightPanel_PowerSuits:
     //iTempVar = idNoPowerText_l
     iTempVar = idUnlocksPowerText_l
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.0 227.0) (136.0 30.0) (18 49 58 140) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 -3.0)   //THIS SUIT ALSO UNLOCKS
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.0 227.0) (136.0 30.0) (18 49 58 140) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 -3.0)   //Combined with the following suit:
 
     //DRAW NAME SUIT
     GET_LABEL_POINTER GUI_Memory_SuitItem (iTempVar)
@@ -7924,6 +8041,7 @@ CONST_INT idUnlocksPowerText_l  21
 CONST_INT idSuit_l              22
 CONST_INT idSuitPower_l         23
 CONST_INT idSuitMods_l          24
+CONST_INT idSelectedSuitUnlocks 25
 
 CONST_INT idWarningTITLE_l      60
 CONST_INT idWarningMsg_l        61
