@@ -1544,13 +1544,15 @@ assign_iron_arms:
     timera = 0
     iTempVar = 0
     GOSUB play_sfx_general_sfx
+    IF NOT IS_CHAR_REALLY_IN_AIR player_actor
+        TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("iron_armsA" "spider") 61.0 (0 1 1 0) -1
+        WAIT 0
+        SET_CHAR_ANIM_SPEED player_actor "iron_armsA" 0.65
+    ENDIF    
     GOSUB create_iron_arms
     WAIT 10
     //CLEAR_CHAR_TASKS player_actor
     //CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("iron_armsA" "spider") 61.0 (0 1 1 0) -1
-    WAIT 0
-    SET_CHAR_ANIM_SPEED player_actor "iron_armsA" 0.65
 
     WHILE max_time >= timera
         CLEO_CALL set_current_power_progress 0 max_time timera
