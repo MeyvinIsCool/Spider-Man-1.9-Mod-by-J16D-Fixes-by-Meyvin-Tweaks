@@ -2015,9 +2015,8 @@ ProcessGame_and_DrawMenu_RightPanel_SUITS:
             ENDIF        
         ENDIF
     ENDIF
-
-//iTempVar = idNoPowerText_l    
-//CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //NO ASSOCIATED SUIT POWER 
+    
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.0 122.5) (136.0 20.0) (18 49 58 140) (0.5) (1 1 1 1) (31 181 240 200) -1 -1 (-60.0 0.0)   //TEXT_UPPER_WITH_BLUE_BACKGROUND
 
     GOSUB DrawInfo_SUITS
     USE_TEXT_COMMANDS FALSE
