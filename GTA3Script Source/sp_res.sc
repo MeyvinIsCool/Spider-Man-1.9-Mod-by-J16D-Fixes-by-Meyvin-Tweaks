@@ -190,9 +190,7 @@ animSequence_r1:
             IF 0.200 >= currentTime     //frame 18/90
                 IF flag_photo_mode = 0    //Smooth
                     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-                    //CAMERA_SET_LERP_FOV 100.0 105.0 500 1   //105.0 100.0
-                    //CLEO_CALL addForceToChar 0 player_actor 0.0 3.0 0.0 3.5    //0.0 0.01 0.0
-                    //CAMERA_SET_LERP_FOV 100.0 105.0 1000 TRUE
+                    CLEO_CALL addForceToChar 0 player_actor 0.0 0.01 0.0 3.5
                 ELSE                //Default  (for photo mode)         
                     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0] 
                 ENDIF
@@ -464,9 +462,7 @@ animSequence_r2:
             IF 0.200 >= currentTime     //frame 18/90
                 IF flag_photo_mode = 0    //Smooth
                     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-                    //CAMERA_SET_LERP_FOV 100.0 105.0 500 1   //105.0 100.0
-                    //CLEO_CALL addForceToChar 0 player_actor 0.0 3.0 0.0 3.5    //0.0 0.01 0.0
-                    //CAMERA_SET_LERP_FOV 100.0 105.0 1000 TRUE
+                    CLEO_CALL addForceToChar 0 player_actor 0.0 0.01 0.0 3.5
                 ELSE                //Default  (for photo mode)         
                     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0] 
                 ENDIF
@@ -739,9 +735,7 @@ animSequence_r3:
             IF 0.200 >= currentTime     //frame 18/90
                 IF flag_photo_mode = 0    //Smooth
                     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-                    //CAMERA_SET_LERP_FOV 100.0 105.0 500 1   //105.0 100.0
-                    //CLEO_CALL addForceToChar 0 player_actor 0.0 3.0 0.0 3.5    //0.0 0.01 0.0
-                    //CAMERA_SET_LERP_FOV 100.0 105.0 1000 TRUE
+                    CLEO_CALL addForceToChar 0 player_actor 0.0 0.01 0.0 3.5
                 ELSE                //Default  (for photo mode)         
                     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0] 
                 ENDIF
@@ -1013,9 +1007,7 @@ animSequence_r4:
             IF 0.200 >= currentTime     //frame 18/90
                 IF flag_photo_mode = 0    //Smooth
                     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-                    //CAMERA_SET_LERP_FOV 100.0 105.0 500 1   //105.0 100.0
-                    //CLEO_CALL addForceToChar 0 player_actor 0.0 3.0 0.0 3.5    //0.0 0.01 0.0
-                    //CAMERA_SET_LERP_FOV 100.0 105.0 1000 TRUE
+                    CLEO_CALL addForceToChar 0 player_actor 0.0 0.01 0.0 3.5
                 ELSE                //Default  (for photo mode)         
                     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0] 
                 ENDIF
@@ -1289,9 +1281,7 @@ animSequence_r5:
             IF 0.200 >= currentTime     //frame 18/90
                 IF flag_photo_mode = 0    //Smooth
                     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-                    //CAMERA_SET_LERP_FOV 100.0 105.0 500 1   //105.0 100.0
-                    //CLEO_CALL addForceToChar 0 player_actor 0.0 3.0 0.0 3.5    //0.0 0.01 0.0
-                    //CAMERA_SET_LERP_FOV 100.0 105.0 1000 TRUE
+                    CLEO_CALL addForceToChar 0 player_actor 0.0 0.01 0.0 3.5
                 ELSE                //Default  (for photo mode)         
                     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0] 
                 ENDIF
@@ -1565,9 +1555,7 @@ animSequence_r6:
             IF 0.200 >= currentTime     //frame 18/90
                 IF flag_photo_mode = 0    //Smooth
                     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-                    //CAMERA_SET_LERP_FOV 100.0 105.0 500 1   //105.0 100.0
-                    //CLEO_CALL addForceToChar 0 player_actor 0.0 3.0 0.0 3.5    //0.0 0.01 0.0
-                    //CAMERA_SET_LERP_FOV 100.0 105.0 1000 TRUE
+                    CLEO_CALL addForceToChar 0 player_actor 0.0 0.01 0.0 3.5
                 ELSE                //Default  (for photo mode)         
                     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0] 
                 ENDIF
