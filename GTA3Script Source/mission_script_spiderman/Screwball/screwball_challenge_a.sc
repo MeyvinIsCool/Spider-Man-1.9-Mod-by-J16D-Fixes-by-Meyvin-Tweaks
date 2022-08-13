@@ -802,6 +802,9 @@ animSequence:
     ENDIF
     WAIT 0
 
+    ATTACH_OBJECT_TO_CHAR baseObject player_actor (0.0 0.0 0.0) (0.0 0.0 0.0)
+    WAIT 0
+
     TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "t_tower_A" "spider" 91.0 (0 1 1 0) -2
     TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("w_tower_L_A" "mweb") 91.0 (0 1 1 1) -2
     TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("w_tower_R_A" "mweb") 91.0 (0 1 1 1) -2
@@ -810,7 +813,6 @@ animSequence:
     SET_CHAR_ANIM_PLAYING_FLAG iWebActor ("w_tower_L_A") STOP
     SET_CHAR_ANIM_PLAYING_FLAG iWebActorR ("w_tower_R_A") STOP
 
-    ATTACH_OBJECT_TO_CHAR baseObject player_actor (0.0 0.0 0.0) (0.0 0.0 0.0)
 
     WHILE IS_CHAR_PLAYING_ANIM player_actor ("t_tower_A")
         SET_CHAR_HEADING player_actor zAngle
