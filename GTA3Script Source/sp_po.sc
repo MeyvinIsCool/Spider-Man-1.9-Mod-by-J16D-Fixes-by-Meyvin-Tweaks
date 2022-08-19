@@ -1861,7 +1861,6 @@ assign_equalizer:
             IF DOES_CHAR_EXIST iChar
             AND NOT IS_CHAR_DEAD iChar
             AND IS_CHAR_ON_SCREEN iChar
-                PRINT_FORMATTED_NOW "Got A Ped Nearby" 1
                 IF HAS_CHAR_BEEN_DAMAGED_BY_CHAR iChar player_actor
                     CLEAR_CHAR_TASKS iChar
                     CLEAR_CHAR_TASKS_IMMEDIATELY iChar
