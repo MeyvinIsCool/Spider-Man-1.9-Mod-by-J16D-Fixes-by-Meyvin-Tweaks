@@ -265,7 +265,7 @@ get_power_max_time:
             cool_down_time = 120000  //3:00
             BREAK            
         CASE equalizer    //id:14
-            max_time = 12000    //0:12
+            max_time = 100000    //1:00
             cool_down_time = 110000  //2:90
             BREAK              
     ENDSWITCH
@@ -1861,25 +1861,26 @@ assign_equalizer:
             IF DOES_CHAR_EXIST iChar
             AND NOT IS_CHAR_DEAD iChar
             AND IS_CHAR_ON_SCREEN iChar
-                IF HAS_CHAR_BEEN_DAMAGED_BY_CHAR iChar player_actor
+
+                IF GOSUB is_playing_other_hit_anim  
                     CLEAR_CHAR_TASKS iChar
                     CLEAR_CHAR_TASKS_IMMEDIATELY iChar
-                    DAMAGE_CHAR iChar 100 TRUE 
-                ELSE
-                    IF GOSUB is_playing_other_hit_anim  
-                        CLEAR_CHAR_TASKS iChar
-                        CLEAR_CHAR_TASKS_IMMEDIATELY iChar
-                        DAMAGE_CHAR iChar 100 TRUE          
-                    ENDIF       
-                ENDIF                                     
+                    DAMAGE_CHAR iChar 100 TRUE          
+                ENDIF   
+
             ENDIF    
-                        
+           
             GET_CHAR_HEALTH player_actor counter
-            IF NOT p = counter
-                SET_CHAR_HEALTH player_actor 0
-                p = counter 
-            ENDIF                
-            WAIT 0 
+            IF NOT IS_CHAR_SHOOTING iChar
+                IF HAS_CHAR_BEEN_DAMAGED_BY_CHAR player_actor iChar
+                    IF NOT p = counter
+                        SET_CHAR_HEALTH player_actor 0 
+                    ENDIF
+                ENDIF
+            ELSE
+                p = counter
+            ENDIF
+
         ENDIF
 
         // break loop
@@ -1905,11 +1906,37 @@ RETURN
 is_playing_other_hit_anim:
     IF IS_CHAR_PLAYING_ANIM iChar ("swing_kick_hit_1")     //swing kick hit
     OR IS_CHAR_PLAYING_ANIM iChar ("ground_to_air_hit") //Air combo anims
-    OR IS_CHAR_PLAYING_ANIM iChar ("HIT_R")                                 
+    OR IS_CHAR_PLAYING_ANIM iChar ("dildo_hit_1")
+    OR IS_CHAR_PLAYING_ANIM iChar ("dildo_hit_2")
+    OR IS_CHAR_PLAYING_ANIM iChar ("dildo_hit_3")
         RETURN_TRUE
-        RETURN
-    ENDIF    
-    RETURN_FALSE
+    ELSE
+        IF IS_CHAR_PLAYING_ANIM iChar ("dildo_hit_4")
+        OR IS_CHAR_PLAYING_ANIM iChar ("dildo_hit_5")
+        OR IS_CHAR_PLAYING_ANIM iChar ("dildo_hit_6")
+        OR IS_CHAR_PLAYING_ANIM iChar ("dildo_hit_7")
+        OR IS_CHAR_PLAYING_ANIM iChar ("HIT_behind")
+        OR IS_CHAR_PLAYING_ANIM iChar ("HIT_front")        
+            RETURN_TRUE
+        ELSE    
+            IF IS_CHAR_PLAYING_ANIM iChar ("HitA_1")
+            OR IS_CHAR_PLAYING_ANIM iChar ("HitA_2")
+            OR IS_CHAR_PLAYING_ANIM iChar ("HitA_3")
+            OR IS_CHAR_PLAYING_ANIM iChar ("HIT_back")
+            OR IS_CHAR_PLAYING_ANIM iChar ("HIT_L")
+            OR IS_CHAR_PLAYING_ANIM iChar ("HIT_R")        
+                RETURN_TRUE
+            ELSE
+                IF IS_CHAR_PLAYING_ANIM iChar ("HIT_walk")
+                OR IS_CHAR_PLAYING_ANIM iChar ("Hit_fightkick")       
+                OR IS_CHAR_PLAYING_ANIM iChar ("Hit_fightkick_b")                      
+                    RETURN_TRUE
+                ELSE
+                    RETURN_FALSE
+                ENDIF
+            ENDIF
+        ENDIF
+    ENDIF
 RETURN
 //------------------------------------------------------------
 
