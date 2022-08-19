@@ -18,6 +18,7 @@ CONST_INT iron_arms 10
 CONST_INT defence_shield 11
 CONST_INT spirit_fire 12
 CONST_INT quips 13
+CONST_INT equalizer 14
 
 CONST_INT player 0
 
@@ -32,7 +33,7 @@ WAIT 0
 LVAR_INT player_actor toggleSpiderMod isInMainMenu idPowers
 LVAR_INT max_time cool_down_time
 LVAR_INT i p iChar anim_seq fx_system sfx iObj 
-LVAR_INT counter iTempVar iTempVar2
+LVAR_INT counter iTempVar 
 LVAR_INT lvar[2]
 LVAR_FLOAT x[3] y[3] z[3] fRandomVal[2] fAngle[2] fDistance
 
@@ -56,7 +57,7 @@ main_loop:
                     timera = 0
                     //GET_CLEO_SHARED_VAR varIdPowers (idPowers)
                     WHILE 99 > iTempVar
-                        /* Not needed, scprits will be reseted after close Menu
+                        /* Not needed, scripts will be reseted after close Menu
                         GET_CLEO_SHARED_VAR varIdPowers (iTempVar2)
                         IF NOT iTempVar2 = idPowers //Update Cool_Down_time -check if power has changed
                             GET_CLEO_SHARED_VAR varIdPowers (idPowers)
@@ -124,7 +125,7 @@ main_loop:
                             GOSUB get_power_max_time
                             GET_CLEO_SHARED_VAR varIdPowers (idPowers)
                             IF idPowers >= 1
-                            AND 13 >= idPowers
+                            AND 14 >= idPowers
                                 CREATE_FX_SYSTEM_ON_CHAR SP_POWERS player_actor (0.0 0.0 0.15) 4 (fx_system)
                                 PLAY_AND_KILL_FX_SYSTEM fx_system
                                 CLEAR_CHAR_SECONDARY_TASKS player_actor
@@ -171,7 +172,10 @@ main_loop:
                                     BREAK
                                 CASE quips    //id:13
                                     GOSUB assign_quips
-                                    BREAK                                    
+                                    BREAK   
+                                CASE equalizer    //id:14
+                                    GOSUB assign_equalizer
+                                    BREAK                                                                      
                                 DEFAULT
                                     WAIT 500
                                     BREAK
@@ -253,13 +257,17 @@ get_power_max_time:
             cool_down_time = 120000  //2:00
             BREAK
         CASE spirit_fire    //id:12
-            max_time = 15000    //0:10
+            max_time = 15000    //0:15
             cool_down_time = 180000  //3:00
             BREAK
-        CASE quips    //id:12
-            max_time = 6500    //0:10
+        CASE quips    //id:13
+            max_time = 6500    //0:06
             cool_down_time = 120000  //3:00
             BREAK            
+        CASE equalizer    //id:14
+            max_time = 12000    //0:12
+            cool_down_time = 110000  //2:90
+            BREAK              
     ENDSWITCH
 RETURN
 //------------------------------------------------------------
@@ -504,7 +512,6 @@ set_z_angle_holo_a:
 RETURN
 
 assign_melee_task_at_coords_a:
-    //IF GOSUB is_not_performing_sequence_task
     IF NOT IS_CHAR_PLAYING_ANIM iChar "EV_step"
     AND NOT IS_CHAR_PLAYING_ANIM iChar "IDLE_chat"
         GOSUB assign_char_reference
@@ -524,7 +531,6 @@ assign_melee_task_at_coords_a:
 RETURN
 
 assign_shoot_task_at_coords_a:
-    //IF GOSUB is_not_performing_sequence_task
     IF NOT IS_CHAR_PLAYING_ANIM iChar "EV_step"
     AND NOT IS_CHAR_PLAYING_ANIM iChar "IDLE_chat"
         GOSUB assign_char_reference
@@ -550,7 +556,6 @@ set_z_angle_holo_b:
 RETURN
 
 assign_melee_task_at_coords_b:
-    //IF GOSUB is_not_performing_sequence_task
     IF NOT IS_CHAR_PLAYING_ANIM iChar "EV_step"
     AND NOT IS_CHAR_PLAYING_ANIM iChar "IDLE_chat"
         GOSUB assign_char_reference
@@ -570,7 +575,6 @@ assign_melee_task_at_coords_b:
 RETURN
 
 assign_shoot_task_at_coords_b:
-    //IF GOSUB is_not_performing_sequence_task
     IF NOT IS_CHAR_PLAYING_ANIM iChar "EV_step"
     AND NOT IS_CHAR_PLAYING_ANIM iChar "IDLE_chat"
         GOSUB assign_char_reference
@@ -1839,6 +1843,114 @@ playQuips:
     ENDSWITCH
 RETURN
 
+//------------------------------------------------------------
+assign_equalizer:
+    //max_time = 12500    //ms 
+    timera = 0
+    iTempVar = 0
+    GOSUB play_sfx_general_sfx    
+    GET_CHAR_HEALTH player_actor counter
+    p = counter  
+    WAIT 0
+
+    WHILE max_time >= timera
+        CLEO_CALL set_current_power_progress 0 max_time timera
+
+        GET_CHAR_COORDINATES player_actor (x[0] y[0] z[0])
+        IF GET_RANDOM_CHAR_IN_SPHERE_NO_SAVE_RECURSIVE x[0] y[0] z[0] 2.5 0 1 (iChar) 
+            IF DOES_CHAR_EXIST iChar
+            AND NOT IS_CHAR_DEAD iChar
+            AND IS_CHAR_ON_SCREEN iChar
+                PRINT_FORMATTED_NOW "Got A Ped Nearby" 1
+                IF HAS_CHAR_BEEN_DAMAGED_BY_CHAR iChar player_actor
+                    CLEAR_CHAR_TASKS iChar
+                    CLEAR_CHAR_TASKS_IMMEDIATELY iChar
+                    DAMAGE_CHAR iChar 100 TRUE 
+                ELSE
+                    IF GOSUB is_playing_other_hit_anim  
+                        CLEAR_CHAR_TASKS iChar
+                        CLEAR_CHAR_TASKS_IMMEDIATELY iChar
+                        DAMAGE_CHAR iChar 100 TRUE          
+                    ENDIF       
+                ENDIF                                     
+            ENDIF    
+                        
+            GET_CHAR_HEALTH player_actor counter
+            IF NOT p = counter
+                SET_CHAR_HEALTH player_actor 0
+                p = counter 
+            ENDIF                
+            WAIT 0 
+        ENDIF
+
+        // break loop
+        GOSUB readVars
+        IF toggleSpiderMod = 0  //FALSE
+        OR isInMainMenu = 1     //1:true 0:false
+            BREAK
+        ENDIF
+        IF NOT IS_PLAYER_PLAYING player
+            BREAK
+        ENDIF
+        IF IS_CHAR_IN_ANY_CAR player_actor
+            BREAK
+        ENDIF
+
+        WAIT 0
+    ENDWHILE
+
+    REMOVE_AUDIO_STREAM sfx
+    WAIT 50
+RETURN
+
+is_playing_other_hit_anim:
+    IF IS_CHAR_PLAYING_ANIM iChar ("swing_kick_hit_1")     //swing kick hit
+    OR IS_CHAR_PLAYING_ANIM iChar ("ground_to_air_hit") //Air combo anims
+    OR IS_CHAR_PLAYING_ANIM iChar ("HIT_R")                                 
+        RETURN_TRUE
+        RETURN
+    ENDIF    
+    RETURN_FALSE
+RETURN
+//------------------------------------------------------------
+
+/*
+//------------------------------------------------------------
+assign_fornew:
+    //max_time = 10000    //ms
+    timera = 0
+    iTempVar = 0
+    GOSUB play_sfx_general_sfx
+    WAIT 0
+
+    WHILE max_time >= timera
+        CLEO_CALL set_current_power_progress 0 max_time timera
+
+        // start the code here !
+
+
+        // break loop
+        GOSUB readVars
+        IF toggleSpiderMod = 0  //FALSE
+        OR isInMainMenu = 1     //1:true 0:false
+            BREAK
+        ENDIF
+        IF NOT IS_PLAYER_PLAYING player
+            BREAK
+        ENDIF
+        IF IS_CHAR_IN_ANY_CAR player_actor
+            BREAK
+        ENDIF
+
+        WAIT 0
+    ENDWHILE
+
+    REMOVE_AUDIO_STREAM sfx
+    WAIT 50
+RETURN
+*/
+//------------------------------------------------------------
+
 //------------------GENERAL-----------------------------------
 assign_char_reference:
     IF NOT IS_CHAR_SCRIPT_CONTROLLED iChar
@@ -1846,15 +1958,6 @@ assign_char_reference:
             MARK_CHAR_AS_NEEDED iChar
         ENDIF
     ENDIF
-RETURN
-
-is_not_performing_sequence_task:
-    GET_SCRIPT_TASK_STATUS iChar 0x618 (iTempVar2) // PERFORM_SEQUENCE_TASK
-    IF iTempVar2 = 7  //-1
-        RETURN_TRUE
-        RETURN
-    ENDIF
-    RETURN_FALSE
 RETURN
 
 play_sfx_general_sfx:

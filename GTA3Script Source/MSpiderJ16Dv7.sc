@@ -670,7 +670,7 @@ show_menu:
                 CASE menPowerSuit
                     CLEO_CALL GetDataJoystickMatrix5x5 0 (5 1 iActiveCol)(3 1 iActiveRow) (iActiveCol iActiveRow)
                     IF iActiveRow = 3
-                        CLAMP_INT iActiveCol 1 3 (iActiveCol)   //Limit 2 power on 3rd row
+                        CLAMP_INT iActiveCol 1 4 (iActiveCol)   //Limit 4 power on 4rd row
                     ENDIF
                     IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                         //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
@@ -1994,14 +1994,21 @@ ProcessGame_and_DrawMenu_RightPanel_SUITS:
                                                     iSelectedPower = 13     // Quips
                                                     GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel   
                                                 ELSE      
-                                                    IF iSelectedSuit = 29   //Iron Spider Armor
+                                                    IF iSelectedSuit = 24   //Undies Suit
                                                         iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
                                                         CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
-                                                        iSelectedPower = 10     // Iron Arms
+                                                        iSelectedPower = 14     // Equalizer
                                                         GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel     
                                                     ELSE
-                                                        iTempVar = idNoPowerText_l    
-                                                        CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //NO ASSOCIATED SUIT POWER
+                                                        IF iSelectedSuit = 29   //Iron Spider Armor
+                                                            iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+                                                            CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+                                                            iSelectedPower = 10     // Iron Arms
+                                                            GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel 
+                                                        ELSE                                                     
+                                                            iTempVar = idNoPowerText_l    
+                                                            CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //NO ASSOCIATED SUIT POWER
+                                                        ENDIF
                                                     ENDIF
                                                 ENDIF
                                             ENDIF
@@ -3867,7 +3874,7 @@ ProcessGame_and_DrawItems_POWER_SUITS:
                 yCoord += 50.0
             BREAK
             CASE 109 //3rd Row
-                iMaxRowQuantity = 111
+                iMaxRowQuantity = 112
                 xCoord = 115.0
                 yCoord += 50.0
             BREAK
@@ -3916,7 +3923,10 @@ get_power_id_by_selected_item:
             BREAK
         CASE 13
             iTempVar = 111
-            BREAK            
+            BREAK    
+        CASE 14
+            iTempVar = 112
+            BREAK                     
         DEFAULT
             iTempVar = pow_null
             BREAK
@@ -4163,7 +4173,10 @@ get_texture_helper_id_by_selected_power:
             BREAK
         CASE 13
             idTexture = 333
-            BREAK            
+            BREAK           
+        CASE 14
+            idTexture = 334
+            BREAK              
         DEFAULT
             idTexture = 320
             BREAK
@@ -4223,7 +4236,11 @@ get_text_id_by_selected_power:
         CASE 13
             iTempVar = idPower13_l
             counter = 433
-            BREAK            
+            BREAK    
+        CASE 14
+            iTempVar = idPower14_l
+            counter = 434
+            BREAK                      
         DEFAULT
             iTempVar = idNoPower_l
             counter = 420
@@ -5699,6 +5716,7 @@ load_all_needed_files:
         CONST_INT pow81 109
         CONST_INT pow82 110
         CONST_INT pow83 111
+        CONST_INT pow84 112
 
         CONST_INT idPrimaryControls 132
 
@@ -5895,6 +5913,7 @@ load_all_needed_files:
         LOAD_SPRITE pow81 "pow_ic_ds"
         LOAD_SPRITE pow82 "pow_ic_sf"
         LOAD_SPRITE pow83 "pow_ic_qs"
+        LOAD_SPRITE pow84 "pow_ic_eq"
 
         LOAD_SPRITE idPrimaryControls "mpc_a"
         /*counter = 300
@@ -8081,6 +8100,7 @@ CONST_INT idPower10_l           410
 CONST_INT idPower11_l           411
 CONST_INT idPower12_l           412
 CONST_INT idPower13_l           413
+CONST_INT idPower14_l           414
 
 //Text key_press activation
 CONST_INT idPower_KeyPress      450

@@ -53,6 +53,7 @@ CONST_INT iron_arms 10
 CONST_INT defence_shield 11
 CONST_INT spirit_fire 12
 CONST_INT quips 13
+CONST_INT equalizer 14
 
 SCRIPT_START
 {
@@ -386,7 +387,12 @@ drawPowerIcon:
             USE_TEXT_COMMANDS FALSE
             SET_SPRITES_DRAW_BEFORE_FADE TRUE
             DRAW_SPRITE idIconQS (320.0 55.0) (sx sy) (255 255 255 255)
-            BREAK            
+            BREAK        
+        CASE equalizer
+            USE_TEXT_COMMANDS FALSE
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_SPRITE idIconEQ (320.0 55.0) (sx sy) (255 255 255 255)
+            BREAK                   
     ENDSWITCH
 RETURN
 
@@ -417,6 +423,7 @@ load_textures_powers:
         LOAD_SPRITE idIconSF "sp_icon_sf"
         LOAD_SPRITE idIconWB "sp_icon_wb"
         LOAD_SPRITE idIconQS "sp_icon_qs"
+        LOAD_SPRITE idIconEQ "sp_icon_eq"
     ELSE
         PRINT_STRING_NOW "~r~ERROR: 'CLEO\SpiderJ16D' folder not found!" 6000
         timera = 0
@@ -1507,6 +1514,7 @@ CONST_INT idIconIA 22
 CONST_INT idIconDS 23
 CONST_INT idIconSF 24
 CONST_INT idIconQS 25
+CONST_INT idIconEQ 26
 
 CONST_INT idMapIcon3 30
 CONST_INT backpackBack 31    
