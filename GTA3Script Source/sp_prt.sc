@@ -282,6 +282,15 @@ SWITCH idVar
             IF timera > 6000
                 BREAK
             ENDIF
+            GOSUB readVars
+            IF isInMainMenu = 1     //1:true 0: false
+            OR toggleSpiderMod = 0
+                BREAK
+            ENDIF
+            IF IS_ON_SCRIPTED_CUTSCENE  // checks if the "widescreen" mode is active
+            OR IS_ON_CUTSCENE         
+                BREAK
+            ENDIF                
             WAIT 0
         ENDWHILE
         BREAK         
