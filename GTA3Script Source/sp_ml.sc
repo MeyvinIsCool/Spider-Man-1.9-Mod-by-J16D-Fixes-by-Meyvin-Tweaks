@@ -161,21 +161,21 @@ main_loop:
                                             //----------------------------------- Zip if $player on Air
                                             GOSUB REQUEST_Animations
                                             GOSUB REQUEST_webAnimations
-                                            GOSUB in_air_zip_to_point
+                                            GOSUB in_air_zip_to_buidling
                                             IF is_near_pole = TRUE
                                                 IF IS_BUTTON_PRESSED PAD1 SQUARE  // ~k~~PED_JUMPING~
                                                     IF GOSUB does_skill_Point_Launch_enabled
-                                                        GOSUB point_launch_air_building
+                                                        GOSUB point_launch_air_building                                                           
                                                     ELSE
                                                         GET_CHAR_HEADING player_actor (zAngle)
                                                         GET_COORD_FROM_ANGLED_DISTANCE x[0] y[0] zAngle 0.2 (x[0] y[0])
-                                                        GOSUB stay_on_building_from_air
+                                                        GOSUB stay_on_building_from_air                                                     
                                                     ENDIF
                                                 ELSE
                                                     GET_CHAR_HEADING player_actor (zAngle)
                                                     GET_COORD_FROM_ANGLED_DISTANCE x[0] y[0] zAngle 0.2 (x[0] y[0])
-                                                    GOSUB stay_on_building_from_air
-                                                ENDIF
+                                                    GOSUB stay_on_building_from_air                                                   
+                                                ENDIF                                                                                          
                                                 is_near_pole = FALSE
                                                 
                                             ENDIF
@@ -216,7 +216,8 @@ main_loop:
                         ENDIF
 
                     ENDIF
-                */
+                    */
+                
                     // Throw Vehicle Doors (COMPLETED) - Scripted By MeyvinIsCool
                     //IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -3.0) (1 0 0 0 0)
                     IF IS_CHAR_REALLY_IN_AIR player_actor
@@ -327,7 +328,7 @@ main_loop:
         ENDIF
 
     ENDIF
-
+/*
     // Web Zip Behind (BETA) - Scripted By MeyvinIsCool 
     IF IS_CHAR_REALLY_IN_AIR player_actor
         IF GOSUB is_not_player_playing_for_backzip
@@ -336,51 +337,48 @@ main_loop:
 
                     IF NOT IS_CHAR_PLAYING_ANIM player_actor "zip_back"
                     AND IS_BUTTON_JUST_PRESSED PAD1 CIRCLE                // ~k~~PED_FIREWEAPON~
-                    AND IS_BUTTON_JUST_PRESSED PAD1 RIGHTSHOULDER1            // PED_LOCK_TARGET
+                    AND IS_BUTTON_JUST_PRESSED PAD1 SQUARE            // PED_JUMP
 
-                        CLEO_CALL setCharVelocity 0 player_actor 0.0 -0.95 1.0 10.0                   
-                        GOSUB destroyTwoWebs
-                        GOSUB createTwoWebs
+                        //CLEO_CALL setCharVelocity 0 player_actor 0.0 -0.95 1.0 10.0  
+                        CLEO_CALL setCharVelocity 0 player_actor 0.0 -1.5 0.65 10.0              
+                        GOSUB destroyTwoBackWebs
+                        GOSUB createTwoBackWebs
+                            ATTACH_OBJECT_TO_CHAR baseObject player_actor (0.0 0.0 0.0) (0.0 0.0 180.0)            
+                        WAIT 0         
                         TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("LA_airToLampA" "mweb") 44.0 (0 1 1 1) -2
                         TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("SH_airToLampA" "mweb") 44.0 (0 1 1 1) -2                         
                         WAIT 0
                         SET_CHAR_ANIM_SPEED iWebActor "LA_airToLampA" 0.76     
                         SET_CHAR_ANIM_SPEED iWebActorR "SH_airToLampA" 0.76  
-                        GOSUB playWebSound
-                        timera = 0                                
-                        WHILE 500 > timera
-                        IF DOES_OBJECT_EXIST baseObject
-                            ATTACH_OBJECT_TO_CHAR baseObject player_actor (0.0 0.0 0.0) (0.0 0.0 180.0)
-                        ENDIF                   
+                        GOSUB playWebSound                                                 
                         GOSUB TASK_PLAY_BackWebZip                 
-                        WAIT 0
-                        ENDWHILE                          
-                        IF DOES_OBJECT_EXIST baseObject
-                            DETACH_OBJECT baseObject (0.0 0.0 0.0) FALSE
-                        ENDIF                        
+                        WAIT 0                                           
                         WAIT 0
                         GOSUB destroyTwoWebs
+                        IF DOES_OBJECT_EXIST baseObject
+                            DETACH_OBJECT baseObject (0.0 0.0 0.0) FALSE
+                        ENDIF   
                         CLEAR_CHAR_TASKS player_actor
                         CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
 
                     ENDIF
                 ENDIF
             ENDIF
-        ENDIF    
-    ENDIF
-
+        ENDIF   
+    ENDIF   */
+                
     WAIT 0
 GOTO main_loop  
 
 //-+---GOSUB HELPERS
-/*
+
 get_building_side:
     CLEO_CALL getXYZAimCoords 0 player_actor 50.0 0.0 (x[0] y[0] z[0]) (x[2] y[2] z[2]) //(fDistance)
     z[0] += 0.65
-    //DRAW_CORONA x[0] y[0] z[0] 0.35 CORONATYPE_SHINYSTAR FLARETYPE_NONE 255 0 0
+    DRAW_CORONA x[0] y[0] z[0] 0.35 CORONATYPE_SHINYSTAR FLARETYPE_NONE 255 0 0
 
     CLEO_CALL getXYZAimCoords 0 player_actor 50.0 1.0 (x[1] y[1] z[1]) (x[3] y[3] z[3]) //(fDistance)
-    //DRAW_CORONA x[1] y[1] z[1] 0.35 CORONATYPE_SHINYSTAR FLARETYPE_NONE 0 255 0
+    DRAW_CORONA x[1] y[1] z[1] 0.35 CORONATYPE_SHINYSTAR FLARETYPE_NONE 0 255 0
     //PRINT_FORMATTED_NOW "Col1 %.2f %.2f %.2f ~n~norm1 %.2f %.2f %.2f ~n~Col2 %.2f %.2f %.2f ~n~norm2 %.2f %.2f %.2f" 1000 x[0] y[0] z[0] x[2] y[2] z[2] x[1] y[1] z[1] x[3] y[3] z[3]
 
     IF NOT x[2] = x[3]
@@ -403,7 +401,7 @@ draw_building_indicator:
         GOSUB draw_tip_key_command
     ENDIF
 RETURN
-*/
+
 
 does_skill_Point_Launch_enabled:
     GET_CLEO_SHARED_VAR varSkill3a (iTempVar)   // 0:OFF || 1:ON
@@ -689,6 +687,46 @@ createTwoWebs:
         TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("m_idleWeb" "mweb") 5.0 (1 1 1 1) -2
         GET_CHAR_HEADING player_actor (zAngle)
         SET_OBJECT_HEADING baseObject zAngle
+    ENDIF
+RETURN
+
+createTwoBackWebs:
+    IF NOT DOES_CHAR_EXIST iWebActor
+    AND NOT DOES_CHAR_EXIST iWebActorR
+    AND NOT DOES_OBJECT_EXIST baseObject
+        REQUEST_MODEL 1598
+        LOAD_SPECIAL_CHARACTER 9 wmt
+        LOAD_ALL_MODELS_NOW
+        CREATE_OBJECT_NO_SAVE 1598 0.0 0.0 0.0 FALSE FALSE (baseObject) 
+        SET_OBJECT_COLLISION baseObject FALSE
+        SET_OBJECT_RECORDS_COLLISIONS baseObject FALSE
+        SET_OBJECT_SCALE baseObject 0.01
+        SET_OBJECT_PROOFS baseObject (1 1 1 1 1)
+        MARK_MODEL_AS_NO_LONGER_NEEDED 1598
+
+        CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (3.0 0.0 -10.0) iWebActor
+        SET_CHAR_COLLISION iWebActor 0
+        SET_CHAR_NEVER_TARGETTED iWebActor 1
+        CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (-3.0 0.0 -10.0) iWebActorR
+        SET_CHAR_COLLISION iWebActorR 0
+        SET_CHAR_NEVER_TARGETTED iWebActorR 1
+        UNLOAD_SPECIAL_CHARACTER 9
+        ATTACH_CHAR_TO_OBJECT iWebActor baseObject (0.0 0.0 0.0) 0 0.0 WEAPONTYPE_UNARMED
+        ATTACH_CHAR_TO_OBJECT iWebActorR baseObject (0.0 0.0 0.0) 0 0.0 WEAPONTYPE_UNARMED
+        GET_CHAR_HEADING player_actor (zAngle)
+        SET_OBJECT_HEADING baseObject zAngle       
+    ENDIF
+RETURN
+
+destroyTwoBackWebs:
+    IF DOES_CHAR_EXIST iWebActor
+        DELETE_CHAR iWebActor
+    ENDIF
+    IF DOES_CHAR_EXIST iWebActorR
+        DELETE_CHAR iWebActorR
+    ENDIF
+    IF DOES_OBJECT_EXIST baseObject
+        DELETE_OBJECT baseObject
     ENDIF
 RETURN
 
@@ -1081,6 +1119,142 @@ in_air_zip_to_point:
     GOSUB destroyTwoWebs
 RETURN
 
+in_air_zip_to_buidling:
+    GOSUB destroyTwoWebs
+    GOSUB createTwoWebs
+    //GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[2] y[2] z[2])
+    CLEAR_CHAR_TASKS player_actor
+    CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
+    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("airToLampA" "spider") 13.0 (0 1 1 1) -2
+    WAIT 1
+    SET_CHAR_ANIM_SPEED player_actor "airToLampA" 2.0
+    WHILE IS_CHAR_PLAYING_ANIM player_actor ("airToLampA")
+        GET_CHAR_ANIM_CURRENT_TIME player_actor ("airToLampA") (currentTime)
+        IF currentTime >= 0.98  //0.236   // frame
+            SET_CHAR_ANIM_PLAYING_FLAG player_actor ("airToLampA") 0
+            BREAK
+        ENDIF
+        GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.001 (x[1] y[1] z[1])
+        SET_CHAR_COORDINATES_SIMPLE player_actor x[1] y[1] z[1]
+        CLEO_CALL getXangleBetweenPoints 0 (x[1] y[1] z[1]) (x[0] y[0] z[0]) (xAngle)
+        GET_ANGLE_FROM_TWO_COORDS (x[1] y[1]) (x[0] y[0]) (zAngle)
+        SET_CHAR_ROTATION player_actor xAngle 0.0 zAngle
+        IF DOES_OBJECT_EXIST baseObject
+            SET_OBJECT_ROTATION baseObject xAngle 0.0 zAngle
+        ENDIF
+        //IF NOT IS_CHAR_REALLY_IN_AIR player_actor
+        IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -2.0) (1 0 0 0 0)   //AIR
+        ELSE
+            //CLEAR_CHAR_TASKS player_actor
+            //CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
+            WAIT 0
+            is_near_pole = FALSE
+            GOSUB destroyTwoWebs
+            RETURN
+        ENDIF
+        WAIT 0
+    ENDWHILE
+    IF DOES_OBJECT_EXIST obj    
+        SET_OBJECT_COLLISION obj FALSE  //fix camera&attach bug
+    ENDIF
+
+    GENERATE_RANDOM_INT_IN_RANGE 0 3 (randomVal)
+    GOSUB playWebSound
+    IF DOES_OBJECT_EXIST baseObject
+        ATTACH_OBJECT_TO_CHAR baseObject player_actor (0.0 0.0 0.0) (0.0 0.0 0.0)
+    ENDIF
+    GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (x[1] y[1] z[1]) (fDistance)
+    x[2] = 1.0 //1.5
+    y[2] = fDistance - x[2]
+
+    randomVal = 0
+    GOSUB playSFXSound
+
+    IF y[2] > 35.0
+        randomVal = 0   // anim for long distance
+    ELSE
+        randomVal = 1   // anim for short distance
+    ENDIF
+
+    timera = 0
+    //WHILE fDistance >= x[2]     //_distance              
+    IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 1.5
+
+        WHILE NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 1.5
+            GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[1] y[1] z[1])
+            GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (x[1] y[1] z[1]) (fDistance)
+            fDistance -= x[2]
+            CLEO_CALL getXangleBetweenPoints 0 (x[1] y[1] z[1]) (x[0] y[0] z[0]) (xAngle)
+            GET_ANGLE_FROM_TWO_COORDS (x[1] y[1]) (x[0] y[0]) (zAngle)
+            SET_CHAR_ROTATION player_actor xAngle 0.0 zAngle 
+
+            CLEO_CALL linearInterpolation 0 (y[2] x[2] fDistance) (0.0 1.0) (currentTime)
+            IF currentTime > 1.0
+                currentTime = 1.0
+            ENDIF
+            SWITCH randomVal
+                CASE 0  // anim for long distance
+                    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("airToLampB" "spider") 34.0 (0 1 1 1) -2
+                    SET_CHAR_ANIM_CURRENT_TIME player_actor ("airToLampB") currentTime
+                    SET_CHAR_ANIM_PLAYING_FLAG player_actor ("airToLampB") 0                                                        
+                    BREAK
+                CASE 1  // anim for short distance
+                    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("airToLampB_B" "spider") 44.0 (0 1 1 1) -2
+                    SET_CHAR_ANIM_CURRENT_TIME player_actor ("airToLampB_B") currentTime
+                    SET_CHAR_ANIM_PLAYING_FLAG player_actor ("airToLampB_B") 0
+                    BREAK
+            ENDSWITCH
+            IF DOES_CHAR_EXIST iWebActor
+                TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("LA_airToLampA" "mweb") 44.0 (0 1 1 1) -2
+                SET_CHAR_ANIM_CURRENT_TIME iWebActor ("LA_airToLampA") currentTime
+                SET_CHAR_ANIM_PLAYING_FLAG iWebActor ("LA_airToLampA") 0
+            ENDIF
+            IF DOES_CHAR_EXIST iWebActorR
+                TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("SH_airToLampA" "mweb") 44.0 (0 1 1 1) -2
+                SET_CHAR_ANIM_CURRENT_TIME iWebActorR ("SH_airToLampA") currentTime
+                SET_CHAR_ANIM_PLAYING_FLAG iWebActorR ("SH_airToLampA") 0  
+            ENDIF
+            IF DOES_OBJECT_EXIST baseObject
+                IF currentTime > 0.279
+                //AND 0.302 > currentTime
+                AND IS_OBJECT_ATTACHED baseObject
+                    DETACH_OBJECT baseObject (0.0 0.0 0.0) FALSE
+                ENDIF
+            ENDIF
+            GET_CHAR_SPEED player_actor (fCharSpeed)
+            fCharSpeed *= 1.020
+            CLAMP_FLOAT fCharSpeed 35.0 60.0 (fCharSpeed)
+            CLEO_CALL setCharVelocityTo 0 player_actor (x[0] y[0] z[0]) fCharSpeed
+            //PRINT_FORMATTED_NOW "vel:%.1f" 1 fCharSpeed //DEBUG
+
+            IF NOT IS_LINE_OF_SIGHT_CLEAR (x[1] y[1] z[1]) (x[0] y[0] z[0]) (1 1 0 1 0)
+            //CLEO_CALL isClearBetweenCoords 0 (x[1] y[1] z[1]) (x[0] y[0] z[0]) (1 1 0 1 0)
+                CLEAR_CHAR_TASKS player_actor
+                CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
+                WAIT 0
+                is_near_pole = FALSE
+                GOSUB destroyTwoWebs
+                RETURN
+            ENDIF
+            IF timera > 750
+                GOSUB stay_on_building_from_air
+                GOSUB destroyWeb
+                /*
+                CLEAR_CHAR_TASKS player_actor
+                CLEAR_CHAR_TASKS_IMMEDIATELY player_actor                
+                WAIT 0 
+                TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("groundToLampC" "spider") 13.0 (0 1 1 1) -2
+                WAIT 1
+                SET_CHAR_ANIM_SPEED player_actor "groundToLampC" 1.65  
+                */
+                RETURN
+            ENDIF 
+        ENDWHILE
+    ENDIF
+    is_near_pole = TRUE
+    GOSUB destroyTwoWebs
+RETURN
+
 point_launch_air:
     GOSUB destroyTwoWebs
     GET_CHAR_SPEED player_actor (fCharSpeed)
@@ -1118,7 +1292,6 @@ point_launch_air:
     ENDWHILE
 RETURN
 
-/*
 point_launch_air_building:
     GOSUB destroyTwoWebs
     GET_CHAR_SPEED player_actor (fCharSpeed)
@@ -1157,7 +1330,6 @@ point_launch_air_building:
         WAIT 0
     ENDWHILE
 RETURN
-*/
 
 stay_on_pole_from_air:
     GOSUB destroyTwoWebs
@@ -1229,7 +1401,6 @@ stay_on_pole_from_air:
     ENDWHILE
 RETURN
 
-/*
 stay_on_building_from_air:
     GOSUB destroyTwoWebs
     SET_CHAR_COLLISION player_actor FALSE
@@ -1289,6 +1460,7 @@ stay_on_building_from_air:
             WAIT 0
             TASK_TOGGLE_DUCK player_actor TRUE
             WAIT 500
+            TASK_TOGGLE_DUCK player_actor FALSE            
         ENDIF
 
         WAIT 0
@@ -1300,7 +1472,6 @@ stay_on_building_from_air:
         WAIT 0
     ENDWHILE
 RETURN
-*/
 
 on_ground_zip_to_point:
     GOSUB destroyTwoWebs
@@ -1479,7 +1650,6 @@ point_launch_ground:
     ENDWHILE
 RETURN
 
-/*
 point_launch_ground_building:
     GOSUB destroyTwoWebs
     GET_CHAR_SPEED player_actor (fCharSpeed)
@@ -1518,7 +1688,6 @@ point_launch_ground_building:
         WAIT 0
     ENDWHILE
 RETURN
-*/
 
 stay_on_pole_from_ground:
     GOSUB destroyTwoWebs
@@ -1593,7 +1762,6 @@ stay_on_pole_from_ground:
     ENDWHILE
 RETURN
 
-/*
 stay_on_building_from_ground:
     GOSUB destroyTwoWebs
     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
@@ -1664,7 +1832,6 @@ stay_on_building_from_ground:
         WAIT 0
     ENDWHILE
 RETURN
-*/
 
 //-+----------------------------------------------------------
 
