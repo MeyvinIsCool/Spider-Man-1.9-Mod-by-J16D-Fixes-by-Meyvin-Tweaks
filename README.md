@@ -19,7 +19,7 @@ Things I Fixed And Added On This Mod :
 - Added More Reservoirs
 - Added New Screwball Mission (It Is Merged So You Can Try Both Of The Original And My Custom Made Mission)
 - Added Remade Pizza Time Mission by MeyvinIsCool (Mission v2) (Thanks For Mr.Demon "Genos" Cyborg For Giving Me The Source Code)
-- Added Hit Counter (v2) (Still Need Some Improvements As It's Wont Detect The Suit Powers And May Have Some Bugs !!)
+- Added Hit Counter (v2)
 - Added Iron Arms Suit Power (Version 1.0)
 - And MORE ....
 
