@@ -1857,15 +1857,17 @@ assign_equalizer:
         CLEO_CALL set_current_power_progress 0 max_time timera
 
         GET_CHAR_COORDINATES player_actor (x[0] y[0] z[0])
-        WHILE GET_RANDOM_CHAR_IN_SPHERE_NO_SAVE_RECURSIVE x[0] y[0] z[0] 4.8 1 1 (iChar) 
+        WHILE GET_RANDOM_CHAR_IN_SPHERE_NO_SAVE_RECURSIVE x[0] y[0] z[0] 4.5 1 1 (iChar) 
             IF DOES_CHAR_EXIST iChar
             AND NOT IS_CHAR_DEAD iChar
-            AND IS_CHAR_ON_SCREEN iChar
 
-                IF GOSUB is_playing_other_hit_anim           
-                    CLEAR_CHAR_TASKS iChar    
-                    WAIT 0                
-                    DAMAGE_CHAR iChar 100 TRUE 
+                IF GOSUB is_playing_other_hit_anim  
+                    WAIT 0   
+                    CLEAR_CHAR_TASKS iChar
+                    CLEAR_CHAR_TASKS_IMMEDIATELY iChar
+                    DAMAGE_CHAR iChar 100 TRUE     
+                    WAIT 0  
+                    DAMAGE_CHAR iChar 100 TRUE                      
                 ENDIF   
 
             ENDIF    
