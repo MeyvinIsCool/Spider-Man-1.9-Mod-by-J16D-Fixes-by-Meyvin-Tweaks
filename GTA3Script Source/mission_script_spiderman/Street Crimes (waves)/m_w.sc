@@ -30,6 +30,7 @@ LVAR_INT randomVal iCounter hp_chars attack_rate weap_accuracy iTempVar iTempVar
 LVAR_INT max_wave counter_wave number_of_members kill_counter iTotalKills
 LVAR_FLOAT x[3] y[3] z[3] fPedMass
 LVAR_INT is_random_event_available 
+LVAR_INT crimealert
 
 GET_PLAYER_CHAR 0 player_actor
 
@@ -132,6 +133,11 @@ SET_RELATIONSHIP 4 PEDTYPE_MISSION1 PEDTYPE_PLAYER1
 SET_RELATIONSHIP 0 PEDTYPE_MISSION1 PEDTYPE_MISSION1
 
 GOSUB load_all_needed_models
+crimealert = 0
+SET_CLEO_SHARED_VAR varCrimeAlert crimealert
+WAIT 1
+crimealert = 1
+SET_CLEO_SHARED_VAR varCrimeAlert crimealert
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 802 808    //{id} {mission_id} {text1_id} {text2_id}
 ENDIF    
@@ -1287,6 +1293,10 @@ CONST_INT varIdWebWeapon        32    //sp_mm     || 1-8 weap
 CONST_INT varWeapAmmo           33    //sp_wep    ||store current weap ammo
 CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 - 12
 CONST_INT varPowersProgress     35    //sp_po     || current power progress
+
+
+
+CONST_INT varCrimeAlert         39
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
