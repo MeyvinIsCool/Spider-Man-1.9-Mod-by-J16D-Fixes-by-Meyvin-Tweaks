@@ -61,8 +61,8 @@ SCRIPT_NAME sp_prt
 LVAR_INT idVar  //in
 LVAR_INT iTempVar2 iTempVar3 iTempVar4      //in
 //---
-LVAR_INT toggleSpiderMod isInMainMenu
-LVAR_INT counter idPowers sfx r g b iTempVar
+LVAR_INT toggleSpiderMod isInMainMenu flag_player_on_mission
+LVAR_INT counter idPowers sfx r g b iTempVar crimealert
 LVAR_FLOAT sx sy px py
 
 USE_TEXT_COMMANDS TRUE
@@ -276,6 +276,7 @@ SWITCH idVar
         GOSUB load_textures_mission_label
         timera = 0
         WHILE TRUE
+            GET_CLEO_SHARED_VAR varCrimeAlert crimealert
             px = 568.0
             py = 120.0
             GOSUB draw_crime_mission_labels
@@ -286,14 +287,17 @@ SWITCH idVar
             IF isInMainMenu = 1     //1:true 0: false
             OR toggleSpiderMod = 0
                 BREAK
+            ENDIF   
+            IF crimealert = 0
+                BREAK
             ENDIF
             IF IS_ON_SCRIPTED_CUTSCENE  // checks if the "widescreen" mode is active
             OR IS_ON_CUTSCENE         
                 BREAK
             ENDIF                
             WAIT 0
-        ENDWHILE
-        BREAK         
+        ENDWHILE                
+        BREAK                 
     DEFAULT
         BREAK
 ENDSWITCH
@@ -312,6 +316,7 @@ TERMINATE_THIS_CUSTOM_SCRIPT
 readVars:
     GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
     GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
+    GET_CLEO_SHARED_VAR varOnmission (flag_player_on_mission)
 RETURN
 
 //-+----------------------------------- POWERS (sp_po.sc)
@@ -1485,6 +1490,7 @@ CONST_INT varPowersProgress     35    //sp_po     || current power progress
 CONST_INT varHitCount           36    //sp_hit    || hitcounting
 CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
 CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
+CONST_INT varCrimeAlert         39
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable

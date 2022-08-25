@@ -19,6 +19,7 @@ LVAR_INT player_actor toggleSpiderMod
 LVAR_INT idZone[2] i iEventBlip iSfx[1]
 LVAR_FLOAT x[2] y[2] z[2] randm_x randm_y randm_z v1 v2 v3 v4 fDistance
 LVAR_INT iRandomVal iTempVar iDistance flag_player_on_mission isInMainMenu
+LVAR_INT crimealert
 
 GET_PLAYER_CHAR 0 player_actor
 flag_player_on_mission = 0
@@ -108,6 +109,11 @@ car_chase_event:
                 timera = 0
                 ADD_SPRITE_BLIP_FOR_COORD x[1] y[1] z[1] RADAR_SPRITE_ENEMYATTACK (iEventBlip)
                 GOSUB play_sfx_start_event_alert
+                crimealert = 0
+                SET_CLEO_SHARED_VAR varCrimeAlert crimealert
+                WAIT 0                
+                crimealert = 1
+                SET_CLEO_SHARED_VAR varCrimeAlert crimealert
                 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
                     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 801 808    //{id} {mission_id} {text1_id} {text2_id}
                 ENDIF                
@@ -440,6 +446,7 @@ CONST_INT varPowersProgress     35    //sp_po     || current power progress
 CONST_INT varHitCount           36    //sp_hit    || hitcounting
 CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
 CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
+CONST_INT varCrimeAlert         39
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable

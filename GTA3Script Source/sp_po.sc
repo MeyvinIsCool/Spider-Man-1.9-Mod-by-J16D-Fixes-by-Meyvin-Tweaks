@@ -262,11 +262,11 @@ get_power_max_time:
             BREAK
         CASE quips    //id:13
             max_time = 6500    //0:06
-            cool_down_time = 120000  //3:00
+            cool_down_time = 120000  //2:00
             BREAK            
         CASE equalizer    //id:14
             max_time = 100000    //1:00
-            cool_down_time = 110000  //2:90
+            cool_down_time = 180000  //3:00
             BREAK              
     ENDSWITCH
 RETURN
@@ -1845,7 +1845,7 @@ RETURN
 
 //------------------------------------------------------------
 assign_equalizer:
-    //max_time = 12500    //ms 
+    //max_time = 100000    //ms 
     timera = 0
     iTempVar = 0
     GOSUB play_sfx_general_sfx    
@@ -1857,32 +1857,30 @@ assign_equalizer:
         CLEO_CALL set_current_power_progress 0 max_time timera
 
         GET_CHAR_COORDINATES player_actor (x[0] y[0] z[0])
-        IF GET_RANDOM_CHAR_IN_SPHERE_NO_SAVE_RECURSIVE x[0] y[0] z[0] 2.5 0 1 (iChar) 
+        WHILE GET_RANDOM_CHAR_IN_SPHERE_NO_SAVE_RECURSIVE x[0] y[0] z[0] 4.8 1 1 (iChar) 
             IF DOES_CHAR_EXIST iChar
             AND NOT IS_CHAR_DEAD iChar
             AND IS_CHAR_ON_SCREEN iChar
 
-                IF GOSUB is_playing_other_hit_anim  
-                    CLEAR_CHAR_TASKS iChar
-                    CLEAR_CHAR_TASKS_IMMEDIATELY iChar
-                    DAMAGE_CHAR iChar 100 TRUE          
+                IF GOSUB is_playing_other_hit_anim           
+                    CLEAR_CHAR_TASKS iChar    
+                    WAIT 0                
+                    DAMAGE_CHAR iChar 100 TRUE 
                 ENDIF   
 
             ENDIF    
            
             GET_CHAR_HEALTH player_actor counter
-            IF NOT IS_CHAR_SHOOTING iChar
-                IF HAS_CHAR_BEEN_DAMAGED_BY_CHAR player_actor iChar
-                    IF NOT p = counter
-                        SET_CHAR_HEALTH player_actor 0 
-                    ENDIF
-                ENDIF
+            IF HAS_CHAR_BEEN_DAMAGED_BY_WEAPON player_actor WEAPONTYPE_UNARMED
+                IF NOT p = counter
+                    SET_CHAR_HEALTH player_actor 0 
+                ENDIF                
             ELSE
                 p = counter
-            ENDIF
-
-        ENDIF
-
+            ENDIF       
+            WAIT 0
+        ENDWHILE
+ 
         // break loop
         GOSUB readVars
         IF toggleSpiderMod = 0  //FALSE
@@ -1906,9 +1904,9 @@ RETURN
 is_playing_other_hit_anim:
     IF IS_CHAR_PLAYING_ANIM iChar ("swing_kick_hit_1")     //swing kick hit
     OR IS_CHAR_PLAYING_ANIM iChar ("ground_to_air_hit") //Air combo anims
-    OR IS_CHAR_PLAYING_ANIM iChar ("dildo_hit_1")
-    OR IS_CHAR_PLAYING_ANIM iChar ("dildo_hit_2")
-    OR IS_CHAR_PLAYING_ANIM iChar ("dildo_hit_3")
+    OR IS_CHAR_PLAYING_ANIM iChar ("DILDO_Hit_1")
+    OR IS_CHAR_PLAYING_ANIM iChar ("DILDO_Hit_2")
+    OR IS_CHAR_PLAYING_ANIM iChar ("DILDO_Hit_3")
         RETURN_TRUE
     ELSE
         IF IS_CHAR_PLAYING_ANIM iChar ("dildo_hit_4")
@@ -1929,7 +1927,10 @@ is_playing_other_hit_anim:
             ELSE
                 IF IS_CHAR_PLAYING_ANIM iChar ("HIT_walk")
                 OR IS_CHAR_PLAYING_ANIM iChar ("Hit_fightkick")       
-                OR IS_CHAR_PLAYING_ANIM iChar ("Hit_fightkick_b")                      
+                OR IS_CHAR_PLAYING_ANIM iChar ("Hit_fightkick_b") 
+                OR IS_CHAR_PLAYING_ANIM iChar ("dodge_front_b_hit")
+                OR IS_CHAR_PLAYING_ANIM iChar ("dodge_front_c_hita")           
+                OR IS_CHAR_PLAYING_ANIM iChar ("dodge_front_c_hitb")            
                     RETURN_TRUE
                 ELSE
                     RETURN_FALSE

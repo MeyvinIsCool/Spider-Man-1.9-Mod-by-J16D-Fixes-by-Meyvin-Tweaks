@@ -5776,6 +5776,7 @@ load_all_needed_files:
         CONST_INT bck331 331
         CONST_INT bck332 332
         CONST_INT bck333 333
+        CONST_INT bck334 334
 
         /*counter = 1
         WHILE 25 >= counter
@@ -5953,6 +5954,7 @@ load_all_needed_files:
         LOAD_SPRITE bck331 "bck331"
         LOAD_SPRITE bck332 "bck332"
         LOAD_SPRITE bck333 "bck333"
+        LOAD_SPRITE bck334 "bck334"
 
         CLEO_CALL suitUnlock 0
         REQUEST_ANIMATION "spider"
