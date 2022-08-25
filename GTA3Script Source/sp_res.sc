@@ -87,7 +87,7 @@ WHILE TRUE
                     y[1] = 13.982
                     z[1] = 61.60
                     //-- Coords
-                    x[0] = x[1] 
+                    x[0] = x[1] + 0.08
                     y[0] = y[1] - 9.982        
                     z[0] = z[1] - 1.0
                     IF IS_CHAR_REALLY_IN_AIR player_actor
@@ -108,7 +108,7 @@ WHILE TRUE
                                 WAIT 500     
                             ENDIF
                         ELSE
-                            x[0] = x[1] 
+                            x[0] = x[1] + 0.08
                             y[0] = y[1] + 9.982        
                             z[0] = z[1] - 1.0
                             IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 8.0
@@ -355,8 +355,8 @@ WHILE TRUE
                     z[1] = 64.624
                     //-- Coords
                     x[0] = x[1] - 9.982
-                    y[0] = y[1]         
-                    z[0] = z[1] - 0.70
+                    y[0] = y[1] - 0.08        
+                    z[0] = z[1] - 0.75
                     IF IS_CHAR_REALLY_IN_AIR player_actor
                         IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
                             GOSUB draw_indicator_r2
@@ -376,8 +376,8 @@ WHILE TRUE
                             ENDIF
                         ELSE
                             x[0] = x[1] + 9.982  
-                            y[0] = y[1]       
-                            z[0] = z[1] - 0.70
+                            y[0] = y[1] - 0.08      
+                            z[0] = z[1] - 0.75
                             IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
                                 GOSUB draw_indicator_r2
                                 IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
@@ -626,9 +626,9 @@ WHILE TRUE
                     y[1] = 900.735
                     z[1] = 65.2756
                     //-- Coords
-                    x[0] = x[1] 
+                    x[0] = x[1] - 0.08
                     y[0] = y[1] - 9.982        
-                    z[0] = z[1] - 0.65
+                    z[0] = z[1] - 0.70
                     IF IS_CHAR_REALLY_IN_AIR player_actor
                         IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
                             GOSUB draw_indicator_r3
@@ -647,9 +647,9 @@ WHILE TRUE
                                 WAIT 500     
                             ENDIF
                         ELSE
-                            x[0] = x[1] 
+                            x[0] = x[1] - 0.08
                             y[0] = y[1] + 9.982        
-                            z[0] = z[1] - 0.65
+                            z[0] = z[1] - 0.70
                             IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
                                 GOSUB draw_indicator_r3
                                 IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
@@ -900,8 +900,8 @@ WHILE TRUE
                     z[1] = 82.0859
                     //-- Coords
                     x[0] = x[1] - 9.982
-                    y[0] = y[1]         
-                    z[0] = z[1] - 0.65
+                    y[0] = y[1] + 0.08    
+                    z[0] = z[1] - 0.70
                     IF IS_CHAR_REALLY_IN_AIR player_actor
                         IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
                             GOSUB draw_indicator_r4
@@ -921,8 +921,8 @@ WHILE TRUE
                             ENDIF
                         ELSE
                             x[0] = x[1] + 9.982  
-                            y[0] = y[1]       
-                            z[0] = z[1] - 0.65
+                            y[0] = y[1] + 0.08      
+                            z[0] = z[1] - 0.70
                             IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
                                 GOSUB draw_indicator_r4
                                 IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
@@ -1171,9 +1171,9 @@ WHILE TRUE
                     y[1] = 951.715
                     z[1] = 34.5971
                     //-- Coords
-                    x[0] = x[1]
+                    x[0] = x[1] + 0.08
                     y[0] = y[1] - 9.982        
-                    z[0] = z[1] - 0.70
+                    z[0] = z[1] - 0.75
                     IF IS_CHAR_REALLY_IN_AIR player_actor
                         IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
                             GOSUB draw_indicator_r5
@@ -1192,9 +1192,9 @@ WHILE TRUE
                                 WAIT 500     
                             ENDIF
                         ELSE
-                            x[0] = x[1] 
+                            x[0] = x[1] + 0.08
                             y[0] = y[1] + 9.982        
-                            z[0] = z[1] - 0.70
+                            z[0] = z[1] - 0.75
                             IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
                                 GOSUB draw_indicator_r5
                                 IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
@@ -1445,9 +1445,9 @@ WHILE TRUE
                     y[1] = 712.266
                     z[1] = 86.38
                     //-- Coords
-                    x[0] = x[1] 
+                    x[0] = x[1] + 0.08
                     y[0] = y[1] + 9.982      
-                    z[0] = z[1] - 0.70
+                    z[0] = z[1] - 0.75
                     IF IS_CHAR_REALLY_IN_AIR player_actor
                         IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
                             GOSUB draw_indicator_r6
@@ -1466,9 +1466,9 @@ WHILE TRUE
                                 WAIT 500     
                             ENDIF
                         ELSE
-                            x[0] = x[1] 
+                            x[0] = x[1] + 0.08
                             y[0] = y[1] - 9.982       
-                            z[0] = z[1] - 0.70
+                            z[0] = z[1] - 0.75
                             IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
                                 GOSUB draw_indicator_r6
                                 IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
