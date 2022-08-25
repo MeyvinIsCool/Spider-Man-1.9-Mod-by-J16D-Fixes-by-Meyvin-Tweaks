@@ -27,9 +27,19 @@ GOSUB REQUEST_Animations
 GOSUB REQUEST_Web_Animations
 GOSUB load_and_create_entities
 
+iTempVar = 1
+SET_CLEO_SHARED_VAR varCrimeAlert iTempVar
+IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
+    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 801 808    //{id} {mission_id} {text1_id} {text2_id}
+ENDIF                
+
 WHILE IS_CAR_WAITING_FOR_WORLD_COLLISION veh
     WAIT 0
 ENDWHILE
+IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_cd.cs"
+    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_cd.cs" veh char[0] char[1]  // police_chase
+ENDIF
+
 flag_enemy1_killed = FALSE
 flag_enemy2_killed = FALSE
 
@@ -2622,6 +2632,9 @@ CONST_INT varWeapAmmo           33    //sp_wep    ||store current weap ammo
 CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 - 12
 CONST_INT varPowersProgress     35    //sp_po     || current power progress
 CONST_INT varHitCount           36    //sp_hit    || hitcouting
+
+
+CONST_INT varCrimeAlert         39
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
