@@ -757,10 +757,12 @@ unlock_spiderman_suits:
                 BREAK
             CASE 28 //Group #9 ID: 20-21
                 WRITE_INT_TO_INI_FILE 9999 "CLEO\SpiderJ16D\config.ini" "CODE" "suit20"
-                WRITE_INT_TO_INI_FILE 8525 "CLEO\SpiderJ16D\config.ini" "CODE" "suit21"
                 BREAK
-            CASE 33 //Group #10 ID: 22-23
+            CASE 31 //Group #9 ID: 21-22
+                WRITE_INT_TO_INI_FILE 8525 "CLEO\SpiderJ16D\config.ini" "CODE" "suit21"
                 WRITE_INT_TO_INI_FILE 7898 "CLEO\SpiderJ16D\config.ini" "CODE" "suit22"
+                BREAK                
+            CASE 33 //Group #10 ID: 22-23
                 WRITE_INT_TO_INI_FILE 1232 "CLEO\SpiderJ16D\config.ini" "CODE" "suit23"
                 WRITE_INT_TO_INI_FILE 8319 "CLEO\SpiderJ16D\config.ini" "CODE" "suit49"
                 BREAK
