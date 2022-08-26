@@ -669,9 +669,9 @@ show_menu:
 
                 CASE menPowerSuit
                     CLEO_CALL GetDataJoystickMatrix5x5 0 (5 1 iActiveCol)(3 1 iActiveRow) (iActiveCol iActiveRow)
-                    IF iActiveRow = 3
-                        CLAMP_INT iActiveCol 1 4 (iActiveCol)   //Limit 4 power on 4rd row
-                    ENDIF
+                    //IF iActiveRow = 3             
+                        //CLAMP_INT iActiveCol 1 4 (iActiveCol)   //Limit 4 power on 4rd row    //no longer needed as the row got filled
+                    //ENDIF
                     IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                         //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
                             CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
@@ -1964,50 +1964,57 @@ ProcessGame_and_DrawMenu_RightPanel_SUITS:
                                 iSelectedPower = 7      // Rock Out
                                 GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel 
                             ELSE
-                                IF iSelectedSuit = 14   // Stealth "Big Time" Suit
+                                IF iSelectedSuit = 13   // Fear Itself Suit
                                     iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
                                     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
-                                    iSelectedPower = 8      // Blur Projector
-                                    GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel     
-                                ELSE
-                                    IF iSelectedSuit = 16   // Spider-Man 2099 Black Suit
+                                    iSelectedPower = 15      // Quad Damage
+                                    GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel 
+                                ELSE                            
+                                    IF iSelectedSuit = 14   // Stealth "Big Time" Suit
                                         iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
                                         CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
-                                        iSelectedPower = 9      // Low Gravity
-                                        GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel  
-                                    ELSE                                  
-                                        IF iSelectedSuit = 19   // Spider Armour - MK IV Suit
+                                        iSelectedPower = 8      // Blur Projector
+                                        GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel     
+                                    ELSE
+                                        IF iSelectedSuit = 16   // Spider-Man 2099 Black Suit
                                             iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
                                             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
-                                            iSelectedPower = 11     // Defence Shield
-                                            GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel   
-                                        ELSE
-                                            IF iSelectedSuit = 20   // Spirit Spider
+                                            iSelectedPower = 9      // Low Gravity
+                                            GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel  
+                                        ELSE                                  
+                                            IF iSelectedSuit = 19   // Spider Armour - MK IV Suit
                                                 iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
                                                 CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
-                                                iSelectedPower = 12     // Spirit Fire
-                                                GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel  
-                                            ELSE        
-                                                IF iSelectedSuit = 22   // Vintage Comic Book Suit
+                                                iSelectedPower = 11     // Defence Shield
+                                                GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel   
+                                            ELSE
+                                                IF iSelectedSuit = 20   // Spirit Spider
                                                     iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
                                                     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
-                                                    iSelectedPower = 13     // Quips
-                                                    GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel   
-                                                ELSE      
-                                                    IF iSelectedSuit = 24   //Undies Suit
+                                                    iSelectedPower = 12     // Spirit Fire
+                                                    GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel  
+                                                ELSE        
+                                                    IF iSelectedSuit = 22   // Vintage Comic Book Suit
                                                         iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
                                                         CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
-                                                        iSelectedPower = 14     // Equalizer
-                                                        GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel     
-                                                    ELSE
-                                                        IF iSelectedSuit = 29   //Iron Spider Armor
+                                                        iSelectedPower = 13     // Quips
+                                                        GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel   
+                                                    ELSE      
+                                                        IF iSelectedSuit = 24   //Undies Suit
                                                             iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
                                                             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
-                                                            iSelectedPower = 10     // Iron Arms
-                                                            GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel 
-                                                        ELSE                                                     
-                                                            iTempVar = idNoPowerText_l    
-                                                            CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //NO ASSOCIATED SUIT POWER
+                                                            iSelectedPower = 14     // Equalizer
+                                                            GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel     
+                                                        ELSE
+                                                            IF iSelectedSuit = 29   //Iron Spider Armor
+                                                                iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+                                                                CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+                                                                iSelectedPower = 10     // Iron Arms
+                                                                GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel 
+                                                            ELSE                                                     
+                                                                iTempVar = idNoPowerText_l    
+                                                                CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //NO ASSOCIATED SUIT POWER
+                                                            ENDIF
                                                         ENDIF
                                                     ENDIF
                                                 ENDIF
@@ -3874,7 +3881,7 @@ ProcessGame_and_DrawItems_POWER_SUITS:
                 yCoord += 50.0
             BREAK
             CASE 109 //3rd Row
-                iMaxRowQuantity = 112
+                iMaxRowQuantity = 113
                 xCoord = 115.0
                 yCoord += 50.0
             BREAK
@@ -3926,7 +3933,10 @@ get_power_id_by_selected_item:
             BREAK    
         CASE 14
             iTempVar = 112
-            BREAK                     
+            BREAK  
+        CASE 15
+            iTempVar = 113
+            BREAK                                
         DEFAULT
             iTempVar = pow_null
             BREAK
@@ -4176,6 +4186,9 @@ get_texture_helper_id_by_selected_power:
             BREAK           
         CASE 14
             idTexture = 334
+            BREAK            
+        CASE 15
+            idTexture = 335
             BREAK              
         DEFAULT
             idTexture = 320
@@ -4240,7 +4253,11 @@ get_text_id_by_selected_power:
         CASE 14
             iTempVar = idPower14_l
             counter = 434
-            BREAK                      
+            BREAK     
+        CASE 15
+            iTempVar = idPower15_l
+            counter = 435
+            BREAK                              
         DEFAULT
             iTempVar = idNoPower_l
             counter = 420
@@ -5717,6 +5734,7 @@ load_all_needed_files:
         CONST_INT pow82 110
         CONST_INT pow83 111
         CONST_INT pow84 112
+        CONST_INT pow85 113
 
         CONST_INT idPrimaryControls 132
 
@@ -5915,6 +5933,7 @@ load_all_needed_files:
         LOAD_SPRITE pow82 "pow_ic_sf"
         LOAD_SPRITE pow83 "pow_ic_qs"
         LOAD_SPRITE pow84 "pow_ic_eq"
+        LOAD_SPRITE pow85 "pow_ic_qd"
 
         LOAD_SPRITE idPrimaryControls "mpc_a"
         /*counter = 300
@@ -8103,6 +8122,7 @@ CONST_INT idPower11_l           411
 CONST_INT idPower12_l           412
 CONST_INT idPower13_l           413
 CONST_INT idPower14_l           414
+CONST_INT idPower15_l           415
 
 //Text key_press activation
 CONST_INT idPower_KeyPress      450

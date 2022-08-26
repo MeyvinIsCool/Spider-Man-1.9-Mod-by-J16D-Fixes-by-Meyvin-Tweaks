@@ -19,6 +19,7 @@ CONST_INT defence_shield 11
 CONST_INT spirit_fire 12
 CONST_INT quips 13
 CONST_INT equalizer 14
+CONST_INT quad_damage 15
 
 CONST_INT player 0
 
@@ -125,7 +126,7 @@ main_loop:
                             GOSUB get_power_max_time
                             GET_CLEO_SHARED_VAR varIdPowers (idPowers)
                             IF idPowers >= 1
-                            AND 14 >= idPowers
+                            AND 15 >= idPowers
                                 CREATE_FX_SYSTEM_ON_CHAR SP_POWERS player_actor (0.0 0.0 0.15) 4 (fx_system)
                                 PLAY_AND_KILL_FX_SYSTEM fx_system
                                 CLEAR_CHAR_SECONDARY_TASKS player_actor
@@ -175,7 +176,10 @@ main_loop:
                                     BREAK   
                                 CASE equalizer    //id:14
                                     GOSUB assign_equalizer
-                                    BREAK                                                                      
+                                    BREAK  
+                                CASE quad_damage   //id:14
+                                    GOSUB assign_quad_damage
+                                    BREAK                                                                                                        
                                 DEFAULT
                                     WAIT 500
                                     BREAK
@@ -267,7 +271,11 @@ get_power_max_time:
         CASE equalizer    //id:14
             max_time = 100000    //1:00
             cool_down_time = 180000  //3:00
-            BREAK              
+            BREAK       
+        CASE quad_damage   //id:14
+            max_time = 20000    //0:20
+            cool_down_time = 100000  //1:00
+            BREAK                     
     ENDSWITCH
 RETURN
 //------------------------------------------------------------
@@ -1561,6 +1569,19 @@ assign_iron_arms:
     WHILE max_time >= timera
         CLEO_CALL set_current_power_progress 0 max_time timera
 
+        GET_CHAR_COORDINATES player_actor (x[0] y[0] z[0])
+        WHILE GET_RANDOM_CHAR_IN_SPHERE_NO_SAVE_RECURSIVE x[0] y[0] z[0] 4.5 1 1 (iChar) 
+            IF DOES_CHAR_EXIST iChar
+            AND NOT IS_CHAR_DEAD iChar
+
+                IF GOSUB is_playing_other_hit_anim  
+                    DAMAGE_CHAR iChar 5 TRUE                      
+                ENDIF   
+
+            ENDIF      
+            WAIT 0
+        ENDWHILE     
+
         // break loop
         GOSUB readVars
         IF toggleSpiderMod = 0  //FALSE
@@ -1940,6 +1961,51 @@ is_playing_other_hit_anim:
             ENDIF
         ENDIF
     ENDIF
+RETURN
+//------------------------------------------------------------
+
+//------------------------------------------------------------
+assign_quad_damage:
+    //max_time = 10000    //ms
+    timera = 0
+    iTempVar = 0
+    GOSUB play_sfx_general_sfx
+    WAIT 0
+
+    WHILE max_time >= timera
+        CLEO_CALL set_current_power_progress 0 max_time timera
+
+        GET_CHAR_COORDINATES player_actor (x[0] y[0] z[0])
+        WHILE GET_RANDOM_CHAR_IN_SPHERE_NO_SAVE_RECURSIVE x[0] y[0] z[0] 4.5 1 1 (iChar) 
+            IF DOES_CHAR_EXIST iChar
+            AND NOT IS_CHAR_DEAD iChar
+
+                IF GOSUB is_playing_other_hit_anim  
+                    DAMAGE_CHAR iChar 10 TRUE                      
+                ENDIF   
+
+            ENDIF      
+            WAIT 0
+        ENDWHILE  
+
+        // break loop
+        GOSUB readVars
+        IF toggleSpiderMod = 0  //FALSE
+        OR isInMainMenu = 1     //1:true 0:false
+            BREAK
+        ENDIF
+        IF NOT IS_PLAYER_PLAYING player
+            BREAK
+        ENDIF
+        IF IS_CHAR_IN_ANY_CAR player_actor
+            BREAK
+        ENDIF
+
+        WAIT 0
+    ENDWHILE
+
+    REMOVE_AUDIO_STREAM sfx
+    WAIT 50
 RETURN
 //------------------------------------------------------------
 
