@@ -1979,9 +1979,10 @@ assign_quad_damage:
         WHILE GET_RANDOM_CHAR_IN_SPHERE_NO_SAVE_RECURSIVE x[0] y[0] z[0] 4.5 1 1 (iChar) 
             IF DOES_CHAR_EXIST iChar
             AND NOT IS_CHAR_DEAD iChar
+            AND IS_CHAR_ON_SCREEN iChar
 
                 IF GOSUB is_playing_other_hit_anim  
-                    DAMAGE_CHAR iChar 10 TRUE                      
+                    DAMAGE_CHAR iChar 8 TRUE                      
                 ENDIF   
 
             ENDIF      
