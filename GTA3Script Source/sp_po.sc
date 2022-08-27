@@ -1883,13 +1883,12 @@ assign_equalizer:
             AND NOT IS_CHAR_DEAD iChar
 
                 IF GOSUB is_playing_other_hit_anim  
-                    WAIT 0   
                     CLEAR_CHAR_TASKS iChar
-                    CLEAR_CHAR_TASKS_IMMEDIATELY iChar
-                    DAMAGE_CHAR iChar 100 TRUE     
-                    WAIT 0  
-                    DAMAGE_CHAR iChar 100 TRUE                      
-                ENDIF   
+                    IF IS_CHAR_HEALTH_GREATER iChar 1
+                        DAMAGE_CHAR iChar 100 TRUE 
+                        CLEAR_CHAR_TASKS iChar
+                    ENDIF                     
+                ENDIF  
 
             ENDIF    
            
@@ -1982,7 +1981,11 @@ assign_quad_damage:
             AND IS_CHAR_ON_SCREEN iChar
 
                 IF GOSUB is_playing_other_hit_anim  
-                    DAMAGE_CHAR iChar 8 TRUE                      
+                    CLEAR_CHAR_TASKS iChar
+                    CLEAR_CHAR_TASKS_IMMEDIATELY iChar
+                    IF IS_CHAR_HEALTH_GREATER iChar 15
+                        DAMAGE_CHAR iChar 15 TRUE 
+                    ENDIF                     
                 ENDIF   
 
             ENDIF      
