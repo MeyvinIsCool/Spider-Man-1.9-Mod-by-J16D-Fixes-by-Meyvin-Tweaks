@@ -672,16 +672,260 @@ show_menu:
                     //IF iActiveRow = 3             
                         //CLAMP_INT iActiveCol 1 4 (iActiveCol)   //Limit 4 power on 4rd row    //no longer needed as the row got filled
                     //ENDIF
-                    IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                        //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
-                            CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
-                            CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
-                            SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
-                        //ENDIF
-                        WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                            GOSUB drawItems
-                        ENDWHILE
-                        iSetCamera = TRUE
+                    pUnlockCode = 3564
+                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power1" (iTempVar)
+                    IF pUnlockCode = iTempVar
+                    AND iSelectedPower = 1
+                        IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                            //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                            //ENDIF
+                            WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                GOSUB drawItems
+                            ENDWHILE
+                            iSetCamera = TRUE
+                        ENDIF  
+                    ELSE
+                        pUnlockCode = 7952
+                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power2" (iTempVar)
+                        IF pUnlockCode = iTempVar
+                        AND iSelectedPower = 2
+                            IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                    CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                    CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                    SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                //ENDIF
+                                WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                    GOSUB drawItems
+                                ENDWHILE
+                                iSetCamera = TRUE
+                            ENDIF 
+                        ELSE           
+                            pUnlockCode = 8431
+                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power3" (iTempVar)
+                            IF pUnlockCode = iTempVar
+                            AND iSelectedPower = 3
+                                IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                    //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                        CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                        CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                        SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                    //ENDIF
+                                    WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                        GOSUB drawItems
+                                    ENDWHILE
+                                    iSetCamera = TRUE
+                                ENDIF   
+                            ELSE
+                                pUnlockCode = 9999
+                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power4" (iTempVar)
+                                IF pUnlockCode = iTempVar
+                                AND iSelectedPower = 4
+                                    IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                        //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                            CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                            CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                            SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                        //ENDIF
+                                        WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                            GOSUB drawItems
+                                        ENDWHILE
+                                        iSetCamera = TRUE
+                                    ENDIF                     
+                                ELSE
+                                    pUnlockCode = 6784
+                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power5" (iTempVar)
+                                    IF pUnlockCode = iTempVar
+                                    AND iSelectedPower = 5
+                                        IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                            //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                                CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                                CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                                SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                            //ENDIF
+                                            WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                GOSUB drawItems
+                                            ENDWHILE
+                                            iSetCamera = TRUE
+                                        ENDIF                           
+                                    ELSE
+                                        pUnlockCode = 3897
+                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power6" (iTempVar)
+                                        IF pUnlockCode = iTempVar
+                                        AND iSelectedPower = 6
+                                            IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                                    CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                                    CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                                    SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                                //ENDIF
+                                                WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                    GOSUB drawItems
+                                                ENDWHILE
+                                                iSetCamera = TRUE
+                                            ENDIF 
+                                        ELSE
+                                            pUnlockCode = 4837
+                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power7" (iTempVar)
+                                            IF pUnlockCode = iTempVar
+                                            AND iSelectedPower = 7
+                                                IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                    //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                                        CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                                        CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                                        SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                                    //ENDIF
+                                                    WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                        GOSUB drawItems
+                                                    ENDWHILE
+                                                    iSetCamera = TRUE
+                                                ENDIF 
+                                            ELSE
+                                                pUnlockCode = 7319
+                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power8" (iTempVar)
+                                                IF pUnlockCode = iTempVar
+                                                AND iSelectedPower = 15
+                                                    IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                        //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                                            CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                                            CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                                            SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                                        //ENDIF
+                                                        WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                            GOSUB drawItems
+                                                        ENDWHILE
+                                                        iSetCamera = TRUE
+                                                    ENDIF 
+                                                ELSE                                                                             
+                                                    pUnlockCode = 8319
+                                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power9" (iTempVar)
+                                                    IF pUnlockCode = iTempVar
+                                                    AND iSelectedPower = 8
+                                                        IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                            //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                                                CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                                                CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                                                SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                                            //ENDIF
+                                                            WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                GOSUB drawItems
+                                                            ENDWHILE
+                                                            iSetCamera = TRUE
+                                                        ENDIF 
+                                                    ELSE
+                                                        pUnlockCode = 4627
+                                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power10" (iTempVar)
+                                                        IF pUnlockCode = iTempVar
+                                                        AND iSelectedPower = 9
+                                                            IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                                                    CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                                                    CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                                                    SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                                                //ENDIF
+                                                                WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                    GOSUB drawItems
+                                                                ENDWHILE
+                                                                iSetCamera = TRUE
+                                                            ENDIF  
+                                                        ELSE
+                                                            pUnlockCode = 9636
+                                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power11" (iTempVar)
+                                                            IF pUnlockCode = iTempVar
+                                                            AND iSelectedPower = 11
+                                                                IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                    //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                                                        CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                                                        CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                                                        SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                                                    //ENDIF
+                                                                    WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                        GOSUB drawItems
+                                                                    ENDWHILE
+                                                                    iSetCamera = TRUE
+                                                                ENDIF  
+                                                            ELSE
+                                                                pUnlockCode = 9999
+                                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power12" (iTempVar)
+                                                                IF pUnlockCode = iTempVar
+                                                                AND iSelectedPower = 12               
+                                                                    IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                        //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                                                            CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                                                            CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                                                            SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                                                        //ENDIF
+                                                                        WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                            GOSUB drawItems
+                                                                        ENDWHILE
+                                                                        iSetCamera = TRUE
+                                                                    ENDIF      
+                                                                ELSE
+                                                                    pUnlockCode = 7898
+                                                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power13" (iTempVar)
+                                                                    IF pUnlockCode = iTempVar
+                                                                    AND iSelectedPower = 13                 
+                                                                        IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                            //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                                                                CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                                                                CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                                                                SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                                                            //ENDIF
+                                                                            WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                                GOSUB drawItems
+                                                                            ENDWHILE
+                                                                            iSetCamera = TRUE
+                                                                        ENDIF
+                                                                    ELSE
+                                                                        pUnlockCode = 7319
+                                                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power14" (iTempVar)
+                                                                        IF pUnlockCode = iTempVar
+                                                                        AND iSelectedPower = 14                 
+                                                                            IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                                //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                                                                    CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                                                                    CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                                                                    SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                                                                //ENDIF
+                                                                                WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                                    GOSUB drawItems
+                                                                                ENDWHILE
+                                                                                iSetCamera = TRUE
+                                                                            ENDIF  
+                                                                        ELSE
+                                                                            pUnlockCode = 3734
+                                                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power15" (iTempVar)
+                                                                            IF pUnlockCode = iTempVar
+                                                                            AND iSelectedPower = 10                 
+        
+                                                                                IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                                    //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                                                                        CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                                                                        CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                                                                        SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                                                                    //ENDIF
+                                                                                    WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                                        GOSUB drawItems
+                                                                                    ENDWHILE
+                                                                                    iSetCamera = TRUE
+                                                                                ENDIF
+                                                                            ENDIF
+                                                                        ENDIF
+                                                                    ENDIF
+                                                                ENDIF
+                                                            ENDIF
+                                                        ENDIF
+                                                    ENDIF
+                                                ENDIF
+                                            ENDIF
+                                        ENDIF
+                                    ENDIF
+                                ENDIF
+                            ENDIF
+                        ENDIF
                     ENDIF
                     BREAK
 
@@ -3863,13 +4107,137 @@ ProcessGame_and_DrawItems_POWER_SUITS:
             USE_TEXT_COMMANDS FALSE
             DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (2 254 252 255)
         ELSE
-            //IF idTexture = 108   //Iron Arms Power (Temporary locked, isn't ready)
+            //IF idTexture = 108   //Iron Arms Power (Temporary locked, isn't ready)                    // Unused Code
                 //USE_TEXT_COMMANDS FALSE
                 //DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)
             //ELSE
-                USE_TEXT_COMMANDS FALSE
-                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)
+                //USE_TEXT_COMMANDS FALSE
+                //DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)
             //ENDIF
+
+            pUnlockCode = 3564
+            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power1" (iTempVar)
+            IF pUnlockCode = iTempVar
+            AND idTexture = 99
+                USE_TEXT_COMMANDS FALSE
+                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+            ELSE
+                pUnlockCode = 7952
+                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power2" (iTempVar)
+                IF pUnlockCode = iTempVar
+                AND idTexture = 100
+                    USE_TEXT_COMMANDS FALSE
+                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210) 
+                ELSE           
+                    pUnlockCode = 8431
+                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power3" (iTempVar)
+                    IF pUnlockCode = iTempVar
+                    AND idTexture = 101
+                        USE_TEXT_COMMANDS FALSE
+                        DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210) 
+                    ELSE
+                        pUnlockCode = 9999
+                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power4" (iTempVar)
+                        IF pUnlockCode = iTempVar
+                        AND idTexture = 102
+                            USE_TEXT_COMMANDS FALSE
+                            DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)                     
+                        ELSE
+                            pUnlockCode = 6784
+                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power5" (iTempVar)
+                            IF pUnlockCode = iTempVar
+                            AND idTexture = 103
+                                USE_TEXT_COMMANDS FALSE
+                                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)                          
+                            ELSE
+                                pUnlockCode = 3897
+                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power6" (iTempVar)
+                                IF pUnlockCode = iTempVar
+                                AND idTexture = 104
+                                    USE_TEXT_COMMANDS FALSE
+                                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210) 
+                                ELSE
+                                    pUnlockCode = 4837
+                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power7" (iTempVar)
+                                    IF pUnlockCode = iTempVar
+                                    AND idTexture = 105
+                                        USE_TEXT_COMMANDS FALSE
+                                        DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210) 
+                                    ELSE
+                                        pUnlockCode = 7319
+                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power8" (iTempVar)
+                                        IF pUnlockCode = iTempVar
+                                        AND idTexture = 113
+                                            USE_TEXT_COMMANDS FALSE
+                                            DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                                        ELSE                                                                             
+                                            pUnlockCode = 8319
+                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power9" (iTempVar)
+                                            IF pUnlockCode = iTempVar
+                                            AND idTexture = 106
+                                                USE_TEXT_COMMANDS FALSE
+                                                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)
+                                            ELSE
+                                                pUnlockCode = 4627
+                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power10" (iTempVar)
+                                                IF pUnlockCode = iTempVar
+                                                AND idTexture = 107
+                                                    USE_TEXT_COMMANDS FALSE
+                                                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)
+                                                ELSE
+                                                    pUnlockCode = 9636
+                                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power11" (iTempVar)
+                                                    IF pUnlockCode = iTempVar
+                                                    AND idTexture = 109
+                                                        USE_TEXT_COMMANDS FALSE
+                                                        DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210) 
+                                                    ELSE
+                                                        pUnlockCode = 9999
+                                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power12" (iTempVar)
+                                                        IF pUnlockCode = iTempVar
+                                                        AND idTexture = 110               
+                                                            USE_TEXT_COMMANDS FALSE
+                                                            DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)      
+                                                        ELSE
+                                                            pUnlockCode = 7898
+                                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power13" (iTempVar)
+                                                            IF pUnlockCode = iTempVar
+                                                            AND idTexture = 111                 
+                                                                USE_TEXT_COMMANDS FALSE
+                                                                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210) 
+                                                            ELSE
+                                                                pUnlockCode = 7319
+                                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power14" (iTempVar)
+                                                                IF pUnlockCode = iTempVar
+                                                                AND idTexture = 112                 
+                                                                    USE_TEXT_COMMANDS FALSE
+                                                                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                                                                ELSE
+                                                                    pUnlockCode = 3734
+                                                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power15" (iTempVar)
+                                                                    IF pUnlockCode = iTempVar
+                                                                    AND idTexture = 108                 
+                                                                        USE_TEXT_COMMANDS FALSE
+                                                                        DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)                                                                                                                                                                                                                                                                                                                                                            
+                                                                    ELSE
+                                                                        USE_TEXT_COMMANDS FALSE
+                                                                        DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)    
+                                                                    ENDIF
+                                                                ENDIF
+                                                            ENDIF
+                                                        ENDIF
+                                                    ENDIF
+                                                ENDIF
+                                            ENDIF
+                                        ENDIF
+                                    ENDIF
+                                ENDIF
+                            ENDIF
+                        ENDIF
+                    ENDIF
+                ENDIF       
+            ENDIF
+
         ENDIF
         idTexture ++
         xCoord += 50.0
