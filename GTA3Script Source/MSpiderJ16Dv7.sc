@@ -673,7 +673,7 @@ show_menu:
                         //CLAMP_INT iActiveCol 1 4 (iActiveCol)   //Limit 4 power on 4rd row    //no longer needed as the row got filled
                     //ENDIF
                     pUnlockCode = 3564
-                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power1" (iTempVar)
+                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit3" (iTempVar)
                     IF pUnlockCode = iTempVar
                     AND iSelectedPower = 1
                         IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -689,7 +689,7 @@ show_menu:
                         ENDIF  
                     ELSE
                         pUnlockCode = 7952
-                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power2" (iTempVar)
+                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit5" (iTempVar)
                         IF pUnlockCode = iTempVar
                         AND iSelectedPower = 2
                             IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -705,7 +705,7 @@ show_menu:
                             ENDIF 
                         ELSE           
                             pUnlockCode = 8431
-                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power3" (iTempVar)
+                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit6" (iTempVar)
                             IF pUnlockCode = iTempVar
                             AND iSelectedPower = 3
                                 IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -721,7 +721,7 @@ show_menu:
                                 ENDIF   
                             ELSE
                                 pUnlockCode = 9999
-                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power4" (iTempVar)
+                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit8" (iTempVar)
                                 IF pUnlockCode = iTempVar
                                 AND iSelectedPower = 4
                                     IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -737,7 +737,7 @@ show_menu:
                                     ENDIF                     
                                 ELSE
                                     pUnlockCode = 6784
-                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power5" (iTempVar)
+                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit9" (iTempVar)
                                     IF pUnlockCode = iTempVar
                                     AND iSelectedPower = 5
                                         IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -753,7 +753,7 @@ show_menu:
                                         ENDIF                           
                                     ELSE
                                         pUnlockCode = 3897
-                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power6" (iTempVar)
+                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit10" (iTempVar)
                                         IF pUnlockCode = iTempVar
                                         AND iSelectedPower = 6
                                             IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -769,7 +769,7 @@ show_menu:
                                             ENDIF 
                                         ELSE
                                             pUnlockCode = 4837
-                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power7" (iTempVar)
+                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit11" (iTempVar)
                                             IF pUnlockCode = iTempVar
                                             AND iSelectedPower = 7
                                                 IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -784,8 +784,8 @@ show_menu:
                                                     iSetCamera = TRUE
                                                 ENDIF 
                                             ELSE
-                                                pUnlockCode = 7319
-                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power8" (iTempVar)
+                                                pUnlockCode = 1937
+                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit13" (iTempVar)
                                                 IF pUnlockCode = iTempVar
                                                 AND iSelectedPower = 15
                                                     IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -801,7 +801,7 @@ show_menu:
                                                     ENDIF 
                                                 ELSE                                                                             
                                                     pUnlockCode = 8319
-                                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power9" (iTempVar)
+                                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit14" (iTempVar)
                                                     IF pUnlockCode = iTempVar
                                                     AND iSelectedPower = 8
                                                         IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -817,7 +817,7 @@ show_menu:
                                                         ENDIF 
                                                     ELSE
                                                         pUnlockCode = 4627
-                                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power10" (iTempVar)
+                                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit16" (iTempVar)
                                                         IF pUnlockCode = iTempVar
                                                         AND iSelectedPower = 9
                                                             IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -833,7 +833,7 @@ show_menu:
                                                             ENDIF  
                                                         ELSE
                                                             pUnlockCode = 9636
-                                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power11" (iTempVar)
+                                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit19" (iTempVar)
                                                             IF pUnlockCode = iTempVar
                                                             AND iSelectedPower = 11
                                                                 IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -849,7 +849,7 @@ show_menu:
                                                                 ENDIF  
                                                             ELSE
                                                                 pUnlockCode = 9999
-                                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power12" (iTempVar)
+                                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit20" (iTempVar)
                                                                 IF pUnlockCode = iTempVar
                                                                 AND iSelectedPower = 12               
                                                                     IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -865,7 +865,7 @@ show_menu:
                                                                     ENDIF      
                                                                 ELSE
                                                                     pUnlockCode = 7898
-                                                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power13" (iTempVar)
+                                                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit22" (iTempVar)
                                                                     IF pUnlockCode = iTempVar
                                                                     AND iSelectedPower = 13                 
                                                                         IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -881,7 +881,7 @@ show_menu:
                                                                         ENDIF
                                                                     ELSE
                                                                         pUnlockCode = 7319
-                                                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power14" (iTempVar)
+                                                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit24" (iTempVar)
                                                                         IF pUnlockCode = iTempVar
                                                                         AND iSelectedPower = 14                 
                                                                             IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -897,7 +897,7 @@ show_menu:
                                                                             ENDIF  
                                                                         ELSE
                                                                             pUnlockCode = 3734
-                                                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power15" (iTempVar)
+                                                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit29" (iTempVar)
                                                                             IF pUnlockCode = iTempVar
                                                                             AND iSelectedPower = 10                 
         
@@ -4116,105 +4116,105 @@ ProcessGame_and_DrawItems_POWER_SUITS:
             //ENDIF
 
             pUnlockCode = 3564
-            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power1" (iTempVar)
+            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit3" (iTempVar)
             IF pUnlockCode = iTempVar
             AND idTexture = 99
                 USE_TEXT_COMMANDS FALSE
                 DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
             ELSE
                 pUnlockCode = 7952
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power2" (iTempVar)
+                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit5" (iTempVar)
                 IF pUnlockCode = iTempVar
                 AND idTexture = 100
                     USE_TEXT_COMMANDS FALSE
                     DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210) 
                 ELSE           
                     pUnlockCode = 8431
-                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power3" (iTempVar)
+                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit6" (iTempVar)
                     IF pUnlockCode = iTempVar
                     AND idTexture = 101
                         USE_TEXT_COMMANDS FALSE
                         DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210) 
                     ELSE
                         pUnlockCode = 9999
-                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power4" (iTempVar)
+                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit8" (iTempVar)
                         IF pUnlockCode = iTempVar
                         AND idTexture = 102
                             USE_TEXT_COMMANDS FALSE
                             DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)                     
                         ELSE
                             pUnlockCode = 6784
-                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power5" (iTempVar)
+                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit9" (iTempVar)
                             IF pUnlockCode = iTempVar
                             AND idTexture = 103
                                 USE_TEXT_COMMANDS FALSE
                                 DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)                          
                             ELSE
                                 pUnlockCode = 3897
-                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power6" (iTempVar)
+                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit10" (iTempVar)
                                 IF pUnlockCode = iTempVar
                                 AND idTexture = 104
                                     USE_TEXT_COMMANDS FALSE
                                     DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210) 
                                 ELSE
                                     pUnlockCode = 4837
-                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power7" (iTempVar)
+                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit11" (iTempVar)
                                     IF pUnlockCode = iTempVar
                                     AND idTexture = 105
                                         USE_TEXT_COMMANDS FALSE
                                         DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210) 
                                     ELSE
-                                        pUnlockCode = 7319
-                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power8" (iTempVar)
+                                        pUnlockCode = 1937
+                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit13" (iTempVar)
                                         IF pUnlockCode = iTempVar
                                         AND idTexture = 113
                                             USE_TEXT_COMMANDS FALSE
                                             DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
                                         ELSE                                                                             
                                             pUnlockCode = 8319
-                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power9" (iTempVar)
+                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit14" (iTempVar)
                                             IF pUnlockCode = iTempVar
                                             AND idTexture = 106
                                                 USE_TEXT_COMMANDS FALSE
                                                 DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)
                                             ELSE
                                                 pUnlockCode = 4627
-                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power10" (iTempVar)
+                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit16" (iTempVar)
                                                 IF pUnlockCode = iTempVar
                                                 AND idTexture = 107
                                                     USE_TEXT_COMMANDS FALSE
                                                     DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)
                                                 ELSE
                                                     pUnlockCode = 9636
-                                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power11" (iTempVar)
+                                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit19" (iTempVar)
                                                     IF pUnlockCode = iTempVar
                                                     AND idTexture = 109
                                                         USE_TEXT_COMMANDS FALSE
                                                         DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210) 
                                                     ELSE
                                                         pUnlockCode = 9999
-                                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power12" (iTempVar)
+                                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit20" (iTempVar)
                                                         IF pUnlockCode = iTempVar
                                                         AND idTexture = 110               
                                                             USE_TEXT_COMMANDS FALSE
                                                             DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)      
                                                         ELSE
                                                             pUnlockCode = 7898
-                                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power13" (iTempVar)
+                                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit22" (iTempVar)
                                                             IF pUnlockCode = iTempVar
                                                             AND idTexture = 111                 
                                                                 USE_TEXT_COMMANDS FALSE
                                                                 DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210) 
                                                             ELSE
                                                                 pUnlockCode = 7319
-                                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power14" (iTempVar)
+                                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit24" (iTempVar)
                                                                 IF pUnlockCode = iTempVar
                                                                 AND idTexture = 112                 
                                                                     USE_TEXT_COMMANDS FALSE
                                                                     DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
                                                                 ELSE
                                                                     pUnlockCode = 3734
-                                                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "POWERC" "power15" (iTempVar)
+                                                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit29" (iTempVar)
                                                                     IF pUnlockCode = iTempVar
                                                                     AND idTexture = 108                 
                                                                         USE_TEXT_COMMANDS FALSE
