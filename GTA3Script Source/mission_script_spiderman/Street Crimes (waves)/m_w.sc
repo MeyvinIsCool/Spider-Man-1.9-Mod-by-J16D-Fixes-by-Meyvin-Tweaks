@@ -46,16 +46,6 @@ ELSE
     WAIT 5000
     TERMINATE_THIS_CUSTOM_SCRIPT
 ENDIF
-
-WAIT 15000
-crimealert = 0
-SET_CLEO_SHARED_VAR varCrimeAlert crimealert
-WAIT 1
-crimealert = 1
-SET_CLEO_SHARED_VAR varCrimeAlert crimealert
-IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
-    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 802 808    //{id} {mission_id} {text1_id} {text2_id}
-ENDIF   
 GOSUB generate_random_events
 CLEO_CALL get_map_coords 0 (x[2] y[2] z[2])
 ADD_SPRITE_BLIP_FOR_COORD x[2] y[2] z[2] RADAR_SPRITE_GANG_N (iEventBlip)
@@ -80,17 +70,6 @@ WHILE TRUE
                         ENDIF
                     ENDIF
                     IF is_random_event_available = EVENT_NOT_AVAILABLE
-                        GET_CLEO_SHARED_VAR varOnmission flag_player_on_mission
-                        IF flag_player_on_mission = 0
-                            crimealert = 0
-                            SET_CLEO_SHARED_VAR varCrimeAlert crimealert
-                            WAIT 1
-                            crimealert = 1
-                            SET_CLEO_SHARED_VAR varCrimeAlert crimealert
-                            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
-                                STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 802 808    //{id} {mission_id} {text1_id} {text2_id}
-                            ENDIF 
-                        ENDIF
                         GOSUB generate_random_events
                         CLEO_CALL get_map_coords 0 (x[2] y[2] z[2])
                         ADD_SPRITE_BLIP_FOR_COORD x[2] y[2] z[2] RADAR_SPRITE_GANG_N (iEventBlip)
