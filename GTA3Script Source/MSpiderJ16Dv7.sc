@@ -4439,8 +4439,157 @@ DrawInfo_Suit_Unlocked_Power_RightPanel:
     xSize = 41.25
     ySize = 51.33
     USE_TEXT_COMMANDS FALSE
-    DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)    //IMAGE_POWER_SUIT-RIGHT_PANEL  
-    
+    IF iTempVar = 99
+        pUnlockCode = 3564
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit3" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF
+    IF iTempVar = 100
+        pUnlockCode = 7952
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit5" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF  
+    IF iTempVar = 101
+        pUnlockCode = 8431
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit6" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF      
+    IF iTempVar = 102
+        pUnlockCode = 9999
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit8" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF   
+    IF iTempVar = 103
+        pUnlockCode = 6784
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit9" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF        
+    IF iTempVar = 104
+        pUnlockCode = 3897
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit10" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF      
+    IF iTempVar = 105
+        pUnlockCode = 4837
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit11" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF    
+    IF iTempVar = 113
+        pUnlockCode = 1937
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit13" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF    
+    IF iTempVar = 106
+        pUnlockCode = 8319
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit14" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF    
+    IF iTempVar = 107
+        pUnlockCode = 4627
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit16" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF     
+    IF iTempVar = 109
+        pUnlockCode = 9636
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit19" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF      
+    IF iTempVar = 110
+        pUnlockCode = 9999
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit20" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF    
+    IF iTempVar = 111
+        pUnlockCode = 7898
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit22" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF    
+    IF iTempVar = 112
+        pUnlockCode = 7319
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit24" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF          
+    IF iTempVar = 108
+        pUnlockCode = 3734
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit29" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF                  
+
     //DRAW POWER SUIT NAME
     GOSUB get_text_id_by_selected_power
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (597.5 149.75) (85.0 17.5) (31 181 240 0) (0.5) (0 0 1 0) (0 125 180 150) iTempVar 6 (-42.5 0.0)   //NAME_SUIT (25-49)
