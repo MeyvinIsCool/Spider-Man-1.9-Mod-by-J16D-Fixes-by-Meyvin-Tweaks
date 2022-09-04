@@ -4124,160 +4124,173 @@ ProcessGame_and_DrawItems_POWER_SUITS:
                     USE_TEXT_COMMANDS FALSE
                     DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
                 ENDIF
-            ENDIF 
-            IF idTexture = 100
-                pUnlockCode = 7952
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit5" (iTempVar)
-                IF pUnlockCode = iTempVar
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
-                ENDIF
-            ENDIF    
-            IF idTexture = 101
-                pUnlockCode = 8431
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit6" (iTempVar)
-                IF pUnlockCode = iTempVar
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
-                ENDIF
-            ENDIF                         
-            IF idTexture = 102
-                pUnlockCode = 9999
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit8" (iTempVar)
-                IF pUnlockCode = iTempVar
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
-                ENDIF
-            ENDIF    
-            IF idTexture = 103
-                pUnlockCode = 6784
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit9" (iTempVar)
-                IF pUnlockCode = iTempVar
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
-                ENDIF
-            ENDIF              
-            IF idTexture = 104
-                pUnlockCode = 3897
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit10" (iTempVar)
-                IF pUnlockCode = iTempVar
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
-                ENDIF
-            ENDIF 
-            IF idTexture = 105
-                pUnlockCode = 4837
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit11" (iTempVar)
-                IF pUnlockCode = iTempVar
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
-                ENDIF
-            ENDIF  
-
-            IF idTexture = 113
-                pUnlockCode = 1937
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit13" (iTempVar)
-                IF pUnlockCode = iTempVar
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
-                ENDIF
-            ENDIF 
-            IF idTexture = 106
-                pUnlockCode = 8319
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit14" (iTempVar)
-                IF pUnlockCode = iTempVar
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
-                ENDIF
-            ENDIF       
-            IF idTexture = 107
-                pUnlockCode = 4627
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit16" (iTempVar)
-                IF pUnlockCode = iTempVar
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
-                ENDIF
-            ENDIF  
-            IF idTexture = 109
-                pUnlockCode = 9636
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit19" (iTempVar)
-                IF pUnlockCode = iTempVar
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
-                ENDIF
-            ENDIF       
-            IF idTexture = 110
-                pUnlockCode = 9999
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit20" (iTempVar)
-                IF pUnlockCode = iTempVar
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
-                ENDIF
-            ENDIF            
-            IF idTexture = 111
-                pUnlockCode = 7898
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit22" (iTempVar)
-                IF pUnlockCode = iTempVar
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
-                ENDIF
-            ENDIF 
-            IF idTexture = 112
-                pUnlockCode = 7319
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit24" (iTempVar)
-                IF pUnlockCode = iTempVar
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
-                ENDIF
-            ENDIF       
-            IF idTexture = 108
-                pUnlockCode = 3734
-                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit29" (iTempVar)
-                IF pUnlockCode = iTempVar
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+            ELSE 
+                IF idTexture = 100
+                    pUnlockCode = 7952
+                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit5" (iTempVar)
+                    IF pUnlockCode = iTempVar
+                        USE_TEXT_COMMANDS FALSE
+                        DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                    ELSE
+                        USE_TEXT_COMMANDS FALSE
+                        DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                    ENDIF
+                ELSE    
+                    IF idTexture = 101
+                        pUnlockCode = 8431
+                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit6" (iTempVar)
+                        IF pUnlockCode = iTempVar
+                            USE_TEXT_COMMANDS FALSE
+                            DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                        ELSE
+                            USE_TEXT_COMMANDS FALSE
+                            DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                        ENDIF
+                    ELSE                        
+                        IF idTexture = 102
+                            pUnlockCode = 9999
+                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit8" (iTempVar)
+                            IF pUnlockCode = iTempVar
+                                USE_TEXT_COMMANDS FALSE
+                                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                            ELSE
+                                USE_TEXT_COMMANDS FALSE
+                            DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                        ENDIF
+                    ELSE  
+                        IF idTexture = 103
+                            pUnlockCode = 6784
+                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit9" (iTempVar)
+                            IF pUnlockCode = iTempVar
+                                USE_TEXT_COMMANDS FALSE
+                                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                            ELSE
+                                USE_TEXT_COMMANDS FALSE
+                                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                            ENDIF
+                        ELSE              
+                            IF idTexture = 104
+                                pUnlockCode = 3897
+                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit10" (iTempVar)
+                                IF pUnlockCode = iTempVar
+                                    USE_TEXT_COMMANDS FALSE
+                                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                                ELSE
+                                    USE_TEXT_COMMANDS FALSE
+                                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                                ENDIF
+                            ELSE
+                                IF idTexture = 105
+                                    pUnlockCode = 4837
+                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit11" (iTempVar)
+                                    IF pUnlockCode = iTempVar
+                                        USE_TEXT_COMMANDS FALSE
+                                        DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                                    ELSE
+                                        USE_TEXT_COMMANDS FALSE
+                                        DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                                    ENDIF
+                                ELSE
+                                    IF idTexture = 113
+                                        pUnlockCode = 1937
+                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit13" (iTempVar)
+                                        IF pUnlockCode = iTempVar
+                                            USE_TEXT_COMMANDS FALSE
+                                            DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                                        ELSE
+                                            USE_TEXT_COMMANDS FALSE
+                                            DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                                        ENDIF
+                                    ELSE
+                                        IF idTexture = 106
+                                            pUnlockCode = 8319
+                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit14" (iTempVar)
+                                            IF pUnlockCode = iTempVar
+                                                USE_TEXT_COMMANDS FALSE
+                                                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                                            ELSE
+                                                USE_TEXT_COMMANDS FALSE
+                                                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                                            ENDIF
+                                        ELSE      
+                                            IF idTexture = 107
+                                                pUnlockCode = 4627
+                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit16" (iTempVar)
+                                                IF pUnlockCode = iTempVar
+                                                    USE_TEXT_COMMANDS FALSE
+                                                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                                                ELSE
+                                                    USE_TEXT_COMMANDS FALSE
+                                                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                                                ENDIF
+                                            ELSE
+                                                    IF idTexture = 109
+                                                        pUnlockCode = 9636
+                                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit19" (iTempVar)
+                                                        IF pUnlockCode = iTempVar
+                                                            USE_TEXT_COMMANDS FALSE
+                                                            DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                                                        ELSE
+                                                            USE_TEXT_COMMANDS FALSE
+                                                            DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                                                        ENDIF
+                                                    ELSE       
+                                                        IF idTexture = 110
+                                                            pUnlockCode = 9999
+                                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit20" (iTempVar)
+                                                            IF pUnlockCode = iTempVar
+                                                                USE_TEXT_COMMANDS FALSE
+                                                                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                                                            ELSE
+                                                                USE_TEXT_COMMANDS FALSE
+                                                                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                                                            ENDIF
+                                                        ELSE        
+                                                            IF idTexture = 111
+                                                                pUnlockCode = 7898
+                                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit22" (iTempVar)
+                                                                IF pUnlockCode = iTempVar
+                                                                    USE_TEXT_COMMANDS FALSE
+                                                                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                                                                ELSE
+                                                                    USE_TEXT_COMMANDS FALSE
+                                                                    DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                                                                ENDIF
+                                                            ELSE 
+                                                                IF idTexture = 112
+                                                                    pUnlockCode = 7319
+                                                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit24" (iTempVar)
+                                                                    IF pUnlockCode = iTempVar
+                                                                        USE_TEXT_COMMANDS FALSE
+                                                                        DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                                                                    ELSE
+                                                                        USE_TEXT_COMMANDS FALSE
+                                                                        DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                                                                    ENDIF
+                                                                ELSE       
+                                                                    IF idTexture = 108
+                                                                        pUnlockCode = 3734
+                                                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit29" (iTempVar)
+                                                                        IF pUnlockCode = iTempVar
+                                                                            USE_TEXT_COMMANDS FALSE
+                                                                            DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                                                                        ELSE
+                                                                            USE_TEXT_COMMANDS FALSE
+                                                                            DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                                                                        ENDIF
+                                                                    ENDIF
+                                                                ENDIF
+                                                            ENDIF
+                                                        ENDIF
+                                                    ENDIF
+                                                ENDIF
+                                            ENDIF
+                                        ENDIF
+                                    ENDIF
+                                ENDIF
+                            ENDIF
+                        ENDIF
+                    ENDIF
                 ENDIF
             ENDIF                                                                                  
         ENDIF
