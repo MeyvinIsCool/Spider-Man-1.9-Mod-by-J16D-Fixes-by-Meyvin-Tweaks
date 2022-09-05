@@ -4738,17 +4738,6 @@ DrawInfo_POWER_SUITS_RightPanel:
         ENDIF
     ENDIF    
     IF iSelectedPower = 8
-        pUnlockCode = 1937
-        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit13" (counter)
-        IF pUnlockCode = counter
-            USE_TEXT_COMMANDS FALSE
-            DRAW_SPRITE idTexture (572.0 yCoord) (xSize ySize) (255 255 255 255)
-        ELSE
-            USE_TEXT_COMMANDS FALSE
-            DRAW_SPRITE bck320 (572.0 yCoord) (xSize ySize) (255 255 255 255)
-        ENDIF
-    ENDIF    
-    IF iSelectedPower = 9
         pUnlockCode = 8319
         READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit14" (counter)
         IF pUnlockCode = counter
@@ -4759,9 +4748,20 @@ DrawInfo_POWER_SUITS_RightPanel:
             DRAW_SPRITE bck320 (572.0 yCoord) (xSize ySize) (255 255 255 255)
         ENDIF
     ENDIF    
-    IF iSelectedPower = 10
+    IF iSelectedPower = 9
         pUnlockCode = 4627
         READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit16" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE idTexture (572.0 yCoord) (xSize ySize) (255 255 255 255)
+        ELSE
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE bck320 (572.0 yCoord) (xSize ySize) (255 255 255 255)
+        ENDIF
+    ENDIF    
+    IF iSelectedPower = 10
+        pUnlockCode = 3734
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit29" (counter)
         IF pUnlockCode = counter
             USE_TEXT_COMMANDS FALSE
             DRAW_SPRITE idTexture (572.0 yCoord) (xSize ySize) (255 255 255 255)
@@ -4783,7 +4783,7 @@ DrawInfo_POWER_SUITS_RightPanel:
     ENDIF   
     IF iSelectedPower = 12
         pUnlockCode = 9999
-        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit20" (counter)
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit20" (counter)        
         IF pUnlockCode = counter
             USE_TEXT_COMMANDS FALSE
             DRAW_SPRITE idTexture (572.0 yCoord) (xSize ySize) (255 255 255 255)
@@ -4815,8 +4815,8 @@ DrawInfo_POWER_SUITS_RightPanel:
         ENDIF
     ENDIF          
     IF iSelectedPower = 15
-        pUnlockCode = 3734
-        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit29" (counter)
+        pUnlockCode = 1937
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit13" (counter)
         IF pUnlockCode = counter
             USE_TEXT_COMMANDS FALSE
             DRAW_SPRITE idTexture (572.0 yCoord) (xSize ySize) (255 255 255 255)
