@@ -254,6 +254,8 @@ assign_air_swing_kick_task:
             WAIT 50
         ENDIF
     ENDIF
+    WAIT 1000
+    TASK_KILL_CHAR_ON_FOOT iChar player_actor
     GOSUB destroyWeb
 RETURN
 
@@ -320,13 +322,13 @@ assign_ground_to_air_combo_task:
                         IF GOSUB does_skill_Bunker_Buster_enabled
                             TASK_PLAY_ANIM_NON_INTERRUPTABLE iChar ("ground_to_air_hit" "dildo") 40.0 (0 1 1 0) -1
                             WAIT 0
-                            SET_CHAR_ANIM_SPEED iChar "ground_to_air_hit" 1.4                           
+                            SET_CHAR_ANIM_SPEED iChar "ground_to_air_hit" 1.4                                                        
                         ELSE
                             CLEO_CALL get_char_mass 0 iChar (fTempVar)
                             IF mass_lvl0 >= fTempVar //default
                                 TASK_PLAY_ANIM_NON_INTERRUPTABLE iChar ("ground_to_air_hit" "dildo") 40.0 (0 1 1 0) -1
                                 WAIT 0
-                                SET_CHAR_ANIM_SPEED iChar "ground_to_air_hit" 1.4
+                                SET_CHAR_ANIM_SPEED iChar "ground_to_air_hit" 1.4                                
                             ENDIF
                         ENDIF
                     ELSE
@@ -341,7 +343,7 @@ assign_ground_to_air_combo_task:
         WAIT 0
         IF DOES_CHAR_EXIST iChar
             IF NOT IS_CHAR_PLAYING_ANIM iChar "ground_to_air_hit"
-                CLEAR_CHAR_TASKS iChar
+                CLEAR_CHAR_TASKS iChar                
                 RETURN
             ENDIF
         ENDIF
@@ -665,6 +667,9 @@ assign_ground_to_air_combo_task:
                 WAIT 0
             ENDWHILE
         ENDIF
+        WAIT 1000
+        TASK_KILL_CHAR_ON_FOOT iChar player_actor   
+        PRINT_FORMATTED_NOW "CLOSED" 2222            
         WAIT 50
         RETURN
         
@@ -683,7 +688,8 @@ assign_ground_to_air_combo_task:
                 TASK_PLAY_ANIM_NON_INTERRUPTABLE iChar ("getup" "ped") 42.0 (0 1 1 0) -1
                 WAIT 0
             ENDIF
-            WAIT 50
+            WAIT 1000
+            TASK_KILL_CHAR_ON_FOOT iChar player_actor
         RETURN
 
         fail_combo_air_1:
@@ -701,7 +707,8 @@ assign_ground_to_air_combo_task:
                 TASK_PLAY_ANIM_NON_INTERRUPTABLE iChar ("getup" "ped") 42.0 (0 1 1 0) -1
                 WAIT 0
             ENDIF
-            WAIT 50
+            WAIT 1000
+            TASK_KILL_CHAR_ON_FOOT iChar player_actor
         RETURN
 
         fail_combo_air_2:
@@ -719,7 +726,8 @@ assign_ground_to_air_combo_task:
                 TASK_PLAY_ANIM_NON_INTERRUPTABLE iChar ("getup" "ped") 42.0 (0 1 1 0) -1
                 WAIT 0
             ENDIF
-            WAIT 50
+            WAIT 1000
+            TASK_KILL_CHAR_ON_FOOT iChar player_actor
         RETURN
 
         fail_combo_air_3:
@@ -737,7 +745,8 @@ assign_ground_to_air_combo_task:
                 TASK_PLAY_ANIM_NON_INTERRUPTABLE iChar ("getup" "ped") 42.0 (0 1 1 0) -1
                 WAIT 0
             ENDIF
-            WAIT 50
+            WAIT 1000
+            TASK_KILL_CHAR_ON_FOOT iChar player_actor 
         RETURN
 
     ENDIF
@@ -880,11 +889,11 @@ assign_task_fall_floor:
                 TASK_PLAY_ANIM_NON_INTERRUPTABLE -1 ("getup" "ped") 42.0 (0 1 1 0) -1
             CLOSE_SEQUENCE_TASK anim_seq
             BREAK
-    ENDSWITCH
+    ENDSWITCH    
     PERFORM_SEQUENCE_TASK iChar anim_seq
     SET_CHAR_HEADING iChar zAngle
     WAIT 0
-    CLEAR_SEQUENCE_TASK anim_seq
+    CLEAR_SEQUENCE_TASK anim_seq   
 RETURN
 
 is_not_is_playing_anim:
