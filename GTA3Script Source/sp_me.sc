@@ -668,8 +668,7 @@ assign_ground_to_air_combo_task:
             ENDWHILE
         ENDIF
         WAIT 1000
-        TASK_KILL_CHAR_ON_FOOT iChar player_actor   
-        PRINT_FORMATTED_NOW "CLOSED" 2222            
+        TASK_KILL_CHAR_ON_FOOT iChar player_actor             
         WAIT 50
         RETURN
         
