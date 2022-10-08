@@ -7,7 +7,7 @@ Things I Fixed And Added On This Mod :
 - Cinimatic Jump Restored
 - A Web Swinging Animation Restored
 - Falling Animations Restored
-- Fully Functional Throw Vehicle Doors Features With Web Sound !!!
+- Fully Functional Throw Objects Such As Vehicle Door And Map Objects
 - Fixed Money Bar Not Visible
 - Fixed Webshooters Textures
 - Fixed Menu Rendering Issues Whenever Using Lower Resolutions
