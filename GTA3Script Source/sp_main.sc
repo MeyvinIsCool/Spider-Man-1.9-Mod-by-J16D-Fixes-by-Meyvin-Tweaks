@@ -106,6 +106,7 @@ IF GOSUB does_scripts_exist
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_po.cs"      // Powers
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_st.cs"      // Stealth (Hidden player) AI visibility
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_wep.cs"     // Auto-Fill Web Ammo
+    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_thob.cs"     // Throw Objects
 ENDIF
     //Reservoirs    //additional
     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_res.cs"
@@ -122,7 +123,11 @@ ENDIF
     // Pizza Time Mission
     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_pizza.cs"
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_pizza.cs"     // Pizza Time Mission (Only If The Mission Is Installed !)
-    ENDIF        
+    ENDIF   
+    // Electro Mission Test
+    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\m_elec.cs"
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_elec.cs"     // Pizza Time Mission (Only If The Mission Is Installed !)
+    ENDIF          
 
 //-+-- Start Internal Threads
     STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_cam_internalThread   // Camera Script

@@ -231,6 +231,7 @@ main_loop:
                                 IF CLEO_CALL getClosestVehicle 0 (iVeh)
                                     IF DOES_VEHICLE_EXIST iVeh
                                     AND IS_CAR_ON_SCREEN iVeh
+                                    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("yank_object")
                                         GOSUB draw_indicator_vehicles
                                         // L1 + R1
                                         IF IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
@@ -1454,10 +1455,10 @@ stay_on_building_from_air:
 
         IF IS_BUTTON_PRESSED PAD1 LEFTSTICKX   // ~k~~GO_LEFT~ / ~k~~GO_RIGHT~
         OR IS_BUTTON_PRESSED PAD1 LEFTSTICKY  //~k~~GO_FORWARD~ / ~k~~GO_BACK~
-            SET_CHAR_COLLISION player_actor TRUE
             CLEAR_CHAR_TASKS player_actor
             CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-            WAIT 0
+            WAIT 5
+            SET_CHAR_COLLISION player_actor TRUE
             TASK_TOGGLE_DUCK player_actor TRUE
             WAIT 500
             TASK_TOGGLE_DUCK player_actor FALSE            
@@ -2238,6 +2239,7 @@ get_object_offset_indicator:
     LVAR_INT idModel
     LVAR_FLOAT x[3] y[3] z[3]
     IF DOES_OBJECT_EXIST obj
+    AND NOT HAS_OBJECT_BEEN_DAMAGED obj 
         //Small
         IF DOES_OBJECT_HAVE_THIS_MODEL obj 1375     //tramstop_SF
         OR DOES_OBJECT_HAVE_THIS_MODEL obj 1568     //chinalamp_sf
