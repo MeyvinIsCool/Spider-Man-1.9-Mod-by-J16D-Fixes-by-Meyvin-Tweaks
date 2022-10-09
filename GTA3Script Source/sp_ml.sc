@@ -19,8 +19,8 @@ WAIT 0
 WAIT 0
 LVAR_INT player_actor toggleSpiderMod
 LVAR_FLOAT xAngle zAngle x[4] y[4] z[4] v1 v2 fDistance currentTime fCharSpeed
-LVAR_INT baseObject iWebActor iWebActorR obj idModel iVeh sfx sfxB
-LVAR_INT is_near_pole randomVal iTempVar
+LVAR_INT baseObject iWebActor iWebActorR obj iVeh sfx sfxB
+LVAR_INT is_near_pole randomVal iTempVar is_near_car
 
 CONST_INT STOP 0 
 
@@ -129,7 +129,8 @@ main_loop:
                             ENDIF
 
                         ENDIF
-                    
+                        is_near_car = 0
+                        SET_CLEO_SHARED_VAR varThrowFix (is_near_car)                    
                     ENDIF
 
                 ELSE
@@ -227,12 +228,12 @@ main_loop:
                         IF iTempVar = 1
                             GET_CLEO_SHARED_VAR varOnmission (iTempVar) // flag_player_on_mission ||0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
                             IF NOT iTempVar = 2   //car chase     //Fix crash
-                                //on ground
-                                IF CLEO_CALL getClosestVehicle 0 (iVeh)
+                                //on ground                                 
+                                IF CLEO_CALL getClosestVehicle 0 (iVeh)                             
                                     IF DOES_VEHICLE_EXIST iVeh
                                     AND IS_CAR_ON_SCREEN iVeh
                                     AND NOT IS_CHAR_PLAYING_ANIM player_actor ("yank_object")
-                                        GOSUB draw_indicator_vehicles
+                                        GOSUB draw_indicator_vehicles                                                                                                                                                            
                                         // L1 + R1
                                         IF IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
                                         AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
@@ -248,11 +249,10 @@ main_loop:
                                                 WHILE IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2        // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
                                                     WAIT 0
                                                 ENDWHILE
-                                            ENDIF
-                                        ENDIF
-    
-                                    ENDIF
-                                ENDIF
+                                            ENDIF                                                                                                                                                     
+                                        ENDIF                                          
+                                    ENDIF                                                                                                 
+                                ENDIF                              
                             ENDIF
 
                         ENDIF
@@ -1838,13 +1838,13 @@ RETURN
 
 //-+--------------------vehicles--------------------------
 draw_indicator_vehicles:        
-    IF DOES_VEHICLE_EXIST iVeh               
-        CLEO_CALL get_side_of_char_on_vehicle 0 player_actor iVeh (randomVal) //1:left|2:right          
+    IF DOES_VEHICLE_EXIST iVeh             
+        CLEO_CALL get_side_of_char_on_vehicle 0 player_actor iVeh (randomVal) //1:left|2:right                  
         IF GOSUB is_spider_hud_enabled
             IF CLEO_CALL get_side_of_char_on_vehicle 0 player_actor iVeh (randomVal) //1:left|2:right
                 GOSUB draw_tip_key_command          //Adds Indication 
             ENDIF
-        ENDIF  
+        ENDIF         
         SWITCH randomVal
             CASE 1  //Left
                 iTempVar = 10   //door_lf_dummy
@@ -1861,11 +1861,13 @@ draw_indicator_vehicles:
             GET_FIXED_XY_ASPECT_RATIO 30.0 30.0 (x[1] y[1])
             USE_TEXT_COMMANDS FALSE
             SET_SPRITES_DRAW_BEFORE_FADE TRUE
-            DRAW_SPRITE idLR (v1 v2) (x[1] y[1]) (255 255 255 200)
-        ENDIF      
+            DRAW_SPRITE idLR (v1 v2) (x[1] y[1]) (255 255 255 200)       
+            is_near_car = 1
+            SET_CLEO_SHARED_VAR varThrowFix (is_near_car)       
+        ENDIF                 
         //PRINT_FORMATTED_NOW "side:%i" 1 randomVal  //debug
-        //PRINT_FORMATTED_NOW "x:%.1f y:%1f z:%1f" 1 x[1] y[1] z[1]
-    ENDIF
+        //PRINT_FORMATTED_NOW "x:%.1f y:%1f z:%1f" 1 x[1] y[1] z[1]  
+    ENDIF    
 RETURN
 
 process_push_doors:
@@ -2842,7 +2844,8 @@ CONST_INT varMouseControl       23    //MSpiderJ16Dv7    ||1= Activated     || 0
 CONST_INT varAimSetup           24    // 0:Manual Aim || 1:Auto Aim //sp_dw
 CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= 
+CONST_INT varThrowFix           28    //sp_thob          ||1= Activated     || 0= Deactivated
 
 CONST_INT varLevelChar          30    //sp_lvl    || Level
 CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)

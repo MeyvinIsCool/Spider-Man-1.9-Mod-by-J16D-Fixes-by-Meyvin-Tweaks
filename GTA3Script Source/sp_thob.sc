@@ -1,5 +1,5 @@
 // by MeyvinIsCool
-// Throw Objects In Progress
+// Throw Objects v1.1
 // Spider-Man Mod for GTA SA c.2018 - 2022
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
@@ -18,7 +18,7 @@ WAIT 0
 //     | x[0] y[0] z[0] --> Object | | x[1] y[1] z[1] --> Spider-Man |
 
 LVAR_INT player_actor toggleSpiderMod 
-LVAR_INT iTempVar obj
+LVAR_INT iTempVar is_near_car obj 
 LVAR_FLOAT zAngle v1 v2 fDistance currentTime fCharSpeed
 LVAR_FLOAT x[4] y[4] z[4] 
 LVAR_INT randomVal sfx is_near_pole 
@@ -49,14 +49,15 @@ main_loop:
                     GET_CLEO_SHARED_VAR varOnmission (iTempVar) // flag_player_on_mission ||0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
                     IF NOT iTempVar = 2   //car chase     //Fix crash
 
-                        IF CLEO_CALL get_object_near_char 0 player_actor 60.0 (obj)
-
+                        GET_CLEO_SHARED_VAR varThrowFix (is_near_car)
+                        IF CLEO_CALL get_object_near_char 0 player_actor 20.0 (obj)
+  
                             IF DOES_OBJECT_EXIST obj    //secure check
  
-                                IF CLEO_CALL get_object_offset_indicator 0 obj (x[0] y[0] z[0])
+                                IF CLEO_CALL get_object_offset_indicator 0 obj (x[0] y[0] z[0])   
 
                                     IF DOES_OBJECT_EXIST obj
-                                    AND IS_OBJECT_ON_SCREEN obj
+                                    AND NOT is_near_car = 1
                                     AND NOT IS_CHAR_PLAYING_ANIM player_actor ("yank_object")
                                         GOSUB draw_indicator_object
                                         // L1 + R1
@@ -100,32 +101,77 @@ main_loop:
     WAIT 0  
 GOTO main_loop
 
+draw_tip_key_command:
+    //GET_FIXED_XY_ASPECT_RATIO 120.0 60.0 (x[3] y[3])
+    x[3] = 90.00
+    y[3] = 56.00
+    USE_TEXT_COMMANDS FALSE
+    SET_SPRITES_DRAW_BEFORE_FADE TRUE
+    DRAW_SPRITE idTip1 (50.0 400.0) (x[3] y[3]) (255 255 255 200)
+    IF IS_PC_USING_JOYPAD
+        iTempVar = 703  //~k~~PED_CYCLE_WEAPON_LEFT~
+        CLEO_CALL GUI_DrawHelperText 0 (45.0 400.0) (iTempVar 2) (0.0 0.0)   // gxtId(i)|Format(i)|LeftPadding(f)|TopPadding(f)
+        iTempVar = 704  //~k~~PED_CYCLE_WEAPON_RIGHT~
+        CLEO_CALL GUI_DrawHelperText 0 (80.0 397.0) (iTempVar 2) (0.0 0.0)   // gxtId(i)|Format(i)|LeftPadding(f)|TopPadding(f)
+    ELSE
+        iTempVar = 705  //~h~Q
+        CLEO_CALL GUI_DrawHelperText 0 (45.0 400.0) (iTempVar 2) (0.0 0.0)   // gxtId(i)|Format(i)|LeftPadding(f)|TopPadding(f)
+        iTempVar = 706  //~h~E
+        CLEO_CALL GUI_DrawHelperText 0 (80.0 397.0) (iTempVar 2) (0.0 0.0)   // gxtId(i)|Format(i)|LeftPadding(f)|TopPadding(f)
+    ENDIF
+RETURN
+
+is_spider_hud_enabled:
+    GET_CLEO_SHARED_VAR varHUD (iTempVar)
+    IF iTempVar = 1     // 0:OFF || 1:ON            
+        GET_CLEO_SHARED_VAR varHudRadar (iTempVar)  //display indicator only if radar is enabled
+        IF iTempVar = 1
+            RETURN_TRUE
+            RETURN
+        ENDIF
+    ENDIF
+    RETURN_FALSE
+RETURN
+
 draw_indicator_object:
-    IF NOT IS_ON_SCRIPTED_CUTSCENE  // checks if the "widescreen" mode is active   
-        GET_OFFSET_FROM_OBJECT_IN_WORLD_COORDS obj (0.0 0.0 0.0) (x[0] y[0] z[0])
-        CONVERT_3D_TO_SCREEN_2D (x[0] y[0] z[0]) TRUE TRUE (v1 v2) (x[3] y[3])
-        GET_FIXED_XY_ASPECT_RATIO 30.0 30.0 (x[3] y[3])
-        USE_TEXT_COMMANDS FALSE
-        SET_SPRITES_DRAW_BEFORE_FADE TRUE
-        DRAW_SPRITE idLR (v1 v2) (x[3] y[3]) (255 255 255 200)      
+    IF GOSUB is_spider_hud_enabled
+
+        IF CLEO_CALL get_object_offset_indicator 0 obj (x[0] y[0] z[0])
+            GOSUB draw_tip_key_command          //Adds Indication 
+        ENDIF
+            
+        IF NOT IS_ON_SCRIPTED_CUTSCENE  // checks if the "widescreen" mode is active   
+            GET_OFFSET_FROM_OBJECT_IN_WORLD_COORDS obj (0.0 0.0 0.0) (x[0] y[0] z[0])
+            CONVERT_3D_TO_SCREEN_2D (x[0] y[0] z[0]) TRUE TRUE (v1 v2) (x[3] y[3])
+            GET_FIXED_XY_ASPECT_RATIO 30.0 30.0 (x[3] y[3])
+            USE_TEXT_COMMANDS FALSE
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_SPRITE idLR (v1 v2) (x[3] y[3]) (255 255 255 200)      
+        ENDIF
     ENDIF
 RETURN
 
 loadTextures:
     LOAD_TEXTURE_DICTIONARY spaim
     //Textures
-    CONST_INT objCrosshair 61
+    CONST_INT idTip1 58
     CONST_INT idLR 59
+    CONST_INT tCrosshair 60
+    CONST_INT objCrosshair 61
     LOAD_SPRITE idLR "clr"
     LOAD_SPRITE objCrosshair "ilock"
+    LOAD_SPRITE idTip1 "htip1"
+    //LOAD_SPRITE tCrosshair "crosshair"
 RETURN
 
 process_push_object: 
     IF DOES_OBJECT_EXIST obj
     AND GOSUB draw_indicator_object
+
         SET_OBJECT_DYNAMIC obj TRUE
         SET_OBJECT_MASS obj 800.0
         SET_OBJECT_TURN_MASS obj 800.0
+        SET_OBJECT_COLLISION obj FALSE
 
         GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 0.0) (x[1] y[1] z[1])
         GET_OFFSET_FROM_OBJECT_IN_WORLD_COORDS obj (0.0 0.0 0.0) (x[0] y[0] z[0])
@@ -262,7 +308,8 @@ get_object_near_char:
 
                         CONVERT_3D_TO_SCREEN_2D (x[1] y[1] z[1]) TRUE TRUE (v1 v2) (x[0] y[0])
                         GET_DISTANCE_BETWEEN_COORDS_2D (339.0 179.0) (v1 v2) (fDistance)
-                        IF 70.0 > fDistance
+
+                        IF 30.0 > fDistance
                             iNewObj = obj
                             BREAK
                         ENDIF
@@ -300,8 +347,6 @@ get_object_offset_indicator:
             x[1] = (x[1] + 0.5)    //0.45
             z[2] = (z[2] - 0.25)   //0.6            
             GET_OFFSET_FROM_OBJECT_IN_WORLD_COORDS obj (x[1] 0.0 z[2]) (x[0] y[0] z[0])     //x[1] 0.2 z[2]
-            //GET_OBJECT_COORDINATES obj x[0] y[0] z[0]
-            //PRINT_FORMATTED_NOW "Found Cardboard" 1 
             RETURN_TRUE
         ELSE     
             IF DOES_OBJECT_HAVE_THIS_MODEL obj 1227
@@ -310,13 +355,12 @@ get_object_offset_indicator:
             OR DOES_OBJECT_HAVE_THIS_MODEL obj 1287
             OR DOES_OBJECT_HAVE_THIS_MODEL obj 1288
             OR DOES_OBJECT_HAVE_THIS_MODEL obj 1289
+            //OR DOES_OBJECT_HAVE_THIS_MODEL obj 1211
                 GET_OBJECT_MODEL obj (idModel)
                 GET_MODEL_DIMENSIONS idModel (x[1] y[1] z[1]) (x[2] y[2] z[2])
                 x[1] = (x[1] + 0.5)    //0.45
                 z[2] = (z[2] - 0.25)   //0.6            
-                GET_OFFSET_FROM_OBJECT_IN_WORLD_COORDS obj (x[1] 0.0 z[2]) (x[0] y[0] z[0])     //x[1] 0.2 z[2]
-                //GET_OBJECT_COORDINATES obj x[0] y[0] z[0]
-                //PRINT_FORMATTED_NOW "Found Cardboard" 1 
+                GET_OFFSET_FROM_OBJECT_IN_WORLD_COORDS obj (x[1] 0.0 z[2]) (x[0] y[0] z[0])     //x[1] 0.2 z[2] 
                 RETURN_TRUE
             ELSE
                 RETURN_FALSE
@@ -633,6 +677,7 @@ CONST_INT varAimSetup           24    // 0:Manual Aim || 1:Auto Aim //sp_dw
 CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varThrowFix           28    //sp_thob          ||1= Activated     || 0= Deactivated
 
 CONST_INT varLevelChar          30    //sp_lvl    || Level
 CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)
