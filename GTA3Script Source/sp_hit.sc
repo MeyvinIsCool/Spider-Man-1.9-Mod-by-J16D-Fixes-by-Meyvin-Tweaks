@@ -57,13 +57,13 @@ main_loop:
                     WHILE toggleHUD = 1
                         GOSUB readVars
                         GOSUB openDoorCheck
-                        GOSUB hudCheck
-                        GOSUB activeInteriorCheck
+                        //GOSUB hudCheck
+                        //GOSUB activeInteriorCheck
                         IF IS_ON_SCRIPTED_CUTSCENE  // checks if the "widescreen" mode is active
                         OR IS_ON_CUTSCENE 
                         //OR IS_HUD_VISIBLE 
                         OR is_hud_enabled = TRUE
-                        OR is_opening_door = FALSE  
+                        //OR is_opening_door = FALSE  
                             GOSUB drawHitCounter    // Hit Counting Starts
                         ENDIF      
  

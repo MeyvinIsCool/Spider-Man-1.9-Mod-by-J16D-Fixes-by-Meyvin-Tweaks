@@ -109,13 +109,13 @@ main_loop:
                     WHILE toggleHUD = 1  // 0:OFF || 1:ON
                         GOSUB readVars
                         GOSUB hudCheck
-                        GOSUB openDoorCheck
-                        GOSUB activeInteriorCheck
+                        //GOSUB openDoorCheck
+                        //GOSUB activeInteriorCheck
                         IF IS_ON_SCRIPTED_CUTSCENE  // checks if the "widescreen" mode is active
                         OR IS_ON_CUTSCENE 
                         //OR IS_HUD_VISIBLE 
                         OR is_hud_enabled = FALSE
-                        OR is_opening_door = TRUE
+                        //OR is_opening_door = TRUE
                             USE_TEXT_COMMANDS FALSE // don't show textures
                         ELSE
                             IF is_in_interior = 0
