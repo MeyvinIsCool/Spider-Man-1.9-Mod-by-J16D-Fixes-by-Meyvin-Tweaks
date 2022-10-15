@@ -37,7 +37,7 @@ ENDWHILE
 //delay 8 sec
 timera = 0
 //WHILE 12000 > timera 
-WHILE 2000 > timera 
+WHILE 16000 > timera 
    WAIT 0
 ENDWHILE
 //Yellow waypoing - Main Mission
