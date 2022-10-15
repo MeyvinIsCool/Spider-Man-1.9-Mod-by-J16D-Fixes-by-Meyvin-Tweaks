@@ -63,7 +63,7 @@ main_loop:
                     GOSUB sub_Fade_out_500ms
                     flag_player_on_mission = 1  //1:on_mission
                     SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON                    
-                    LOAD_AND_LAUNCH_CUSTOM_MISSION "SpiderJ16D\sams_m8"
+                    LOAD_AND_LAUNCH_CUSTOM_MISSION "SpiderJ16D\sams_sm2"
                 ELSE
                     USE_TEXT_COMMANDS FALSE
                     PRINT_FORMATTED_NOW "~r~Error! Mission 1 Not Found! Re-Install Spider-Man Mod!" 1500                    

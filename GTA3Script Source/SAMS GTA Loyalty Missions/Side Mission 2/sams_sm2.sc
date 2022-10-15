@@ -75,17 +75,19 @@ TASK_TOGGLE_DUCK player_actor TRUE
 SET_FIXED_CAMERA_POSITION (-1905.973, 1039.984, 68.2078, 0.0, 0.0, 0.0)
 POINT_CAMERA_AT_POINT (-1868.847, 1066.288, 63.0842, 2)
 
+WAIT 2000 
+
 GET_CLEO_SHARED_VAR varMusic (toggleMusic)
 IF toggleMusic = 1 // TRUE
-	IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\music\SD_3.mp3"
-		LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\music\SD_3.mp3" (music_sfx1)
+	IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\music\SD_8.mp3"
+		LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\music\SD_8.mp3" (music_sfx1)
 		SET_MUSIC_DOES_FADE TRUE
 		SET_AUDIO_STREAM_LOOPED music_sfx1 1
 		SET_AUDIO_STREAM_STATE music_sfx1 1	// -1|0:stop || 1:play || 2:pause || 3:resume
 		CLEO_CALL increase_volume 0 music_sfx1 0.75	//max_volume 0.0-1.0
 	ENDIF
 ENDIF
-GOSUB sub_Fade_in_700ms
+GOSUB sub_Fade_in_500ms
 
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prtb.cs"
 	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 0 21 22 //{id} {mission_id} {text1_id} {text2_id}
@@ -156,11 +158,12 @@ mission_part1:
 		LOAD_SCENE (352.1167, 215.0228, 1008.383)
 		SET_CHAR_COORDINATES_NO_OFFSET player_actor 352.1167 215.0228 1008.383
         WAIT 1
-		SET_CHAR_HEADING player_actor 90.0
+		SET_CHAR_HEADING player_actor 180.0
 		RESTORE_CAMERA_JUMPCUT
         SWITCH_WIDESCREEN FALSE
 		WAIT 1200 	
 		DO_FADE 300 FADE_IN
+        CLEAR_CHAR_TASKS player_actor
 		DISPLAY_ZONE_NAMES TRUE
 		SWITCH_ENTRY_EXIT PAPER 0
 		SHOW_BLIPS_ON_ALL_LEVELS TRUE
@@ -727,7 +730,8 @@ mission_part2_A:
         ENDIF               
     ENDIF  
 
-    IF LOCATE_STOPPED_CHAR_ON_FOOT_3D player_actor 347.0044 165.2825 1014.188 1.0 1.0 1.0 TRUE
+    //IF LOCATE_STOPPED_CHAR_ON_FOOT_3D player_actor 347.0044 165.2825 1014.188 1.0 1.0 1.0 TRUE
+    IF LOCATE_STOPPED_CHAR_ON_FOOT_3D player_actor 347.559 165.272 1014.187 1.0 1.0 1.0 TRUE
         IF flag_keycard_aqquired = TRUE 
 		    flag_player_hit_counter = 0
 		    SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter       // 0:OFF || 1:ON	        
@@ -933,7 +937,8 @@ mission_part2_B:
 GOTO mission_part2_B
 
 mission_part2_c:
-    IF LOCATE_CHAR_ANY_MEANS_3D player_actor 351.3243 162.0824 1025.789 3.0 3.0 3.0 FALSE   
+    //IF LOCATE_CHAR_ANY_MEANS_3D player_actor 351.3243 162.0824 1025.789 1.2 1.2 1.2 FALSE   
+    IF LOCATE_CHAR_ANY_MEANS_3D player_actor 353.147 161.991 1025.789 1.2 1.2 1.2 FALSE   
         SET_SPRITES_DRAW_BEFORE_FADE TRUE       
         sx = 90.00
         sy = 56.00             
@@ -974,10 +979,7 @@ mission_part2_c:
     	    SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter       // 0:OFF || 1:ON	          
             RESTORE_CAMERA_JUMPCUT
             SET_CHAR_DROPS_WEAPONS_WHEN_DEAD iEnemy[0] FALSE
-	        ADD_BLIP_FOR_CHAR iEnemy[0] iEnemyBlip[0]     
-            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prtb.cs"
-    	        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 0 21 25 //{id} {mission_id} {text1_id} {text2_id}
-            ENDIF                  
+	        ADD_BLIP_FOR_CHAR iEnemy[0] iEnemyBlip[0]                     
             flag_enemy1_killed = FALSE
             flag_enemy2_killed = FALSE
             flag_enemy3_killed = FALSE
@@ -996,6 +998,10 @@ mission_part2_c:
             TASK_KILL_CHAR_ON_FOOT iEnemy[7] player_actor
             SET_RELATIONSHIP (4) (24) (0) 
 
+            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prtb.cs"
+    	        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 0 21 25 //{id} {mission_id} {text1_id} {text2_id}
+            ENDIF  
+
             IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\sams\paya11.mp3" (sfx2) 
                 SET_AUDIO_STREAM_STATE sfx2 1	// -1|0:stop || 1:play || 2:pause || 3:resume
         	    GET_AUDIO_SFX_VOLUME (fVolume)
@@ -1006,7 +1012,103 @@ mission_part2_c:
                 GOTO mission_part2_D           
             ENDIF       
         ENDIF              
-    ENDIF
+    ELSE
+        IF NOT IS_CHAR_DEAD iEnemy[0]
+            IF IS_CHAR_SHOOTING iEnemy[0]      
+                IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\sams\msp5.mp3" (sfx2) 
+                    SET_AUDIO_STREAM_STATE sfx2 1	// -1|0:stop || 1:play || 2:pause || 3:resume
+	                GET_AUDIO_SFX_VOLUME (fVolume)
+	                fVolume = 0.9
+	                SET_AUDIO_STREAM_VOLUME sfx2 fVolume               
+                    PRINT_NOW MSP1 2500 1
+                    WAIT 2500    
+                    GOSUB discovered      
+                    RETURN
+                ENDIF                         
+            ENDIF               
+        ENDIF
+
+        IF NOT IS_CHAR_DEAD iEnemy[1]  
+            IF IS_CHAR_SHOOTING iEnemy[1]      
+                IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\sams\msp2.mp3" (sfx2) 
+                    SET_AUDIO_STREAM_STATE sfx2 1	// -1|0:stop || 1:play || 2:pause || 3:resume
+	                GET_AUDIO_SFX_VOLUME (fVolume)
+	                fVolume = 0.9
+	                SET_AUDIO_STREAM_VOLUME sfx2 fVolume               
+                    PRINT_NOW MSP1 2500 1
+                    WAIT 2500    
+                    GOSUB discovered  
+                    RETURN    
+                ENDIF                         
+            ENDIF               
+        ENDIF    
+
+        IF NOT IS_CHAR_DEAD iEnemy[2]  
+            IF IS_CHAR_SHOOTING iEnemy[2]      
+                IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\sams\msp2.mp3" (sfx2) 
+                    SET_AUDIO_STREAM_STATE sfx2 1	// -1|0:stop || 1:play || 2:pause || 3:resume
+	                GET_AUDIO_SFX_VOLUME (fVolume)
+	                fVolume = 0.9
+    	            SET_AUDIO_STREAM_VOLUME sfx2 fVolume               
+                    PRINT_NOW MSP1 2500 1
+                    WAIT 2500    
+                    GOSUB discovered
+                    RETURN      
+                ENDIF                         
+            ENDIF               
+        ENDIF    
+
+        IF NOT IS_CHAR_DEAD iEnemy[3]  
+            IF IS_CHAR_SHOOTING iEnemy[3]      
+                IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\sams\msp5.mp3" (sfx2) 
+                    SET_AUDIO_STREAM_STATE sfx2 1	// -1|0:stop || 1:play || 2:pause || 3:resume
+	                GET_AUDIO_SFX_VOLUME (fVolume)
+	                fVolume = 0.9
+    	            SET_AUDIO_STREAM_VOLUME sfx2 fVolume               
+                    PRINT_NOW MSP1 2500 1
+                    WAIT 2500    
+                    GOSUB discovered   
+                    RETURN   
+                ENDIF                         
+            ENDIF               
+        ENDIF    
+
+        IF NOT IS_CHAR_DEAD iEnemy[4]  
+            IF IS_CHAR_SHOOTING iEnemy[4]      
+                IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\sams\msp2.mp3" (sfx2) 
+                    SET_AUDIO_STREAM_STATE sfx2 1	// -1|0:stop || 1:play || 2:pause || 3:resume
+	                GET_AUDIO_SFX_VOLUME (fVolume)
+    	            fVolume = 0.9
+	                SET_AUDIO_STREAM_VOLUME sfx2 fVolume               
+                    PRINT_NOW MSP1 2500 1
+                    WAIT 2500    
+                    GOSUB discovered  
+                    RETURN    
+                ENDIF                         
+            ENDIF    
+        ENDIF             
+    ENDIF      
+
+	IF IS_CHAR_DEAD iEnemy[0]
+        flag_enemy1_killed = TRUE
+		REMOVE_BLIP iEnemyBlip[0]
+    ENDIF        
+	IF IS_CHAR_DEAD iEnemy[1]
+        flag_enemy2_killed = TRUE
+		REMOVE_BLIP iEnemyBlip[1]
+    ENDIF     
+	IF IS_CHAR_DEAD iEnemy[2]
+        flag_enemy3_killed = TRUE
+		REMOVE_BLIP iEnemyBlip[2]
+    ENDIF     
+	IF IS_CHAR_DEAD iEnemy[3]
+        flag_enemy4_killed = TRUE
+		REMOVE_BLIP iEnemyBlip[3]
+    ENDIF                             
+	IF IS_CHAR_DEAD iEnemy[4]
+        flag_enemy5_killed = TRUE
+		REMOVE_BLIP iEnemyBlip[4]
+    ENDIF 
     WAIT 0
 GOTO mission_part2_C
 
@@ -1141,8 +1243,9 @@ init_part4:
     SET_AREA_VISIBLE 0
     SET_CHAR_AREA_VISIBLE player_actor FALSE
     WAIT 1000
+    CLEAR_CHAR_TASKS player_actor
     SET_CHAR_COORDINATES_NO_OFFSET player_actor (-1831.229 1046.705 142.8186)
-    SET_CHAR_HEADING player_actor 180.0
+    SET_CHAR_HEADING player_actor 270.0
     RESTORE_CAMERA_JUMPCUT
     SET_CAMERA_BEHIND_PLAYER 
     DO_FADE 600 FADE_IN   
@@ -1198,11 +1301,11 @@ RETURN
 
 mission_passed:
 	kills_counter *= 15
-	iTempVar1 = 130
+	iTempVar1 = 140
 	counter = 0
 	counter = iTempVar1 + kills_counter
     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prtb.cs"
-        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 2 counter iTempVar1 kills_counter    //{id} {total xp} {mission xp} {combat xp}
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 5 counter iTempVar1 kills_counter    //{id} {total xp} {mission xp} {combat xp}
 		GET_AUDIO_STREAM_STATE music_sfx1 (iTempVar3)
 		IF iTempVar3 = 1	//playing
 			CLEO_CALL decrease_volume 0 music_sfx1 0.75	 //max_volume 0.0-1.0
@@ -1318,13 +1421,14 @@ RETURN
 
 discovered:
     DO_FADE 600 FADE_OUT
-    WAIT 500
+    WAIT 1000
     SET_AREA_VISIBLE 0
     SET_CHAR_AREA_VISIBLE player_actor FALSE
     WAIT 1000
     GOSUB mission_cleanup
+    CLEAR_CHAR_TASKS player_actor
     SET_CHAR_COORDINATES_NO_OFFSET player_actor (-1831.229 1046.705 142.8186)
-    SET_CHAR_HEADING player_actor 180.0
+    SET_CHAR_HEADING player_actor 270.0
     RESTORE_CAMERA_JUMPCUT
     SET_CAMERA_BEHIND_PLAYER 
     DO_FADE 600 FADE_IN   
@@ -1340,7 +1444,7 @@ draw_tower_interface:
     USE_TEXT_COMMANDS FALSE
     SET_SPRITES_DRAW_BEFORE_FADE FALSE
     DRAW_SPRITE idTowerB (460.0 200.0) (sx sy) (255 255 255 230)
-	CLEO_CALL GUI_DrawBoxOutline_WithText 0 (430.0 154.0) (164.5 20.0) (0 0 0 0) (1.0) (0 0 0 0) (255 255 253 230) 600 19 0.0 0.0	//TORRE DE VIGILANCIA
+	CLEO_CALL GUI_DrawBoxOutline_WithText 0 (410.0 154.0) (164.5 20.0) (0 0 0 0) (1.0) (0 0 0 0) (255 255 253 230) 26 19 0.0 0.0	//TORRE DE VIGILANCIA
 	CLEO_CALL barFunc 0 fProgressTower 390.0 205.0
 RETURN
 
@@ -1381,9 +1485,9 @@ sub_Fade_out_500ms:
     ENDWHILE
 RETURN
 
-sub_Fade_in_700ms:
+sub_Fade_in_500ms:
     SET_FADING_COLOUR 0 0 0 
-    DO_FADE 700 FADE_IN
+    DO_FADE 500 FADE_IN
     WHILE GET_FADING_STATUS
         WAIT 0 
     ENDWHILE
