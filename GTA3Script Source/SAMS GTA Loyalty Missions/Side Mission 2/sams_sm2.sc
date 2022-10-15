@@ -29,7 +29,7 @@ LVAR_FLOAT x[6] y[6] z[6] fDistance[6]
 LVAR_FLOAT objX[2] objY[2] objZ[2] fObjDistance[2] 
 LVAR_INT r g b a
 LVAR_FLOAT fProgressTower v1 v2 v3 v4 sx sy fVolume
-LVAR_INT iCheckpoint
+LVAR_INT iWeather iCheckpoint
 LVAR_INT flag_enemy1_killed flag_enemy2_killed flag_enemy3_killed flag_enemy4_killed flag_enemy5_killed flag_enemy6_killed flag_enemy7_killed flag_enemy8_killed
 LVAR_INT iEnemy[8] iObj[5] iEnemyBlip[8] flag_keycard_aqquired
 LVAR_INT iCrates[4]
@@ -92,6 +92,7 @@ GOSUB sub_Fade_in_500ms
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prtb.cs"
 	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 0 21 22 //{id} {mission_id} {text1_id} {text2_id}
 ENDIF
+GET_CURRENT_WEATHER iWeather
 
 //dialogue
 REMOVE_AUDIO_STREAM music_sfx2
@@ -1241,6 +1242,8 @@ init_part4:
     DO_FADE 600 FADE_OUT
     WAIT 1000
     SET_AREA_VISIBLE 0
+    FORCE_WEATHER_NOW iWeather
+    RELEASE_WEATHER
     SET_CHAR_AREA_VISIBLE player_actor FALSE
     WAIT 1000
     CLEAR_CHAR_TASKS player_actor
@@ -1423,6 +1426,8 @@ discovered:
     DO_FADE 600 FADE_OUT
     WAIT 1000
     SET_AREA_VISIBLE 0
+    FORCE_WEATHER_NOW iWeather
+    RELEASE_WEATHER    
     SET_CHAR_AREA_VISIBLE player_actor FALSE
     WAIT 1000
     GOSUB mission_cleanup
