@@ -154,12 +154,12 @@ mission_part1:
 		SET_AREA_VISIBLE 3
 		SET_CHAR_AREA_VISIBLE player_actor 3
 		SWITCH_ENTRY_EXIT PAPER 1
-
-		WAIT 100 
 		LOAD_SCENE (352.1167, 215.0228, 1008.383)
 		SET_CHAR_COORDINATES_NO_OFFSET player_actor 352.1167 215.0228 1008.383
-        WAIT 1
-		SET_CHAR_HEADING player_actor 180.0
+        WAIT 50
+		SET_CHAR_HEADING player_actor 180.0        
+
+		WAIT 100 
 		RESTORE_CAMERA_JUMPCUT
         SWITCH_WIDESCREEN FALSE
 		WAIT 1200 	
@@ -250,7 +250,7 @@ mission_part1:
 	            GET_AUDIO_SFX_VOLUME (fVolume)
 	            fVolume = 0.9
 	            SET_AUDIO_STREAM_VOLUME sfx2 fVolume               
-                PRINT_NOW MSP1 2500 1
+                PRINT_NOW MSP2 2500 1
                 WAIT 2500    
                 GOSUB discovered      
                 RETURN
@@ -280,7 +280,7 @@ mission_part1:
 	            GET_AUDIO_SFX_VOLUME (fVolume)
 	            fVolume = 0.9
 	            SET_AUDIO_STREAM_VOLUME sfx2 fVolume               
-                PRINT_NOW MSP1 2500 1
+                PRINT_NOW MSP2 2500 1
                 WAIT 2500    
                 GOSUB discovered
                 RETURN      
@@ -295,7 +295,7 @@ mission_part1:
 	            GET_AUDIO_SFX_VOLUME (fVolume)
 	            fVolume = 0.9
 	            SET_AUDIO_STREAM_VOLUME sfx2 fVolume               
-                PRINT_NOW MSP1 2500 1
+                PRINT_NOW MSP2 2500 1
                 WAIT 2500    
                 GOSUB discovered   
                 RETURN   
@@ -316,7 +316,8 @@ mission_part1:
                 RETURN    
             ENDIF                         
         ENDIF               
-    ENDIF                
+    ENDIF
+
 //-+----------------------------3D Blips Enemy--------------------------------------------------------
 
     GET_CHAR_COORDINATES player_actor (x[0] y[0] z[0])
@@ -465,6 +466,14 @@ mission_part1:
         flag_keycard_aqquired = FALSE
 		GOTO init_part2_A		
 	ENDIF
+
+    IF IS_CHAR_DEAD player_actor
+        GOSUB mission_failed
+        WAIT 2000
+        GOSUB mission_cleanup
+        RETURN
+    ENDIF  
+
 	WAIT 0 
 GOTO mission_part1  
 
@@ -801,6 +810,13 @@ mission_part2_A:
 		REMOVE_BLIP iEnemyBlip[4]
     ENDIF 
 
+    IF IS_CHAR_DEAD player_actor
+        GOSUB mission_failed
+        WAIT 2000
+        GOSUB mission_cleanup
+        RETURN
+    ENDIF  
+
 	WAIT 0
 GOTO mission_part2_A
 
@@ -934,10 +950,17 @@ mission_part2_B:
 		REMOVE_BLIP iEnemyBlip[4]
     ENDIF 
 
+    IF IS_CHAR_DEAD player_actor
+        GOSUB mission_failed
+        WAIT 2000
+        GOSUB mission_cleanup
+        RETURN
+    ENDIF      
+
     WAIT 0
 GOTO mission_part2_B
 
-mission_part2_c:
+mission_part2_C:
     //IF LOCATE_CHAR_ANY_MEANS_3D player_actor 351.3243 162.0824 1025.789 1.2 1.2 1.2 FALSE   
     IF LOCATE_CHAR_ANY_MEANS_3D player_actor 353.147 161.991 1025.789 1.2 1.2 1.2 FALSE   
         SET_SPRITES_DRAW_BEFORE_FADE TRUE       
@@ -1110,6 +1133,14 @@ mission_part2_c:
         flag_enemy5_killed = TRUE
 		REMOVE_BLIP iEnemyBlip[4]
     ENDIF 
+
+    IF IS_CHAR_DEAD player_actor
+        GOSUB mission_failed
+        WAIT 2000
+        GOSUB mission_cleanup
+        RETURN
+    ENDIF  
+
     WAIT 0
 GOTO mission_part2_C
 
@@ -1167,6 +1198,13 @@ mission_part2_D:
         flag_enemy8_killed = TRUE
 		REMOVE_BLIP iEnemyBlip[7]
     ENDIF  
+
+    IF IS_CHAR_DEAD player_actor
+        GOSUB mission_failed
+        WAIT 0
+        GOSUB mission_cleanup
+        RETURN
+    ENDIF      
 
     WAIT 0
 GOTO mission_part2_D
@@ -1234,25 +1272,33 @@ mission_part3:
         REMOVE_BLIP (iEventBlip)
         REMOVE_SPHERE (iEventBlip2)
         GOTO init_part4
+    ENDIF     
+
+    IF IS_CHAR_DEAD player_actor
+        GOSUB mission_failed
+        WAIT 2000
+        GOSUB mission_cleanup
+        RETURN
     ENDIF      
+
     WAIT 0
 GOTO mission_part3
 
-init_part4:
+init_part4:   
     DO_FADE 600 FADE_OUT
-    WAIT 1000
-    SET_AREA_VISIBLE 0
+    WAIT 600
+    SET_CHAR_HEADING player_actor 270.0    
+    RESTORE_CAMERA_JUMPCUT  
+    SET_AREA_VISIBLE 0            
     FORCE_WEATHER_NOW iWeather
     RELEASE_WEATHER
-    SET_CHAR_AREA_VISIBLE player_actor FALSE
-    WAIT 1000
-    CLEAR_CHAR_TASKS player_actor
-    SET_CHAR_COORDINATES_NO_OFFSET player_actor (-1831.229 1046.705 142.8186)
-    SET_CHAR_HEADING player_actor 270.0
-    RESTORE_CAMERA_JUMPCUT
-    SET_CAMERA_BEHIND_PLAYER 
+    SET_CHAR_AREA_VISIBLE player_actor FALSE                     
+    WAIT 1000     
+    WAIT 50
+	SET_CHAR_COORDINATES_NO_OFFSET player_actor -1831.844 1045.885 113.2112            
     DO_FADE 600 FADE_IN   
-    WAIT 300
+    WAIT 600
+
     IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\sams\paya13.mp3" (sfx2) 
         SET_AUDIO_STREAM_STATE sfx2 1	// -1|0:stop || 1:play || 2:pause || 3:resume
         GET_AUDIO_SFX_VOLUME (fVolume)
@@ -1263,6 +1309,14 @@ init_part4:
     PRINT_NOW PAYA13 3900 1
     WAIT 3900
     GOSUB mission_passed
+
+    IF IS_CHAR_DEAD player_actor
+        GOSUB mission_failed
+        WAIT 2000
+        GOSUB mission_cleanup
+        RETURN
+    ENDIF  
+
 RETURN
 
 //-+-------------------------------------------------------------------------
@@ -1424,20 +1478,18 @@ RETURN
 
 discovered:
     DO_FADE 600 FADE_OUT
-    WAIT 1000
-    SET_AREA_VISIBLE 0
+    WAIT 600
+    SET_CHAR_HEADING player_actor 270.0    
+    RESTORE_CAMERA_JUMPCUT  
+    SET_AREA_VISIBLE 0            
     FORCE_WEATHER_NOW iWeather
-    RELEASE_WEATHER    
-    SET_CHAR_AREA_VISIBLE player_actor FALSE
-    WAIT 1000
-    GOSUB mission_cleanup
-    CLEAR_CHAR_TASKS player_actor
-    SET_CHAR_COORDINATES_NO_OFFSET player_actor (-1831.229 1046.705 142.8186)
-    SET_CHAR_HEADING player_actor 270.0
-    RESTORE_CAMERA_JUMPCUT
-    SET_CAMERA_BEHIND_PLAYER 
+    RELEASE_WEATHER
+    SET_CHAR_AREA_VISIBLE player_actor FALSE                     
+    WAIT 1000     
+    WAIT 50
+	SET_CHAR_COORDINATES_NO_OFFSET player_actor -1831.844 1045.885 113.2112            
     DO_FADE 600 FADE_IN   
-    WAIT 300          
+    WAIT 600
     PRINT_NOW PAYAFA 3500 1
     GOSUB mission_failed
 RETURN
