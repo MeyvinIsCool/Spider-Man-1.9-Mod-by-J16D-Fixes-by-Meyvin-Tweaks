@@ -55,6 +55,7 @@ REQUEST_ANIMATION "spider"
 LOAD_TEXTURE_DICTIONARY spsams
 LOAD_SPRITE idTowerB "surv_tow"
 LOAD_SPRITE idTip2 "htip2"
+LOAD_SPRITE idWay "mk1"
 LOAD_ALL_MODELS_NOW
 
 LOAD_CHAR_DECISION_MAKER 4 (iDecisionHate)
@@ -62,32 +63,32 @@ SET_RELATIONSHIP 4 PEDTYPE_MISSION1 PEDTYPE_PLAYER1
 SET_RELATIONSHIP 0 PEDTYPE_MISSION1 PEDTYPE_MISSION1
 
 // ***************************************Mission Start*************************************
-CAMERA_PERSIST_TRACK FALSE
-CAMERA_PERSIST_POS FALSE
-RESTORE_CAMERA_JUMPCUT
 CAMERA_RESET_NEW_SCRIPTABLES
 CAMERA_RESET_NEW_SCRIPTABLES
-
+CAMERA_PERSIST_TRACK TRUE
+CAMERA_PERSIST_POS TRUE
+CAMERA_SET_VECTOR_MOVE (-1918.9305 1040.1719 68.0078) (-1918.9305 1040.1719 68.0078) 1500 0
+CAMERA_SET_VECTOR_TRACK (-1918.9305 1040.1719 68.0078) (-1918.9305 1040.1719 68.0078) 1500 0
 GOSUB sub_lock_player_controls
+WAIT 0
 SET_CHAR_COORDINATES_NO_OFFSET player_actor -1903.954 1042.778 68.0078
 SET_CHAR_HEADING player_actor 308.0
 TASK_TOGGLE_DUCK player_actor TRUE
-SET_FIXED_CAMERA_POSITION (-1905.973, 1039.984, 68.2078, 0.0, 0.0, 0.0)
-POINT_CAMERA_AT_POINT (-1868.847, 1066.288, 63.0842, 2)
-
-WAIT 2000 
-
+WAIT 1
+GOSUB sub_Fade_in_500ms
 GET_CLEO_SHARED_VAR varMusic (toggleMusic)
 IF toggleMusic = 1 // TRUE
-	IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\music\SD_8.mp3"
-		LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\music\SD_8.mp3" (music_sfx1)
+	IF DOES_FILE_EXIST "CLEO\SpiderJ16D\music\SD_8.mp3"
+		LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\music\SD_8.mp3" (music_sfx1)
 		SET_MUSIC_DOES_FADE TRUE
 		SET_AUDIO_STREAM_LOOPED music_sfx1 1
 		SET_AUDIO_STREAM_STATE music_sfx1 1	// -1|0:stop || 1:play || 2:pause || 3:resume
 		CLEO_CALL increase_volume 0 music_sfx1 0.75	//max_volume 0.0-1.0
 	ENDIF
 ENDIF
-GOSUB sub_Fade_in_500ms
+WAIT 500
+CAMERA_SET_VECTOR_MOVE (-1918.9305 1040.1719 68.0078) (-1895.1395 1064.4817 134.0078) 13000 0
+CAMERA_SET_VECTOR_TRACK (-1918.9305 1040.1719 68.0078) (-1895.1395 1064.4817 134.0078) 13000 0
 
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prtb.cs"
 	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 0 21 22 //{id} {mission_id} {text1_id} {text2_id}
@@ -121,7 +122,7 @@ audio_line_is_active = 1
 SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active        // 0:OFF || 1:ON
 
 timera = 0	//delay
-WHILE 4000 > timera
+WHILE 8000 > timera
 	WAIT 0
 ENDWHILE
 
@@ -218,6 +219,7 @@ mission_part1:
         flag_player_hit_counter = 1
         SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter       // 0:OFF || 1:ON          
         GOSUB sub_unlock_player_controls
+        ADD_SPRITE_BLIP_FOR_COORD (346.9816 161.8278 1014.188) RADAR_SPRITE_WAYPOINT (iEventBlip)
 
 	ENDIF
 
@@ -441,9 +443,28 @@ mission_part1:
         ENDIF   
     ENDIF    
 
+    IF DOES_BLIP_EXIST (iEventBlip)
+        GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (347.559 165.272 1014.187) (fObjDistance[1])
+
+        IF fObjDistance[1] > 10.0
+        AND 300.0 > fObjDistance[1]
+            CONVERT_3D_TO_SCREEN_2D (347.559 165.272 1014.787) TRUE TRUE (v1 v2) (v3 v3)
+            GET_FIXED_XY_ASPECT_RATIO 12.0 12.0 (v3 v3)
+            USE_TEXT_COMMANDS FALSE
+            SET_SPRITES_DRAW_BEFORE_FADE FALSE
+            DRAW_SPRITE idWay (v1 v2) (v3 v3) (255 255 255 235)
+            v1 -= 6.0
+            v2 += 6.0                
+            iTempVar =# fObjDistance[1]
+            GOSUB GUI_TextFormat_Text
+            USE_TEXT_COMMANDS FALSE
+            DISPLAY_TEXT_WITH_NUMBER v1 v2 J16D440 iTempVar    //~1~ m
+        ENDIF 
+    ENDIF 
 //-+-------------------------------------------------------------------------------------
 
 	IF LOCATE_CHAR_ANY_MEANS_3D player_actor 346.9816 161.8278 1014.188 3.0 3.0 3.0 FALSE
+        REMOVE_BLIP (iEventBlip)
 		WAIT 500 
         IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\sams\paya5.mp3" (sfx2) 
             SET_AUDIO_STREAM_STATE sfx2 1	// -1|0:stop || 1:play || 2:pause || 3:resume
@@ -481,6 +502,7 @@ init_part2_A:
 IF DOES_BLIP_EXIST iEventBlip
 	REMOVE_BLIP iEventBlip
 ENDIF
+ADD_SPRITE_BLIP_FOR_COORD (347.559 165.272 1014.187) RADAR_SPRITE_WAYPOINT (iEventBlip)
 
 mission_part2_A:
 	IF HAS_PICKUP_BEEN_COLLECTED iObj[4] 
@@ -663,7 +685,26 @@ mission_part2_A:
             USE_TEXT_COMMANDS FALSE
             DISPLAY_TEXT_WITH_NUMBER v1 v2 J16D440 iTempVar    //~1~ m
         ENDIF 
-    ENDIF  
+    ENDIF 
+
+    IF DOES_BLIP_EXIST (iEventBlip)
+        GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (347.559 165.272 1014.187) (fObjDistance[1])
+
+        IF fObjDistance[1] > 10.0
+        AND 300.0 > fObjDistance[1]
+            CONVERT_3D_TO_SCREEN_2D (347.559 165.272 1014.787) TRUE TRUE (v1 v2) (v3 v3)
+            GET_FIXED_XY_ASPECT_RATIO 12.0 12.0 (v3 v3)
+            USE_TEXT_COMMANDS FALSE
+            SET_SPRITES_DRAW_BEFORE_FADE FALSE
+            DRAW_SPRITE idWay (v1 v2) (v3 v3) (255 255 255 235)
+            v1 -= 6.0
+            v2 += 6.0                
+            iTempVar =# fObjDistance[1]
+            GOSUB GUI_TextFormat_Text
+            USE_TEXT_COMMANDS FALSE
+            DISPLAY_TEXT_WITH_NUMBER v1 v2 J16D440 iTempVar    //~1~ m
+        ENDIF 
+    ENDIF             
 //-+-------------------------------------------------------------------------
     IF NOT IS_CHAR_DEAD iEnemy[0]
         IF IS_CHAR_SHOOTING iEnemy[0]      
@@ -743,6 +784,7 @@ mission_part2_A:
     //IF LOCATE_STOPPED_CHAR_ON_FOOT_3D player_actor 347.0044 165.2825 1014.188 1.0 1.0 1.0 TRUE
     IF LOCATE_STOPPED_CHAR_ON_FOOT_3D player_actor 347.559 165.272 1014.187 1.0 1.0 1.0 TRUE
         IF flag_keycard_aqquired = TRUE 
+            REMOVE_BLIP (iEventBlip)
 		    flag_player_hit_counter = 0
 		    SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter       // 0:OFF || 1:ON	        
             REMOVE_BLIP iEventBlip
@@ -837,7 +879,8 @@ IF DOES_OBJECT_EXIST iObj[1]
 ENDIF
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prtb.cs"
 	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 0 21 24 //{id} {mission_id} {text1_id} {text2_id}
-ENDIF       
+ENDIF  
+ADD_SPRITE_BLIP_FOR_COORD (351.3243 162.0824 1025.789) RADAR_SPRITE_WAYPOINT (iEventBlip)     
 
 mission_part2_B:
     IF LOCATE_CHAR_ANY_MEANS_3D player_actor 351.3243 162.0824 1025.789 3.0 3.0 3.0 FALSE 
@@ -927,7 +970,7 @@ mission_part2_B:
                 ENDIF                         
             ENDIF    
         ENDIF             
-    ENDIF      
+    ENDIF     
 
 	IF IS_CHAR_DEAD iEnemy[0]
         flag_enemy1_killed = TRUE
@@ -955,14 +998,155 @@ mission_part2_B:
         WAIT 2000
         GOSUB mission_cleanup
         RETURN
-    ENDIF      
+    ENDIF       
+//-+----------------------------3D Blips--------------------------------------------------------
+    GET_CHAR_COORDINATES player_actor (x[0] y[0] z[0])
+    IF NOT IS_CHAR_DEAD iEnemy[0] 
+     
+        GET_CHAR_COORDINATES iEnemy[0] (x[1] y[1] z[1])  
+        GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (x[1] y[1] z[1]) (fDistance[0])
+
+        IF fDistance[0] > 10.0
+        AND 300.0 > fDistance[0]
+            CONVERT_3D_TO_SCREEN_2D (x[1] y[1] z[1]) TRUE TRUE (v1 v2) (v3 v3)
+            GET_FIXED_XY_ASPECT_RATIO 12.0 12.0 (v3 v3)
+            USE_TEXT_COMMANDS FALSE
+            GET_HUD_COLOUR 0 r g b a
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_RECT v1 v2 6.5 8.0 0 0 0 a
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_RECT v1 v2 4.5 6.0 r g b a
+            v1 -= 6.0
+            v2 += 6.0                
+            iTempVar =# fDistance[0]
+            GOSUB GUI_TextFormat_Text
+            USE_TEXT_COMMANDS FALSE
+            DISPLAY_TEXT_WITH_NUMBER v1 v2 J16D440 iTempVar    //~1~ m
+        ENDIF   
+    ENDIF
+
+    IF NOT IS_CHAR_DEAD iEnemy[1] 
+     
+        GET_CHAR_COORDINATES iEnemy[1] (x[2] y[2] z[2])  
+        GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (x[2] y[2] z[2]) (fDistance[1])
+
+        IF fDistance[1] > 10.0
+        AND 300.0 > fDistance[1]
+            CONVERT_3D_TO_SCREEN_2D (x[2] y[2] z[2]) TRUE TRUE (v1 v2) (v3 v3)
+            GET_FIXED_XY_ASPECT_RATIO 12.0 12.0 (v3 v3)
+            USE_TEXT_COMMANDS FALSE
+            GET_HUD_COLOUR 0 r g b a
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_RECT v1 v2 6.5 8.0 0 0 0 a
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_RECT v1 v2 4.5 6.0 r g b a
+            v1 -= 6.0
+            v2 += 6.0            
+            iTempVar =# fDistance[1]
+            GOSUB GUI_TextFormat_Text
+            USE_TEXT_COMMANDS FALSE
+            DISPLAY_TEXT_WITH_NUMBER v1 v2 J16D440 iTempVar    //~1~ m
+        ENDIF   
+    ENDIF
+
+    IF NOT IS_CHAR_DEAD iEnemy[2] 
+     
+        GET_CHAR_COORDINATES iEnemy[2] (x[3] y[3] z[3])
+        GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (x[3] y[3] z[3]) (fDistance[2])
+
+        IF fDistance[2] > 10.0
+        AND 300.0 > fDistance[2]
+            CONVERT_3D_TO_SCREEN_2D (x[3] y[3] z[3]) TRUE TRUE (v1 v2) (v3 v3)
+            GET_FIXED_XY_ASPECT_RATIO 12.0 12.0 (v3 v3)
+            USE_TEXT_COMMANDS FALSE
+            GET_HUD_COLOUR 0 r g b a
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_RECT v1 v2 6.5 8.0 0 0 0 a
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_RECT v1 v2 4.5 6.0 r g b a
+            v1 -= 6.0
+            v2 += 6.0            
+            iTempVar =# fDistance[2]
+            GOSUB GUI_TextFormat_Text
+            USE_TEXT_COMMANDS FALSE
+            DISPLAY_TEXT_WITH_NUMBER v1 v2 J16D440 iTempVar    //~1~ m
+        ENDIF   
+    ENDIF
+
+    IF NOT IS_CHAR_DEAD iEnemy[3] 
+     
+        GET_CHAR_COORDINATES iEnemy[3] (x[4] y[4] z[4])  
+        GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (x[4] y[4] z[4]) (fDistance[3])
+
+        IF fDistance[3] > 10.0
+        AND 300.0 > (fDistance[3])
+            CONVERT_3D_TO_SCREEN_2D (x[4] y[4] z[4]) TRUE TRUE (v1 v2) (v3 v3)
+            GET_FIXED_XY_ASPECT_RATIO 12.0 12.0 (v3 v3)
+            USE_TEXT_COMMANDS FALSE
+            GET_HUD_COLOUR 0 r g b a
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_RECT v1 v2 6.5 8.0 0 0 0 a
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_RECT v1 v2 4.5 6.0 r g b a
+            v1 -= 6.0
+            v2 += 6.0            
+            iTempVar =# fDistance[3]
+            GOSUB GUI_TextFormat_Text
+            USE_TEXT_COMMANDS FALSE
+            DISPLAY_TEXT_WITH_NUMBER v1 v2 J16D440 iTempVar    //~1~ m
+        ENDIF   
+    ENDIF
+
+    IF NOT IS_CHAR_DEAD iEnemy[4] 
+     
+        GET_CHAR_COORDINATES iEnemy[4] (x[5] y[5] z[5])  
+        GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (x[5] y[5] z[5]) (fDistance[4])
+
+        IF fDistance[4] > 10.0
+        AND 300.0 > fDistance[4]
+            CONVERT_3D_TO_SCREEN_2D (x[5] y[5] z[5]) TRUE TRUE (v1 v2) (v3 v3)
+            GET_FIXED_XY_ASPECT_RATIO 12.0 12.0 (v3 v3)
+            USE_TEXT_COMMANDS FALSE
+            GET_HUD_COLOUR 0 r g b a
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_RECT v1 v2 6.5 8.0 0 0 0 a
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_RECT v1 v2 4.5 6.0 r g b a
+            v1 -= 6.0
+            v2 += 6.0            
+            iTempVar =# fDistance[4]
+            GOSUB GUI_TextFormat_Text
+            USE_TEXT_COMMANDS FALSE
+            DISPLAY_TEXT_WITH_NUMBER v1 v2 J16D440 iTempVar    //~1~ m
+        ENDIF   
+    ENDIF    
+
+    IF DOES_BLIP_EXIST (iEventBlip)
+        GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (351.3243 162.0824 1025.789) (fObjDistance[1])
+
+        IF fObjDistance[1] > 10.0
+        AND 300.0 > fObjDistance[1]
+            CONVERT_3D_TO_SCREEN_2D (351.3243 162.0824 1025.789) TRUE TRUE (v1 v2) (v3 v3)
+            GET_FIXED_XY_ASPECT_RATIO 12.0 12.0 (v3 v3)
+            USE_TEXT_COMMANDS FALSE
+            SET_SPRITES_DRAW_BEFORE_FADE FALSE
+            DRAW_SPRITE idWay (v1 v2) (v3 v3) (255 255 255 235)
+            v1 -= 6.0
+            v2 += 6.0                
+            iTempVar =# fObjDistance[1]
+            GOSUB GUI_TextFormat_Text
+            USE_TEXT_COMMANDS FALSE
+            DISPLAY_TEXT_WITH_NUMBER v1 v2 J16D440 iTempVar    //~1~ m
+        ENDIF 
+    ENDIF  
+//-+----------------------------------------------------------------------------------------------    
 
     WAIT 0
 GOTO mission_part2_B
 
 mission_part2_C:
-    //IF LOCATE_CHAR_ANY_MEANS_3D player_actor 351.3243 162.0824 1025.789 1.2 1.2 1.2 FALSE   
-    IF LOCATE_CHAR_ANY_MEANS_3D player_actor 353.147 161.991 1025.789 1.2 1.2 1.2 FALSE   
+    IF LOCATE_CHAR_ANY_MEANS_3D player_actor 353.147 161.991 1025.789 1.2 1.2 1.2 FALSE 
+        REMOVE_BLIP (iEventBlip)  
         SET_SPRITES_DRAW_BEFORE_FADE TRUE       
         sx = 90.00
         sy = 56.00             
@@ -1432,6 +1616,10 @@ mission_cleanup:
 		DELETE_CHAR iEnemy[7]
 	ENDIF               
 
+    IF DOES_BLIP_EXIST iEventBlip
+	    REMOVE_BLIP iEventBlip
+    ENDIF
+
 	IF DOES_BLIP_EXIST iEnemyBlip[0]
 		REMOVE_BLIP iEnemyBlip[0]
 	ENDIF
@@ -1528,7 +1716,6 @@ RETURN
 sub_unlock_player_controls:
 	RESTORE_CAMERA_JUMPCUT 
 	SET_CAMERA_BEHIND_PLAYER
-	CLEAR_CHAR_TASKS player_actor
 	SET_PLAYER_CONTROL player TRUE
 	SET_EVERYONE_IGNORE_PLAYER player FALSE 
 	SWITCH_WIDESCREEN FALSE
@@ -2478,5 +2665,6 @@ CONST_INT varAudioActive     	45    // 0:OFF || 1:ON  ||global var to check -spe
 
 //-+---
 CONST_INT idTip2 19
+CONST_INT idWay 25
 CONST_INT idTowerB 55
 
