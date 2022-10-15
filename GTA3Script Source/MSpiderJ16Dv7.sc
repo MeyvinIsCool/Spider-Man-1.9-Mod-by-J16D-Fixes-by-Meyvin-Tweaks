@@ -334,6 +334,15 @@ GOTO start
 fix_menu:
     GET_CLEO_SHARED_VAR varOnmission (counter) // flag_player_on_mission ||0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
     SWITCH counter
+        CASE 1   //SAMS Remastered Side Mission #2
+            IF GOSUB is_not_in_mission_interior
+                iTempVar = 1     // 1:is key combination pressed
+            ELSE
+                iTempVar = 0     // 1:is key combination pressed 
+                PRINT_FORMATTED_NOW "~r~Can't open menu at this moment." 1500
+                WAIT 1500
+            ENDIF
+            BREAK    
         CASE 2   //car chase
             IF GOSUB is_not_char_playing_car_missions_anims
                 IF  GOSUB is_not_char_playing_wall_anims
@@ -395,6 +404,15 @@ is_not_char_playing_wall_anims:
         RETURN
     ENDIF
     RETURN_FALSE
+RETURN
+
+is_not_in_mission_interior:
+    GET_CHAR_AREA_VISIBLE player_actor counter
+    IF NOT counter = 3
+        RETURN_TRUE
+        RETURN
+    ENDIF
+RETURN_FALSE
 RETURN
 
 ///---------------------------------------------------------------------
