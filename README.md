@@ -20,7 +20,8 @@ Things I Fixed And Added On This Mod :
 - Added New Screwball Mission (It Is Merged So You Can Try Both Of The Original And My Custom Made Mission)
 - Added Remade Pizza Time Mission by MeyvinIsCool (Mission v2) (Thanks For Mr.Demon "Genos" Cyborg For Giving Me The Source Code)
 - Added Hit Counter (v2)
-- Added Iron Arms Suit Power (Version 1.0)
+- Added 3 New Suit Powers 
+- Added Only Side Mission #2 - Hacks , Here And There (Thanks to GTA Loyalty)
 - And MORE ....
 
 I Had So Much Fun Time Making These Fixes And Also Thanks To These People Who Helped Me A Lot !
