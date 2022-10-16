@@ -21,7 +21,7 @@ Things I Fixed And Added On This Mod :
 - Added Remade Pizza Time Mission by MeyvinIsCool (Mission v2) (Thanks For Mr.Demon "Genos" Cyborg For Giving Me The Source Code)
 - Added Hit Counter (v2)
 - Added 3 New Suit Powers 
-- Added Only Side Mission #2 - Hacks , Here And There (Thanks to GTA Loyalty)
+- Added Only Side Mission #2 - No More Supplies (Thanks to GTA Loyalty) (Spanish Texts Available Inside The Addon Folder)
 - And MORE ....
 
 I Had So Much Fun Time Making These Fixes And Also Thanks To These People Who Helped Me A Lot !
