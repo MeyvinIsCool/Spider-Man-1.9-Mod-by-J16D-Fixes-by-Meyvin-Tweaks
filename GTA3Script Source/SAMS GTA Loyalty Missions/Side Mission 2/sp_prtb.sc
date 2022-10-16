@@ -11,6 +11,8 @@ INCLUDED:
     ID:1  ||MISSION FAIL
     ID:2  ||CAZANDO FELINOS SAMS-M2 PASSED
     ID:3  ||CALLS IDENTIFICATOR
+    ID:4  ||MAIN MISSION LABEL    
+    ID:5  ||HACKS , HERE AND THERE PASSED
 FORMAT:
     ID:1
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" {id}
@@ -20,6 +22,8 @@ FORMAT:
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" {id} {character_id}
     ID:4
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" {id} {mission_id} {text1_id} {text2_id}
+    ID:5
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" {id} {total xp} {mission xp} {combat xp}        
 */
 
 SCRIPT_START
