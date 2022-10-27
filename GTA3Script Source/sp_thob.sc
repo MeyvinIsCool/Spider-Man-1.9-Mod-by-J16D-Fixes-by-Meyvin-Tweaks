@@ -1,6 +1,9 @@
 // by MeyvinIsCool
-// Throw Objects v1.1
+// Throw Objects v2
 // Spider-Man Mod for GTA SA c.2018 - 2022
+// Original Shine GUI by Junior_Djjr
+// Fixes by MeyvinIsCool
+// Official Page: https://forum.mixmods.com.br/f16-utilidades/t694-shine-gui-crie-interfaces-personalizadas
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
@@ -8,7 +11,7 @@ CONST_INT player 0
 
 SCRIPT_START
 {
-SCRIPT_NAME sp_trob
+SCRIPT_NAME sp_thob
 WAIT 0 
 WAIT 0
 WAIT 0
@@ -56,17 +59,18 @@ main_loop:
  
                                 IF CLEO_CALL get_object_offset_indicator 0 obj (x[0] y[0] z[0])   
 
+                                    //DRAW_CORONA (x[0] y[0] z[0]) (1.0) (CORONATYPE_SHINYSTAR, FLARETYPE_NONE) (255 0 0)
                                     IF DOES_OBJECT_EXIST obj
                                     AND NOT is_near_car = 1
                                     AND NOT IS_CHAR_PLAYING_ANIM player_actor ("yank_object")
                                         GOSUB draw_indicator_object
-                                        // L1 + R1
-                                        IF IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
+                                        // L1 
+                                        IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
                                         AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                                         AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
                                         AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~
 
-                                            IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2        // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
+                                            IF NOT IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2    // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
                                             AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                                             AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
                                             AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~  
@@ -107,17 +111,13 @@ draw_tip_key_command:
     y[3] = 56.00
     USE_TEXT_COMMANDS FALSE
     SET_SPRITES_DRAW_BEFORE_FADE TRUE
-    DRAW_SPRITE idTip1 (50.0 400.0) (x[3] y[3]) (255 255 255 200)
+    DRAW_SPRITE idTip3 (50.0 400.0) (x[3] y[3]) (255 255 255 200)
     IF IS_PC_USING_JOYPAD
         iTempVar = 703  //~k~~PED_CYCLE_WEAPON_LEFT~
         CLEO_CALL GUI_DrawHelperText 0 (45.0 400.0) (iTempVar 2) (0.0 0.0)   // gxtId(i)|Format(i)|LeftPadding(f)|TopPadding(f)
-        iTempVar = 704  //~k~~PED_CYCLE_WEAPON_RIGHT~
-        CLEO_CALL GUI_DrawHelperText 0 (80.0 397.0) (iTempVar 2) (0.0 0.0)   // gxtId(i)|Format(i)|LeftPadding(f)|TopPadding(f)
     ELSE
         iTempVar = 705  //~h~Q
         CLEO_CALL GUI_DrawHelperText 0 (45.0 400.0) (iTempVar 2) (0.0 0.0)   // gxtId(i)|Format(i)|LeftPadding(f)|TopPadding(f)
-        iTempVar = 706  //~h~E
-        CLEO_CALL GUI_DrawHelperText 0 (80.0 397.0) (iTempVar 2) (0.0 0.0)   // gxtId(i)|Format(i)|LeftPadding(f)|TopPadding(f)
     ENDIF
 RETURN
 
@@ -158,9 +158,11 @@ loadTextures:
     CONST_INT idLR 59
     CONST_INT tCrosshair 60
     CONST_INT objCrosshair 61
+    CONST_INT idTip3 63
     LOAD_SPRITE idLR "clr"
     LOAD_SPRITE objCrosshair "ilock"
     LOAD_SPRITE idTip1 "htip1"
+    LOAD_SPRITE idTip3 "htip3"
     //LOAD_SPRITE tCrosshair "crosshair"
 RETURN
 
@@ -355,15 +357,27 @@ get_object_offset_indicator:
             OR DOES_OBJECT_HAVE_THIS_MODEL obj 1287
             OR DOES_OBJECT_HAVE_THIS_MODEL obj 1288
             OR DOES_OBJECT_HAVE_THIS_MODEL obj 1289
-            //OR DOES_OBJECT_HAVE_THIS_MODEL obj 1211
+            OR DOES_OBJECT_HAVE_THIS_MODEL obj 1271
                 GET_OBJECT_MODEL obj (idModel)
                 GET_MODEL_DIMENSIONS idModel (x[1] y[1] z[1]) (x[2] y[2] z[2])
                 x[1] = (x[1] + 0.5)    //0.45
                 z[2] = (z[2] - 0.25)   //0.6            
                 GET_OFFSET_FROM_OBJECT_IN_WORLD_COORDS obj (x[1] 0.0 z[2]) (x[0] y[0] z[0])     //x[1] 0.2 z[2] 
                 RETURN_TRUE
-            ELSE
-                RETURN_FALSE
+            ELSE                             
+                IF DOES_OBJECT_HAVE_THIS_MODEL obj 1258
+                OR DOES_OBJECT_HAVE_THIS_MODEL obj 3798
+                OR DOES_OBJECT_HAVE_THIS_MODEL obj 3799
+                OR DOES_OBJECT_HAVE_THIS_MODEL obj 1300
+                    GET_OBJECT_MODEL obj (idModel)
+                    GET_MODEL_DIMENSIONS idModel (x[1] y[1] z[1]) (x[2] y[2] z[2])
+                    x[1] = (x[1] + 0.5)    //0.45
+                    z[2] = (z[2] - 0.25)   //0.6            
+                    GET_OFFSET_FROM_OBJECT_IN_WORLD_COORDS obj (x[1] 0.0 z[2]) (x[0] y[0] z[0])     //x[1] 0.2 z[2] 
+                    RETURN_TRUE  
+                ELSE                    
+                    RETURN_FALSE
+                ENDIF
             ENDIF
         ENDIF
     ENDIF

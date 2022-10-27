@@ -446,6 +446,22 @@ draw_tip_key_command:
     ENDIF
 RETURN
 
+draw_tip_key_command_left_only:
+    //GET_FIXED_XY_ASPECT_RATIO 120.0 60.0 (x[3] y[3])
+    x[3] = 90.00
+    y[3] = 56.00
+    USE_TEXT_COMMANDS FALSE
+    SET_SPRITES_DRAW_BEFORE_FADE TRUE
+    DRAW_SPRITE idTip3 (50.0 400.0) (x[3] y[3]) (255 255 255 200)
+    IF IS_PC_USING_JOYPAD
+        iTempVar = 703  //~k~~PED_CYCLE_WEAPON_LEFT~
+        CLEO_CALL GUI_DrawHelperText 0 (45.0 400.0) (iTempVar 2) (0.0 0.0)   // gxtId(i)|Format(i)|LeftPadding(f)|TopPadding(f)
+    ELSE
+        iTempVar = 705  //~h~Q
+        CLEO_CALL GUI_DrawHelperText 0 (45.0 400.0) (iTempVar 2) (0.0 0.0)   // gxtId(i)|Format(i)|LeftPadding(f)|TopPadding(f)
+    ENDIF
+RETURN
+
 is_spider_hud_enabled:
     GET_CLEO_SHARED_VAR varHUD (iTempVar)
     IF iTempVar = 1     // 0:OFF || 1:ON            
@@ -981,9 +997,11 @@ loadTextures:
     CONST_INT idLR 59
     CONST_INT tCrosshair 60
     CONST_INT objCrosshair 61
+    CONST_INT idTip3 63
     LOAD_SPRITE idLR "clr"
     LOAD_SPRITE objCrosshair "ilock"
     LOAD_SPRITE idTip1 "htip1"
+    LOAD_SPRITE idTip3 "htip3"
     //LOAD_SPRITE tCrosshair "crosshair"
 RETURN
 //-+----------------------------------------------------------
@@ -1842,7 +1860,7 @@ draw_indicator_vehicles:
         CLEO_CALL get_side_of_char_on_vehicle 0 player_actor iVeh (randomVal) //1:left|2:right                  
         IF GOSUB is_spider_hud_enabled
             IF CLEO_CALL get_side_of_char_on_vehicle 0 player_actor iVeh (randomVal) //1:left|2:right
-                GOSUB draw_tip_key_command          //Adds Indication 
+                GOSUB draw_tip_key_command_left_only          //Adds Indication 
             ENDIF
         ENDIF         
         SWITCH randomVal

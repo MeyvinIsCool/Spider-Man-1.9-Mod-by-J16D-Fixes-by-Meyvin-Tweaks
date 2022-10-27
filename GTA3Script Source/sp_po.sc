@@ -2036,7 +2036,7 @@ assign_king_of_the_ring:
         CLEO_CALL set_current_power_progress 0 max_time timera
 
         // start the code here !
-        CLEO_CALL get_ped_near_char 0 player_actor 14.5 (iChar)
+        CLEO_CALL get_ped_near_char 0 player_actor 16.5 (iChar)
 
         IF NOT IS_CHAR_REALLY_IN_AIR player_actor
         AND DOES_CHAR_EXIST iChar
