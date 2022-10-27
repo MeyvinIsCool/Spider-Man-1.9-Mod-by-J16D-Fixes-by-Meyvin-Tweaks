@@ -686,10 +686,10 @@ show_menu:
                     BREAK
 
                 CASE menPowerSuit
-                    CLEO_CALL GetDataJoystickMatrix5x5 0 (5 1 iActiveCol)(3 1 iActiveRow) (iActiveCol iActiveRow)
-                    //IF iActiveRow = 3             
-                        //CLAMP_INT iActiveCol 1 4 (iActiveCol)   //Limit 4 power on 4rd row    //no longer needed as the row got filled
-                    //ENDIF
+                    CLEO_CALL GetDataJoystickMatrix5x5 0 (5 1 iActiveCol)(4 1 iActiveRow) (iActiveCol iActiveRow)
+                    IF iActiveRow = 4             
+                        CLAMP_INT iActiveCol 1 1 (iActiveCol)   //Limit 4 power on 4rd row   
+                    ENDIF
                     pUnlockCode = 3564
                     READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit3" (iTempVar)
                     IF pUnlockCode = iTempVar
@@ -930,6 +930,24 @@ show_menu:
                                                                                     ENDWHILE
                                                                                     iSetCamera = TRUE
                                                                                 ENDIF
+                                                                            ELSE
+                                                                                pUnlockCode = 7913
+                                                                                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit12" (iTempVar)
+                                                                                IF pUnlockCode = iTempVar
+                                                                                AND iSelectedPower = 16                 
+        
+                                                                                    IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                                        //IF NOT iSelectedPower = 10 //Iron Arms Power (Temporary locked, isn't ready)
+                                                                                            CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
+                                                                                            CLEO_CALL StorePowerSuitItem 0 iSelectedPower    //define power according to selection
+                                                                                            SET_CLEO_SHARED_VAR varIdPowers iSelectedPower
+                                                                                        //ENDIF
+                                                                                        WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                                                                            GOSUB drawItems
+                                                                                        ENDWHILE
+                                                                                        iSetCamera = TRUE
+                                                                                    ENDIF        
+                                                                                ENDIF                                                                    
                                                                             ENDIF
                                                                         ENDIF
                                                                     ENDIF
@@ -2273,9 +2291,16 @@ ProcessGame_and_DrawMenu_RightPanel_SUITS:
                                                                 CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
                                                                 iSelectedPower = 10     // Iron Arms
                                                                 GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel 
-                                                            ELSE                                                     
-                                                                iTempVar = idNoPowerText_l    
-                                                                CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //NO ASSOCIATED SUIT POWER
+                                                            ELSE      
+                                                                IF iSelectedSuit = 12   //Wrestler Suit
+                                                                    iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
+                                                                    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
+                                                                    iSelectedPower = 16     // King Of The Ring
+                                                                    GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel       
+                                                                ELSE                                                                                                     
+                                                                    iTempVar = idNoPowerText_l    
+                                                                    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //NO ASSOCIATED SUIT POWER
+                                                                ENDIF
                                                             ENDIF
                                                         ENDIF
                                                     ENDIF
@@ -4095,7 +4120,7 @@ RETURN
 ProcessGame_and_DrawItems_POWER_SUITS:
     //matrix 5x2=10 + 3
     //POWER MENU
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (215.0 160.0) (260.0 190.0) (2 40 49 150) (0.6) (1 1 1 1) (0 125 180 200) -1 -1 (0.0 0.0)   //BLUE_BACK_MAIN_POWER_SUITS
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (215.0 190.0) (260.0 240.0) (2 40 49 150) (0.6) (1 1 1 1) (0 125 180 200) -1 -1 (0.0 0.0)   //BLUE_BACK_MAIN_POWER_SUITS
     iTempVar = idSuitPower_l
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (215.0 80.0) (250.0 15.0) (6 253 244 0) (0.6) (0 0 1 0) (6 253 244 200) iTempVar 2 (-110.0 0.0)   //TITLE_POWER_SUIT
     //----lines side - left
@@ -4296,7 +4321,19 @@ ProcessGame_and_DrawItems_POWER_SUITS:
                                                                             USE_TEXT_COMMANDS FALSE
                                                                             DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
                                                                         ENDIF
-                                                                    ENDIF
+                                                                    ELSE
+                                                                        IF idTexture = 114
+                                                                            pUnlockCode = 7913
+                                                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit12" (iTempVar)
+                                                                            IF pUnlockCode = iTempVar
+                                                                                USE_TEXT_COMMANDS FALSE
+                                                                                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
+                                                                            ELSE
+                                                                                USE_TEXT_COMMANDS FALSE
+                                                                                DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (255 255 255 200)  
+                                                                            ENDIF
+                                                                        ENDIF
+                                                                    ENDIF                                                                
                                                                 ENDIF
                                                             ENDIF
                                                         ENDIF
@@ -4326,6 +4363,11 @@ ProcessGame_and_DrawItems_POWER_SUITS:
                 xCoord = 115.0
                 yCoord += 50.0
             BREAK
+            CASE 114 //4rd Row
+                iMaxRowQuantity = 114
+                xCoord = 115.0
+                yCoord += 50.0
+            BREAK            
         ENDSWITCH
     ENDWHILE
     USE_TEXT_COMMANDS FALSE
@@ -4377,7 +4419,10 @@ get_power_id_by_selected_item:
             BREAK  
         CASE 15
             iTempVar = 113
-            BREAK                                
+            BREAK    
+        CASE 16
+            iTempVar = 114
+            BREAK                                           
         DEFAULT
             iTempVar = pow_null
             BREAK
@@ -4462,6 +4507,30 @@ DrawSelector_POWER_SUITS:
                 BREAK
             ENDSWITCH
         BREAK
+        CASE 4
+            SWITCH iActiveCol   //Horizontal movement
+                CASE 1
+                    iSelectedPower = 16
+                    DRAW_SPRITE selectSuit26 (115.0 270.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 2
+                    iSelectedPower = 17
+                    DRAW_SPRITE selectSuit26 (165.0 270.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 3
+                    iSelectedPower = 18
+                    DRAW_SPRITE selectSuit26 (215.0 270.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 4
+                    iSelectedPower = 19
+                    DRAW_SPRITE selectSuit26 (265.0 270.0) (xSize ySize) (255 255 255 255)
+                BREAK
+                CASE 5
+                    iSelectedPower = 20
+                    DRAW_SPRITE selectSuit26 (315.0 270.0) (xSize ySize) (255 255 255 255)
+                BREAK
+            ENDSWITCH
+        BREAK        
     ENDSWITCH
 RETURN
 
@@ -4494,6 +4563,11 @@ DrawCheckMarks_POWER_SUITS:
                 xCoord = 134.0
                 yCoord += 50.0
             BREAK
+            CASE 16 //3rd Row
+                iMaxRowQuantity = 21
+                xCoord = 134.0
+                yCoord += 50.0
+            BREAK            
         ENDSWITCH
     ENDWHILE
 RETURN
@@ -4661,7 +4735,17 @@ DrawInfo_Suit_Unlocked_Power_RightPanel:
         ELSE
             DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
         ENDIF
-    ENDIF                  
+    ENDIF           
+    IF iTempVar = 114
+        pUnlockCode = 7913
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit12" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
+        ELSE
+            DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (255 255 255 200)
+        ENDIF
+    ENDIF            
 
     //DRAW POWER SUIT NAME
     GOSUB get_text_id_by_selected_power
@@ -4843,6 +4927,17 @@ DrawInfo_POWER_SUITS_RightPanel:
             DRAW_SPRITE bck320 (572.0 yCoord) (xSize ySize) (255 255 255 255)
         ENDIF
     ENDIF 
+    IF iSelectedPower = 16
+        pUnlockCode = 7913
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit12" (counter)
+        IF pUnlockCode = counter
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE idTexture (572.0 yCoord) (xSize ySize) (255 255 255 255)
+        ELSE
+            USE_TEXT_COMMANDS FALSE
+            DRAW_SPRITE bck320 (572.0 yCoord) (xSize ySize) (255 255 255 255)
+        ENDIF
+    ENDIF     
 
     //DRAW POWER SUIT IMAGE
     //GET_FIXED_XY_ASPECT_RATIO (55.0 50.0) (xSize ySize)
@@ -4944,6 +5039,9 @@ get_texture_helper_id_by_selected_power:
         CASE 15
             idTexture = 335
             BREAK              
+        CASE 16
+            idTexture = 336
+            BREAK             
         DEFAULT
             idTexture = 320
             BREAK
@@ -5011,7 +5109,11 @@ get_text_id_by_selected_power:
         CASE 15
             iTempVar = idPower15_l
             counter = 435
-            BREAK                              
+            BREAK       
+        CASE 16
+            iTempVar = idPower16_l
+            counter = 436
+            BREAK                                      
         DEFAULT
             iTempVar = idNoPower_l
             counter = 420
@@ -6489,6 +6591,7 @@ load_all_needed_files:
         CONST_INT pow83 111
         CONST_INT pow84 112
         CONST_INT pow85 113
+        CONST_INT pow86 114
 
         CONST_INT idPrimaryControls 132
 
@@ -6550,6 +6653,7 @@ load_all_needed_files:
         CONST_INT bck333 333
         CONST_INT bck334 334
         CONST_INT bck335 335
+        CONST_INT bck336 336
 
         /*counter = 1
         WHILE 25 >= counter
@@ -6689,6 +6793,7 @@ load_all_needed_files:
         LOAD_SPRITE pow83 "pow_ic_qs"
         LOAD_SPRITE pow84 "pow_ic_eq"
         LOAD_SPRITE pow85 "pow_ic_qd"
+        LOAD_SPRITE pow86 "pow_ic_kr"
 
         LOAD_SPRITE idPrimaryControls "mpc_a"
         /*counter = 300
@@ -6730,6 +6835,7 @@ load_all_needed_files:
         LOAD_SPRITE bck333 "bck333"
         LOAD_SPRITE bck334 "bck334"
         LOAD_SPRITE bck335 "bck335"
+        LOAD_SPRITE bck336 "bck336"
 
         CLEO_CALL suitUnlock 0
         REQUEST_ANIMATION "spider"
@@ -8879,6 +8985,7 @@ CONST_INT idPower12_l           412
 CONST_INT idPower13_l           413
 CONST_INT idPower14_l           414
 CONST_INT idPower15_l           415
+CONST_INT idPower16_l           416
 
 //Text key_press activation
 CONST_INT idPower_KeyPress      450

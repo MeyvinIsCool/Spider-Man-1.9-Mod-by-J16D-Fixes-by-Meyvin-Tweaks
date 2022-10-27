@@ -29,6 +29,7 @@ CONST_INT spirit_fire 12
 CONST_INT quips 13
 CONST_INT equalizer 14
 CONST_INT quad_damage 15
+CONST_INT king_of_the_ring 16
 
 CONST_INT player 0
 
@@ -445,6 +446,7 @@ loadHudTextures:
     CONST_INT idSPPowerQS 69
     CONST_INT idSPPowerEQ 70
     CONST_INT idSPPowerQD 71
+    CONST_INT idSPPowerKR 72
     CONST_INT idSPPowerNULL 74
     //Armour Power Circle
     CONST_INT idPowerBar1 75
@@ -517,6 +519,7 @@ loadHudTextures:
         LOAD_SPRITE idSPPowerQS "p_qs"
         LOAD_SPRITE idSPPowerEQ "p_eq"
         LOAD_SPRITE idSPPowerQD "p_qd"
+        LOAD_SPRITE idSPPowerKR "p_kr"
         LOAD_SPRITE idSPPowerNULL "p_null"
         //Armour Power Circle
         LOAD_SPRITE idPowerBar1 "c_b_1"
@@ -952,7 +955,12 @@ drawCurrentPower:
             USE_TEXT_COMMANDS FALSE
             SET_SPRITES_DRAW_BEFORE_FADE TRUE
             DRAW_SPRITE idSPPowerQD (535.0 50.0) (sx sy) (255 255 255 255)
-            BREAK                          
+            BREAK   
+        CASE king_of_the_ring
+            USE_TEXT_COMMANDS FALSE
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_SPRITE idSPPowerKR (535.0 50.0) (sx sy) (255 255 255 255)
+            BREAK                                    
         DEFAULT
             USE_TEXT_COMMANDS FALSE
             SET_SPRITES_DRAW_BEFORE_FADE TRUE

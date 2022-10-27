@@ -20,6 +20,7 @@ CONST_INT spirit_fire 12
 CONST_INT quips 13
 CONST_INT equalizer 14
 CONST_INT quad_damage 15
+CONST_INT king_of_the_ring 16
 
 CONST_INT player 0
 
@@ -126,7 +127,7 @@ main_loop:
                             GOSUB get_power_max_time
                             GET_CLEO_SHARED_VAR varIdPowers (idPowers)
                             IF idPowers >= 1
-                            AND 15 >= idPowers
+                            AND 16 >= idPowers
                                 CREATE_FX_SYSTEM_ON_CHAR SP_POWERS player_actor (0.0 0.0 0.15) 4 (fx_system)
                                 PLAY_AND_KILL_FX_SYSTEM fx_system
                                 CLEAR_CHAR_SECONDARY_TASKS player_actor
@@ -177,9 +178,12 @@ main_loop:
                                 CASE equalizer    //id:14
                                     GOSUB assign_equalizer
                                     BREAK  
-                                CASE quad_damage   //id:14
+                                CASE quad_damage   //id:15
                                     GOSUB assign_quad_damage
-                                    BREAK                                                                                                        
+                                    BREAK  
+                                CASE king_of_the_ring    //id:16
+                                    GOSUB assign_king_of_the_ring 
+                                    BREAK                                                                                                                                           
                                 DEFAULT
                                     WAIT 500
                                     BREAK
@@ -272,10 +276,14 @@ get_power_max_time:
             max_time = 100000    //1:00
             cool_down_time = 180000  //3:00
             BREAK       
-        CASE quad_damage   //id:14
+        CASE quad_damage   //id:15
             max_time = 20000    //0:20
             cool_down_time = 100000  //1:00
-            BREAK                     
+            BREAK  
+        CASE king_of_the_ring   //id:16
+            max_time = 120000    //1:20
+            cool_down_time = 100000  //1:00
+            BREAK                                
     ENDSWITCH
 RETURN
 //------------------------------------------------------------
@@ -1930,6 +1938,7 @@ is_playing_other_hit_anim:
     OR IS_CHAR_PLAYING_ANIM iChar ("DILDO_Hit_2")
     OR IS_CHAR_PLAYING_ANIM iChar ("DILDO_Hit_3")
         RETURN_TRUE
+        RETURN
     ELSE
         IF IS_CHAR_PLAYING_ANIM iChar ("dildo_hit_4")
         OR IS_CHAR_PLAYING_ANIM iChar ("dildo_hit_5")
@@ -1938,6 +1947,7 @@ is_playing_other_hit_anim:
         OR IS_CHAR_PLAYING_ANIM iChar ("HIT_behind")
         OR IS_CHAR_PLAYING_ANIM iChar ("HIT_front")        
             RETURN_TRUE
+            RETURN
         ELSE    
             IF IS_CHAR_PLAYING_ANIM iChar ("HitA_1")
             OR IS_CHAR_PLAYING_ANIM iChar ("HitA_2")
@@ -1946,6 +1956,7 @@ is_playing_other_hit_anim:
             OR IS_CHAR_PLAYING_ANIM iChar ("HIT_L")
             OR IS_CHAR_PLAYING_ANIM iChar ("HIT_R")        
                 RETURN_TRUE
+                RETURN
             ELSE
                 IF IS_CHAR_PLAYING_ANIM iChar ("HIT_walk")
                 OR IS_CHAR_PLAYING_ANIM iChar ("Hit_fightkick")       
@@ -1954,12 +1965,12 @@ is_playing_other_hit_anim:
                 OR IS_CHAR_PLAYING_ANIM iChar ("dodge_front_c_hita")           
                 OR IS_CHAR_PLAYING_ANIM iChar ("dodge_front_c_hitb")            
                     RETURN_TRUE
-                ELSE
-                    RETURN_FALSE
+                    RETURN
                 ENDIF
             ENDIF
         ENDIF
     ENDIF
+    RETURN_FALSE
 RETURN
 //------------------------------------------------------------
 
@@ -2012,6 +2023,257 @@ assign_quad_damage:
     WAIT 50
 RETURN
 //------------------------------------------------------------
+assign_king_of_the_ring:
+    //max_time = 10000    //ms
+    LOAD_TEXTURE_DICTIONARY spaim
+    GOSUB loadTextures
+    timera = 0
+    iTempVar = 0
+    GOSUB play_sfx_general_sfx
+    WAIT 0
+
+    WHILE max_time >= timera
+        CLEO_CALL set_current_power_progress 0 max_time timera
+
+        // start the code here !
+        CLEO_CALL get_ped_near_char 0 player_actor 14.5 (iChar)
+
+        IF NOT IS_CHAR_REALLY_IN_AIR player_actor
+        AND DOES_CHAR_EXIST iChar
+
+            // L1 
+            IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
+            AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+            AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~
+
+                IF NOT IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2    // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
+                AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+                AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~  
+
+                    GOSUB process_push_char
+                    WAIT 1000                
+                    WHILE IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2        // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
+                        WAIT 0
+                    ENDWHILE                                   
+                ENDIF
+            ENDIF
+
+        ENDIF        
+
+        // break loop
+        GOSUB readVars
+        IF toggleSpiderMod = 0  //FALSE
+        OR isInMainMenu = 1     //1:true 0:false
+            BREAK
+        ENDIF
+        IF NOT IS_PLAYER_PLAYING player
+            BREAK
+        ENDIF
+        IF IS_CHAR_IN_ANY_CAR player_actor
+            BREAK
+        ENDIF
+        WAIT 0
+    ENDWHILE
+
+    REMOVE_TEXTURE_DICTIONARY 
+    REMOVE_AUDIO_STREAM sfx
+    WAIT 50
+RETURN
+
+loadTextures:
+    //Textures
+    CONST_INT idLR 19 
+    LOAD_SPRITE idLR "clr"
+RETURN
+
+process_push_char: 
+    IF DOES_CHAR_EXIST iChar
+    AND NOT IS_CHAR_DEAD iChar
+    AND IS_CHAR_ON_SCREEN iChar
+
+        SET_CHAR_COLLISION iChar FALSE
+
+        GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 0.0) (x[1] y[1] z[1])
+        GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS iChar (0.0 0.0 0.0) (x[0] y[0] z[0])
+        GET_ANGLE_FROM_TWO_COORDS (x[1] y[1]) (x[0] y[0]) (fAngle[1])
+        SET_CHAR_HEADING player_actor fAngle[1]
+
+        GOSUB REQUEST_Animations
+        WAIT 0
+        CLEAR_CHAR_TASKS player_actor
+        CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
+        TASK_PLAY_ANIM_WITH_FLAGS player_actor ("yank_object" "spider") 63.0 (0 1 1 0) -1 0 1
+        GOSUB playWebSound
+        WAIT 0
+        fDistance = 0.0
+        //SET_CHAR_ANIM_SPEED player_actor "yank_object" 1.25
+
+        IF IS_CHAR_PLAYING_ANIM player_actor ("yank_object")
+            WHILE IS_CHAR_PLAYING_ANIM player_actor ("yank_object")
+
+                GET_CHAR_ANIM_CURRENT_TIME player_actor ("yank_object") (fRandomVal[0])
+                IF fRandomVal[0] >= 0.129 // frame 8/62   //0.061  //frame 4
+                        
+                    CLEO_CALL setCharViewPointToCamera 0 player_actor
+                    SET_CHAR_ANIM_SPEED player_actor "yank_object" 1.1
+                    GET_CHAR_COORDINATES player_actor (x[0] y[0] z[0])
+                    GET_GROUND_Z_FOR_3D_COORD x[0] y[0] z[0] (z[0])                    
+                    CLEO_CALL linearInterpolation2 0 (0.129 0.774 fRandomVal[0]) (720.0 0.0) (fAngle[1])    //(360*2+90=810)
+                    COS fAngle[1] (x[1])
+                    SIN fAngle[1] (y[1])
+                    x[1] *= 3.0
+                    y[1] *= 3.0
+                    x[0] += x[1]
+                    y[0] += y[1]
+                    z[0] += fDistance
+                    fDistance +=@ 0.056
+                    SET_CHAR_COORDINATES iChar x[0] y[0] z[0] 
+                    TASK_PLAY_ANIM_NON_INTERRUPTABLE iChar ("FALL_fall" "ped") 63.0 (0 1 1 0) -1 
+
+                    CONVERT_3D_TO_SCREEN_2D (x[0] y[0] z[0]) TRUE TRUE (x[1] y[1]) (x[2] y[2])
+                    CLEO_CALL getActorBonePos 0 player_actor 25 (x[2] y[2] z[2])    //Right hand
+                    CONVERT_3D_TO_SCREEN_2D (x[2] y[2] z[2]) TRUE TRUE (x[0] y[0]) (x[2] y[2])
+                    CLEO_CALL drawline 0 x[0] y[0] x[1] y[1] 0.5 (255 255 255 255)
+                ENDIF
+                IF fRandomVal[0] >= 0.774     //frame 48/62   //0.788     //frame 52
+                    BREAK
+                ENDIF
+                WAIT 0             
+            ENDWHILE    
+            SET_CHAR_COLLISION iChar TRUE    
+            IF CLEO_CALL get_target_char_from_char 0 player_actor 35.0 (iTempVar)   //recicled-var
+                GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS iTempVar (0.0 0.0 0.8) (x[1] y[1] z[1])
+            ELSE
+                GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 9.0 1.5) (x[1] y[1] z[1])
+            ENDIF
+            CLEO_CALL setCharVelocityTo 0 iChar (x[1] y[1] z[1]) 60.0       
+            counter = 0
+        ENDIF   
+
+        IF IS_CHAR_REALLY_IN_AIR iChar
+            WAIT 250
+            CLEO_CALL setSmokeFX 0 iChar (0.0 0.0 -0.5) 25.0
+
+            GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 0.0) (x[0] y[0] z[0])
+            GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS iChar (0.0 0.0 0.0) (x[1] y[1] z[1])
+            GET_ANGLE_FROM_TWO_COORDS (x[1] y[1]) (x[0] y[0]) (fRandomVal[0])
+            SET_CHAR_HEADING iChar fRandomVal[0]            
+            
+            CLEAR_CHAR_TASKS_IMMEDIATELY iChar
+            OPEN_SEQUENCE_TASK anim_seq
+                TASK_PLAY_ANIM_NON_INTERRUPTABLE -1 ("pow_rock_out_h2" "spider") 52.0 (0 1 1 0) -1        //pow_hit_wblm 121.0
+                TASK_PLAY_ANIM_NON_INTERRUPTABLE -1 ("getup" "ped") 42.0 (0 1 1 0) -1
+            CLOSE_SEQUENCE_TASK anim_seq
+            PERFORM_SEQUENCE_TASK iChar anim_seq
+            WAIT 0
+            CLEAR_SEQUENCE_TASK anim_seq
+        ENDIF
+
+        WHILE counter <= 6
+            GOSUB is_char_around_char
+            IF DOES_CHAR_EXIST iChar
+            AND NOT IS_CHAR_DEAD iChar
+            AND NOT IS_INT_LVAR_EQUAL_TO_INT_LVAR player_actor iChar
+                IF NOT IS_CHAR_IN_ANY_CAR iChar
+                AND NOT IS_CHAR_ON_ANY_BIKE iChar
+                AND NOT IS_CHAR_IN_ANY_POLICE_VEHICLE iChar
+                    IF IS_CHAR_ON_SCREEN iChar 
+                        GOSUB assign_task_hit_king_of_ring
+                    ENDIF
+                ENDIF
+            ENDIF   
+        WAIT 0
+        counter += 1
+        ENDWHILE
+
+        WAIT 0
+    ENDIF
+RETURN
+
+is_char_around_char:
+    IF DOES_CHAR_EXIST iChar
+        GET_CHAR_COORDINATES iChar (x[0] y[0] z[0])
+        IF GET_RANDOM_CHAR_IN_SPHERE_NO_SAVE_RECURSIVE x[0] y[0] z[0] 6.5 0 1 (iChar) 
+            IF DOES_CHAR_EXIST iChar
+                RETURN_TRUE
+                RETURN
+            ENDIF
+        ENDIF
+    ENDIF
+    RETURN_FALSE
+RETURN
+
+assign_task_hit_king_of_ring:
+    GOSUB assign_char_reference
+    
+    GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 0.0) (x[0] y[0] z[0])
+    GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS iChar (0.0 0.0 0.0) (x[1] y[1] z[1])
+    GET_ANGLE_FROM_TWO_COORDS (x[1] y[1]) (x[0] y[0]) (fRandomVal[0])
+    SET_CHAR_HEADING iChar fRandomVal[0]
+    CLEAR_CHAR_TASKS iChar
+    CLEAR_CHAR_TASKS_IMMEDIATELY iChar
+    IF IS_CHAR_HEALTH_GREATER iChar 90
+        DAMAGE_CHAR iChar 15 TRUE
+        /*IF IS_CHAR_DEAD iChar
+            TASK_DIE_NAMED_ANIM iChar ("pow_rock_out_h2" "spider") 16.0 2500        //pow_hit_wblm
+            WAIT 0
+        ELSE*/
+            OPEN_SEQUENCE_TASK anim_seq
+                TASK_PLAY_ANIM_NON_INTERRUPTABLE -1 ("pow_rock_out_h2" "spider") 52.0 (0 1 1 0) -1        //pow_hit_wblm 121.0
+                TASK_PLAY_ANIM_NON_INTERRUPTABLE -1 ("getup" "ped") 42.0 (0 1 1 0) -1
+            CLOSE_SEQUENCE_TASK anim_seq
+            PERFORM_SEQUENCE_TASK iChar anim_seq
+            WAIT 0
+            CLEAR_SEQUENCE_TASK anim_seq
+        //ENDIF
+    ELSE
+        TASK_DIE_NAMED_ANIM iChar ("pow_rock_out_h2" "spider") 16.0 2500    //pow_hit_wblm
+        WAIT 0
+    ENDIF
+    IF IS_CHAR_PLAYING_ANIM iChar "pow_rock_out_h2"
+        SET_CHAR_ANIM_SPEED iChar "pow_rock_out_h2" 1.50
+    ENDIF
+    WAIT 0
+    IF IS_CHAR_DEAD iChar
+        IF IS_CHAR_SCRIPT_CONTROLLED iChar
+            MARK_CHAR_AS_NO_LONGER_NEEDED iChar
+        ENDIF
+    ENDIF
+RETURN
+
+playWebSound:
+    REMOVE_AUDIO_STREAM sfx
+    SWITCH iTempVar
+        CASE 0
+            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull1.mp3" (sfx)
+                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
+                SET_AUDIO_STREAM_STATE sfx 1 
+            ENDIF
+        BREAK
+        CASE 1
+            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull2.mp3" (sfx)
+                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
+                SET_AUDIO_STREAM_STATE sfx 1 
+            ENDIF        
+        BREAK
+        CASE 2
+            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull3.mp3" (sfx)
+                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
+                SET_AUDIO_STREAM_STATE sfx 1 
+            ENDIF        
+        BREAK
+        CASE 3
+            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull4.mp3" (sfx)
+                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
+                SET_AUDIO_STREAM_STATE sfx 1 
+            ENDIF        
+        BREAK
+    ENDSWITCH
+RETURN
+//------------------------------------------------------------
+
 
 /*
 //------------------------------------------------------------
@@ -2111,14 +2373,14 @@ is_power_ready:
 CLEO_RETURN 0
 }
 {
-//CLEO_CALL set_current_power_progress 0 iMaxTime iCurrentTime
+//CLEO_CALL set_current_power_progress 0 iMaxTime ifRandomVal[0]
 set_current_power_progress:
-    LVAR_INT iMaxTime iCurrentTime  //in
+    LVAR_INT iMaxTime ifRandomVal[1]  //in
     LVAR_FLOAT fMax_time fCurrent_time fPercentage fMaxPercent
     LVAR_INT power_progress
     fMaxPercent = 100.0
     CSET_LVAR_FLOAT_TO_LVAR_INT (fMax_time) iMaxTime
-    CSET_LVAR_FLOAT_TO_LVAR_INT (fCurrent_time) iCurrentTime
+    CSET_LVAR_FLOAT_TO_LVAR_INT (fCurrent_time) ifRandomVal[0]
     fPercentage = fCurrent_time
     fPercentage /= fMax_time
     fPercentage *= 100.0
@@ -2128,7 +2390,7 @@ set_current_power_progress:
 CLEO_RETURN 0
 }
 {
-//CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -2.0) (/*solid*/ 1 /*car*/ 1 /*actor*/ 0 /*obj*/ 1 /*particle*/ 0)
+//CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -2.0) (/*solid*/ 1 /*car*/ 1 /*actor*/ 0 /*iChar*/ 1 /*particle*/ 0)
 isClearInSight:
     LVAR_INT tempPlayer
     LVAR_FLOAT x y z
@@ -2184,7 +2446,7 @@ is_char_gang_ped:
 CLEO_RETURN 0
 }
 {
-//CLEO_CALL setObjectPosSimple 0 obj x y z
+//CLEO_CALL setObjectPosSimple 0 iChar x y z
 setObjectPosSimple:
     LVAR_INT hObj // In
     LVAR_FLOAT x y z // In
@@ -2261,6 +2523,204 @@ ELSE
 ENDIF
 iResult =# result[1]
 CLEO_RETURN 0 iResult     //y0 + (x - x0) * (y1 - y0)/(x1 - x0) 
+}
+{
+//CLEO_CALL linearInterpolation 0 (x0 x1 x) (y0 y1) (y)
+linearInterpolation2:
+LVAR_FLOAT x0   //Min 
+LVAR_FLOAT x1   //Max
+LVAR_FLOAT x    //Mid
+LVAR_FLOAT y0   //Min
+LVAR_FLOAT y1   //Max
+LVAR_FLOAT result[2]
+result[0] = (x1 - x0)
+IF result[0] = 0.0
+    result[1] = (y0 + y1)
+    result[1] /= 2.0
+ELSE
+    y1 = (y1 - y0)
+    x1 = (x1 - x0)
+    x = (x - x0)
+    result[0] = (y1 / x1)
+    result[1] = (result[0] * x)
+    result[1] = (result[1] + y0)
+ENDIF
+CLEO_RETURN 0 result[1]     //y0 + (x - x0) * (y1 - y0)/(x1 - x0) 
+}
+{
+//CLEO_CALL get_ped_near_char 0 scplayer 20.0 (iNewObj)
+get_ped_near_char:
+    LVAR_INT scplayer   //in
+    LVAR_FLOAT fMaxDistance //in
+    LVAR_INT i iChar iNewChar
+    LVAR_FLOAT x[2] y[2] z[2] fDistance v1 v2
+    IF DOES_CHAR_EXIST scplayer
+        i = 0
+        WHILE GET_ANY_CHAR_NO_SAVE_RECURSIVE i (i iChar)
+            IF DOES_CHAR_EXIST iChar
+            AND NOT IS_CHAR_ON_ANY_BIKE iChar
+            AND NOT IS_CHAR_IN_ANY_CAR iChar
+                GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS iChar (0.0 0.0 0.0) (x[1] y[1] z[1])
+                GET_ACTIVE_CAMERA_COORDINATES (x[0] y[0] z[0])
+                GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (x[1] y[1] z[1]) (fDistance) 
+                IF fMaxDistance >= fDistance
+                    IF IS_CHAR_ON_SCREEN iChar
+
+                        CONVERT_3D_TO_SCREEN_2D (x[1] y[1] z[1]) TRUE TRUE (v1 v2) (x[0] y[0])
+                        GET_DISTANCE_BETWEEN_COORDS_2D (339.0 179.0) (v1 v2) (fDistance)
+
+                        IF 30.0 > fDistance
+                            iNewChar = iChar
+                            BREAK
+                        ENDIF
+
+                    ENDIF
+                ENDIF
+            ENDIF
+        ENDWHILE
+        IF DOES_CHAR_EXIST iNewChar
+            RETURN_TRUE
+        ELSE
+            RETURN_FALSE
+        ENDIF
+    ENDIF
+CLEO_RETURN 0 iNewChar
+}
+{
+//CLEO_CALL get_object_offset_indicator 0 iChar 
+get_char_offset_indicator:
+    LVAR_INT iChar    //in
+    LVAR_INT idModel
+    LVAR_FLOAT x[3] y[3] z[3]
+    IF DOES_CHAR_EXIST iChar
+    AND NOT IS_CHAR_FALLEN_ON_GROUND iChar 
+        GET_CHAR_MODEL iChar (idModel)
+        GET_MODEL_DIMENSIONS idModel (x[1] y[1] z[1]) (x[2] y[2] z[2])
+        x[1] = (x[1] + 0.5)    //0.45
+        z[2] = (z[2] - 0.25)   //0.6            
+        GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS iChar (x[1] 0.0 z[2]) (x[0] y[0] z[0])     //x[1] 0.2 z[2]
+        RETURN_TRUE  
+    ELSE                    
+        RETURN_FALSE
+    ENDIF
+CLEO_RETURN 0 x[0] y[0] z[0]
+}
+{
+//CLEO_CALL setCharViewPointToCamera 0 player_actor
+setCharViewPointToCamera:
+    LVAR_INT scplayer   //in
+    LVAR_FLOAT xPoint yPoint zPoint xPos yPos zPos newAngle
+    GET_ACTIVE_CAMERA_POINT_AT xPoint yPoint zPoint
+    GET_ACTIVE_CAMERA_COORDINATES xPos yPos zPos
+    xPoint = xPoint - xPos
+    yPoint = yPoint - yPos
+    GET_HEADING_FROM_VECTOR_2D xPoint yPoint (newAngle)
+    SET_CHAR_HEADING scplayer newAngle
+CLEO_RETURN 0
+}
+{
+//CLEO_CALL getActorBonePos 0 /*actor*/actor /*bone*/0 /*store_to*/var1 var2 var3 
+getActorBonePos:
+    LVAR_INT scplayer iBone  //in
+    LVAR_FLOAT fx fy fz
+    LVAR_INT var5 //var6
+    GET_PED_POINTER scplayer (scplayer)
+    GET_VAR_POINTER (fx) (var5)
+    CALL_METHOD 0x5E4280 /*struct*/scplayer /*params*/3 /*pop*/0 /*bUnk*/1 /*nBone*/iBone /*pPoint*/ var5
+    /// 0x5E4280 - RwV3d *__thiscall CPed__getBonePosition(RwV3d *vPosition int iBoneID, bool bIncludeAnim)
+    /// https://wiki.multitheftauto.com/wiki/GetPedBonePosition
+CLEO_RETURN 0 fx fy fz
+}
+{
+//CLEO_CALL get_target_char_from_char 0 scplayer fMaxDistance (char)
+get_target_char_from_char:
+    LVAR_INT scplayer   //in
+    LVAR_FLOAT fMaxDistance  //in
+    LVAR_INT p i char iNewPed 
+    LVAR_FLOAT xScreenSize x[2] y[2] z[2] fDistance v1 v2
+    LVAR_INT pedType
+    IF DOES_CHAR_EXIST scplayer
+        xScreenSize = 50.0
+        i = 0
+        WHILE GET_ANY_CHAR_NO_SAVE_RECURSIVE i (i char)
+            IF DOES_CHAR_EXIST char
+            AND NOT IS_CHAR_DEAD char
+            AND NOT IS_INT_LVAR_EQUAL_TO_INT_LVAR scplayer char
+                IF NOT IS_CHAR_IN_ANY_CAR char
+                AND NOT IS_CHAR_ON_ANY_BIKE char
+                AND NOT IS_CHAR_IN_ANY_POLICE_VEHICLE char
+                    //GET_PED_TYPE char (pedType)
+                    //IF NOT pedType = PEDTYPE_COP
+                        GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS char (0.0 0.0 0.0) (x[1] y[1] z[1])
+                        GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS scplayer (0.0 0.0 0.0) (x[0] y[0] z[0])
+                        GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (x[1] y[1] z[1]) (fDistance) 
+                        IF fMaxDistance > fDistance
+                            IF IS_CHAR_ON_SCREEN char
+                            AND IS_LINE_OF_SIGHT_CLEAR (x[1] y[1] z[1]) (x[0] y[0] z[0]) (1 0 0 1 0)   //(isSolid isCar isActor isObject isParticle)
+                                CONVERT_3D_TO_SCREEN_2D (x[1] y[1] z[1]) TRUE TRUE (v1 v2) (x[0] y[0])
+                                GET_DISTANCE_BETWEEN_COORDS_2D (339.0 179.0) (v1 v2) (fDistance)
+                                IF xScreenSize >= fDistance
+                                    xScreenSize = fDistance
+                                    iNewPed = char
+                                ENDIF
+                            ENDIF
+                        ENDIF
+                    //ENDIF
+                ENDIF
+            ENDIF
+        ENDWHILE
+        IF DOES_CHAR_EXIST iNewPed
+            RETURN_TRUE
+        ELSE
+            RETURN_FALSE
+        ENDIF
+    ENDIF
+CLEO_RETURN 0 iNewPed
+}
+{
+//CLEO_CALL setCharVelocityTo 0 iPlayer (x y z) Amp
+setCharVelocityTo:
+    LVAR_INT scplayer    //in
+    LVAR_FLOAT xIn yIn zIn iAmplitude   //in
+    LVAR_FLOAT x[2] y[2] z[2] fDistance
+    x[1] = xIn
+    y[1] = yIn
+    z[1] = zIn
+    GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS scplayer 0.0 0.0 0.0 (x[0] y[0] z[0])
+    x[1] -= x[0]
+    y[1] -= y[0]
+    z[1] -= z[0]
+    GET_DISTANCE_BETWEEN_COORDS_3D (0.0 0.0 0.0) (x[1] y[1] z[1]) fDistance
+    x[1] = (x[1] / fDistance)
+    y[1] = (y[1] / fDistance)
+    z[1] = (z[1] / fDistance)
+    x[1] *= iAmplitude
+    y[1] *= iAmplitude
+    z[1] *= iAmplitude
+    SET_CHAR_VELOCITY scplayer x[1] y[1] z[1]
+    WAIT 0
+    SET_CHAR_VELOCITY scplayer x[1] y[1] z[1]
+CLEO_RETURN 0
+}
+{
+//CLEO_CALL drawline 0 x y x1 y1 fThickness r g b a
+drawline:
+    LVAR_FLOAT x y x1 y1 fThickness //in
+    LVAR_INT r g b a    //in
+    LVAR_FLOAT fDistance zAngle
+    GET_DISTANCE_BETWEEN_COORDS_2D x y x1 y1 (fDistance)
+    x1 -= x
+    y1 -= y
+    GET_HEADING_FROM_VECTOR_2D x1 y1 (zAngle)
+    zAngle += 90.0
+    x1 /= 2.0
+    y1 /= 2.0
+    x += x1
+    y += y1
+    USE_TEXT_COMMANDS FALSE
+    SET_SPRITES_DRAW_BEFORE_FADE TRUE
+    DRAW_SPRITE_WITH_ROTATION 666 x y fDistance fThickness zAngle r g b a
+CLEO_RETURN 0
 }
 
 

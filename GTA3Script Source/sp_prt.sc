@@ -15,7 +15,8 @@ INCLUDED:
     ID:6  ||STREET CRIMES MISSION PASSED
     ID:7  ||PIZZA TIME MISSION PASSED
     ID:8  ||MISSION ALERT
-    ID:8  ||CRIME ALERT
+    ID:9  ||CRIME ALERT
+    ID:10  ||ELECTRO BOSS MISSION PASSED
 FORMAT:
     ID:1
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id}
@@ -55,6 +56,7 @@ CONST_INT spirit_fire 12
 CONST_INT quips 13
 CONST_INT equalizer 14
 CONST_INT quad_damage 15
+CONST_INT king_of_the_ring 16
 
 SCRIPT_START
 {
@@ -269,7 +271,12 @@ SWITCH idVar
             IF timera > 6000
                 BREAK
             ENDIF
-            WAIT 0
+            GOSUB readVars
+            IF isInMainMenu = 1     //1:true 0: false
+            OR toggleSpiderMod = 0
+                BREAK
+            ENDIF                 
+            WAIT 0            
         ENDWHILE
         BREAK            
     CASE 9  //ID:8  || Crime Mission label
@@ -298,7 +305,34 @@ SWITCH idVar
             ENDIF                
             WAIT 0
         ENDWHILE                
-        BREAK                 
+        BREAK 
+    CASE 10  //ID:10  ||ELECTRO BOSS FIGHT MISSION PASSED
+        // IN: {id} {total xp} {mission xp} {combat xp}
+        GOSUB play_sfx_mission_end
+        GOSUB load_textures_street_crimes
+        timera = 0
+        WHILE TRUE
+            GOSUB draw_electro_boss_mission_succesful
+            GOSUB draw_street_crimes_key_press_succesful
+            IF timera > 2000
+                IF IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+                    WHILE IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+                        WAIT 0
+                    ENDWHILE
+                    BREAK
+                ENDIF
+            ENDIF
+            IF timera > 6000   //6 sec
+                BREAK
+            ENDIF
+            GOSUB readVars
+            IF isInMainMenu = 1     //1:true 0: false
+            OR toggleSpiderMod = 0
+                BREAK
+            ENDIF
+            WAIT 0
+        ENDWHILE
+        BREAK                        
     DEFAULT
         BREAK
 ENDSWITCH
@@ -412,7 +446,12 @@ drawPowerIcon:
             USE_TEXT_COMMANDS FALSE
             SET_SPRITES_DRAW_BEFORE_FADE TRUE
             DRAW_SPRITE idIconQD (320.0 55.0) (sx sy) (255 255 255 255)
-            BREAK                            
+            BREAK   
+        CASE king_of_the_ring
+            USE_TEXT_COMMANDS FALSE
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_SPRITE idIconKR (320.0 55.0) (sx sy) (255 255 255 255)
+            BREAK                                      
     ENDSWITCH
 RETURN
 
@@ -445,6 +484,7 @@ load_textures_powers:
         LOAD_SPRITE idIconQS "sp_icon_qs"
         LOAD_SPRITE idIconEQ "sp_icon_eq"
         LOAD_SPRITE idIconQD "sp_icon_qd"
+        LOAD_SPRITE idIconKR "sp_icon_KR"
     ELSE
         PRINT_STRING_NOW "~r~ERROR: 'CLEO\SpiderJ16D' folder not found!" 6000
         timera = 0
@@ -835,6 +875,45 @@ draw_pizza_time_mission_succesful:
     SET_SPRITES_DRAW_BEFORE_FADE TRUE
     DRAW_SPRITE tPBBackInfo (79.0 165.0) (sx sy) (255 255 255 235)
 RETURN
+
+//-+----------------------------------- ELECTRO BOSS FIGHT
+
+draw_electro_boss_mission_succesful:
+    //iTempVar2     // Total XP
+    //iTempVar3     // Mission completed XP
+    //iTempVar4     // Combat XP
+    GET_FIXED_XY_ASPECT_RATIO 25.0 25.0 (sx sy)
+    USE_TEXT_COMMANDS FALSE
+    SET_SPRITES_DRAW_BEFORE_FADE FALSE
+    DRAW_SPRITE idMapIcon5 (21.0 110.0) (sx sy) (255 255 255 235)
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (58.5 105.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 975 18 0.0 0.0  // Happy Birthday Electro
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (115.5 105.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 487 20 0.0 0.0 // COMPLETED!
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (79.0 115.0) (120.0 20.0) (255 255 255 0) (0.75) (0 0 1 0) (255 255 255 250) -1 -1 0.0 0.0  //SIDES_LINES division
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (115.0 135.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 473 1 0.0 0.0 //  XP SUMMARY
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 145.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 977 19 0.0 0.0  // Defeat Electro
+    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 146.0) (50.0 15.0) (255 255 255 0) 122 19 0.0 0.0 iTempVar3  //+~1~
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 165.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 471 19 0.0 0.0  // Combat
+    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 166.0) (50.0 15.0) (255 255 255 0) 122 19 0.0 0.0 iTempVar4    //+~1~
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (79.0 180.0) (120.0 20.0) (255 255 255 0) (0.75) (0 0 1 0) (255 255 255 250) -1 -1 0.0 0.0  //SIDES_LINES division
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 197.5) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 472 20 0.0 0.0  // TOTAL XP EARNED
+    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 195.0) (50.0 15.0) (255 255 255 0) 121 21 0.0 0.0 iTempVar2    //~1~
+
+    //GET_FIXED_XY_ASPECT_RATIO 250.0 180.0 (sx sy)
+    sx = 187.50
+    sy = 168.00
+    USE_TEXT_COMMANDS FALSE
+    SET_SPRITES_DRAW_BEFORE_FADE TRUE
+    DRAW_SPRITE tPBBackInfo (79.0 165.0) (sx sy) (255 255 255 235)
+RETURN
+
+
 
 load_textures_mission_label:
     IF DOES_DIRECTORY_EXIST "CLEO\SpiderJ16D"
@@ -1538,20 +1617,21 @@ CONST_INT idIconSF 24
 CONST_INT idIconQS 25
 CONST_INT idIconEQ 26
 CONST_INT idIconQD 27
+CONST_INT idIconKR 28
 
-CONST_INT idMapIcon3 30
-CONST_INT backpackBack 31    
-CONST_INT idBP1 32
-CONST_INT idBP2 33
-CONST_INT idBP3 34
-CONST_INT idBP4 35
-CONST_INT idBP5 36
-CONST_INT idBP6 37
-CONST_INT idBP7 38
-CONST_INT idBP8 39
-CONST_INT idBP9 40
-CONST_INT idBP10 41
+CONST_INT idMapIcon3 35
+CONST_INT backpackBack 36    
+CONST_INT idBP1 37
+CONST_INT idBP2 38
+CONST_INT idBP3 39
+CONST_INT idBP4 40
+CONST_INT idBP5 41
+CONST_INT idBP6 42
+CONST_INT idBP7 43
+CONST_INT idBP8 44
+CONST_INT idBP9 45
+CONST_INT idBP10 46
 
-CONST_INT idMainMission 42
-CONST_INT idSideMission 43
-CONST_INT idCrimeReport 44
+CONST_INT idMainMission 47
+CONST_INT idSideMission 48
+CONST_INT idCrimeReport 49
