@@ -234,13 +234,13 @@ main_loop:
                                     AND IS_CAR_ON_SCREEN iVeh
                                     AND NOT IS_CHAR_PLAYING_ANIM player_actor ("yank_object")
                                         GOSUB draw_indicator_vehicles                                                                                                                                                            
-                                        // L1 + R1
-                                        IF IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
+                                        // L1 
+                                        IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
                                         AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                                         AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
                                         AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~
 
-                                            IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2        // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
+                                            IF NOT IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2    // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
                                             AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                                             AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
                                             AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~  
@@ -1872,7 +1872,7 @@ RETURN
 
 process_push_doors:
     IF DOES_VEHICLE_EXIST iVeh
-    AND GOSUB draw_indicator_vehicles      // This Will Fix The Crash As It Only Going To Active Only If This Gets True
+    AND CLEO_CALL get_side_of_char_on_vehicle 0 player_actor iVeh (randomVal)      // This Will Fix The Crash As It Only Going To Active Only If This Gets True
 
         IF CLEO_CALL get_dummy_vehicle 0 iVeh iTempVar (obj)
             IF iTempVar = 8 //door_rf_dummy
@@ -2243,11 +2243,11 @@ get_object_offset_indicator:
     IF DOES_OBJECT_EXIST obj
     AND NOT HAS_OBJECT_BEEN_DAMAGED obj 
         //Small
-        IF DOES_OBJECT_HAVE_THIS_MODEL obj 1375     //tramstop_SF
-        OR DOES_OBJECT_HAVE_THIS_MODEL obj 1568     //chinalamp_sf
+        IF DOES_OBJECT_HAVE_THIS_MODEL obj 1568     //chinalamp_sf
         OR DOES_OBJECT_HAVE_THIS_MODEL obj 1223     //lampost_coast ----|||
         OR DOES_OBJECT_HAVE_THIS_MODEL obj 1232     //Streetlamp1   ----|||
         OR DOES_OBJECT_HAVE_THIS_MODEL obj 1231     //Streetlamp2   (double)
+        //OR DOES_OBJECT_HAVE_THIS_MODEL obj 1375     //tramstop_SF
             GET_OBJECT_MODEL obj (idModel)
             GET_MODEL_DIMENSIONS idModel (x[1] y[1] z[1]) (x[2] y[2] z[2])
             x[1] = (x[1] + 0.5)    //0.45
