@@ -2155,6 +2155,9 @@ process_push_char:
         IF IS_CHAR_REALLY_IN_AIR iChar
             WAIT 250
             CLEO_CALL setSmokeFX 0 iChar (0.0 0.0 -0.5) 25.0
+            GET_CLEO_SHARED_VAR varHitCount iTempVar
+            iTempVar ++
+            SET_CLEO_SHARED_VAR varHitCount iTempVar            
 
             GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 0.0) (x[0] y[0] z[0])
             GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS iChar (0.0 0.0 0.0) (x[1] y[1] z[1])
@@ -2168,7 +2171,7 @@ process_push_char:
             CLOSE_SEQUENCE_TASK anim_seq
             PERFORM_SEQUENCE_TASK iChar anim_seq
             WAIT 0
-            CLEAR_SEQUENCE_TASK anim_seq
+            CLEAR_SEQUENCE_TASK anim_seq            
         ENDIF
 
         WHILE counter <= 6
@@ -2183,9 +2186,9 @@ process_push_char:
                         GOSUB assign_task_hit_king_of_ring
                     ENDIF
                 ENDIF
-            ENDIF   
-        WAIT 0
-        counter += 1
+            ENDIF              
+            WAIT 0
+            counter += 1
         ENDWHILE
 
         WAIT 0
@@ -2195,7 +2198,7 @@ RETURN
 is_char_around_char:
     IF DOES_CHAR_EXIST iChar
         GET_CHAR_COORDINATES iChar (x[0] y[0] z[0])
-        IF GET_RANDOM_CHAR_IN_SPHERE_NO_SAVE_RECURSIVE x[0] y[0] z[0] 6.5 0 1 (iChar) 
+        IF GET_RANDOM_CHAR_IN_SPHERE_NO_SAVE_RECURSIVE x[0] y[0] z[0] 5.0 0 1 (iChar) 
             IF DOES_CHAR_EXIST iChar
                 RETURN_TRUE
                 RETURN
