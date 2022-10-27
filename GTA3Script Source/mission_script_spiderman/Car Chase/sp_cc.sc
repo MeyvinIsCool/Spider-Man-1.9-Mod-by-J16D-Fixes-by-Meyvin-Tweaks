@@ -1357,7 +1357,7 @@ draw_car_indicator:
     y[1] = 56.00
     USE_TEXT_COMMANDS FALSE
     SET_SPRITES_DRAW_BEFORE_FADE TRUE
-    DRAW_SPRITE idTip1 (50.0 400.0) (x[1] y[1]) (255 255 255 200)
+    DRAW_SPRITE idTip3 (50.0 400.0) (x[1] y[1]) (255 255 255 200)
     IF IS_PC_USING_JOYPAD
         iRandomVal = 703  //~k~~PED_CYCLE_WEAPON_LEFT~
         CLEO_CALL GUI_DrawHelperText 0 (45.0 400.0) (iRandomVal 2) (0.0 0.0)   // gxtId(i)|Format(i)|LeftPadding(f)|TopPadding(f)
@@ -1562,6 +1562,7 @@ GOTO REQUEST_Web_Animations
 
 load_and_create_entities:
     CONST_INT idTip1 10
+    CONST_INT idTip3 11
     CONST_INT objCrosshair 20
     CONST_INT idTargetVeh 31
     CONST_INT idMapIcon5  30
@@ -1569,6 +1570,7 @@ load_and_create_entities:
     LOAD_TEXTURE_DICTIONARY spaim
     LOAD_SPRITE objCrosshair "ilock"
     LOAD_SPRITE idTip1 "htip1"
+    LOAD_SPRITE idTip3 "htip3"
     LOAD_SPRITE idMapIcon5 "mk5"    //Crime
     LOAD_SPRITE idTargetVeh "tn_veh"
 
