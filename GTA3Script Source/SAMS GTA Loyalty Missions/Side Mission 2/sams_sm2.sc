@@ -23,7 +23,7 @@ CONST_INT player 0
 LVAR_INT player_actor
 LVAR_INT flag_player_on_mission flag_player_hit_counter toggleMusic 
 LVAR_INT iTempVar iTempVar1 iTempVar2 iTempVar3 counter 
-LVAR_INT sfx1 sfx2 sfx3 music_sfx1 music_sfx2 iEventBlip iEventBlip2 iDecisionHate
+LVAR_INT sfx1 sfx2 sfx3 music_sfx1 music_sfx2 iEventBlip iEventBlip2 
 LVAR_INT audio_line_is_active iEventTask kills_counter
 LVAR_FLOAT x[6] y[6] z[6] fDistance[6] 
 LVAR_FLOAT objX[2] objY[2] objZ[2] fObjDistance[2] 
@@ -57,10 +57,6 @@ LOAD_SPRITE idTowerB "surv_tow"
 LOAD_SPRITE idTip2 "htip2"
 LOAD_SPRITE idWay "mk1"
 LOAD_ALL_MODELS_NOW
-
-LOAD_CHAR_DECISION_MAKER 4 (iDecisionHate)
-SET_RELATIONSHIP 4 PEDTYPE_MISSION1 PEDTYPE_PLAYER1
-SET_RELATIONSHIP 0 PEDTYPE_MISSION1 PEDTYPE_MISSION1
 
 // ***************************************Mission Start*************************************
 CAMERA_RESET_NEW_SCRIPTABLES
