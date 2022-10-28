@@ -19,7 +19,7 @@ CONST_INT idMapIcon7 58     //RADAR_SPRITE_GANG_B
 CONST_INT idMapIcon8 26     //RADAR_SPRITE_MCSTRAP
 CONST_INT idMapIcon9 61     //RADAR_SPRITE_GANG_N
 CONST_INT idMapIcon10 55    //RADAR_SPRITE_IMPOUND
-//CONST_INT idMapIcon11 52    //RADAR_SPRITE_CASH
+CONST_INT idMapIcon11 20    //RADAR_SPRITE_FIRE
 
 LOAD_TEXTURE_DICTIONARY spaim
 LOAD_SPRITE idMapIcon0b "mk0_b"     //Way Point
@@ -29,7 +29,7 @@ LOAD_SPRITE idMapIcon7 "mk7"        //Thug Hideouts
 LOAD_SPRITE idMapIcon8 "mk0"        //Main Mission WayPoint
 LOAD_SPRITE idMapIcon9 "mk9"        //Street Crimes
 LOAD_SPRITE idMapIcon10 "mk10"      //Surveillance Towers
-//LOAD_SPRITE idMapIcon11 "mk11"      //Cash
+LOAD_SPRITE idMapIcon11 "mk11"      //Cash
 
 //ADD_SPRITE_BLIP_FOR_COORD -1691.91 1104.3081 94.0312 RADAR_SPRITE_GANG_N (iEventBlip) //RADAR_SPRITE_WAYPOINT
 WHILE TRUE
@@ -112,7 +112,7 @@ draw_3d_blip:
         OR iBlipIcon = RADAR_SPRITE_GANG_N
         OR iBlipIcon = RADAR_SPRITE_IMPOUND
         OR iBlipIcon = RADAR_SPRITE_DATE_DISCO
-        //OR iBlipIcon = RADAR_SPRITE_CASH
+        OR iBlipIcon = RADAR_SPRITE_FIRE
             iTempVar = iPoolStart + 8      //float fPosX; // 8
             READ_MEMORY iTempVar 4 FALSE (x)
             iTempVar = iPoolStart + 12      //float fPosY; // 12
