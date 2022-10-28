@@ -281,8 +281,8 @@ get_power_max_time:
             cool_down_time = 100000  //1:00
             BREAK  
         CASE king_of_the_ring   //id:16
-            max_time = 120000    //1:20
-            cool_down_time = 100000  //1:00
+            max_time = 65000    //1:05
+            cool_down_time = 120000  //2:00
             BREAK                                
     ENDSWITCH
 RETURN
