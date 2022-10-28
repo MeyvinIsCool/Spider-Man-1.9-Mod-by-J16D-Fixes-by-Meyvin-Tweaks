@@ -40,7 +40,7 @@ WHILE 8000 > timera
    WAIT 0
 ENDWHILE
 //Yellow waypoing - Main Mission
-ADD_SPRITE_BLIP_FOR_COORD (-1904.5178 1042.2417 68.0078) RADAR_SPRITE_GANG_B (iEventBlip) //RADAR_SPRITE_WAYPOINT
+ADD_SPRITE_BLIP_FOR_COORD (-1904.5178 1042.2417 68.0078) RADAR_SPRITE_WAYPOINT (iEventBlip) 
 WAIT 500
 
 main_loop:
@@ -74,7 +74,7 @@ main_loop:
                 WAIT 3000
                 GOSUB readVars
                 IF toggleSpiderMod = 1
-                    ADD_SPRITE_BLIP_FOR_COORD (-1904.5178 1042.2417 68.0078) RADAR_SPRITE_GANG_B (iEventBlip) //RADAR_SPRITE_WAYPOINT
+                    ADD_SPRITE_BLIP_FOR_COORD (-1904.5178 1042.2417 68.0078) RADAR_SPRITE_WAYPOINT (iEventBlip) //RADAR_SPRITE_WAYPOINT
                     WAIT 500
                 ELSE
                     WAIT 500
