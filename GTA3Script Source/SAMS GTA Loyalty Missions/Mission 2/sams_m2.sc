@@ -1,6 +1,6 @@
 // by J16D
 // in Colaboration with GTA Loyalty
-// SAMS: Remastered | Misi�n #2 - Cazando Felinos
+// SAMS: Remastered | Mission #2 - Cazando Felinos
 // Spider-Man Mod for GTA SA c.2018 - 2021
 // Original Shine GUI by Junior_Djjr
 // Official Page: https://forum.mixmods.com.br/f16-utilidades/t694-shine-gui-crie-interfaces-personalizadas
@@ -16,7 +16,7 @@ MISSION_START
 MISSION_END
 
 {
-//Constans
+//Constant
 CONST_INT player 0
 
 // Variables for mission
@@ -965,8 +965,8 @@ create_enemys_phase1:
 		SET_FOLLOW_NODE_THRESHOLD_DISTANCE iEnemy[5] 15.0     //Sets the range within which the char responds to events
 		SET_INFORM_RESPECTED_FRIENDS iEnemy[5] 15.0 2     //gossip
 RETURN
-
-enemys_killed:
+	
+	enemys_killed:
 	IF flag_enemy1_killed = FALSE
 		IF IS_CHAR_DEAD iEnemy[0]
 			MARK_CHAR_AS_NO_LONGER_NEEDED iEnemy[0]
