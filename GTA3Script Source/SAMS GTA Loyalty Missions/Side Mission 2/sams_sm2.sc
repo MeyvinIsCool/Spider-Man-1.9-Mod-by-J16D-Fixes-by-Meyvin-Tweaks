@@ -91,7 +91,7 @@ CAMERA_SET_VECTOR_MOVE (-1918.9305 1040.1719 68.0078) (-1895.1395 1064.4817 134.
 CAMERA_SET_VECTOR_TRACK (-1918.9305 1040.1719 68.0078) (-1895.1395 1064.4817 134.0078) 13000 0
 
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prtb.cs"
-	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 0 21 22 //{id} {mission_id} {text1_id} {text2_id}
+	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 1 21 22 //{id} {mission_id} {text1_id} {text2_id}
 ENDIF
 GET_CURRENT_WEATHER iWeather
 
@@ -136,7 +136,7 @@ WAIT 100
 flag_player_hit_counter = 1
 SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter       // 0:OFF || 1:ON
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prtb.cs"
-	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 0 21 22 //{id} {mission_id} {text1_id} {text2_id}
+	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 1 21 22 //{id} {mission_id} {text1_id} {text2_id}
 ENDIF
 WAIT 50
 CREATE_CHECKPOINT 3 (-1831.844 1045.885 113.2112) (0.0 0.0 0.0) (3.0) iCheckpoint
@@ -214,7 +214,7 @@ mission_part1:
 
 		PRINT_NOW JDSM30 3500 1      
         IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prtb.cs"
-	        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 0 21 23 //{id} {mission_id} {text1_id} {text2_id}
+	        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 1 21 23 //{id} {mission_id} {text1_id} {text2_id}
         ENDIF           
         flag_player_hit_counter = 1
         SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter       // 0:OFF || 1:ON          
@@ -1065,7 +1065,7 @@ IF DOES_OBJECT_EXIST iObj[1]
     DELETE_OBJECT iObj[1]
 ENDIF
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prtb.cs"
-	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 0 21 24 //{id} {mission_id} {text1_id} {text2_id}
+	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 1 21 24 //{id} {mission_id} {text1_id} {text2_id}
 ENDIF  
 ADD_SPRITE_BLIP_FOR_COORD (351.3243 162.0824 1025.789) RADAR_SPRITE_WAYPOINT (iEventBlip)     
 iTempVar1 = 1	// 0:combat end sfx || 1:blip sfx
@@ -1396,7 +1396,7 @@ mission_part2_C:
             SET_RELATIONSHIP (4) (24) (0) 
 
             IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prtb.cs"
-    	        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 0 21 25 //{id} {mission_id} {text1_id} {text2_id}
+    	        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 1 21 25 //{id} {mission_id} {text1_id} {text2_id}
             ENDIF  
 
             IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\sams\paya11.mp3" (sfx2) 
