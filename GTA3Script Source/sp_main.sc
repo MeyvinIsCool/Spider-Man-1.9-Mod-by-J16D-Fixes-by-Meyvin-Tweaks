@@ -123,10 +123,6 @@ ENDIF
     // Pizza Time Mission
     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_pizza.cs"
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_pizza.cs"     // Pizza Time Mission (Only If The Mission Is Installed !)
-    ENDIF   
-    // Electro Mission Test
-    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\m_elec.cs"
-        STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_elec.cs"     // Pizza Time Mission (Only If The Mission Is Installed !)
     ENDIF          
 
 //-+-- Start Internal Threads
