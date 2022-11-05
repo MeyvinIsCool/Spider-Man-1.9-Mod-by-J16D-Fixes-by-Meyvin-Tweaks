@@ -1,7 +1,7 @@
 // by J16D
 // Spider-Man Mod for GTA SA c.2022
 // ScrewBall Challenge Start
-// Re-made Script by MeyvinIsCool - GTA3Script
+// Re-made Script by Meyvin Tweaks - GTA3Script
 // Original Shine GUI by Junior_Djjr
 // Official Page: https://forum.mixmods.com.br/f16-utilidades/t694-shine-gui-crie-interfaces-personalizadas
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo

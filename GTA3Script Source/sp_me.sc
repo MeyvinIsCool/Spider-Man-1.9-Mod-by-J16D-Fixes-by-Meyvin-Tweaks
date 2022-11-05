@@ -1,7 +1,7 @@
 // by J16D
 // Melee Combo X4 | Air Combo x4 | Swing kick
-// Fixes by MeyvinIsCool
-// Spider-Man Mod for GTA SA c.2018 - 2021
+// Fixes by Meyvin Tweaks
+// Spider-Man Mod for GTA SA c.2018 - 2022
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------

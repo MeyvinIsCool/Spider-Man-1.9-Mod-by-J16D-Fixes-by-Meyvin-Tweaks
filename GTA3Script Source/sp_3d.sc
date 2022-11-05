@@ -1,6 +1,6 @@
 // by J16D
 // 3D for Blips used in this mod
-// Spider-Man Mod for GTA SA c.2018 - 2021
+// Spider-Man Mod for GTA SA c.2018 - 2022
 // Documentation:
 // https://gtaforums.com/topic/871359-blipmarker-struct/
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo

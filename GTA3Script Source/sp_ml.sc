@@ -1,8 +1,8 @@
 // by J16D
 // Web zip (air / lamp / object) (This includes an experimental code for web-zip-Building, unavailable in v1.9 beta; code between: /* * */)
-// Spider-Man Mod for GTA SA c.2018 - 2021
+// Spider-Man Mod for GTA SA c.2018 - 2022
 // Original Shine GUI by Junior_Djjr
-// Fixes by MeyvinIsCool
+// Fixes by Meyvin Tweaks
 // Official Page: https://forum.mixmods.com.br/f16-utilidades/t694-shine-gui-crie-interfaces-personalizadas
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 

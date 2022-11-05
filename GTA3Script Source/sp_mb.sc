@@ -1,6 +1,7 @@
 // by J16D
 // On ground/jump script (Restored - Cinematic Jump)
-// Spider-Man Mod for GTA SA c.2018 - 2021
+// Spider-Man Mod for GTA SA c.2018 - 2022
+// Fixes by Meyvin Tweaks
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
@@ -15,10 +16,10 @@ WAIT 0
 WAIT 0
 WAIT 0
 LVAR_INT player_actor toggleSpiderMod
-LVAR_INT baseObject iWebActor iObjArms sfx
+LVAR_INT baseObject iWebActor fx_system sfx
 LVAR_INT taskJump randomVal iTempVar
 LVAR_FLOAT x y z fVelX fVelY fVelZ
-LVAR_FLOAT fCharSpeed fAmplitude fZAnglePlayerAir currentTime
+LVAR_FLOAT fCharSpeed fAmplitude fZAnglePlayerAir currentTime fRandomVal[1]
 
 GET_PLAYER_CHAR 0 player_actor
 SET_PLAYER_JUMP_BUTTON player FALSE
@@ -35,8 +36,9 @@ main_loop:
                     IF CLEO_CALL isActorInWater 0 player_actor
                         GOSUB resetCharInWater
                     ENDIF
+                    GET_CHAR_SPEED player_actor (fCharSpeed)     // check if the velocity is enough for Ground Crush          
                 ELSE
-                    //----------------------------------- if $player is on Ground
+                    //----------------------------------- if $player is on Ground                  
                     GOSUB reset_char_falling_ground
 
                     IF IS_BUTTON_PRESSED PAD1 CROSS  // ~k~~PED_SPRINT~
@@ -126,7 +128,26 @@ main_loop:
 
                     ENDIF
                 
-
+                    IF fCharSpeed > 55.8    // for Ground Crush 
+                        IF IS_CHAR_PLAYING_ANIM player_actor "fall_glide_A"
+                        OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_B"
+                        OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_C"
+                        OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_D"                         
+                            WAIT 1
+                            CLEAR_CHAR_TASKS player_actor
+                            WAIT 1
+                            randomVal = 2
+                            PRINT_FORMATTED_NOW "Done" 1111
+                            SWITCH randomVal
+                            CASE 2
+                                TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_C" "spider") 26.0 (0 1 1 0) -1
+                                WAIT 0
+                                SET_CHAR_ANIM_SPEED player_actor "fall_land_C" 1.0
+                                BREAK
+                            ENDSWITCH
+                            fCharSpeed = 0.0
+                        ENDIF
+                    ENDIF
                 ENDIF                
             
             ENDIF
@@ -345,7 +366,7 @@ resetCharInWater:
 RETURN
 
 TASK_PLAY_land:
-    IF  IS_BUTTON_PRESSED 0 CROSS   // ~k~~PED_SPRINT~
+    IF IS_BUTTON_PRESSED 0 CROSS   // ~k~~PED_SPRINT~
         TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_F" "spider") 1000.0 (0 1 1 0) -1
         WAIT 0
         SET_CHAR_ANIM_SPEED player_actor "fall_land_F" 1.35
@@ -365,16 +386,35 @@ TASK_PLAY_land:
                 SET_CHAR_ANIM_SPEED player_actor "fall_land_C" 2.0
                 BREAK
         ENDSWITCH
-        /*
-        GET_CHAR_SPEED player_actor (fCharSpeed)
-        IF fCharSpeed > 30.0
-            CLEO_CALL setSmokeFX 0 player_actor (0.0 0.0 -0.85) 30.0
+        
+        IF fCharSpeed > 55.8        // for Ground Crush 
+            IF IS_CHAR_PLAYING_ANIM player_actor "fall_glide_A"
+            OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_B"
+            OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_C"
+            OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_D"          
+                GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 0.0) (x y z)
+                GET_GROUND_Z_FOR_3D_COORD x y z (z)
+                z += 0.06
+                CREATE_FX_SYSTEM SP_GROUND_CRUSH (x y z) 4 (fx_system)                      
+                REMOVE_AUDIO_STREAM sfx
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ground_crush.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ground_crush.mp3" (sfx)
+                    SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
+                    SET_AUDIO_STREAM_STATE sfx 1    //play 
+                    //SET_AUDIO_STREAM_VOLUME sfx 1.0
+                    GET_AUDIO_SFX_VOLUME (fRandomVal[0])
+                    fRandomVal[0] *= 0.8
+                    SET_AUDIO_STREAM_VOLUME sfx fRandomVal[0]                 
+                ENDIF            
+                PLAY_AND_KILL_FX_SYSTEM fx_system  
+            ENDIF            
         ENDIF
-        */
+
     ENDIF
 RETURN
 
 playSFXSound:
+    SET_AUDIO_STREAM_STATE sfx 0    //stop
     REMOVE_AUDIO_STREAM sfx
     IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\web1_f.mp3" (sfx)
         SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor

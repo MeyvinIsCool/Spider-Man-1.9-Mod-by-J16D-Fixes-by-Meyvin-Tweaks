@@ -1,7 +1,7 @@
 // by Mr.Genos Cyborg
-// Spider-Man Mod for GTA SA c.2019
-// Pizza Time Mission With Fixes - MeyvinIsCool 
-// Remade Mission by MeyvinIsCool - GTA3Script
+// Spider-Man Mod for GTA SA c.2022
+// Pizza Time Mission With Fixes - Meyvin Tweaks
+// Remade Mission by Meyvin Tweaks - GTA3Script
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
