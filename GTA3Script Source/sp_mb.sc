@@ -128,7 +128,7 @@ main_loop:
 
                     ENDIF
                 
-                    IF fCharSpeed > 55.8    // for Ground Crush 
+                    IF fCharSpeed > 55.65    // for Ground Crush 
                         IF IS_CHAR_PLAYING_ANIM player_actor "fall_glide_A"
                         OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_B"
                         OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_C"
@@ -137,7 +137,6 @@ main_loop:
                             CLEAR_CHAR_TASKS player_actor
                             WAIT 1
                             randomVal = 2
-                            PRINT_FORMATTED_NOW "Done" 1111
                             SWITCH randomVal
                             CASE 2
                                 TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_C" "spider") 26.0 (0 1 1 0) -1
@@ -387,7 +386,7 @@ TASK_PLAY_land:
                 BREAK
         ENDSWITCH
         
-        IF fCharSpeed > 55.8        // for Ground Crush 
+        IF fCharSpeed > 55.65        // for Ground Crush 
             IF IS_CHAR_PLAYING_ANIM player_actor "fall_glide_A"
             OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_B"
             OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_C"
