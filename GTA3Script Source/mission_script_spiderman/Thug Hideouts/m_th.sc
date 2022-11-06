@@ -24,8 +24,9 @@ WAIT 0
 WAIT 0
 WAIT 0
 LVAR_INT player_actor toggleSpiderMod flag_player_on_mission isInMainMenu
-LVAR_INT iDecisionHate iBlip iEventBlip flag_player_hit_counter
+LVAR_INT iDecisionHate iBlip iEventBlip flag_player_hit_counter 
 LVAR_INT char_thug counter kills_counter iRandomVal iRandomVal2
+LVAR_INT crimealert
 LVAR_FLOAT fPedMass
 
 GET_PLAYER_CHAR 0 player_actor
@@ -97,6 +98,11 @@ GOSUB sub_Fade_500ms_and_Restore_Controls
 kills_counter = 0
 flag_player_hit_counter = 1
 SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON
+crimealert = 0
+SET_CLEO_SHARED_VAR varCrimeAlert crimealert
+WAIT 1
+crimealert = 1
+SET_CLEO_SHARED_VAR varCrimeAlert crimealert
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 803 808    //{id} {mission_id} {text1_id} {text2_id}
 ENDIF   
@@ -819,6 +825,8 @@ CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 
 CONST_INT varPowersProgress     35    //sp_po     || current power progress
 CONST_INT varHitCount           36    //sp_hit    || hitcounting
 CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting
+
+CONST_INT varCrimeAlert         39
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
