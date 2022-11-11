@@ -22,7 +22,7 @@ Things I Fixed And Added On This Mod :
 - Added Hit Counter (v2)
 - Added 3 New Suit Powers 
 - Added Only Side Mission #2 - No More Supplies (Thanks to GTA Loyalty) (Spanish Texts Available Inside The Addon Folder)
-- And MORE ....
+- Added New Drug Deal Crime Mission
 
 I Had So Much Fun Time Making These Fixes And Also Thanks To These People Who Helped Me A Lot !
 
