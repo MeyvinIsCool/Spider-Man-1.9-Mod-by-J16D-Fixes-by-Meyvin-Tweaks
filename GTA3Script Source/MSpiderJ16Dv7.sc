@@ -29,6 +29,7 @@ CONST_INT varCarChaseProgress   14    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varScrewBallProgress  15    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varBackpacksProgress  16    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varLandmarksProgress  17    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varDrugDealProgress   18    //for stadistics ||MSpiderJ16Dv7
 
 CONST_INT varAlternativeSwing   20    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varSwingBuilding      21    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
@@ -136,6 +137,8 @@ READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_cchase" (iT
 SET_CLEO_SHARED_VAR varCarChaseProgress iTempVar
 READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_screwb" (iTempVar)
 SET_CLEO_SHARED_VAR varScrewBallProgress iTempVar
+READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_drdeal" (iTempVar)
+SET_CLEO_SHARED_VAR varDrugDealProgress iTempVar
 READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_bpacks" (iTempVar)
 SET_CLEO_SHARED_VAR varBackpacksProgress iTempVar
 READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_lmarks" (iTempVar)
@@ -6005,7 +6008,7 @@ ProcessGame_and_DrawItems_STATISTICS:
 
     yCoord = 85.0
     iRow = 503
-    WHILE 508 >= iRow
+    WHILE 509 >= iRow
         CLEO_CALL GUI_DrawBoxOutline_WithText 0 (127.5 yCoord) (145.0 20.0) (0 0 0 190) (0.5) (1 0 1 0) (225 225 225 30) iRow 5 (0.0 0.0)   //text
         SWITCH iRow
             CASE 503
@@ -6021,14 +6024,17 @@ ProcessGame_and_DrawItems_STATISTICS:
                 GET_CLEO_SHARED_VAR varScrewBallProgress (iTempVar)
                 BREAK
             CASE 507
-                GET_CLEO_SHARED_VAR varBackpacksProgress (iTempVar)
-                BREAK
+                GET_CLEO_SHARED_VAR varDrugDealProgress (iTempVar)
+                BREAK              
             CASE 508
+                GET_CLEO_SHARED_VAR varBackpacksProgress (iTempVar)
+                BREAK            
+            CASE 509
                 GET_CLEO_SHARED_VAR varLandmarksProgress (iTempVar)
-                BREAK
+                BREAK           
         ENDSWITCH
         CLEO_CALL GUI_DrawBoxOutline_WithText 0 (272.5 yCoord) (145.0 20.0) (0 0 0 190) (0.5) (1 0 1 0) (225 225 225 30) -1 5 (0.0 0.0) // lines sides
-        IF iRow > 506
+        IF iRow > 507
             CLEO_CALL GUI_DrawBox_WithNumber 0 (272.5 yCoord) (145.0 20.0) (0 0 0 0) 126 5 (0.0 -3.0) iTempVar  //~1~ / 10
         ELSE
             IF iRow = 503
