@@ -266,7 +266,7 @@ mission_failed:
         WAIT 2000
     ENDIF
     USE_TEXT_COMMANDS FALSE
-GOTO delay_befor_restart
+GOTO delay_before_restart
 
 mission_passed:
     GOSUB clear_all_mission_files
@@ -285,9 +285,9 @@ mission_passed:
     CLAMP_INT randomVal 0 50 (randomVal)    //50 Max
     SET_CLEO_SHARED_VAR varCrimesProgress randomVal
     WRITE_INT_TO_INI_FILE randomVal "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_crimin"
-GOTO delay_befor_restart
+GOTO delay_before_restart
 
-delay_befor_restart:
+delay_before_restart:
     flag_player_on_mission = 0
     SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
 
@@ -1293,8 +1293,6 @@ CONST_INT varIdWebWeapon        32    //sp_mm     || 1-8 weap
 CONST_INT varWeapAmmo           33    //sp_wep    ||store current weap ammo
 CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 - 12
 CONST_INT varPowersProgress     35    //sp_po     || current power progress
-
-
 
 CONST_INT varCrimeAlert         39
 
