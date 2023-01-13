@@ -67,7 +67,7 @@ J16D103 Control Swing with Mouse
 J16D104 Auto Aim
 J16D105 Drive Vehicles
 J16D106 Friendly Neighborhood
-J16D107 Throw Vehicle Doors
+J16D107 Throw Objects
 
 J16D109 HUD ELEMENTS
 J16D110 SPIDERMAN MOD
@@ -228,7 +228,7 @@ J16D335 When turned ON, press Aim Button ~n~to auto-aim peds. ~n~Default: Off
 J16D336 When turned ON, Spider-Man will ~n~be able to drive vehicles. ~n~~r~Warning! ~s~This may cause bugs because ~n~incompatibility with Web-Strike. ~n~Default: Off
 J16D337 When turned ON, Spider-Man will ~n~be ignored by police.
 J16D338 Hold ~k~~PED_CYCLE_WEAPON_LEFT~ + ~k~~PED_CYCLE_WEAPON_RIGHT~ besides a ~n~vehicle to catch and throw Door. ~n~~r~Warning! ~s~This is a ~r~BETA ~s~feature ~n~and may not work correctly, ~n~use it by your own risk.
-J16D339 Hold ~h~Q ~s~+ ~h~E besides a vehicle ~n~to catch and throw Door. ~n~Default: Off
+J16D339 Press ~h~Q besides an object or a vehicle ~n~to catch and throw them. ~n~Default: Off
 
 J16D400 No Power Selected
 J16D401 Web Blossom
@@ -246,6 +246,7 @@ J16D412 Spirit Fire
 J16D413 Quips
 J16D414 Equalizer
 J16D415 Quad Damage
+J16D416 King Of The Ring
 
 J16D420 -
 J16D421 Leap into the air and web everythin ~n~in sight.
@@ -263,6 +264,7 @@ J16D432 Channels unstable waves of damaging ~n~ethereal energy from ... somewher
 J16D433 Insult your enemy's pride
 J16D434 Everyone goes down in one hit, including you
 J16D435 Assistive nano-musculature temporarily deals ~n~MASSIVE damage
+J16D436 Web Throw your enemies instead of ~n~Webbing Them
 
 J16D440 ~1~ m
 
@@ -297,8 +299,9 @@ J16D503 Crimes
 J16D504 Thug Hideouts
 J16D505 Car Chase
 J16D506 Screwball Challenges
-J16D507 Backpacks
-J16D508 Landmarks
+J16D507 Drug Deal
+J16D508 Backpacks
+J16D509 Landmarks
 
 J16D521 ~k~~PED_CYCLE_WEAPON_LEFT~
 J16D522 ~h~Q
@@ -401,6 +404,7 @@ J16D785 ???????
 J16D801 Stolen Vehicle
 J16D802 Street Crimes
 J16D803 Thug Hideout
+J16D804 Drug Deal
 J16D808 Defeat The Thugs !
 
 SP650 ~k~~VEHICLE_ENTER_EXIT~ ~s~Web Backpack
