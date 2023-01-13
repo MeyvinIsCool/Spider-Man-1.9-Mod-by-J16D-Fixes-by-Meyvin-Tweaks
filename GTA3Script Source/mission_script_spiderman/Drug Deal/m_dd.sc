@@ -27,12 +27,12 @@ SCRIPT_START
 SCRIPT_NAME m_dd
 WAIT 0
 LVAR_FLOAT xIn yIn zIn  // xVar yVar zVar  // in
-LVAR_INT player_actor iDM iChar iBlip iEventBlip toggleSpiderMod isInMainMenu flag_player_on_mission
-LVAR_INT randomVal iCounter iTempVar iTempVar2 timer_temp
+LVAR_INT player_actor iDM iChar iBlip toggleSpiderMod isInMainMenu flag_player_on_mission
+LVAR_INT randomVal iCounter iTempVar iTempVar2
 LVAR_INT max_wave number_of_members kill_counter iTotalKills
 LVAR_FLOAT x[3] y[3] z[3] fPedMass
 LVAR_INT is_random_event_available 
-LVAR_INT obj
+LVAR_INT obj iCoordFx
 
 GET_PLAYER_CHAR 0 player_actor
 
@@ -80,10 +80,9 @@ IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 804 808    //{id} {mission_id} {text1_id} {text2_id}
 ENDIF    
 
-zIn += 0.6
+zIn += 0.65
 CREATE_OBJECT_NO_OFFSET 2919 xIn yIn zIn (obj)  //kmb_holdall
-SET_OBJECT_SCALE obj 0.6
-
+SET_OBJECT_SCALE obj 0.55
 SET_OBJECT_DYNAMIC obj TRUE
 timera = 0
 
@@ -118,6 +117,11 @@ main_loop:
                 IF max_wave >= 1
                     GOTO mission_passed
                 ENDIF
+            ENDIF
+
+            IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor xIn yIn zIn 8.0
+                CREATE_FX_SYSTEM SP_CC (xIn yIn zIn) 4 (iCoordFx)
+                PLAY_AND_KILL_FX_SYSTEM iCoordFx
             ENDIF
 
             IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor (xIn yIn zIn) 150.0   //center of stage
