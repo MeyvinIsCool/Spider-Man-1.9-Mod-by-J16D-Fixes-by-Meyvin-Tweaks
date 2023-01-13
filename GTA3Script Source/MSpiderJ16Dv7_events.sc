@@ -4,13 +4,14 @@
 //   -Backpack  (m_bp.cs)
 //   -Thug Hideouts (m_th.cs)
 //   -Street Crimes (m_w.cs)
+//   -Car chase (m_dd.cs)
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
-CONST_INT time_update 30000 //ms   
+CONST_INT time_update 30000//ms   
 CONST_INT time_delay 60000  //ms    
 CONST_INT time_delay_after_mission 20000 //ms
-CONST_INT time_mission_randomize 18000 //ms 
+CONST_INT time_mission_randomize 5000 //ms 
 
 SCRIPT_START
 {
@@ -71,11 +72,13 @@ main_loop:
             IF toggleSpiderMod = 1  //TRUE
                 IF isInMainMenu = 0     //1:true 0: false
 
-                    IF timerb >= time_mission_randomize
-                    AND NOT GOSUB car_chase_event
-                    AND NOT GOSUB drug_deal_event
-                        GENERATE_RANDOM_INT_IN_RANGE 1 3 iRandomMission
-                        timerb = 0
+                    IF NOT GOSUB car_chase_event
+                    AND NOT GOSUB drug_deal_event                    
+                        IF timerb >= time_mission_randomize
+                        AND flag_player_on_mission = 0                    
+                            GENERATE_RANDOM_INT_IN_RANGE 1 3 iRandomMission
+                            timerb = 0
+                        ENDIF
                     ELSE
                         timerb = 0
                     ENDIF
@@ -92,6 +95,7 @@ main_loop:
                     ENDIF
 
                     //PRINT_FORMATTED_NOW "Mission Value : %i" 1000 iRandomMission    //debug
+
                 ENDIF
             ELSE
                 GET_AUDIO_STREAM_STATE iSfx[0] (iTempVar)
@@ -249,7 +253,7 @@ drug_deal_event:
 
                     GOSUB readVars
                     IF flag_player_on_mission = 0   //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
-                        IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 60.0   //10.0
+                        IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 50.0   //10.0
                             IF DOES_BLIP_EXIST iEventBlip
                                 REMOVE_BLIP iEventBlip
                             ENDIF

@@ -82,7 +82,7 @@ LVAR_INT sideSwing  // 0:center || 1:left || 2:right
 LVAR_INT baseObject baseObjectR iWebActor iWebActorR
 LVAR_INT LRStick UDStick
 LVAR_FLOAT fProgress ftimera
-LVAR_FLOAT fMaxSwingPeriod x y z fVelX fVelY fVelZ
+LVAR_FLOAT fMaxSwingPeriod x y z fVelY fVelZ
 LVAR_FLOAT fLongitude fCharSpeed fAmplitude
 LVAR_FLOAT fSyncMaxAngle fSyncMinAngle fSyncAngle
 LVAR_FLOAT fXAnglePlayerAir fZAnglePlayerAir
@@ -1105,7 +1105,7 @@ createWeb_Wall:
         SET_OBJECT_RECORDS_COLLISIONS baseObject FALSE
         SET_OBJECT_SCALE baseObject 0.01
         SET_OBJECT_PROOFS baseObject (1 1 1 1 1)
-        CREATE_OBJECT 1598 0.0 0.0 0.0 baseObjectR
+        CREATE_OBJECT_NO_SAVE 1598 0.0 0.0 0.0 FALSE FALSE (baseObjectR) 
     	SET_OBJECT_PROOFS baseObjectR 1 1 1 1 1
 	    SET_OBJECT_COLLISION baseObjectR 0
 	    SET_OBJECT_SCALE baseObjectR 0.01
@@ -2295,8 +2295,8 @@ spideyFrontWall:
             ENDIF
         ENDIF
 
-        // Web Zip While Wall Running (COMPLETED) - Scripted By MeyvinIsCool
-        IF NOT CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 15.0) (1 0 0 0 0)
+        // Web Zip While Wall Running (COMPLETED BETA) - Scripted By MeyvinIsCool
+        IF CLEO_CALL isClearInSightWall 0 player_actor (0.0 2.5 7.5) (1 0 0 0 0)
             IF NOT IS_CHAR_PLAYING_ANIM player_actor "zip_point_wall_run_up"
             AND IS_BUTTON_PRESSED PAD1 CROSS
             AND IS_BUTTON_JUST_PRESSED PAD1 CIRCLE // ~k~~PED_FIREWEAPON~
@@ -2311,16 +2311,18 @@ spideyFrontWall:
                 TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("w_front_veh" "mweb") 57.0 (0 1 1 1) -1
                 TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("w_front_veh" "mweb") 57.0 (0 1 1 1) -1
                 WAIT 0
-                SET_CHAR_ANIM_SPEED iWebActor "w_front_veh" 2.35      
-                SET_CHAR_ANIM_SPEED iWebActorR "w_front_veh" 2.35    
+                SET_CHAR_ANIM_SPEED iWebActor "w_front_veh" 2.55      
+                SET_CHAR_ANIM_SPEED iWebActorR "w_front_veh" 2.55    
                 GOSUB playWebSound
                 timera = 0
                 WHILE 500 > timera
-                    CLEO_CALL addForceToChar 0 player_actor 0.0 -2.0 1.2 10.0
+                    CLEO_CALL addForceToChar 0 player_actor 0.0 -1.2 1.2 10.0
                     IF DOES_OBJECT_EXIST baseObject
                     AND DOES_OBJECT_EXIST baseObjectR
-                        ATTACH_OBJECT_TO_CHAR baseObject player_actor (-0.75 4.5 6.7) (75.0 0.0 0.0)
-                        ATTACH_OBJECT_TO_CHAR baseObjectR player_actor (0.3 4.5 6.7) (75.0 0.0 0.0)
+                        //ATTACH_OBJECT_TO_CHAR baseObject player_actor (-0.75 4.5 6.7) (75.0 0.0 0.0)
+                        //ATTACH_OBJECT_TO_CHAR baseObjectR player_actor (0.3 4.5 6.7) (75.0 0.0 0.0)
+                        ATTACH_OBJECT_TO_CHAR baseObject player_actor (-0.6 4.5 6.2) (75.0 0.0 0.0)
+                        ATTACH_OBJECT_TO_CHAR baseObjectR player_actor (0.22 4.5 6.2) (75.0 0.0 0.0)                        
                     ENDIF                                    
                     WAIT 0
                 ENDWHILE

@@ -10,14 +10,15 @@
 INCLUDED:
     ID:1  ||SUIT POWER READY
     ID:2  ||CAR CHASE MISSION PASSED
-    ID:3  ||CAR CHASE MISSION FAIL
+    ID:3  ||MISSION FAILED
     ID:4  ||BACK PACK FOUND
     ID:5  ||THUG HIDOUTS MISSION PASSED
     ID:6  ||STREET CRIMES MISSION PASSED
     ID:7  ||PIZZA TIME MISSION PASSED
     ID:8  ||MISSION ALERT
     ID:9  ||CRIME ALERT
-    ID:10  ||ELECTRO BOSS MISSION PASSED
+    ID:10 ||ELECTRO BOSS MISSION PASSED (UNUSED)
+    ID:11 ||DRUG DEAL MISSION PASSED 
 FORMAT:
     ID:1
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id}
@@ -36,7 +37,11 @@ FORMAT:
     ID:8
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {mission id} {text1_id} {text2_id}   
     ID:9
-        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {mission id} {text1_id} {text2_id}                          
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {mission id} {text1_id} {text2_id}  
+    ID:10                       
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {mission id} {text1_id} {text2_id}
+    ID:11                       
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {mission id} {text1_id} {text2_id}        
 
 */
 
@@ -307,7 +312,7 @@ SWITCH idVar
             WAIT 0
         ENDWHILE                
         BREAK 
-    CASE 10  //ID:10  ||ELECTRO BOSS FIGHT MISSION PASSED
+    CASE 10  //ID:10  ||ELECTRO BOSS FIGHT MISSION PASSED   (UNUSED)
         // IN: {id} {total xp} {mission xp} {combat xp}
         GOSUB play_sfx_mission_end
         GOSUB load_textures_street_crimes
@@ -333,7 +338,34 @@ SWITCH idVar
             ENDIF
             WAIT 0
         ENDWHILE
-        BREAK                        
+        BREAK  
+    CASE 11  //ID:11  ||DRUG DEAL MISSION PASSED
+        // IN: {id} {total xp} {mission xp} {extra time xp}
+        GOSUB play_sfx_mission_end
+        GOSUB load_textures_street_crimes
+        timera = 0
+        WHILE TRUE
+            GOSUB draw_drug_deal_mission_succesful
+            GOSUB draw_street_crimes_key_press_succesful
+            IF timera > 2000
+                IF IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+                    WHILE IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+                        WAIT 0
+                    ENDWHILE
+                    BREAK
+                ENDIF
+            ENDIF
+            IF timera > 6000   //6 sec
+                BREAK
+            ENDIF
+            GOSUB readVars
+            IF isInMainMenu = 1     //1:true 0: false
+            OR toggleSpiderMod = 0
+                BREAK
+            ENDIF
+            WAIT 0
+        ENDWHILE
+        BREAK                                  
     DEFAULT
         BREAK
 ENDSWITCH
@@ -851,7 +883,7 @@ draw_pizza_time_mission_succesful:
     SET_SPRITES_DRAW_BEFORE_FADE FALSE
     DRAW_SPRITE idMapIcon5 (21.0 110.0) (sx sy) (255 255 255 235)
 
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (52.5 105.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 811 18 0.0 0.0  // Crimes
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (52.5 105.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 811 18 0.0 0.0  // Pizza Time 
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (115.5 105.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 487 20 0.0 0.0 // COMPLETED!
 
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (79.0 115.0) (120.0 20.0) (255 255 255 0) (0.75) (0 0 1 0) (255 255 255 250) -1 -1 0.0 0.0  //SIDES_LINES division
@@ -985,6 +1017,42 @@ draw_crime_mission_labels:
     py = 127.5
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (px py) (sx sy) (0 0 0 0) (1.0) (0 0 0 0) (255 255 253 230) iTempVar4 15 -30.0 0.0
     USE_TEXT_COMMANDS FALSE
+RETURN
+
+//-+----------------------------------- DRUG DEAL
+draw_drug_deal_mission_succesful:
+    //iTempVar2     // Total XP
+    //iTempVar3     // Mission completed XP
+    //iTempVar4     // Extra Time XP
+    GET_FIXED_XY_ASPECT_RATIO 25.0 25.0 (sx sy)
+    USE_TEXT_COMMANDS FALSE
+    SET_SPRITES_DRAW_BEFORE_FADE FALSE
+    DRAW_SPRITE idMapIcon5 (21.0 110.0) (sx sy) (255 255 255 235)
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (52.5 105.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 804 18 0.0 0.0  // Drug Deal
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (115.5 105.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 487 20 0.0 0.0 // COMPLETED!
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (79.0 115.0) (120.0 20.0) (255 255 255 0) (0.75) (0 0 1 0) (255 255 255 250) -1 -1 0.0 0.0  //SIDES_LINES division
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (115.0 135.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 473 1 0.0 0.0 //  XP SUMMARY
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 145.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 170 19 0.0 0.0  // Side Missions
+    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 146.0) (50.0 15.0) (255 255 255 0) 122 19 0.0 0.0 iTempVar3  //+~1~
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 165.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 471 19 0.0 0.0  // Combat
+    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 166.0) (50.0 15.0) (255 255 255 0) 122 19 0.0 0.0 iTempVar4    //+~1~
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (79.0 180.0) (120.0 20.0) (255 255 255 0) (0.75) (0 0 1 0) (255 255 255 250) -1 -1 0.0 0.0  //SIDES_LINES division
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 197.5) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 472 20 0.0 0.0  // TOTAL XP EARNED
+    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 195.0) (50.0 15.0) (255 255 255 0) 121 21 0.0 0.0 iTempVar2    //~1~
+
+    //GET_FIXED_XY_ASPECT_RATIO 250.0 180.0 (sx sy)
+    sx = 187.50
+    sy = 168.00
+    USE_TEXT_COMMANDS FALSE
+    SET_SPRITES_DRAW_BEFORE_FADE TRUE
+    DRAW_SPRITE tPBBackInfo (79.0 165.0) (sx sy) (255 255 255 235)
 RETURN
 //-+-----------------------------------
 

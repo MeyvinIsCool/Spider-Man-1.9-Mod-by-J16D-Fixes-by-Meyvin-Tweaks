@@ -293,6 +293,25 @@ CLEO_RETURN 0 fValue
 }
 //---------------------------------------------------------
 
+//-+--------------- NEW FUNCTIONS ------------------------
+{
+//CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -2.0) (/*solid*/ 1 /*car*/ 1 /*actor*/ 0 /*obj*/ 1 /*particle*/ 0)
+isClearInSightWall:
+    LVAR_INT tempPlayer
+    LVAR_FLOAT x y z
+    LVAR_INT isSolid isCar isActor isObject isParticle
+    LVAR_FLOAT xA yA zA xB yB zB 
+    GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS tempPlayer x y z (xA yA zA)
+    GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS tempPlayer 0.0 0.3 6.5 (xB yB zB)
+    IF NOT IS_LINE_OF_SIGHT_CLEAR xB yB zB xA yA zA (isSolid isCar isActor isObject isParticle)
+        RETURN_TRUE
+    ELSE
+        RETURN_FALSE
+    ENDIF
+CLEO_RETURN 0
+}
+//---------------------------------------------------------
+
 //-+------------------------ GET ------------------------
 {
 /*

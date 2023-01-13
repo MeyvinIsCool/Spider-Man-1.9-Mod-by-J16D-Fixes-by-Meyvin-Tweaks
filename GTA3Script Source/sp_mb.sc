@@ -36,7 +36,14 @@ main_loop:
                     IF CLEO_CALL isActorInWater 0 player_actor
                         GOSUB resetCharInWater
                     ENDIF
-                    GET_CHAR_SPEED player_actor (fCharSpeed)     // check if the velocity is enough for Ground Crush          
+                    GET_CHAR_SPEED player_actor (fCharSpeed)     // check if the velocity is enough for Ground Crush      
+
+                    IF IS_CHAR_REALLY_IN_AIR player_actor
+                        SET_CHAR_PROOFS player_actor FALSE FALSE FALSE TRUE FALSE    
+                    ELSE
+                        SET_CHAR_PROOFS player_actor FALSE FALSE FALSE FALSE FALSE
+                    ENDIF                                       
+
                 ELSE
                     //----------------------------------- if $player is on Ground                  
                     GOSUB reset_char_falling_ground
@@ -127,26 +134,17 @@ main_loop:
                         ENDIF
 
                     ENDIF
-                
-                    IF fCharSpeed > 55.65    // for Ground Crush 
-                        IF IS_CHAR_PLAYING_ANIM player_actor "fall_glide_A"
-                        OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_B"
-                        OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_C"
-                        OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_D"                         
-                            WAIT 1
-                            CLEAR_CHAR_TASKS player_actor
-                            WAIT 1
-                            randomVal = 2
-                            SWITCH randomVal
-                            CASE 2
-                                TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_C" "spider") 26.0 (0 1 1 0) -1
-                                WAIT 0
-                                SET_CHAR_ANIM_SPEED player_actor "fall_land_C" 1.0
-                                BREAK
-                            ENDSWITCH
+
+                    IF IS_CHAR_PLAYING_ANIM player_actor "fall_glide_A"
+                    OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_B"
+                    OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_C"
+                    OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_D"     
+                        IF fCharSpeed > 56.5    // for Ground Crush    
+                            WAIT 0
                             fCharSpeed = 0.0
                         ENDIF
-                    ENDIF
+                    ENDIF                    
+
                 ENDIF                
             
             ENDIF
@@ -365,10 +363,28 @@ resetCharInWater:
 RETURN
 
 TASK_PLAY_land:
-    IF IS_BUTTON_PRESSED 0 CROSS   // ~k~~PED_SPRINT~
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_F" "spider") 1000.0 (0 1 1 0) -1
+    //IF IS_BUTTON_PRESSED 0 CROSS   // ~k~~PED_SPRINT~
+    IF fCharSpeed > 56.5        // for Ground Crush 
+        TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_D" "spider") 28.0 (0 1 1 0) -1
         WAIT 0
-        SET_CHAR_ANIM_SPEED player_actor "fall_land_F" 1.35
+        SET_CHAR_ANIM_SPEED player_actor "fall_land_D" 0.65   
+        IF IS_CHAR_PLAYING_ANIM player_actor "fall_land_D"     
+            GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 0.0) (x y z)
+            GET_GROUND_Z_FOR_3D_COORD x y z (z)
+            z += 0.06
+            CREATE_FX_SYSTEM SP_GROUND_CRUSH (x y z) 4 (fx_system)                      
+            REMOVE_AUDIO_STREAM sfx
+            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ground_crush.mp3"
+                LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ground_crush.mp3" (sfx)
+                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
+                SET_AUDIO_STREAM_STATE sfx 1    //play 
+                //SET_AUDIO_STREAM_VOLUME sfx 1.0
+                GET_AUDIO_SFX_VOLUME (fRandomVal[0])
+                fRandomVal[0] *= 0.8
+                SET_AUDIO_STREAM_VOLUME sfx fRandomVal[0]                 
+            ENDIF            
+            PLAY_AND_KILL_FX_SYSTEM fx_system  
+        ENDIF            
     ELSE
         SWITCH randomVal
             CASE 0
@@ -385,30 +401,6 @@ TASK_PLAY_land:
                 SET_CHAR_ANIM_SPEED player_actor "fall_land_C" 2.0
                 BREAK
         ENDSWITCH
-        
-        IF fCharSpeed > 55.65        // for Ground Crush 
-            IF IS_CHAR_PLAYING_ANIM player_actor "fall_glide_A"
-            OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_B"
-            OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_C"
-            OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_D"          
-                GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 0.0) (x y z)
-                GET_GROUND_Z_FOR_3D_COORD x y z (z)
-                z += 0.06
-                CREATE_FX_SYSTEM SP_GROUND_CRUSH (x y z) 4 (fx_system)                      
-                REMOVE_AUDIO_STREAM sfx
-                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ground_crush.mp3"
-                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ground_crush.mp3" (sfx)
-                    SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                    SET_AUDIO_STREAM_STATE sfx 1    //play 
-                    //SET_AUDIO_STREAM_VOLUME sfx 1.0
-                    GET_AUDIO_SFX_VOLUME (fRandomVal[0])
-                    fRandomVal[0] *= 0.8
-                    SET_AUDIO_STREAM_VOLUME sfx fRandomVal[0]                 
-                ENDIF            
-                PLAY_AND_KILL_FX_SYSTEM fx_system  
-            ENDIF            
-        ENDIF
-
     ENDIF
 RETURN
 
