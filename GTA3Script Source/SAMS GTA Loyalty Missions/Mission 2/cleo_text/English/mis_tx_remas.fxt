@@ -37,6 +37,7 @@ DLS26 ~z~~b~~h~MJ:~w~ It can be the Maggia, you know
 DLS27 ~z~~b~~h~Spider-Man:~w~ Yeah, If it's them, you owe me two ice creams.
 DLS28 ~z~~b~~h~MJ:~w~ That if we can date sometime.
 
+
 DLS29 ~z~~b~~h~Spider-Man:~w~ Well, she's really pissed off.
 
 MF1 ~r~One of the survivors died!
@@ -83,7 +84,7 @@ CF4 ~z~~b~~h~MJ:~w~ If they are working together, ~n~she must use one of their h
 CF5 ~z~~b~~h~MJ:~w~ And well, Maggia has all the ~n~locations of its hideouts by GPS.
 CF6 ~z~~b~~h~MJ:~w~ So if you manage to synchronize ~n~with their towers...
 CF7 ~z~~b~~h~Spider-Man:~w~ We'll have the location ~n~of the black cat.
-CF8 ~z~~b~~h~Spider-Man:~w~ Excellent, MJ, how much ~n~intelligence can fit in that pretty head.
+CF8 ~z~~b~~h~Spider-Man:~w~ Excellent, Mary Jane, how much ~n~intelligence can fit in that pretty head.
 CF9 ~z~~b~~h~MJ:~w~ You would be surprised.
 CF10 ~z~~b~~h~MJ:~w~ Alright. The first tower is ~n~in King's
 CF11 ~z~~b~~h~Spider-Man:~w~ I go there in a jiffy.
@@ -105,18 +106,18 @@ CF17 ~z~~b~~h~Spider-Man:~w~ And there goes our buddy the spider.
 CFF4 ~z~~b~~h~Thief:~w~ Attention, we got company!
 CFF5 ~z~~b~~h~Spider-Man:~w~ Never give up on losing so much? ~n~I would give up after a while.
 CFF6 ~z~~b~~h~Criminal:~w~ This will be your end, Spider-Man.
-CF18 ~z~~b~~h~Spider-Man:~w~ MJ, second tower ready.
+CF18 ~z~~b~~h~Spider-Man:~w~ Mary Jane, second tower ready.
 CF19 ~z~~b~~h~MJ:~w~ Okay, Okay, in the previous location ~n~there is not Black Cat.
 CF20 ~z~~b~~h~Spider-Man:~w~ Hopefully we'll lucky this time, ~n~where is the other tower?
 CF21 ~z~~b~~h~MJ:~w~ This is the last one. It's in Santa Flora.
 
 CFF7 ~z~~b~~h~Spider-Man:~w~ Hi big guys, I came to ~n~interrupt your 'criminalistic' activities.
 CFF8 ~z~~b~~h~Spider-Man:~w~ I came to beat some of you, ~n~do not expect that you can achieve something.
-CF22 ~z~~b~~h~Spider-Man:~w~ MJ, it's ready. ~n~You got something?
+CF22 ~z~~b~~h~Spider-Man:~w~ Mary Jane, it's ready. ~n~You got something?
 CF23 ~z~~b~~h~MJ:~w~ Okay, I don't think I can have ~n~anything right now, so I need time.
 CF24 ~z~~b~~h~MJ:~w~ I'll let you know when I have something. ~n~Meanwhile, if you have some free time...
 CF25 ~z~~b~~h~MJ:~w~ You can go to check the hideouts ~n~that the antennas showed out.
-CF26 ~z~~b~~h~Spider-Man:~w~ Seems cool to me. I will wait for ~n~your call, see you later MJ.
+CF26 ~z~~b~~h~Spider-Man:~w~ Seems cool to me. I will wait for ~n~your call, see you later Mary Jane.
 
 UAND1 ~z~~b~~h~Spider-Man:~w~ Hi, Mary Jane, you found Black Cat?
 UAND2 ~z~~b~~h~MJ:~w~ That's right. You will not believe the place where she is hidden.
@@ -879,6 +880,8 @@ TDC11 ~z~~b~~h~Boy:~w~ Now I have a new time to break, Thank you so much, Spider
 TDCS1 3
 TDCS2 2
 TDCS3 1
+MSP1 ~z~~h~~b~Goon:~w~ Wake up, we got company!
+MSP2 ~z~~b~~h~Goon:~w~ Spider-Man is here!
 PAYA1 ~z~~b~~h~Spider-Man:~w~ According to Yuri's information, this is the Hammerhead building.
 PAYA2 ~z~~b~~h~Spider-Man:~w~ I will look for a way to get in and I will infiltrate to see what I can get.
 PAYA3 ~z~~b~~h~Spider-Man:~w~ I'm in. I have to find the security room to deactivate it.
@@ -887,7 +890,7 @@ PAYA5 ~z~~b~~h~Spider-Man:~w~ This is the security computer, but it needs a keyc
 PAYA6 ~z~~b~~h~Spider-Man:~w~ If I was a keycard... Where I would hide myself?
 PAYA7 ~z~~b~~h~Spider-Man:~w~ Got it, Now let's take it to the computer.
 PAYA8 ~z~~b~~h~Spider-Man:~w~ Security deactivated. Let's go for those files.
-PAYA9 ~z~~b~~h~Spider-Man:~w~ I'll use some Spider-bombs for this job.
+PAYA9 ~z~~b~~h~Spider-Man:~w~ How much informations ! I'll use some Spider-bombs for this job.
 
 
 PAYA10 ~z~~b~~h~Goon:~w~ Hey! Spider-Man is here, everybody on him!
