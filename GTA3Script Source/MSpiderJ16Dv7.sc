@@ -917,8 +917,8 @@ show_menu:
                                                                                 iSetCamera = TRUE
                                                                             ENDIF  
                                                                         ELSE
-                                                                            pUnlockCode = 3734
-                                                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit29" (iTempVar)
+                                                                            pUnlockCode = 8319
+                                                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit33" (iTempVar)
                                                                             IF pUnlockCode = iTempVar
                                                                             AND iSelectedPower = 10                 
         
@@ -2289,7 +2289,7 @@ ProcessGame_and_DrawMenu_RightPanel_SUITS:
                                                             iSelectedPower = 14     // Equalizer
                                                             GOSUB DrawInfo_Suit_Unlocked_Power_RightPanel     
                                                         ELSE
-                                                            IF iSelectedSuit = 29   //Iron Spider Armor
+                                                            IF iSelectedSuit = 33   //Iron Spider Armor
                                                                 iTempVar = idSelectedSuitUnlocks    //THIS SUIT ALSO UNLOCKS 
                                                                 CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.5 122.5) (136.0 15.0) (16 43 52 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 2 (-60.0 0.0)   //THIS SUIT ALSO UNLOCKS
                                                                 iSelectedPower = 10     // Iron Arms
@@ -4315,8 +4315,8 @@ ProcessGame_and_DrawItems_POWER_SUITS:
                                                                     ENDIF
                                                                 ELSE       
                                                                     IF idTexture = 108
-                                                                        pUnlockCode = 3734
-                                                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit29" (iTempVar)
+                                                                        pUnlockCode = 8319
+                                                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit33" (iTempVar)
                                                                         IF pUnlockCode = iTempVar
                                                                             USE_TEXT_COMMANDS FALSE
                                                                             DRAW_SPRITE idTexture (xCoord yCoord) (xSize ySize) (41 190 240 210)   
@@ -4730,8 +4730,8 @@ DrawInfo_Suit_Unlocked_Power_RightPanel:
         ENDIF
     ENDIF          
     IF iTempVar = 108
-        pUnlockCode = 3734
-        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit29" (counter)
+        pUnlockCode = 8319
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit33" (counter)
         IF pUnlockCode = counter
             USE_TEXT_COMMANDS FALSE
             DRAW_SPRITE iTempVar (530.0 158.5) (xSize ySize) (41 190 240 210)
@@ -4865,8 +4865,8 @@ DrawInfo_POWER_SUITS_RightPanel:
         ENDIF
     ENDIF    
     IF iSelectedPower = 10
-        pUnlockCode = 3734
-        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit29" (counter)
+        pUnlockCode = 8319
+        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "CODE" "suit33" (counter)
         IF pUnlockCode = counter
             USE_TEXT_COMMANDS FALSE
             DRAW_SPRITE idTexture (572.0 yCoord) (xSize ySize) (255 255 255 255)
