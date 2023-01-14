@@ -11,7 +11,7 @@
 CONST_INT time_update 30000//ms   
 CONST_INT time_delay 60000  //ms    
 CONST_INT time_delay_after_mission 20000 //ms
-CONST_INT time_mission_randomize 5000 //ms 
+CONST_INT time_mission_randomize 2500 //ms 
 
 SCRIPT_START
 {
@@ -72,29 +72,27 @@ main_loop:
             IF toggleSpiderMod = 1  //TRUE
                 IF isInMainMenu = 0     //1:true 0: false
 
-                    IF NOT GOSUB car_chase_event
-                    AND NOT GOSUB drug_deal_event                    
-                        IF timerb >= time_mission_randomize
-                        AND flag_player_on_mission = 0                    
-                            GENERATE_RANDOM_INT_IN_RANGE 1 3 iRandomMission
-                            timerb = 0
-                        ENDIF
+                    IF flag_player_on_mission = 0               
+                        IF timerb >= time_mission_randomize               
+
+                            GENERATE_RANDOM_INT_IN_RANGE 1 3 iRandomMission  
+
+                            IF iRandomMission = 1
+                            AND flag_player_on_mission = 0
+                                GOSUB car_chase_event
+                            ENDIF
+
+                            IF iRandomMission = 2
+                            AND flag_player_on_mission = 0
+                                GOSUB drug_deal_event         
+                            ENDIF                
+
+                        ENDIF                                           
                     ELSE
                         timerb = 0
                     ENDIF
 
-                    IF iRandomMission = 1
-                    AND flag_player_on_mission = 0
-                        GOSUB car_chase_event
-                    ENDIF
-
-                    IF iRandomMission = 2
-                        IF flag_player_on_mission = 0
-                            GOSUB drug_deal_event                                 
-                        ENDIF
-                    ENDIF
-
-                    //PRINT_FORMATTED_NOW "Mission Value : %i" 1000 iRandomMission    //debug
+                    //PRINT_FORMATTED_NOW "Mission %i TimerB %i" 1 iRandomMission timerb    //debug
 
                 ENDIF
             ELSE
@@ -109,7 +107,7 @@ main_loop:
                 WAIT 50
                 GOTO start
             ENDIF
-        ENDIF 
+        ENDIF
     ENDIF
     WAIT 0
 GOTO main_loop  
@@ -146,6 +144,7 @@ car_chase_event:
                 ENDIF                
 
                 WHILE idZone[1] = idZone[0]
+                    timerb = 0
                     GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[0] y[0] z[0])
                     CLEO_CALL get_info_zone_id 0 x[0] y[0] z[0] (idZone[0])
                     //PRINT_FORMATTED_NOW "zone: %i = %i" 1 idZone[0] idZone[1]  //debug
@@ -241,6 +240,7 @@ drug_deal_event:
                 ENDIF                
             
                 WHILE idZone[1] = idZone[0]
+                    timerb = 0
                     GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[0] y[0] z[0])
                     CLEO_CALL get_info_zone_id 0 x[0] y[0] z[0] (idZone[0])
                     //PRINT_FORMATTED_NOW "zone: %i = %i" 1 idZone[0] idZone[1]  //debug
