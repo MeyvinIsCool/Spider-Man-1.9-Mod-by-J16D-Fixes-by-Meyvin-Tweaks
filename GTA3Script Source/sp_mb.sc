@@ -96,6 +96,7 @@ main_loop:
                                 ENDIF
                             ENDIF
 
+
                         ENDIF
 
                     ELSE
@@ -133,17 +134,21 @@ main_loop:
                             GOSUB assign_task_cinematic_jump
                         ENDIF
 
-                    ENDIF
+                    ENDIF                  
 
-                    IF IS_CHAR_PLAYING_ANIM player_actor "fall_glide_A"
-                    OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_B"
-                    OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_C"
-                    OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_D"     
-                        IF fCharSpeed > 56.5    // for Ground Crush    
-                            WAIT 0
-                            fCharSpeed = 0.0
-                        ENDIF
-                    ENDIF                    
+                    IF NOT IS_BUTTON_PRESSED PAD1 CROSS  // ~k~~PED_SPRINT~
+                    AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE        // ~k~~PED_FIREWEAPON~
+                    AND NOT IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER1   //~k~~PED_LOCK_TARGET~
+                        IF IS_CHAR_PLAYING_ANIM player_actor "fall_glide_A"
+                        OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_B"
+                        OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_C"
+                        OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_D"     
+                            IF fCharSpeed > 56.5    // for Ground Crush    
+                                WAIT 0
+                                fCharSpeed = 0.0
+                            ENDIF
+                        ENDIF  
+                    ENDIF
 
                 ENDIF                
             
@@ -363,44 +368,53 @@ resetCharInWater:
 RETURN
 
 TASK_PLAY_land:
-    //IF IS_BUTTON_PRESSED 0 CROSS   // ~k~~PED_SPRINT~
-    IF fCharSpeed > 56.5        // for Ground Crush 
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_D" "spider") 28.0 (0 1 1 0) -1
-        WAIT 0
-        SET_CHAR_ANIM_SPEED player_actor "fall_land_D" 0.65   
-        IF IS_CHAR_PLAYING_ANIM player_actor "fall_land_D"     
-            GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 0.0) (x y z)
-            GET_GROUND_Z_FOR_3D_COORD x y z (z)
-            z += 0.06
-            CREATE_FX_SYSTEM SP_GROUND_CRUSH (x y z) 4 (fx_system)                      
-            REMOVE_AUDIO_STREAM sfx
-            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ground_crush.mp3"
-                LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ground_crush.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1    //play 
-                //SET_AUDIO_STREAM_VOLUME sfx 1.0
-                GET_AUDIO_SFX_VOLUME (fRandomVal[0])
-                fRandomVal[0] *= 0.8
-                SET_AUDIO_STREAM_VOLUME sfx fRandomVal[0]                 
+    IF NOT IS_BUTTON_PRESSED 0 CROSS   // ~k~~PED_SPRINT~
+    AND fCharSpeed > 56.5        // for Ground Crush 
+        IF NOT IS_BUTTON_PRESSED 0 CROSS   // ~k~~PED_SPRINT~
+            TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_D" "spider") 28.0 (0 1 1 0) -1
+            WAIT 0
+            SET_CHAR_ANIM_SPEED player_actor "fall_land_D" 0.65   
+            IF IS_CHAR_PLAYING_ANIM player_actor "fall_land_D"     
+                GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 0.0) (x y z)
+                GET_GROUND_Z_FOR_3D_COORD x y z (z)
+                z += 0.06
+                CREATE_FX_SYSTEM SP_GROUND_CRUSH (x y z) 4 (fx_system)                      
+                REMOVE_AUDIO_STREAM sfx
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ground_crush.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ground_crush.mp3" (sfx)
+                    SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
+                    SET_AUDIO_STREAM_STATE sfx 1    //play 
+                    //SET_AUDIO_STREAM_VOLUME sfx 1.0
+                    GET_AUDIO_SFX_VOLUME (fRandomVal[0])
+                    fRandomVal[0] *= 0.8
+                    SET_AUDIO_STREAM_VOLUME sfx fRandomVal[0]                 
+                ENDIF            
+                PLAY_AND_KILL_FX_SYSTEM fx_system  
             ENDIF            
-            PLAY_AND_KILL_FX_SYSTEM fx_system  
-        ENDIF            
+        ENDIF
     ELSE
-        SWITCH randomVal
-            CASE 0
-                TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_A" "spider") 8.0 (0 1 1 0) -1
-                WAIT 0
-                BREAK
-            CASE 1
-                TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_B" "spider") 21.0 (0 1 1 0) -1
-                WAIT 0
-                BREAK
-            CASE 2
-                TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_C" "spider") 26.0 (0 1 1 0) -1
-                WAIT 0
-                SET_CHAR_ANIM_SPEED player_actor "fall_land_C" 2.0
-                BREAK
-        ENDSWITCH
+        fCharSpeed = 45.5
+        IF IS_BUTTON_PRESSED 0 CROSS   // ~k~~PED_SPRINT~
+            TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_F" "spider") 1000.0 (0 1 1 0) -1
+            WAIT 0
+            SET_CHAR_ANIM_SPEED player_actor "fall_land_F" 1.35
+        ELSE
+            SWITCH randomVal
+                CASE 0
+                    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_A" "spider") 8.0 (0 1 1 0) -1
+                    WAIT 0
+                    BREAK
+                CASE 1
+                    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_B" "spider") 21.0 (0 1 1 0) -1
+                    WAIT 0
+                    BREAK
+                CASE 2
+                    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("fall_land_C" "spider") 26.0 (0 1 1 0) -1
+                    WAIT 0
+                    SET_CHAR_ANIM_SPEED player_actor "fall_land_C" 2.0
+                    BREAK
+            ENDSWITCH
+        ENDIF
     ENDIF
 RETURN
 
