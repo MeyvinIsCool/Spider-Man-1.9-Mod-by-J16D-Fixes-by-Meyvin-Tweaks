@@ -4,14 +4,13 @@
 //   -Backpack  (m_bp.cs)
 //   -Thug Hideouts (m_th.cs)
 //   -Street Crimes (m_w.cs)
-//   -Car chase (m_dd.cs)
+//   -Drug Deal (m_dd.cs)
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
-CONST_INT time_update 30000//ms   
+CONST_INT time_update 30000  //ms  
 CONST_INT time_delay 60000  //ms    
 CONST_INT time_delay_after_mission 20000 //ms
-CONST_INT time_mission_randomize 2500 //ms 
 
 SCRIPT_START
 {
@@ -60,7 +59,8 @@ CLEO_CALL storeLanguage 0 iTempVar
     ENDIF   
 
 timera = 0
-iRandomMission = 0
+//iRandomMission = 1
+GENERATE_RANDOM_INT_IN_RANGE 1 3 iRandomMission
 
 GOSUB generate_random_coords
 GOSUB generate_random_coords_2
@@ -72,29 +72,52 @@ main_loop:
             IF toggleSpiderMod = 1  //TRUE
                 IF isInMainMenu = 0     //1:true 0: false
 
-                    IF flag_player_on_mission = 0               
-                        IF timerb >= time_mission_randomize               
 
-                            GENERATE_RANDOM_INT_IN_RANGE 1 3 iRandomMission  
+                    IF flag_player_on_mission = 0  
+                        IF iRandomMission = 1
+                            GOTO car_chase_initial
+                        ELSE
+                            GOTO drug_deal_initial
+                        ENDIF
 
-                            IF iRandomMission = 1
-                            AND flag_player_on_mission = 0
-                                GOSUB car_chase_event
+                        car_chase_initial:
+                        IF iRandomMission = 1                    
+                            GOSUB car_chase_event
+                        ELSE
+                            GET_AUDIO_STREAM_STATE iSfx[0] (iTempVar)
+                            IF iTempVar = 1     //playing
+                                SET_AUDIO_STREAM_STATE iSfx[0] 0    //Stop
                             ENDIF
+                            REMOVE_AUDIO_STREAM iSfx[0]
+                            IF DOES_BLIP_EXIST iEventBlip
+                                REMOVE_BLIP iEventBlip
+                            ENDIF
+                            iRandomMission = 2
+                            WAIT 2500
+                            GOTO drug_deal_initial
+                        ENDIF
 
-                            IF iRandomMission = 2
-                            AND flag_player_on_mission = 0
-                                GOSUB drug_deal_event         
-                            ENDIF                
-
-                        ENDIF                                           
-                    ELSE
-                        timerb = 0
+                        drug_deal_initial:
+                        IF iRandomMission = 2                    
+                            GOSUB drug_deal_event
+                        ELSE
+                            GET_AUDIO_STREAM_STATE iSfx[0] (iTempVar)
+                            IF iTempVar = 1     //playing
+                                SET_AUDIO_STREAM_STATE iSfx[0] 0    //Stop
+                            ENDIF
+                            REMOVE_AUDIO_STREAM iSfx[0]
+                            IF DOES_BLIP_EXIST iEventBlip
+                                REMOVE_BLIP iEventBlip
+                            ENDIF
+                            iRandomMission = 1
+                            WAIT 2500
+                            GOTO car_chase_initial
+                        ENDIF                                          
                     ENDIF
-
-                    //PRINT_FORMATTED_NOW "Mission %i TimerB %i" 1 iRandomMission timerb    //debug
-
                 ENDIF
+
+                //PRINT_FORMATTED_NOW "Mission %i" 1 iRandomMission    //debug
+
             ELSE
                 GET_AUDIO_STREAM_STATE iSfx[0] (iTempVar)
                 IF iTempVar = 1     //playing
@@ -186,9 +209,10 @@ car_chase_event:
                         BREAK
                     ENDIF
                     IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0
+                        iRandomMission = 2
                         BREAK
                     ENDIF
-                    IF timera > time_delay
+                    IF timera > time_delay                    
                         BREAK
                     ENDIF
                     WAIT 0
@@ -282,11 +306,12 @@ drug_deal_event:
                         BREAK
                     ENDIF
                     IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0
+                        iRandomMission = 1
                         BREAK
                     ENDIF
                     IF timera > time_delay
                         BREAK
-                    ENDIF
+                    ENDIF                   
                     WAIT 0
                 ENDWHILE
 
@@ -301,7 +326,7 @@ drug_deal_event:
                 ENDIF
                 GOSUB update_zone_events_2
 
-            ELSE
+            //ELSE
                 //PRINT_FORMATTED_NOW "zone: %i not equal %i" 1 idZone[0] idZone[1]  //debug
             ENDIF
         ELSE
