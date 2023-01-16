@@ -80,13 +80,15 @@ IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 804 808    //{id} {mission_id} {text1_id} {text2_id}
 ENDIF    
 
+GOSUB prepare_wave_deal
+
+xIn += 1.05
+yIn += 1.05
 zIn += 0.65
 CREATE_OBJECT_NO_OFFSET 2919 xIn yIn zIn (obj)  //kmb_holdall
 SET_OBJECT_SCALE obj 0.55
 SET_OBJECT_DYNAMIC obj TRUE
 timera = 0
-
-GOSUB prepare_wave_deal
 
 kill_counter = 0
 main_loop:
