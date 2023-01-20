@@ -47,6 +47,7 @@ main_loop:
                     IF DOES_OBJECT_EXIST obj    //secure check
 
                         IF CLEO_CALL get_object_offset_indicator 0 obj (x[0] y[0] z[0]) //Lamps
+                        AND GOSUB is_not_char_playing_car_missions_anims
                             GOSUB draw_indicator_lamps
 
                             //----------------------------------- Zip to Point
@@ -1003,6 +1004,31 @@ loadTextures:
     LOAD_SPRITE idTip1 "htip1"
     LOAD_SPRITE idTip3 "htip3"
     //LOAD_SPRITE tCrosshair "crosshair"
+RETURN
+
+is_not_char_playing_car_missions_anims:
+    IF NOT IS_CHAR_PLAYING_ANIM player_actor ("c_idle_Z")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_00")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_01")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_02")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_00")
+        IF NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_01")
+        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_02")
+        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_B_00")
+        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_B_01")
+        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_B_00")
+        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_B_01")
+            IF NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_front")
+            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_fall")
+            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_center")
+            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_left")
+            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_right")
+                RETURN_TRUE
+                RETURN
+            ENDIF
+        ENDIF
+    ENDIF
+    RETURN_FALSE
 RETURN
 //-+----------------------------------------------------------
 
