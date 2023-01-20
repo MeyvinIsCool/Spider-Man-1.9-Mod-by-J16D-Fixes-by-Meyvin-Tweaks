@@ -248,7 +248,7 @@ main_loop:
                             ENDIF
                         ENDIF
                         
-                        GENERATE_RANDOM_INT_IN_RANGE 0 6 (randomVal)    //random animation Swing (6 types by side)
+                        GENERATE_RANDOM_INT_IN_RANGE 0 7 (randomVal)    //random animation Swing (6 types by side)
                         //Fix animation D
                         IF randomVal = 3
                             GENERATE_RANDOM_FLOAT_IN_RANGE 1.150 1.450  (fMaxSwingPeriod)
@@ -981,7 +981,12 @@ attachWeb:
                         TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("m_webSwingL_F" "mweb") 26.0 (0 1 1 1) -2
                         SET_CHAR_ANIM_CURRENT_TIME iWebActor ("m_webSwingL_F") fProgress
                         SET_CHAR_ANIM_PLAYING_FLAG iWebActor ("m_webSwingL_F") STOP 
-                        BREAK                                                                         
+                        BREAK         
+                    CASE 6
+                        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("m_webSwingL_G" "mweb") 26.0 (0 1 1 1) -2
+                        SET_CHAR_ANIM_CURRENT_TIME iWebActor ("m_webSwingL_G") fProgress
+                        SET_CHAR_ANIM_PLAYING_FLAG iWebActor ("m_webSwingL_G") STOP 
+                        BREAK                                                                                             
                 ENDSWITCH
                 BREAK
             CASE 2
@@ -1015,7 +1020,12 @@ attachWeb:
                         TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("m_webSwingR_F" "mweb") 26.0 (0 1 1 1) -2
                         SET_CHAR_ANIM_CURRENT_TIME iWebActor ("m_webSwingR_F") fProgress
                         SET_CHAR_ANIM_PLAYING_FLAG iWebActor ("m_webSwingR_F") STOP 
-                        BREAK                                                          
+                        BREAK     
+                    CASE 6
+                        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("m_webSwingR_G" "mweb") 26.0 (0 1 1 1) -2
+                        SET_CHAR_ANIM_CURRENT_TIME iWebActor ("m_webSwingR_G") fProgress
+                        SET_CHAR_ANIM_PLAYING_FLAG iWebActor ("m_webSwingR_G") STOP 
+                        BREAK                                                                                
                 ENDSWITCH
                 BREAK
         ENDSWITCH
