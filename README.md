@@ -6,6 +6,7 @@ Things I Fixed And Added On This Mod :
 - Added Functional Scrolling System On Menu + 20 New Suits Added ! (You Will Need To Reach Level 52 In Order To Unlock All 50 Suits)
 - Cinimatic Jump Restored
 - A Web Swinging Animation Restored
+- A New Web Swinging Animation Added
 - Falling Animations Restored
 - Fully Functional Throw Objects Such As Vehicle Door And Map Objects
 - Fixed Money Bar Not Visible
