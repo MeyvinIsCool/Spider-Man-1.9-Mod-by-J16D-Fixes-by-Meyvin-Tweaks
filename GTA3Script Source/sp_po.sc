@@ -251,7 +251,7 @@ get_power_max_time:
             cool_down_time = 30000  //0:30
             BREAK
         CASE iron_arms      //id:10
-            max_time = 65000    //1:05
+            max_time = 65000    //1:05  
             cool_down_time = 120000  //2:00
             BREAK
         CASE defence_shield //id:11
@@ -1561,6 +1561,8 @@ assign_iron_arms:
     WAIT 10
     //CLEAR_CHAR_TASKS player_actor
     //CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
+    GOSUB destroyArms_Object
+    WAIT 0
     GOSUB createArms_Object
     WAIT 0
     SET_OBJECT_SCALE iChar 1.0
@@ -1624,12 +1626,12 @@ assign_iron_arms:
         ENDIF
         IF IS_CHAR_IN_ANY_CAR player_actor
             BREAK
-        ENDIF
-
+        ENDIF          
         WAIT 0
     ENDWHILE
     DELETE_RENDER_OBJECT i
     REMOVE_AUDIO_STREAM sfx
+    WAIT 50
 RETURN    
 
 create_iron_arms_render_object:
@@ -1667,9 +1669,12 @@ createArms_Object:
 RETURN
 
 destroyArms_Object:
-    DELETE_OBJECT iObj
-    DELETE_OBJECT iChar
-    WAIT 0
+    IF DOES_OBJECT_EXIST iObj
+        DELETE_OBJECT iObj
+    ENDIF
+    IF DOES_OBJECT_EXIST iChar
+        DELETE_OBJECT iChar
+    ENDIF
 RETURN
 
 set_rotation:
