@@ -35,7 +35,7 @@ WAIT 0
 WAIT 0
 LVAR_INT player_actor toggleSpiderMod isInMainMenu idPowers
 LVAR_INT max_time cool_down_time
-LVAR_INT i p iChar anim_seq fx_system sfx iObj 
+LVAR_INT i p iChar anim_seq fx_system sfx iObj
 LVAR_INT counter iTempVar 
 LVAR_INT lvar[2]
 LVAR_FLOAT x[3] y[3] z[3] fRandomVal[2] fAngle[2] fDistance
@@ -106,14 +106,7 @@ main_loop:
                                 WAIT 0
                                 GOSUB get_power_max_time
                                 GOSUB assign_quips
-                            ENDIF             
-                            IF idPowers = 10     //iron_arms    //id:10
-                                CREATE_FX_SYSTEM_ON_CHAR SP_POWERS player_actor (0.0 0.0 0.15) 4 (fx_system)
-                                PLAY_AND_KILL_FX_SYSTEM fx_system
-                                WAIT 0
-                                GOSUB get_power_max_time
-                                GOSUB assign_iron_arms
-                            ENDIF                                            
+                            ENDIF                                                     
                         ENDIF
                     ENDIF
 
@@ -1565,19 +1558,48 @@ assign_iron_arms:
     timera = 0
     iTempVar = 0
     GOSUB play_sfx_general_sfx
-    IF NOT IS_CHAR_REALLY_IN_AIR player_actor
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("iron_armsA" "spider") 61.0 (0 1 1 0) -1
-        WAIT 0
-        SET_CHAR_ANIM_SPEED player_actor "iron_armsA" 0.65
-    ENDIF    
-    GOSUB create_iron_arms
     WAIT 10
     //CLEAR_CHAR_TASKS player_actor
     //CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
+    GOSUB createArms_Object
+    WAIT 0
+    SET_OBJECT_SCALE iChar 1.0
 
     WHILE max_time >= timera
         CLEO_CALL set_current_power_progress 0 max_time timera
 
+        // initialize
+        IF DOES_OBJECT_EXIST iObj
+            //play animation
+            TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("iron_armsA" "spider") 26.0 (0 1 1 1) -1
+            WAIT 5
+            WHILE IS_CHAR_PLAYING_ANIM player_actor ("iron_armsA")
+                GET_CHAR_ANIM_CURRENT_TIME player_actor ("iron_armsA") (fRandomVal[0])
+                IF fRandomVal[0] > 0.99
+                    BREAK
+                ELSE
+                    PLAY_OBJECT_ANIM iChar ("iron_armsB" "spider") /*fdelta*/60.0 /*lockF*/1 /*loop*/0
+                    SET_OBJECT_ANIM_CURRENT_TIME iChar "iron_armsB" fRandomVal[0]
+                    SET_OBJECT_ANIM_SPEED iChar "iron_armsB" 0.0
+                ENDIF
+                GOSUB set_rotation
+                WAIT 0
+            ENDWHILE
+            timera = 0
+            WHILE 1500 > timera   
+                GOSUB set_rotation
+                IF IS_BUTTON_JUST_PRESSED PAD1 SQUARE
+                OR IS_BUTTON_JUST_PRESSED PAD1 CROSS
+                    BREAK
+                ENDIF                      
+                WAIT 0     
+            ENDWHILE                    
+            GOSUB create_iron_arms_render_object
+            GOSUB destroyArms_Object
+            CLEAR_CHAR_TASKS player_actor
+        ENDIF
+
+        // damage
         GET_CHAR_COORDINATES player_actor (x[0] y[0] z[0])
         WHILE GET_RANDOM_CHAR_IN_SPHERE_NO_SAVE_RECURSIVE x[0] y[0] z[0] 4.5 1 1 (iChar) 
             IF DOES_CHAR_EXIST iChar
@@ -1588,8 +1610,8 @@ assign_iron_arms:
                 ENDIF   
 
             ENDIF      
-            WAIT 0
-        ENDWHILE     
+            WAIT 0 
+        ENDWHILE        
 
         // break loop
         GOSUB readVars
@@ -1608,19 +1630,69 @@ assign_iron_arms:
     ENDWHILE
     DELETE_RENDER_OBJECT i
     REMOVE_AUDIO_STREAM sfx
-
 RETURN    
 
-create_iron_arms:
+create_iron_arms_render_object:
     i = 0
     REQUEST_MODEL 6025
     LOAD_ALL_MODELS_NOW
-    WAIT 1
     CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 6025 4 (0.0 0.0 0.0) (0.0 0.0 0.0) i
     SET_RENDER_OBJECT_ROTATION i (83.0 90.0 90.0)
     //SET_RENDER_OBJECT_POSITION i (-0.2 0.2 0.36)
     SET_RENDER_OBJECT_POSITION i (-0.65 0.2 0.01)
 RETURN
+
+createArms_Object:
+    IF NOT DOES_OBJECT_EXIST iObj
+        REQUEST_MODEL 3100
+        REQUEST_MODEL 6026
+        LOAD_ALL_MODELS_NOW
+
+        CREATE_OBJECT iObj 0.0 0.0 0.0 (iObj)
+        SET_OBJECT_COLLISION iObj FALSE
+        SET_OBJECT_SCALE iObj 0.001
+        //hier object
+        //iChar = iObj2 
+        GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[0] y[0] z[0])
+        CREATE_OBJECT 6026 (x[0] y[0] z[0]) (iChar)
+        SET_OBJECT_SCALE iChar 0.001
+        SET_OBJECT_COLLISION iChar FALSE
+        SET_OBJECT_PROOFS iChar (1 1 1 1 1)
+        ATTACH_OBJECT_TO_OBJECT iObj iChar (0.0 -0.05 0.09) (0.0 0.0 0.0)
+        TASK_PICK_UP_OBJECT player_actor iChar (-0.08 0.0 0.0) (1 16) "NULL" "NULL" 1   // iChar = iObj2 , to save variables  
+        GOSUB set_rotation      
+        MARK_MODEL_AS_NO_LONGER_NEEDED 6026
+        MARK_MODEL_AS_NO_LONGER_NEEDED 3100
+    ENDIF
+RETURN
+
+destroyArms_Object:
+    DELETE_OBJECT iObj
+    DELETE_OBJECT iChar
+    WAIT 0
+RETURN
+
+set_rotation:
+    GET_CHAR_HEADING player_actor (fAngle[0])
+    SET_OBJECT_ROTATION iObj 0.0 0.0 fAngle[0]
+    SET_OBJECT_ROTATION iChar 0.0 0.0 fAngle[0]
+RETURN
+
+// Old Code         
+/*
+        GET_CHAR_COORDINATES player_actor (x[0] y[0] z[0])
+        WHILE GET_RANDOM_CHAR_IN_SPHERE_NO_SAVE_RECURSIVE x[0] y[0] z[0] 4.5 1 1 (iChar) 
+            IF DOES_CHAR_EXIST iChar
+            AND NOT IS_CHAR_DEAD iChar
+
+                IF GOSUB is_playing_other_hit_anim  
+                    DAMAGE_CHAR iChar 5 TRUE                      
+                ENDIF   
+
+            ENDIF      
+            WAIT 0 
+        ENDWHILE
+*/ 
 
 //------------------------------------------------------------
 
