@@ -42,12 +42,13 @@ main_loop:
                 ENDWHILE
             ENDIF
 
+            IF GOSUB is_not_char_playing_car_missions_anims
+
                 IF CLEO_CALL get_object_near_char 0 player_actor 60.0 (obj)
 
                     IF DOES_OBJECT_EXIST obj    //secure check
 
                         IF CLEO_CALL get_object_offset_indicator 0 obj (x[0] y[0] z[0]) //Lamps
-                        AND GOSUB is_not_char_playing_car_missions_anims
                             GOSUB draw_indicator_lamps
 
                             //----------------------------------- Zip to Point
@@ -260,6 +261,7 @@ main_loop:
                     ENDIF
                 
                 ENDIF
+            ENDIF
 
             //----------------------------------- Web Zip
             IF IS_BUTTON_PRESSED PAD1 SQUARE                // ~k~~PED_JUMPING~
