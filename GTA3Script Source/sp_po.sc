@@ -106,7 +106,14 @@ main_loop:
                                 WAIT 0
                                 GOSUB get_power_max_time
                                 GOSUB assign_quips
-                            ENDIF                                                     
+                            ENDIF  
+                            IF idPowers = 10     //ironarms    //id:10
+                                CREATE_FX_SYSTEM_ON_CHAR SP_POWERS player_actor (0.0 0.0 0.15) 4 (fx_system)
+                                PLAY_AND_KILL_FX_SYSTEM fx_system
+                                WAIT 0
+                                GOSUB get_power_max_time
+                                GOSUB assign_iron_arms
+                            ENDIF                                                                                 
                         ENDIF
                     ENDIF
 
@@ -251,8 +258,8 @@ get_power_max_time:
             cool_down_time = 30000  //0:30
             BREAK
         CASE iron_arms      //id:10
-            max_time = 65000    //1:05  
-            cool_down_time = 120000  //2:00
+            max_time = 15000    //1:05    65000
+            cool_down_time = 3000  //2:00     120000
             BREAK
         CASE defence_shield //id:11
             max_time = 15000    //0:15
@@ -1554,7 +1561,7 @@ RETURN
 
 //------------------------------------------------------------
 assign_iron_arms:               
-    //max_time = 9000    //ms
+    //max_time = 65000    //ms
     timera = 0
     iTempVar = 0
     GOSUB play_sfx_general_sfx
@@ -1563,42 +1570,20 @@ assign_iron_arms:
     //CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
     GOSUB destroyArms_Object
     WAIT 0
-    GOSUB createArms_Object
-    WAIT 0
-    SET_OBJECT_SCALE iChar 1.0
+
+    IF NOT IS_CHAR_REALLY_IN_AIR player_actor
+        GOSUB createArms_Object
+        WAIT 0
+        SET_OBJECT_SCALE iChar 1.0
+    ELSE
+        GOSUB create_iron_arms_render_object
+    ENDIF
 
     WHILE max_time >= timera
         CLEO_CALL set_current_power_progress 0 max_time timera
 
-        // initialize
-        IF DOES_OBJECT_EXIST iObj
-            //play animation
-            TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("iron_armsA" "spider") 26.0 (0 1 1 1) -1
-            WAIT 5
-            WHILE IS_CHAR_PLAYING_ANIM player_actor ("iron_armsA")
-                GET_CHAR_ANIM_CURRENT_TIME player_actor ("iron_armsA") (fRandomVal[0])
-                IF fRandomVal[0] > 0.99
-                    BREAK
-                ELSE
-                    PLAY_OBJECT_ANIM iChar ("iron_armsB" "spider") /*fdelta*/60.0 /*lockF*/1 /*loop*/0
-                    SET_OBJECT_ANIM_CURRENT_TIME iChar "iron_armsB" fRandomVal[0]
-                    SET_OBJECT_ANIM_SPEED iChar "iron_armsB" 0.0
-                ENDIF
-                GOSUB set_rotation
-                WAIT 0
-            ENDWHILE
-            timera = 0
-            WHILE 1500 > timera   
-                GOSUB set_rotation
-                IF IS_BUTTON_JUST_PRESSED PAD1 SQUARE
-                OR IS_BUTTON_JUST_PRESSED PAD1 CROSS
-                    BREAK
-                ENDIF                      
-                WAIT 0     
-            ENDWHILE                    
-            GOSUB create_iron_arms_render_object
-            GOSUB destroyArms_Object
-            CLEAR_CHAR_TASKS player_actor
+        IF NOT IS_CHAR_REALLY_IN_AIR player_actor
+            GOSUB play_arms_ground_anim        
         ENDIF
 
         // damage
@@ -1606,11 +1591,9 @@ assign_iron_arms:
         WHILE GET_RANDOM_CHAR_IN_SPHERE_NO_SAVE_RECURSIVE x[0] y[0] z[0] 4.5 1 1 (iChar) 
             IF DOES_CHAR_EXIST iChar
             AND NOT IS_CHAR_DEAD iChar
-
                 IF GOSUB is_playing_other_hit_anim  
                     DAMAGE_CHAR iChar 5 TRUE                      
                 ENDIF   
-
             ENDIF      
             WAIT 0 
         ENDWHILE        
@@ -1630,19 +1613,19 @@ assign_iron_arms:
         WAIT 0
     ENDWHILE
     DELETE_RENDER_OBJECT i
+/*
+    GOSUB destroyArms_Object
+    WAIT 0
+    IF NOT IS_CHAR_REALLY_IN_AIR player_actor
+        GOSUB createArms_Object
+        WAIT 0
+        SET_OBJECT_SCALE iChar 1.0
+        GOSUB play_arms_ground_anim_deactivate
+    ENDIF    
+*/
     REMOVE_AUDIO_STREAM sfx
     WAIT 50
 RETURN    
-
-create_iron_arms_render_object:
-    i = 0
-    REQUEST_MODEL 6025
-    LOAD_ALL_MODELS_NOW
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 6025 4 (0.0 0.0 0.0) (0.0 0.0 0.0) i
-    SET_RENDER_OBJECT_ROTATION i (83.0 90.0 90.0)
-    //SET_RENDER_OBJECT_POSITION i (-0.2 0.2 0.36)
-    SET_RENDER_OBJECT_POSITION i (-0.65 0.2 0.01)
-RETURN
 
 createArms_Object:
     IF NOT DOES_OBJECT_EXIST iObj
@@ -1650,7 +1633,7 @@ createArms_Object:
         REQUEST_MODEL 6026
         LOAD_ALL_MODELS_NOW
 
-        CREATE_OBJECT iObj 0.0 0.0 0.0 (iObj)
+        CREATE_OBJECT 3100 0.0 0.0 0.0 (iObj)
         SET_OBJECT_COLLISION iObj FALSE
         SET_OBJECT_SCALE iObj 0.001
         //hier object
@@ -1668,6 +1651,87 @@ createArms_Object:
     ENDIF
 RETURN
 
+play_arms_ground_anim:
+    // initialize    
+    IF NOT IS_CHAR_REALLY_IN_AIR player_actor
+        IF DOES_OBJECT_EXIST iObj
+            //play animation
+            TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("iron_armsA" "spider") 26.0 (0 1 1 1) -1
+            WAIT 5
+            WHILE IS_CHAR_PLAYING_ANIM player_actor ("iron_armsA")
+                GET_CHAR_ANIM_CURRENT_TIME player_actor ("iron_armsA") (fRandomVal[0])
+                IF fRandomVal[0] > 0.99
+                    BREAK
+                ELSE
+                    PLAY_OBJECT_ANIM iChar ("iron_armsB" "spider") /*fdelta*/60.0 /*lockF*/1 /*loop*/0
+                    SET_OBJECT_ANIM_CURRENT_TIME iChar "iron_armsB" fRandomVal[0]
+                    SET_OBJECT_ANIM_SPEED iChar "iron_armsB" 0.0                                                                                                                            
+                ENDIF
+           
+                IF GOSUB is_player_playing_other_anims
+                    //PRINT_FORMATTED_NOW "Iron Arms Resetted" 1111
+                    GOSUB destroyArms_Object
+                    GOTO create_iron_arms_render_object
+                    BREAK            
+                ENDIF  
+            
+                GOSUB set_rotation                                                             
+                WAIT 0
+            ENDWHILE                        
+            timera = 0
+            WHILE 1200 > timera                        
+                GOSUB set_rotation                    
+                WAIT 0     
+            ENDWHILE                    
+            GOSUB create_iron_arms_render_object
+            GOSUB destroyArms_Object
+            CLEAR_CHAR_TASKS player_actor
+        ENDIF
+    ENDIF
+RETURN
+
+play_arms_ground_anim_deactivate:
+    // initialize
+    IF NOT IS_CHAR_REALLY_IN_AIR player_actor
+        IF DOES_OBJECT_EXIST iObj
+            //play animation
+            PLAY_OBJECT_ANIM iChar ("iron_armsC" "spider") /*fdelta*/60.0 /*lockF*/1 /*loop*/0
+            fRandomVal[0] = 0.0
+            timera = 0    
+            WHILE 300 > timera 
+                SET_OBJECT_ANIM_CURRENT_TIME iChar "iron_armsC" fRandomVal[0]
+                SET_OBJECT_ANIM_SPEED iChar "iron_armsC" 0.0
+                GOSUB set_rotation
+                WAIT 0
+                fRandomVal[0] += 0.05
+            ENDWHILE
+            WAIT 0
+            timera = 0
+            WHILE 350 > timera   
+                GOSUB set_rotation
+                IF IS_BUTTON_JUST_PRESSED PAD1 SQUARE
+                OR IS_BUTTON_JUST_PRESSED PAD1 CROSS
+                    BREAK
+                ENDIF                      
+                WAIT 0     
+            ENDWHILE                    
+            GOSUB destroyArms_Object
+            CLEAR_CHAR_TASKS player_actor
+        ENDIF
+    ENDIF
+RETURN
+
+create_iron_arms_render_object:
+    i = 0
+    REQUEST_MODEL 6025
+    LOAD_ALL_MODELS_NOW
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 6025 4 (0.0 0.0 0.0) (0.0 0.0 0.0) i
+    SET_RENDER_OBJECT_ROTATION i (83.0 90.0 90.0)
+    //SET_RENDER_OBJECT_POSITION i (-0.2 0.2 0.36)
+    SET_RENDER_OBJECT_POSITION i (-0.65 0.2 0.01)
+RETURN
+
+
 destroyArms_Object:
     IF DOES_OBJECT_EXIST iObj
         DELETE_OBJECT iObj
@@ -1678,9 +1742,83 @@ destroyArms_Object:
 RETURN
 
 set_rotation:
-    GET_CHAR_HEADING player_actor (fAngle[0])
-    SET_OBJECT_ROTATION iObj 0.0 0.0 fAngle[0]
-    SET_OBJECT_ROTATION iChar 0.0 0.0 fAngle[0]
+    IF DOES_OBJECT_EXIST iObj
+    AND DOES_OBJECT_EXIST iChar
+        GET_CHAR_HEADING player_actor (fAngle[0])
+        SET_OBJECT_ROTATION iObj 0.0 0.0 fAngle[0]
+        SET_OBJECT_ROTATION iChar 0.0 0.0 fAngle[0]
+    ENDIF
+RETURN
+
+//------------------------CHECKS-------------------------------
+is_player_playing_other_anims:
+    IF IS_CHAR_PLAYING_ANIM player_actor ("dodge_front")
+    OR IS_CHAR_PLAYING_ANIM player_actor ("dodge_back")
+    OR IS_CHAR_PLAYING_ANIM player_actor ("dodge_right")
+    OR IS_CHAR_PLAYING_ANIM player_actor ("dodge_left")
+        RETURN_TRUE 
+        RETURN
+    ELSE
+        IF IS_CHAR_PLAYING_ANIM player_actor ("dodge_back_b")
+        OR IS_CHAR_PLAYING_ANIM player_actor ("dodge_back_c")
+        OR IS_CHAR_PLAYING_ANIM player_actor ("dodge_right_b")
+        OR IS_CHAR_PLAYING_ANIM player_actor ("dodge_left_b")
+            RETURN_TRUE
+            RETURN
+        ELSE
+            IF IS_CHAR_PLAYING_ANIM player_actor ("dodge_front_b")
+            OR IS_CHAR_PLAYING_ANIM player_actor ("dodge_front_b_ha")
+            OR IS_CHAR_PLAYING_ANIM player_actor ("dodge_right_c")
+            OR IS_CHAR_PLAYING_ANIM player_actor ("dodge_left_c")
+                RETURN_TRUE
+                RETURN
+            ELSE
+                IF IS_CHAR_PLAYING_ANIM player_actor ("dodge_front_c")
+                OR IS_CHAR_PLAYING_ANIM player_actor ("dodge_front_c_ha")
+                OR IS_CHAR_PLAYING_ANIM player_actor ("dodge_back_d")
+                OR IS_CHAR_PLAYING_ANIM player_actor ("dodge_back_e")                
+                    RETURN_TRUE
+                    RETURN
+                ELSE
+                    IF IS_CHAR_PLAYING_ANIM player_actor ("webstrike_g_in")
+                    OR IS_CHAR_PLAYING_ANIM player_actor ("webstrike_g_out")
+                    OR IS_CHAR_PLAYING_ANIM player_actor ("groundToLampB")  //Angle controlled in sp_ml
+                        RETURN_TRUE
+                        RETURN    
+                    ELSE
+                        IF IS_CHAR_PLAYING_ANIM player_actor ("c_idle_Z")
+                        OR IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_00")
+                        OR IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_01")
+                        OR IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_02")
+                        OR IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_00")
+                            RETURN_TRUE
+                            RETURN                  
+                        ELSE
+                            IF IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_01")
+                            OR IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_02")
+                            OR IS_CHAR_PLAYING_ANIM player_actor ("c_right_B_00")
+                            OR IS_CHAR_PLAYING_ANIM player_actor ("c_right_B_01")
+                            OR IS_CHAR_PLAYING_ANIM player_actor ("c_left_B_00")
+                            OR IS_CHAR_PLAYING_ANIM player_actor ("c_left_B_01")
+                                RETURN_TRUE
+                                RETURN 
+                            ELSE
+                                IF IS_CHAR_PLAYING_ANIM player_actor ("c_hit_front")
+                                OR IS_CHAR_PLAYING_ANIM player_actor ("c_hit_fall")
+                                OR IS_CHAR_PLAYING_ANIM player_actor ("c_hit_center")
+                                OR IS_CHAR_PLAYING_ANIM player_actor ("c_hit_left")
+                                OR IS_CHAR_PLAYING_ANIM player_actor ("c_hit_right")
+                                    RETURN_TRUE
+                                    RETURN
+                                ENDIF
+                            ENDIF
+                        ENDIF
+                    ENDIF        
+                ENDIF        
+            ENDIF
+        ENDIF
+    ENDIF
+    RETURN_FALSE                               
 RETURN
 
 // Old Code         
