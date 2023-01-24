@@ -1655,6 +1655,7 @@ play_arms_ground_anim:
     // initialize    
     IF NOT IS_CHAR_REALLY_IN_AIR player_actor
         IF DOES_OBJECT_EXIST iObj
+        AND DOES_OBJECT_EXIST iChar
             //play animation
             TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("iron_armsA" "spider") 26.0 (0 1 1 1) -1
             WAIT 5
@@ -1665,22 +1666,19 @@ play_arms_ground_anim:
                 ELSE
                     PLAY_OBJECT_ANIM iChar ("iron_armsB" "spider") /*fdelta*/60.0 /*lockF*/1 /*loop*/0
                     SET_OBJECT_ANIM_CURRENT_TIME iChar "iron_armsB" fRandomVal[0]
-                    SET_OBJECT_ANIM_SPEED iChar "iron_armsB" 0.0                                                                                                                            
+                    SET_OBJECT_ANIM_SPEED iChar "iron_armsB" 0.0                                                                                                                                              
                 ENDIF
-           
+                GOSUB set_rotation  
                 IF GOSUB is_player_playing_other_anims
-                    //PRINT_FORMATTED_NOW "Iron Arms Resetted" 1111
                     GOSUB destroyArms_Object
                     GOTO create_iron_arms_render_object
                     BREAK            
-                ENDIF  
-            
-                GOSUB set_rotation                                                             
+                ENDIF                                                                             
                 WAIT 0
             ENDWHILE                        
             timera = 0
-            WHILE 1200 > timera                        
-                GOSUB set_rotation                    
+            WHILE 100 > timera      
+                GOSUB set_rotation                                               
                 WAIT 0     
             ENDWHILE                    
             GOSUB create_iron_arms_render_object
@@ -1698,7 +1696,7 @@ play_arms_ground_anim_deactivate:
             PLAY_OBJECT_ANIM iChar ("iron_armsC" "spider") /*fdelta*/60.0 /*lockF*/1 /*loop*/0
             fRandomVal[0] = 0.0
             timera = 0    
-            WHILE 300 > timera 
+            WHILE 250 > timera 
                 SET_OBJECT_ANIM_CURRENT_TIME iChar "iron_armsC" fRandomVal[0]
                 SET_OBJECT_ANIM_SPEED iChar "iron_armsC" 0.0
                 GOSUB set_rotation
@@ -1716,7 +1714,6 @@ play_arms_ground_anim_deactivate:
                 WAIT 0     
             ENDWHILE                    
             GOSUB destroyArms_Object
-            CLEAR_CHAR_TASKS player_actor
         ENDIF
     ENDIF
 RETURN
