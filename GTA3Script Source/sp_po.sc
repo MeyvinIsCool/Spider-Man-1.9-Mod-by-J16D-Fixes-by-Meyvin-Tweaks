@@ -1629,8 +1629,8 @@ RETURN
 
 createArms_Object:
     IF NOT DOES_OBJECT_EXIST iObj
-        REQUEST_MODEL 3100
-        REQUEST_MODEL 6026
+        REQUEST_MODEL 3100      //k_poolballspt02
+        REQUEST_MODEL 6026      //iron_arms_hier_object  
         LOAD_ALL_MODELS_NOW
 
         CREATE_OBJECT 3100 0.0 0.0 0.0 (iObj)
@@ -1645,7 +1645,8 @@ createArms_Object:
         SET_OBJECT_PROOFS iChar (1 1 1 1 1)
         ATTACH_OBJECT_TO_OBJECT iObj iChar (0.0 -0.05 0.09) (0.0 0.0 0.0)
         TASK_PICK_UP_OBJECT player_actor iChar (-0.08 0.0 0.0) (1 16) "NULL" "NULL" 1   // iChar = iObj2 , to save variables  
-        GOSUB set_rotation      
+        GOSUB set_rotation     
+        //WAIT 1000 
         MARK_MODEL_AS_NO_LONGER_NEEDED 6026
         MARK_MODEL_AS_NO_LONGER_NEEDED 3100
     ENDIF
@@ -1656,11 +1657,13 @@ play_arms_ground_anim:
     IF NOT IS_CHAR_REALLY_IN_AIR player_actor
         IF DOES_OBJECT_EXIST iObj
         AND DOES_OBJECT_EXIST iChar
+            
             //play animation
             TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("iron_armsA" "spider") 26.0 (0 1 1 1) -1
             WAIT 5
-            WHILE IS_CHAR_PLAYING_ANIM player_actor ("iron_armsA")
+            WHILE IS_CHAR_PLAYING_ANIM player_actor ("iron_armsA") 
                 GET_CHAR_ANIM_CURRENT_TIME player_actor ("iron_armsA") (fRandomVal[0])
+
                 IF fRandomVal[0] > 0.99
                     BREAK
                 ELSE
@@ -1668,22 +1671,26 @@ play_arms_ground_anim:
                     SET_OBJECT_ANIM_CURRENT_TIME iChar "iron_armsB" fRandomVal[0]
                     SET_OBJECT_ANIM_SPEED iChar "iron_armsB" 0.0                                                                                                                                              
                 ENDIF
-                GOSUB set_rotation  
-                IF GOSUB is_player_playing_other_anims
+
+                IF NOT IS_CHAR_HOLDING_OBJECT player_actor iChar
+                    TASK_PICK_UP_OBJECT player_actor iChar (-0.08 0.0 0.0) (1 16) "NULL" "NULL" 1   // iChar = iObj2 , to save variables  
                     GOSUB destroyArms_Object
-                    GOTO create_iron_arms_render_object
-                    BREAK            
-                ENDIF                                                                             
+                    GOTO create_iron_arms_render_object                    
+                ENDIF      
+
+                GOSUB set_rotation                                                           
                 WAIT 0
             ENDWHILE                        
             timera = 0
             WHILE 100 > timera      
                 GOSUB set_rotation                                               
                 WAIT 0     
-            ENDWHILE                    
+            ENDWHILE          
+
             GOSUB create_iron_arms_render_object
             GOSUB destroyArms_Object
             CLEAR_CHAR_TASKS player_actor
+
         ENDIF
     ENDIF
 RETURN
