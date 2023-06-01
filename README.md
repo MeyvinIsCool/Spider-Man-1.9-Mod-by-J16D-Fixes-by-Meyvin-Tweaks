@@ -1,4 +1,4 @@
-# Spider-Man-1.9 Mod by J16D Fixes by MeyvinIsCool
+# Spider-Man-1.9 Mod by J16D Fixes by Meyvin Tweaks
 I Made These Fixes On These Scripts And Also Improvements In Order To Make This Mod Much More Complete And As Well As Adding Some New Addtions , Making It More Enjoyable !
 
 Things I Fixed And Added On This Mod :
