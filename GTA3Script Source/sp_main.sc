@@ -123,7 +123,12 @@ ENDIF
     // Pizza Time Mission
     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_pizza.cs"
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_pizza.cs"     // Pizza Time Mission (Only If The Mission Is Installed !)
-    ENDIF          
+    ENDIF        
+
+    // Web Zip To Building EXPERIMENTAL SCRIPT (MAY CAUSE BUGS AND CRASHES DUE TO OUTDATED CODES)
+    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_mlb.cs"
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_mlb.cs"     // Web Zip To Building
+    ENDIF            
 
 //-+-- Start Internal Threads
     STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_cam_internalThread   // Camera Script

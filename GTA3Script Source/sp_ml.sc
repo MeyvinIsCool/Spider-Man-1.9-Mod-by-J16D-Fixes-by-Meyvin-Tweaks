@@ -136,6 +136,10 @@ main_loop:
                     ENDIF
 
                 ELSE
+
+                    GET_CLEO_SHARED_VAR varBuidlingZipFlag iTempVar
+                    iTempVar = 1
+                    SET_CLEO_SHARED_VAR varBuidlingZipFlag iTempVar
                 /*
                     obj = -1
                     //Compatible reservoirs 
@@ -220,45 +224,6 @@ main_loop:
 
                     ENDIF
                     */
-                
-                    // Throw Vehicle Doors (COMPLETED) - Scripted By MeyvinIsCool
-                    //IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -3.0) (1 0 0 0 0)
-                    IF IS_CHAR_REALLY_IN_AIR player_actor
-                        //in air
-                    ELSE
-                        GET_CLEO_SHARED_VAR varThrowVehDoors (iTempVar)     ////MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-                        IF iTempVar = 1
-                            GET_CLEO_SHARED_VAR varOnmission (iTempVar) // flag_player_on_mission ||0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
-                            IF NOT iTempVar = 2   //car chase     //Fix crash
-                                //on ground                                 
-                                IF CLEO_CALL getClosestVehicle 0 (iVeh)                             
-                                    IF DOES_VEHICLE_EXIST iVeh
-                                    AND IS_CAR_ON_SCREEN iVeh
-                                    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("yank_object")
-                                        GOSUB draw_indicator_vehicles                                                                                                                                                            
-                                        // L1 
-                                        IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                                        AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                                        AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                                        AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~
-
-                                            IF NOT IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2    // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                                            AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                                            AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                                            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~  
-
-                                                GOSUB process_push_doors
-                                                WHILE IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2        // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                                                    WAIT 0
-                                                ENDWHILE
-                                            ENDIF                                                                                                                                                     
-                                        ENDIF                                          
-                                    ENDIF                                                                                                 
-                                ENDIF                              
-                            ENDIF
-
-                        ENDIF
-                    ENDIF
                 
                 ENDIF
             ENDIF
@@ -1882,121 +1847,6 @@ RETURN
 
 //-+----------------------------------------------------------
 
-//-+--------------------vehicles--------------------------
-draw_indicator_vehicles:        
-    IF DOES_VEHICLE_EXIST iVeh             
-        CLEO_CALL get_side_of_char_on_vehicle 0 player_actor iVeh (randomVal) //1:left|2:right                  
-        IF GOSUB is_spider_hud_enabled
-            IF CLEO_CALL get_side_of_char_on_vehicle 0 player_actor iVeh (randomVal) //1:left|2:right
-                GOSUB draw_tip_key_command_left_only          //Adds Indication 
-            ENDIF
-        ENDIF         
-        SWITCH randomVal
-            CASE 1  //Left
-                iTempVar = 10   //door_lf_dummy
-                BREAK
-            CASE 2
-                iTempVar = 8    //door_rf_dummy
-                BREAK
-        ENDSWITCH
-        IF NOT randomVal = 0
-            CLEO_CALL get_vehicle_dummy_offset 0 iVeh iTempVar (x[1] y[1] z[1])
-            GET_OFFSET_FROM_CAR_IN_WORLD_COORDS iVeh (x[1] y[1] z[1]) (x[0] y[0] z[0])
-
-            CONVERT_3D_TO_SCREEN_2D (x[0] y[0] z[0]) TRUE TRUE (v1 v2) (x[1] y[1])
-            GET_FIXED_XY_ASPECT_RATIO 30.0 30.0 (x[1] y[1])
-            USE_TEXT_COMMANDS FALSE
-            SET_SPRITES_DRAW_BEFORE_FADE TRUE
-            DRAW_SPRITE idLR (v1 v2) (x[1] y[1]) (255 255 255 200)       
-            is_near_car = 1
-            SET_CLEO_SHARED_VAR varThrowFix (is_near_car)       
-        ENDIF                 
-        //PRINT_FORMATTED_NOW "side:%i" 1 randomVal  //debug
-        //PRINT_FORMATTED_NOW "x:%.1f y:%1f z:%1f" 1 x[1] y[1] z[1]  
-    ENDIF    
-RETURN
-
-process_push_doors:
-    IF DOES_VEHICLE_EXIST iVeh
-    AND CLEO_CALL get_side_of_char_on_vehicle 0 player_actor iVeh (randomVal)      // This Will Fix The Crash As It Only Going To Active Only If This Gets True
-
-        IF CLEO_CALL get_dummy_vehicle 0 iVeh iTempVar (obj)
-            IF iTempVar = 8 //door_rf_dummy
-                POP_CAR_DOOR iVeh 3 FALSE   //3-Front right door (passenger)
-            ELSE
-                POP_CAR_DOOR iVeh 2 FALSE   //2-Front left door (driver)
-            ENDIF
-            SET_OBJECT_DYNAMIC obj TRUE
-            SET_OBJECT_MASS obj 800.0
-            SET_OBJECT_TURN_MASS obj 800.0
-            SET_OBJECT_COLLISION obj FALSE
-
-            GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 0.0) (x[1] y[1] z[1])
-            GET_OFFSET_FROM_OBJECT_IN_WORLD_COORDS obj (0.0 0.0 0.0) (x[0] y[0] z[0])
-            GET_ANGLE_FROM_TWO_COORDS (x[1] y[1]) (x[0] y[0]) (zAngle)
-            SET_CHAR_HEADING player_actor zAngle
-
-            GOSUB REQUEST_Animations
-            CLEAR_CHAR_TASKS player_actor
-            CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-            TASK_PLAY_ANIM_WITH_FLAGS player_actor ("yank_object" "spider") 63.0 (0 1 1 0) -1 0 1
-            GOSUB playWebSound
-            WAIT 0
-            //SET_CHAR_ANIM_SPEED player_actor "yank_object" 1.25
-            fDistance = 0.0
-
-            IF IS_CHAR_PLAYING_ANIM player_actor ("yank_object")
-                WHILE IS_CHAR_PLAYING_ANIM player_actor ("yank_object")
-
-                    GET_CHAR_ANIM_CURRENT_TIME player_actor ("yank_object") (currentTime)
-                    IF currentTime >= 0.129 // frame 8/62   //0.061  //frame 4
-                        SET_CHAR_ANIM_SPEED player_actor "yank_object" 1.1
-                        
-                        CLEO_CALL setCharViewPointToCamera 0 player_actor
-                        GET_CHAR_COORDINATES player_actor (x[0] y[0] z[0])
-                        GET_GROUND_Z_FOR_3D_COORD x[0] y[0] z[0] (z[0])
-                        CLEO_CALL linearInterpolation 0 (0.129 0.774 currentTime) (720.0 0.0) (zAngle)    //(360*2+90=810)
-                        COS zAngle (x[1])
-                        SIN zAngle (y[1])
-                        x[1] *= 3.0
-                        y[1] *= 3.0
-                        x[0] += x[1]
-                        y[0] += y[1]
-                        z[0] += fDistance
-                        CLEO_CALL setObjectPosSimple 0 obj x[0] y[0] z[0]
-                        fDistance +=@ 0.056
-
-                        CONVERT_3D_TO_SCREEN_2D (x[0] y[0] z[0]) TRUE TRUE (x[3] y[3]) (x[2] y[2])
-                        CLEO_CALL getActorBonePos 0 player_actor 25 (x[2] y[2] z[2])    //Right hand
-                        CONVERT_3D_TO_SCREEN_2D (x[2] y[2] z[2]) TRUE TRUE (v1 v2) (x[2] y[2])
-                        CLEO_CALL drawline 0 v1 v2 x[3] y[3] 0.5 (255 255 255 255)
-                    ENDIF
-                    IF currentTime >= 0.774     //frame 48/62   //0.788     //frame 52
-                        BREAK
-                    ENDIF
-                    WAIT 0
-                ENDWHILE
-                SET_OBJECT_COLLISION obj TRUE
-                IF CLEO_CALL get_target_char_from_char 0 player_actor 35.0 (is_near_pole)   //recicled-var
-                    GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS is_near_pole (0.0 0.0 0.8) (x[1] y[1] z[1])
-                ELSE
-                    GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 9.0 1.5) (x[1] y[1] z[1])
-                ENDIF
-                CLEO_CALL setObjVelocityTo 0 obj (x[1] y[1] z[1]) 60.0            
-            ENDIF
-            //GET_OBJECT_MODEL obj (iTempVar)
-            //PRINT_FORMATTED_NOW "ID:%i" 1000 iTempVar
-            WAIT 50
-            IF DOES_OBJECT_EXIST obj
-                MARK_OBJECT_AS_NO_LONGER_NEEDED obj
-            ENDIF
-
-        ENDIF
-
-    ENDIF
-RETURN
-//-+----------------------------------------------------------
-
 }
 SCRIPT_END
 
@@ -2019,34 +1869,6 @@ drawline:
     USE_TEXT_COMMANDS FALSE
     SET_SPRITES_DRAW_BEFORE_FADE TRUE
     DRAW_SPRITE_WITH_ROTATION 666 x y fDistance fThickness zAngle r g b a
-CLEO_RETURN 0
-}
-{
-//CLEO_CALL setObjVelocityTo 0 iObject (x y z) Amp
-setObjVelocityTo:
-    LVAR_INT iObj   //in
-    LVAR_FLOAT xIn yIn zIn  //in
-    LVAR_FLOAT iAmplitude   //in
-    LVAR_FLOAT x[2] y[2] z[2] fDistance
-    IF DOES_OBJECT_EXIST iObj
-        x[1] = xIn
-        y[1] = yIn
-        z[1] = zIn
-        GET_OFFSET_FROM_OBJECT_IN_WORLD_COORDS iObj (0.0 0.0 0.0) (x[0] y[0] z[0])
-        x[1] -= x[0]
-        y[1] -= y[0]
-        z[1] -= z[0]
-        GET_DISTANCE_BETWEEN_COORDS_3D (0.0 0.0 0.0) (x[1] y[1] z[1]) fDistance
-        x[1] = (x[1] / fDistance)
-        y[1] = (y[1] / fDistance)
-        z[1] = (z[1] / fDistance)
-        x[1] *= iAmplitude
-        y[1] *= iAmplitude
-        z[1] *= iAmplitude
-        SET_OBJECT_VELOCITY iObj x[1] y[1] z[1]
-        WAIT 0
-        SET_OBJECT_VELOCITY iObj x[1] y[1] z[1]
-    ENDIF
 CLEO_RETURN 0
 }
 {
@@ -2892,6 +2714,7 @@ CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0
 CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= 
 CONST_INT varThrowFix           28    //sp_thob          ||1= Activated     || 0= Deactivated
+CONST_INT varBuidlingZipFlag    29    //sp_mlb           ||1= Activated     || 0= Deactivated
 
 CONST_INT varLevelChar          30    //sp_lvl    || Level
 CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)
