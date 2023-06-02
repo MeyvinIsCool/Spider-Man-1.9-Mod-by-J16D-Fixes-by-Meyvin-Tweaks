@@ -1,5 +1,5 @@
 // by J16D
-// Web zip (air / lamp / object) (This includes an experimental code for web-zip-Building, unavailable in v1.9 beta; code between: /* * */)
+// Web zip (air / lamp / object)
 // Spider-Man Mod for GTA SA c.2018 - 2022
 // Original Shine GUI by Junior_Djjr
 // Fixes by Meyvin Tweaks
@@ -47,9 +47,11 @@ main_loop:
                 IF CLEO_CALL get_object_near_char 0 player_actor 60.0 (obj)
 
                     IF DOES_OBJECT_EXIST obj    //secure check
+                        iTempVar = 0
+                        SET_CLEO_SHARED_VAR varBuildingZipFlag iTempVar
 
                         IF CLEO_CALL get_object_offset_indicator 0 obj (x[0] y[0] z[0]) //Lamps
-                            GOSUB draw_indicator_lamps
+                            GOSUB draw_indicator_lamps                                                    
 
                             //----------------------------------- Zip to Point
                             // L2 + R2 
@@ -130,100 +132,19 @@ main_loop:
                                 ENDIF
                             ENDIF
 
-                        ENDIF
+                        ELSE
+                            iTempVar = 0
+                            SET_CLEO_SHARED_VAR varBuildingZipFlag iTempVar
+                        ENDIF                      
                         is_near_car = 0
                         SET_CLEO_SHARED_VAR varThrowFix (is_near_car)                    
                     ENDIF
 
                 ELSE
 
-                    GET_CLEO_SHARED_VAR varBuidlingZipFlag iTempVar
+                    GET_CLEO_SHARED_VAR varBuildingZipFlag iTempVar
                     iTempVar = 1
-                    SET_CLEO_SHARED_VAR varBuidlingZipFlag iTempVar
-                /*
-                    obj = -1
-                    //Compatible reservoirs 
-                    IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor -2022.26 13.982 61.60 25.0
-                    AND NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor -2192.0 389.789 64.624 25.0
-                    AND NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor -1873.89 900.735 65.2756 25.0
-                    AND NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor -1812.37 1039.22 82.0859 25.0
-                    AND NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor -1589.35 951.715 34.5971 25.0
-
-                        // Buildings
-                        IF GOSUB get_building_side
-                            GOSUB draw_building_indicator
-                            //----------------------------------- Zip to Point
-                            // L2 + R2 
-                            IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                            AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                            AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~
-                                IF IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                                AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                                AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                                AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~          
-                                    IF GOSUB is_not_player_playing_swing_anims
-
-                                        IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -3.0) (1 0 0 0 0)   //AIR
-                                            //----------------------------------- Zip if $player on Air
-                                            GOSUB REQUEST_Animations
-                                            GOSUB REQUEST_webAnimations
-                                            GOSUB in_air_zip_to_buidling
-                                            IF is_near_pole = TRUE
-                                                IF IS_BUTTON_PRESSED PAD1 SQUARE  // ~k~~PED_JUMPING~
-                                                    IF GOSUB does_skill_Point_Launch_enabled
-                                                        GOSUB point_launch_air_building                                                           
-                                                    ELSE
-                                                        GET_CHAR_HEADING player_actor (zAngle)
-                                                        GET_COORD_FROM_ANGLED_DISTANCE x[0] y[0] zAngle 0.2 (x[0] y[0])
-                                                        GOSUB stay_on_building_from_air                                                     
-                                                    ENDIF
-                                                ELSE
-                                                    GET_CHAR_HEADING player_actor (zAngle)
-                                                    GET_COORD_FROM_ANGLED_DISTANCE x[0] y[0] zAngle 0.2 (x[0] y[0])
-                                                    GOSUB stay_on_building_from_air                                                   
-                                                ENDIF                                                                                          
-                                                is_near_pole = FALSE
-                                                
-                                            ENDIF
-
-                                        ELSE
-                                            //----------------------------------- Zip if $player on Ground
-                                            GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[1] y[1] z[1])
-                                            IF z[0] >= z[1]   // fix for stuck player
-                                                //----------------------------------- Zip if $player on Ground
-                                                GOSUB REQUEST_Animations
-                                                GOSUB REQUEST_webAnimations
-                                                GOSUB on_ground_zip_to_point
-                                                IF is_near_pole = TRUE
-                                                    IF IS_BUTTON_PRESSED PAD1 SQUARE  // ~k~~PED_JUMPING~
-                                                        IF GOSUB does_skill_Point_Launch_enabled
-                                                            GOSUB point_launch_ground_building
-                                                        ELSE
-                                                            GET_CHAR_HEADING player_actor (zAngle)
-                                                            GET_COORD_FROM_ANGLED_DISTANCE x[0] y[0] zAngle 0.25 (x[0] y[0])
-                                                            GOSUB stay_on_building_from_ground
-                                                        ENDIF
-                                                    ELSE
-                                                        GET_CHAR_HEADING player_actor (zAngle)
-                                                        GET_COORD_FROM_ANGLED_DISTANCE x[0] y[0] zAngle 0.25 (x[0] y[0])
-                                                        GOSUB stay_on_building_from_ground
-                                                    ENDIF
-                                                    is_near_pole = FALSE
-
-                                                ENDIF
-                                            ENDIF
-
-
-                                        ENDIF
-                                    ENDIF
-                                ENDIF
-                            ENDIF
-
-                        ENDIF
-
-                    ENDIF
-                    */
+                    SET_CLEO_SHARED_VAR varBuildingZipFlag iTempVar
                 
                 ENDIF
             ENDIF
@@ -341,37 +262,6 @@ GOTO main_loop
 
 //-+---GOSUB HELPERS
 
-get_building_side:
-    CLEO_CALL getXYZAimCoords 0 player_actor 50.0 0.0 (x[0] y[0] z[0]) (x[2] y[2] z[2]) //(fDistance)
-    z[0] += 0.65
-    DRAW_CORONA x[0] y[0] z[0] 0.35 CORONATYPE_SHINYSTAR FLARETYPE_NONE 255 0 0
-
-    CLEO_CALL getXYZAimCoords 0 player_actor 50.0 1.0 (x[1] y[1] z[1]) (x[3] y[3] z[3]) //(fDistance)
-    DRAW_CORONA x[1] y[1] z[1] 0.35 CORONATYPE_SHINYSTAR FLARETYPE_NONE 0 255 0
-    //PRINT_FORMATTED_NOW "Col1 %.2f %.2f %.2f ~n~norm1 %.2f %.2f %.2f ~n~Col2 %.2f %.2f %.2f ~n~norm2 %.2f %.2f %.2f" 1000 x[0] y[0] z[0] x[2] y[2] z[2] x[1] y[1] z[1] x[3] y[3] z[3]
-
-    IF NOT x[2] = x[3]
-    OR NOT y[2] = y[3]
-    OR NOT z[2] = z[3]
-        RETURN_TRUE
-    ELSE
-        RETURN_FALSE
-    ENDIF
-RETURN
-
-draw_building_indicator:
-    GET_CLEO_SHARED_VAR varHUD (iTempVar)
-    IF iTempVar = 1     // 0:OFF || 1:ON
-        CONVERT_3D_TO_SCREEN_2D (x[0] y[0] z[0]) TRUE TRUE (v1 v2) (x[3] y[3])
-        GET_FIXED_XY_ASPECT_RATIO 30.0 30.0 (x[3] y[3])
-        USE_TEXT_COMMANDS FALSE
-        SET_SPRITES_DRAW_BEFORE_FADE TRUE
-        DRAW_SPRITE objCrosshair (v1 v2) (x[3] y[3]) (255 255 255 200)
-        GOSUB draw_tip_key_command
-    ENDIF
-RETURN
-
-
 does_skill_Point_Launch_enabled:
     GET_CLEO_SHARED_VAR varSkill3a (iTempVar)   // 0:OFF || 1:ON
     IF iTempVar = 1
@@ -391,7 +281,7 @@ draw_indicator_lamps:
         IF GOSUB is_spider_hud_enabled
             GOSUB draw_tip_key_command
         ENDIF
-    ENDIF
+    ENDIF      
 RETURN
 
 draw_tip_key_command:
@@ -1131,142 +1021,6 @@ in_air_zip_to_point:
     GOSUB destroyTwoWebs
 RETURN
 
-in_air_zip_to_buidling:
-    GOSUB destroyTwoWebs
-    GOSUB createTwoWebs
-    //GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[2] y[2] z[2])
-    CLEAR_CHAR_TASKS player_actor
-    CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("airToLampA" "spider") 13.0 (0 1 1 1) -2
-    WAIT 1
-    SET_CHAR_ANIM_SPEED player_actor "airToLampA" 2.0
-    WHILE IS_CHAR_PLAYING_ANIM player_actor ("airToLampA")
-        GET_CHAR_ANIM_CURRENT_TIME player_actor ("airToLampA") (currentTime)
-        IF currentTime >= 0.98  //0.236   // frame
-            SET_CHAR_ANIM_PLAYING_FLAG player_actor ("airToLampA") 0
-            BREAK
-        ENDIF
-        GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.001 (x[1] y[1] z[1])
-        SET_CHAR_COORDINATES_SIMPLE player_actor x[1] y[1] z[1]
-        CLEO_CALL getXangleBetweenPoints 0 (x[1] y[1] z[1]) (x[0] y[0] z[0]) (xAngle)
-        GET_ANGLE_FROM_TWO_COORDS (x[1] y[1]) (x[0] y[0]) (zAngle)
-        SET_CHAR_ROTATION player_actor xAngle 0.0 zAngle
-        IF DOES_OBJECT_EXIST baseObject
-            SET_OBJECT_ROTATION baseObject xAngle 0.0 zAngle
-        ENDIF
-        //IF NOT IS_CHAR_REALLY_IN_AIR player_actor
-        IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -2.0) (1 0 0 0 0)   //AIR
-        ELSE
-            //CLEAR_CHAR_TASKS player_actor
-            //CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-            WAIT 0
-            is_near_pole = FALSE
-            GOSUB destroyTwoWebs
-            RETURN
-        ENDIF
-        WAIT 0
-    ENDWHILE
-    IF DOES_OBJECT_EXIST obj    
-        SET_OBJECT_COLLISION obj FALSE  //fix camera&attach bug
-    ENDIF
-
-    GENERATE_RANDOM_INT_IN_RANGE 0 3 (randomVal)
-    GOSUB playWebSound
-    IF DOES_OBJECT_EXIST baseObject
-        ATTACH_OBJECT_TO_CHAR baseObject player_actor (0.0 0.0 0.0) (0.0 0.0 0.0)
-    ENDIF
-    GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (x[1] y[1] z[1]) (fDistance)
-    x[2] = 1.0 //1.5
-    y[2] = fDistance - x[2]
-
-    randomVal = 0
-    GOSUB playSFXSound
-
-    IF y[2] > 35.0
-        randomVal = 0   // anim for long distance
-    ELSE
-        randomVal = 1   // anim for short distance
-    ENDIF
-
-    timera = 0
-    //WHILE fDistance >= x[2]     //_distance              
-    IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 1.5
-
-        WHILE NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 1.5
-            GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[1] y[1] z[1])
-            GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (x[1] y[1] z[1]) (fDistance)
-            fDistance -= x[2]
-            CLEO_CALL getXangleBetweenPoints 0 (x[1] y[1] z[1]) (x[0] y[0] z[0]) (xAngle)
-            GET_ANGLE_FROM_TWO_COORDS (x[1] y[1]) (x[0] y[0]) (zAngle)
-            SET_CHAR_ROTATION player_actor xAngle 0.0 zAngle 
-
-            CLEO_CALL linearInterpolation 0 (y[2] x[2] fDistance) (0.0 1.0) (currentTime)
-            IF currentTime > 1.0
-                currentTime = 1.0
-            ENDIF
-            SWITCH randomVal
-                CASE 0  // anim for long distance
-                    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("airToLampB" "spider") 34.0 (0 1 1 1) -2
-                    SET_CHAR_ANIM_CURRENT_TIME player_actor ("airToLampB") currentTime
-                    SET_CHAR_ANIM_PLAYING_FLAG player_actor ("airToLampB") 0                                                        
-                    BREAK
-                CASE 1  // anim for short distance
-                    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("airToLampB_B" "spider") 44.0 (0 1 1 1) -2
-                    SET_CHAR_ANIM_CURRENT_TIME player_actor ("airToLampB_B") currentTime
-                    SET_CHAR_ANIM_PLAYING_FLAG player_actor ("airToLampB_B") 0
-                    BREAK
-            ENDSWITCH
-            IF DOES_CHAR_EXIST iWebActor
-                TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("LA_airToLampA" "mweb") 44.0 (0 1 1 1) -2
-                SET_CHAR_ANIM_CURRENT_TIME iWebActor ("LA_airToLampA") currentTime
-                SET_CHAR_ANIM_PLAYING_FLAG iWebActor ("LA_airToLampA") 0
-            ENDIF
-            IF DOES_CHAR_EXIST iWebActorR
-                TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("SH_airToLampA" "mweb") 44.0 (0 1 1 1) -2
-                SET_CHAR_ANIM_CURRENT_TIME iWebActorR ("SH_airToLampA") currentTime
-                SET_CHAR_ANIM_PLAYING_FLAG iWebActorR ("SH_airToLampA") 0  
-            ENDIF
-            IF DOES_OBJECT_EXIST baseObject
-                IF currentTime > 0.279
-                //AND 0.302 > currentTime
-                AND IS_OBJECT_ATTACHED baseObject
-                    DETACH_OBJECT baseObject (0.0 0.0 0.0) FALSE
-                ENDIF
-            ENDIF
-            GET_CHAR_SPEED player_actor (fCharSpeed)
-            fCharSpeed *= 1.020
-            CLAMP_FLOAT fCharSpeed 35.0 60.0 (fCharSpeed)
-            CLEO_CALL setCharVelocityTo 0 player_actor (x[0] y[0] z[0]) fCharSpeed
-            //PRINT_FORMATTED_NOW "vel:%.1f" 1 fCharSpeed //DEBUG
-
-            IF NOT IS_LINE_OF_SIGHT_CLEAR (x[1] y[1] z[1]) (x[0] y[0] z[0]) (1 1 0 1 0)
-            //CLEO_CALL isClearBetweenCoords 0 (x[1] y[1] z[1]) (x[0] y[0] z[0]) (1 1 0 1 0)
-                CLEAR_CHAR_TASKS player_actor
-                CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-                WAIT 0
-                is_near_pole = FALSE
-                GOSUB destroyTwoWebs
-                RETURN
-            ENDIF
-            IF timera > 750
-                GOSUB stay_on_building_from_air
-                GOSUB destroyWeb
-                /*
-                CLEAR_CHAR_TASKS player_actor
-                CLEAR_CHAR_TASKS_IMMEDIATELY player_actor                
-                WAIT 0 
-                TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("groundToLampC" "spider") 13.0 (0 1 1 1) -2
-                WAIT 1
-                SET_CHAR_ANIM_SPEED player_actor "groundToLampC" 1.65  
-                */
-                RETURN
-            ENDIF 
-        ENDWHILE
-    ENDIF
-    is_near_pole = TRUE
-    GOSUB destroyTwoWebs
-RETURN
-
 point_launch_air:
     GOSUB destroyTwoWebs
     GET_CHAR_SPEED player_actor (fCharSpeed)
@@ -1304,45 +1058,6 @@ point_launch_air:
     ENDWHILE
 RETURN
 
-point_launch_air_building:
-    GOSUB destroyTwoWebs
-    GET_CHAR_SPEED player_actor (fCharSpeed)
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    SET_CHAR_COLLISION player_actor FALSE
-    CLEO_CALL setSmokeFX 0 player_actor (0.0 0.0 -0.5) 25.0
-
-    CLEAR_CHAR_TASKS player_actor 
-    CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "airToLampD" "spider" 36.0 (0 1 1 0) -2
-    WAIT 0
-    SET_CHAR_ANIM_SPEED player_actor "airToLampD" 1.30  //1.35
-
-    WHILE IS_CHAR_PLAYING_ANIM player_actor ("airToLampD")
-        GET_CHAR_ANIM_CURRENT_TIME player_actor ("airToLampD") (currentTime)
-        IF currentTime >= 0.171  //frame 6/35
-            SET_CHAR_COLLISION player_actor TRUE
-            BREAK
-        ENDIF
-        WAIT 0
-    ENDWHILE
-    SET_CHAR_COLLISION player_actor TRUE
-    GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 1.0 (x[0] y[0] z[0])
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    CLEO_CALL setCharViewPointToCamera 0 player_actor
-    y[2] = 0.60 //0.5     //2.0
-    z[2] = 0.40 //0.40    //1.5
-    CLAMP_FLOAT fCharSpeed 40.0 55.0 (fCharSpeed)   //55.0
-    CLEO_CALL setCharVelocity 0 player_actor (0.0 y[2] z[2]) fCharSpeed
-
-    randomVal = 1
-    GOSUB playSFXSound
-    //CLEO_CALL setSmokeFX 0 player_actor (0.0 0.0 -0.5) 25.0
-    WAIT 25
-    WHILE IS_BUTTON_PRESSED PAD1 SQUARE  // ~k~~PED_JUMPING~
-        WAIT 0
-    ENDWHILE
-RETURN
-
 stay_on_pole_from_air:
     GOSUB destroyTwoWebs
     SET_CHAR_COLLISION player_actor FALSE
@@ -1352,6 +1067,11 @@ stay_on_pole_from_air:
     TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "groundToLampC" "spider" 54.0 (0 1 1 1) -2
     WAIT 0
     SET_CHAR_ANIM_SPEED player_actor "groundToLampC" 1.65
+
+    GET_CLEO_SHARED_VAR varBuildingZipFlag iTempVar
+    iTempVar = 1
+    SET_CLEO_SHARED_VAR varBuildingZipFlag iTempVar     
+
     WHILE IS_CHAR_PLAYING_ANIM player_actor ("groundToLampC")
         GET_CHAR_ANIM_CURRENT_TIME player_actor ("groundToLampC") (currentTime)
         IF currentTime >= 0.943   // frame 50/53
@@ -1359,9 +1079,9 @@ stay_on_pole_from_air:
             BREAK
         ENDIF
         WAIT 0
-    ENDWHILE
+    ENDWHILE      
 
-    WHILE IS_CHAR_PLAYING_ANIM player_actor ("groundToLampC")
+    WHILE IS_CHAR_PLAYING_ANIM player_actor ("groundToLampC")   
         //Jump from Lamp -> sp_dw 
         IF IS_BUTTON_PRESSED PAD1 SQUARE            // ~k~~PED_JUMPING~
         AND NOT IS_BUTTON_PRESSED PAD1 CROSS        // ~k~~PED_SPRINT~
@@ -1402,78 +1122,6 @@ stay_on_pole_from_air:
             PRINT_FORMATTED_NOW "hanging..." 1000
             WAIT 1000
         ENDIF*/
-
-        WAIT 0
-    ENDWHILE
-    //CLEAR_CHAR_TASKS player_actor
-    SET_CHAR_COLLISION player_actor TRUE
-    WAIT 0
-    WHILE IS_BUTTON_PRESSED PAD1 SQUARE  // ~k~~PED_JUMPING~
-        WAIT 0
-    ENDWHILE
-RETURN
-
-stay_on_building_from_air:
-    GOSUB destroyTwoWebs
-    SET_CHAR_COLLISION player_actor FALSE
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    CLEAR_CHAR_TASKS player_actor
-    CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "groundToLampC" "spider" 54.0 (0 1 1 1) -2
-    WAIT 0
-    SET_CHAR_ANIM_SPEED player_actor "groundToLampC" 1.65
-    WHILE IS_CHAR_PLAYING_ANIM player_actor ("groundToLampC")
-        GET_CHAR_ANIM_CURRENT_TIME player_actor ("groundToLampC") (currentTime)
-        IF currentTime >= 0.943   // frame 50/53
-            SET_CHAR_ANIM_PLAYING_FLAG player_actor ("groundToLampC") STOP
-            BREAK
-        ENDIF
-        WAIT 0
-    ENDWHILE
-
-    WHILE IS_CHAR_PLAYING_ANIM player_actor ("groundToLampC")
-        IF IS_BUTTON_PRESSED PAD1 SQUARE            // ~k~~PED_JUMPING~
-        AND NOT IS_BUTTON_PRESSED PAD1 CROSS        // ~k~~PED_SPRINT~
-        AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE       // ~k~~PED_FIREWEAPON~
-        AND NOT IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2    // ~k~~PED_CYCLE_WEAPON_LEFT~/
-
-            //----------------------------------- Jump from Building
-            SET_CHAR_COLLISION player_actor TRUE
-            GOSUB REQUEST_Animations
-            y[2] = 1.5
-            z[2] = 2.0
-            CLEAR_CHAR_TASKS player_actor
-            CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-            TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("jump_launch_A" "spider") 6.0 (0 1 1 0) -1
-            WAIT 0
-            CLEO_CALL setCharVelocity 0 player_actor (0.0 y[2] z[2]) 10.5
-
-            WHILE IS_CHAR_PLAYING_ANIM player_actor ("jump_launch_A")
-                GET_CHAR_ANIM_CURRENT_TIME player_actor ("jump_launch_A") (currentTime)
-                IF currentTime >= 0.800  //frame 4/5
-                    BREAK
-                ENDIF
-                WAIT 0
-            ENDWHILE
-            
-            WAIT 0
-            CLEAR_CHAR_TASKS player_actor
-            CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-            TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("jump_glide_A" "spider") 23.0 (0 1 1 1) -2
-            WAIT 50
-
-        ENDIF
-
-        IF IS_BUTTON_PRESSED PAD1 LEFTSTICKX   // ~k~~GO_LEFT~ / ~k~~GO_RIGHT~
-        OR IS_BUTTON_PRESSED PAD1 LEFTSTICKY  //~k~~GO_FORWARD~ / ~k~~GO_BACK~
-            CLEAR_CHAR_TASKS player_actor
-            CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-            WAIT 5
-            SET_CHAR_COLLISION player_actor TRUE
-            TASK_TOGGLE_DUCK player_actor TRUE
-            WAIT 500
-            TASK_TOGGLE_DUCK player_actor FALSE            
-        ENDIF
 
         WAIT 0
     ENDWHILE
@@ -1662,45 +1310,6 @@ point_launch_ground:
     ENDWHILE
 RETURN
 
-point_launch_ground_building:
-    GOSUB destroyTwoWebs
-    GET_CHAR_SPEED player_actor (fCharSpeed)
-
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    SET_CHAR_COLLISION player_actor FALSE
-    CLEO_CALL setSmokeFX 0 player_actor (0.0 0.0 -0.5) 25.0
-
-    CLEAR_CHAR_TASKS player_actor 
-    CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "groundToLampD" "spider" 47.0 (0 1 1 0) -2
-    WAIT 0
-    SET_CHAR_ANIM_SPEED player_actor "groundToLampD" 1.80   //1.85
-    WHILE IS_CHAR_PLAYING_ANIM player_actor ("groundToLampD")
-        GET_CHAR_ANIM_CURRENT_TIME player_actor ("groundToLampD") (currentTime)
-        IF currentTime >= 0.217     // frame 10/46
-            SET_CHAR_COLLISION player_actor TRUE
-            BREAK
-        ENDIF
-        WAIT 0
-    ENDWHILE
-    SET_CHAR_COLLISION player_actor TRUE
-    GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 1.0 (x[0] y[0] z[0])
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    CLEO_CALL setCharViewPointToCamera 0 player_actor
-    y[2] = 0.75 //0.65  //2.0
-    z[2] = 0.45 //0.45  //1.8
-    fCharSpeed *= 1.25
-    CLAMP_FLOAT fCharSpeed 40.0 50.0 (fCharSpeed)
-    CLEO_CALL setCharVelocity 0 player_actor (0.0 y[2] z[2]) fCharSpeed
-
-    randomVal = 1
-    GOSUB playSFXSound
-    WAIT 0
-    WHILE IS_BUTTON_PRESSED PAD1 SQUARE  // ~k~~PED_JUMPING~
-        WAIT 0
-    ENDWHILE
-RETURN
-
 stay_on_pole_from_ground:
     GOSUB destroyTwoWebs
     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
@@ -1711,6 +1320,11 @@ stay_on_pole_from_ground:
     TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "groundToLampC" "spider" 54.0 (0 1 1 1) -2
     WAIT 0
     SET_CHAR_ANIM_SPEED player_actor "groundToLampC" 1.65
+
+    GET_CLEO_SHARED_VAR varBuildingZipFlag iTempVar
+    iTempVar = 1
+    SET_CLEO_SHARED_VAR varBuildingZipFlag iTempVar      
+
     WHILE IS_CHAR_PLAYING_ANIM player_actor ("groundToLampC")
         GET_CHAR_ANIM_CURRENT_TIME player_actor ("groundToLampC") (currentTime)
         IF currentTime >= 0.943   // frame 50/53
@@ -1763,77 +1377,6 @@ stay_on_pole_from_ground:
             PRINT_FORMATTED_NOW "hanging..." 1000
             WAIT 1000
         ENDIF*/
-
-        WAIT 0
-    ENDWHILE
-    //CLEAR_CHAR_TASKS player_actor
-    SET_CHAR_COLLISION player_actor TRUE
-    WAIT 0
-    WHILE IS_BUTTON_PRESSED PAD1 SQUARE  // ~k~~PED_JUMPING~
-        WAIT 0
-    ENDWHILE
-RETURN
-
-stay_on_building_from_ground:
-    GOSUB destroyTwoWebs
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    SET_CHAR_COLLISION player_actor FALSE
-
-    CLEAR_CHAR_TASKS player_actor 
-    CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "groundToLampC" "spider" 54.0 (0 1 1 1) -2
-    WAIT 0
-    SET_CHAR_ANIM_SPEED player_actor "groundToLampC" 1.65
-    WHILE IS_CHAR_PLAYING_ANIM player_actor ("groundToLampC")
-        GET_CHAR_ANIM_CURRENT_TIME player_actor ("groundToLampC") (currentTime)
-        IF currentTime >= 0.943   // frame 50/53
-            SET_CHAR_ANIM_PLAYING_FLAG player_actor ("groundToLampC") STOP
-            BREAK
-        ENDIF
-        WAIT 0
-    ENDWHILE
-
-    WHILE IS_CHAR_PLAYING_ANIM player_actor ("groundToLampC")
-
-        IF IS_BUTTON_PRESSED PAD1 SQUARE            // ~k~~PED_JUMPING~
-        AND NOT IS_BUTTON_PRESSED PAD1 CROSS        // ~k~~PED_SPRINT~
-        AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE       // ~k~~PED_FIREWEAPON~
-        AND NOT IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2    // ~k~~PED_CYCLE_WEAPON_LEFT~/   
-
-            //----------------------------------- Jump from Building
-            SET_CHAR_COLLISION player_actor TRUE
-            GOSUB REQUEST_Animations
-            y[2] = 1.5
-            z[2] = 2.0
-            CLEAR_CHAR_TASKS player_actor
-            CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-            TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("jump_launch_A" "spider") 6.0 (0 1 1 0) -1
-            WAIT 0
-            CLEO_CALL setCharVelocity 0 player_actor (0.0 y[2] z[2]) 8.0
-
-            WHILE IS_CHAR_PLAYING_ANIM player_actor ("jump_launch_A")
-                GET_CHAR_ANIM_CURRENT_TIME player_actor ("jump_launch_A") (currentTime)
-                IF currentTime >= 0.800  //frame 4/5
-                    BREAK
-                ENDIF
-                WAIT 0
-            ENDWHILE
-            WAIT 0
-            CLEAR_CHAR_TASKS player_actor
-            CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-            TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("jump_glide_A" "spider") 23.0 (0 1 1 0) -2
-            WAIT 50
-        ENDIF
-
-        IF IS_BUTTON_PRESSED PAD1 LEFTSTICKX   // ~k~~GO_LEFT~ / ~k~~GO_RIGHT~
-        OR IS_BUTTON_PRESSED PAD1 LEFTSTICKY  //~k~~GO_FORWARD~ / ~k~~GO_BACK~
-            SET_CHAR_COLLISION player_actor TRUE
-            CLEAR_CHAR_TASKS player_actor
-            CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-            WAIT 0
-            TASK_TOGGLE_DUCK player_actor TRUE
-            WAIT 500
-        ENDIF
 
         WAIT 0
     ENDWHILE
@@ -2458,53 +2001,6 @@ CLEO_RETURN 0 iNewVeh
 }
 
 {
-//CLEO_CALL getXYZAimCoords 0 scplayer fRange fZPoint (x y z) (x2 y2 z2) fVar
-getXYZAimCoords:
-    LVAR_INT scplayer   //in
-    LVAR_FLOAT range fZPoint  //in
-    LVAR_FLOAT fromX fromY fromZ
-    LVAR_FLOAT camX camY camZ pointX pointY pointZ
-    LVAR_INT var1 var2 i j k
-    LVAR_FLOAT resultX resultY resultZ x y z
-    IF DOES_CHAR_EXIST scplayer
-        GET_CHAR_COORDINATES scplayer (fromX fromY fromZ)
-        GET_VAR_POINTER (camX) (var1)
-        GET_VAR_POINTER (pointX) (var2)
-        CALL_METHOD 0x514970 /*struct*/0xB6F028 /*params*/6 /*pop*/0 /*pPoint*/var2 /*pCam*/var1 /*fZ*/fromZ /*fY*/fromY /*fX*/fromX /*fRange*/ range
-        pointZ += fZPoint
-        GET_PLAYER_CHAR 0 scplayer
-        GET_PED_POINTER scplayer (i)
-        GET_LABEL_POINTER Buffer44 j
-        IF GET_COLLISION_BETWEEN_POINTS (camX camY camZ) (pointX pointY pointZ) TRUE FALSE FALSE FALSE FALSE FALSE TRUE TRUE i j (resultX resultY resultZ i)
-            GET_ENTITY_TYPE i (k)
-            IF k = ENTITY_TYPE_BUILDING
-                GET_COLPOINT_NORMAL_VECTOR j x y z
-                x *= 10.0
-                y *= 10.0
-                z *= 10.0
-                CLEO_RETURN 0 resultX resultY resultZ x y z
-            ENDIF
-            /*
-            GET_ENTITY_TYPE i (k)
-            IF k = ENTITY_TYPE_BUILDING
-                GET_ENTITY_COORDINATES i (pointX pointY pointZ)
-                resultZ -= pointZ
-                pointZ += resultZ
-                pointZ += 0.75
-                CLEO_RETURN 0 resultX resultY pointZ x y z
-            ELSE
-                CLEO_RETURN 0 resultX resultY resultZ x y z
-            ENDIF
-            */
-        ELSE
-            resultX = pointX
-            resultY = pointY
-            resultZ = pointZ
-        ENDIF
-    ENDIF
-CLEO_RETURN 0 resultX resultY resultZ 0.0 0.0 0.0
-}
-{
 //CLEO_CALL get_vehicle_dummy_offset 0 veh id (x y z)
 get_vehicle_dummy_offset:
     LVAR_INT hVehicle id //in
@@ -2714,7 +2210,7 @@ CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0
 CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= 
 CONST_INT varThrowFix           28    //sp_thob          ||1= Activated     || 0= Deactivated
-CONST_INT varBuidlingZipFlag    29    //sp_mlb           ||1= Activated     || 0= Deactivated
+CONST_INT varBuildingZipFlag    29    //sp_mlb           ||1= Activated     || 0= Deactivated
 
 CONST_INT varLevelChar          30    //sp_lvl    || Level
 CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)
