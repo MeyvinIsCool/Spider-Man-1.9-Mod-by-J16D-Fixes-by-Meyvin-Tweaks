@@ -1,5 +1,5 @@
 // by Meyvin Tweaks
-// Web zip to buildings (IN EXPERIMENTAL STAGE !!! , and may cause bugs and crashes due to the OUTDATED CODE)
+// Web zip to buildings (In BETA , there might be some bugs due to some collisions are not perfect on the vanilla game , need to make proper collision)
 // Spider-Man Mod for GTA SA c.2018 - 2023
 // Original Shine GUI by Junior_Djjr
 // Official Page: https://forum.mixmods.com.br/f16-utilidades/t694-shine-gui-crie-interfaces-personalizadas
@@ -29,9 +29,8 @@ GOSUB REQUEST_webAnimations
 GOSUB loadTextures
 USE_TEXT_COMMANDS TRUE
 
-GET_CLEO_SHARED_VAR varBuidlingZipFlag iTempVar
 iTempVar = 1
-SET_CLEO_SHARED_VAR varBuidlingZipFlag iTempVar
+SET_CLEO_SHARED_VAR varBuildingZipFlag iTempVar
 
 main_loop:
     IF IS_PLAYER_PLAYING player
@@ -45,10 +44,11 @@ main_loop:
                 ENDWHILE
             ENDIF
 
-            GET_CLEO_SHARED_VAR varBuidlingZipFlag iTempVar
+            GET_CLEO_SHARED_VAR varBuildingZipFlag iTempVar
 
             IF GOSUB is_not_char_playing_car_missions_anims
             AND iTempVar = 1
+
 
                 //Compatible reservoirs 
                 IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor -2022.26 13.982 61.60 25.0
@@ -66,10 +66,12 @@ main_loop:
                         AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                         AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
                         AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~
+
                             IF IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
                             AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                             AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~          
+                            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~    
+                                  
                                 IF GOSUB is_not_player_playing_swing_anims
 
                                     IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -3.0) (1 0 0 0 0)   //AIR
@@ -118,11 +120,17 @@ main_loop:
                                                     GOSUB stay_on_building_from_ground
                                                 ENDIF
                                                 is_near_pole = FALSE
-
+                                                IF DOES_OBJECT_EXIST obj
+                                                    SET_OBJECT_COLLISION obj TRUE
+                                                ENDIF    
+                                            ELSE
+                                                IF DOES_OBJECT_EXIST obj
+                                                    SET_OBJECT_COLLISION obj TRUE
+                                                    WAIT 0
+                                                    SET_OBJECT_COLLISION obj TRUE
+                                                ENDIF
                                             ENDIF
                                         ENDIF
-
-
                                     ENDIF
                                 ENDIF
                             ENDIF
@@ -154,13 +162,256 @@ get_building_side:
     z[0] += 0.65
 
     CLEO_CALL getXYZAimCoords 0 player_actor 50.0 1.0 (x[1] y[1] z[1]) (x[3] y[3] z[3]) //(fDistance)
-    //PRINT_FORMATTED_NOW "Col1 %.2f %.2f %.2f ~n~norm1 %.2f %.2f %.2f ~n~Col2 %.2f %.2f %.2f ~n~norm2 %.2f %.2f %.2f" 1000 x[0] y[0] z[0] x[2] y[2] z[2] x[1] y[1] z[1] x[3] y[3] z[3]
+    PRINT_FORMATTED_NOW "Col1 %.2f %.2f %.2f ~n~norm1 %.2f %.2f %.2f ~n~Col2 %.2f %.2f %.2f ~n~norm2 %.2f %.2f %.2f" 1000 x[0] y[0] z[0] x[2] y[2] z[2] x[1] y[1] z[1] x[3] y[3] z[3]
 
     IF NOT x[2] = x[3]
     OR NOT y[2] = y[3]
     OR NOT z[2] = z[3]
-        RETURN_TRUE
-    ELSE
+        
+        // Collision's Normal Vector Conditions 
+
+        //-+----------------------------------------------------------------------------------X Axis--------------------------------------------------------------------------
+        IF x[2] <= -8.00
+        OR x[3] <= -8.00
+        OR x[2] >= 8.00
+        OR x[3] >= 8.00   
+
+            IF CLEO_CALL isClearInSight 0 player_actor (0.0 5.0 1.5) (1 0 0 0 0)    //Front
+            AND x[2] = 0.00
+            AND x[3] = 0.00       
+
+                IF x[2] = 10.00
+                AND x[3] = 10.00        
+                    //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000                       
+                    RETURN_FALSE
+                    RETURN
+                ENDIF
+
+                IF x[2] = -10.00   
+                AND x[3] = 10.00
+                    //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000
+                    RETURN_FALSE
+                    RETURN
+                ENDIF
+
+                IF x[2] = 10.00   
+                AND x[3] = -10.00
+                    RETURN_FALSE    //to prevent zipping to unrelated (no idea how it works :) )
+                    RETURN
+                    IF z[2] = 10.00
+                    OR z[3] = 10.00    
+                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000              
+                        RETURN_FALSE
+                        RETURN
+                    ELSE
+                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000 
+                        RETURN_TRUE
+                        RETURN
+                    ENDIF
+                ENDIF
+
+                IF x[2] = 0.00   
+                AND x[3] = 10.00
+                    IF z[2] >= 5.0
+                    OR z[3] = 10.0
+                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
+                        RETURN_FALSE
+                        RETURN
+                    ELSE
+                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000      
+                        RETURN_TRUE
+                        RETURN
+                    ENDIF                            
+                ENDIF
+
+                IF x[2] = 10.00   
+                AND x[3] = 0.00
+                    IF z[2] = 10.00
+                    OR z[3] = 10.00          
+                    OR z[3] = -10.00   
+                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000    
+                        RETURN_FALSE
+                        RETURN
+                    ELSE
+                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000
+                        RETURN_TRUE
+                        RETURN
+                    ENDIF                         
+                ENDIF
+
+                IF x[2] = 0.00   
+                AND x[3] = -10.00
+                    RETURN_FALSE     //to prevent zipping to unrelated (no idea how it works :) )
+                    RETURN
+                    IF z[2] = 10.00
+                    OR z[3] = -10.00  
+                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
+                        RETURN_FALSE
+                        RETURN
+                    ELSE
+                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000 
+                        RETURN_TRUE
+                        RETURN
+                    ENDIF
+                ENDIF
+
+                IF x[2] = -10.00   
+                AND x[3] = 0.00
+                    IF z[2] = 10.00
+                    OR z[3] = 10.00
+                    OR z[3] = -10.00
+                    OR y[3] = 10.00 
+                    OR y[3] = -10.00 
+                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
+                        RETURN_FALSE
+                        RETURN
+                    ELSE
+                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000
+                        RETURN_TRUE
+                        RETURN
+                    ENDIF                           
+                ENDIF                     
+            ENDIF              
+        ENDIF          
+        
+        //-+----------------------------------------------------------------------------------Y Axis--------------------------------------------------------------------------
+        IF y[2] <= -8.00
+        OR y[3] <= -8.00
+        OR y[2] >= 8.00
+        OR y[3] >= 8.00  
+
+            IF y[2] = 10.00 
+            AND y[3] = 10.00   
+                IF x[2] = 0.00
+                OR x[3] = 0.00    
+                    //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                   
+                    RETURN_TRUE
+                    RETURN
+                ENDIF
+            ENDIF
+
+            IF y[2] = -10.00 
+            AND y[3] = -10.00   
+                IF x[2] = 0.00
+                OR x[3] = 0.00           
+                    //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                             
+                    RETURN_TRUE
+                    RETURN
+                ENDIF
+            ENDIF
+
+            IF y[2] = 10.00 
+            AND y[3] = 0.00
+                RETURN_FALSE        //to prevent zipping to unrelated (no idea how it works :) )  
+                RETURN 
+                IF x[2] = 10.00
+                OR x[2] = -10.00
+                OR x[3] = 10.00 
+                OR x[3] = -10.00
+                OR z[2] = 10.00
+                OR z[2] = -10.00
+                OR z[3] = 10.00 
+                OR z[3] = -10.00   
+                    //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000  
+                    RETURN_FALSE
+                    RETURN
+                ELSE   
+                    //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                      
+                    RETURN_TRUE
+                    RETURN
+                ENDIF
+            ENDIF
+
+            IF y[2] = 0.00 
+            AND y[3] = 10.00  
+                RETURN_FALSE
+                RETURN 
+                IF x[2] = 10.00
+                OR x[2] = -10.00
+                OR x[3] = 10.00 
+                OR x[3] = -10.00
+                OR z[2] = 10.00
+                OR z[2] = -10.00
+                OR z[3] = 10.00 
+                OR z[3] = -10.00   
+                    //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000
+                    RETURN_FALSE
+                    RETURN
+                ELSE        
+                    //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                 
+                    RETURN_TRUE
+                    RETURN
+                ENDIF
+            ENDIF
+
+            IF y[2] = -10.00 
+            AND y[3] = 0.00   
+                IF x[2] = 10.00
+                OR x[2] = -10.00
+                OR x[3] = 10.00 
+                OR x[3] = -10.00
+                OR z[2] = 10.00
+                OR z[2] = -10.00
+                OR z[3] = 10.00 
+                OR z[3] = -10.00    
+                    //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000
+                    RETURN_FALSE
+                    RETURN
+                ELSE         
+                    //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                
+                    RETURN_TRUE
+                    RETURN
+                ENDIF
+            ENDIF
+
+            IF y[2] = 0.00 
+            AND y[3] = -10.00   
+                IF x[2] = 10.00
+                OR x[2] = -10.00
+                OR x[3] = 10.00 
+                OR x[3] = -10.00
+                OR z[2] = 10.00
+                OR z[2] = -10.00
+                OR z[3] = 10.00 
+                OR z[3] = -10.00                     
+                    //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
+                    RETURN_FALSE
+                    RETURN
+                ELSE       
+                    IF x[2] >= 0.01         //avoid zip inside collisions
+                    OR x[2] <= 0.001
+                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
+                        RETURN_FALSE
+                        RETURN 
+                    ELSE                   
+                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                            
+                        RETURN_TRUE
+                        RETURN
+                    ENDIF
+                ENDIF
+            ENDIF
+        ENDIF       
+        
+/*        //-+-----------------------------------------------------------------------Z Axis (This Part Need To Be Adjusted)--------------------------------------------------------------------------
+        IF z[2] = 10.00
+        OR z[3] = 0.00
+            IF z[2] = 10.00
+            OR z[3] = 10.00
+            OR z[3] <= 10.00
+            OR y[3] = 10.00
+            OR x[3] >= 0.01
+            OR x[3] <= -0.01
+                //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
+                RETURN_FALSE
+                RETURN
+            ELSE
+                //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000 
+                RETURN_TRUE
+                RETURN
+            ENDIF                    
+        ENDIF  
+*/ 
+    ELSE    
         RETURN_FALSE
    ENDIF
 RETURN
@@ -328,19 +579,20 @@ in_air_zip_to_buidling:
                 GOSUB destroyTwoWebs
                 RETURN
             ENDIF
+            /*
             IF timera > 750
                 GOSUB stay_on_building_from_air
                 GOSUB destroyWeb
-                /*
+                
                 CLEAR_CHAR_TASKS player_actor
                 CLEAR_CHAR_TASKS_IMMEDIATELY player_actor                
                 WAIT 0 
                 TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("groundToLampC" "spider") 13.0 (0 1 1 1) -2
                 WAIT 1
                 SET_CHAR_ANIM_SPEED player_actor "groundToLampC" 1.65  
-                */
+                
                 RETURN
-            ENDIF 
+            ENDIF */
         ENDWHILE
     ENDIF
     is_near_pole = TRUE
@@ -368,7 +620,6 @@ point_launch_air_building:
         ENDIF
         WAIT 0
     ENDWHILE
-    SET_CHAR_COLLISION player_actor TRUE
     GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 1.0 (x[0] y[0] z[0])
     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
     CLEO_CALL setCharViewPointToCamera 0 player_actor
@@ -413,8 +664,8 @@ stay_on_building_from_air:
             //----------------------------------- Jump from Building
             SET_CHAR_COLLISION player_actor TRUE
             GOSUB REQUEST_Animations
-            y[2] = 1.5
-            z[2] = 2.0
+            y[2] = 0.5
+            z[2] = 1.0
             CLEAR_CHAR_TASKS player_actor
             CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
             TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("jump_launch_A" "spider") 6.0 (0 1 1 0) -1
@@ -439,12 +690,10 @@ stay_on_building_from_air:
 
         IF IS_BUTTON_PRESSED PAD1 LEFTSTICKX   // ~k~~GO_LEFT~ / ~k~~GO_RIGHT~
         OR IS_BUTTON_PRESSED PAD1 LEFTSTICKY  //~k~~GO_FORWARD~ / ~k~~GO_BACK~
-            y[2] = 0.0
-            z[2] = 0.5
-            CLEO_CALL setCharVelocity 0 player_actor (0.0 y[2] z[2]) 1.5
-            WAIT 5
+            SET_CHAR_VELOCITY player_actor 0.0 0.5 5.0
             SET_CHAR_COLLISION player_actor TRUE
-            TASK_TOGGLE_DUCK player_actor TRUE        
+            WAIT 1
+            TASK_TOGGLE_DUCK player_actor TRUE      
         ENDIF
         WAIT 0
     ENDWHILE
@@ -501,9 +750,6 @@ on_ground_zip_to_point:
             ENDIF
             WAIT 0
         ENDWHILE
-    ENDIF
-    IF DOES_OBJECT_EXIST obj
-        SET_OBJECT_COLLISION obj FALSE
     ENDIF
 
     randomVal = 3
@@ -573,9 +819,6 @@ on_ground_zip_to_point:
                 WAIT 0
                 is_near_pole = FALSE
                 GOSUB destroyTwoWebs
-                IF DOES_OBJECT_EXIST obj
-                    SET_OBJECT_COLLISION obj TRUE
-                ENDIF
                 RETURN
             ENDIF
             IF timera > 4000
@@ -584,9 +827,6 @@ on_ground_zip_to_point:
                 WAIT 0
                 is_near_pole = FALSE
                 GOSUB destroyTwoWebs
-                IF DOES_OBJECT_EXIST obj
-                    SET_OBJECT_COLLISION obj TRUE
-                ENDIF
                 RETURN
             ENDIF
             WAIT 0
@@ -1179,8 +1419,11 @@ getXYZAimCoords:
     LVAR_FLOAT range fZPoint  //in
     LVAR_FLOAT fromX fromY fromZ
     LVAR_FLOAT camX camY camZ pointX pointY pointZ
-    LVAR_INT var1 var2 i j k
+    LVAR_INT var1 var2 i j k idNewObj idModel
     LVAR_FLOAT resultX resultY resultZ x y z
+    LVAR_FLOAT x2 y2 z2 outputX outputY outputZ
+
+
     IF DOES_CHAR_EXIST scplayer
         GET_CHAR_COORDINATES scplayer (fromX fromY fromZ)
         GET_VAR_POINTER (camX) (var1)
@@ -1191,6 +1434,7 @@ getXYZAimCoords:
         GET_PED_POINTER scplayer (i)
         GET_LABEL_POINTER Buffer44 j
         IF GET_COLLISION_BETWEEN_POINTS (camX camY camZ) (pointX pointY pointZ) TRUE FALSE FALSE FALSE FALSE FALSE TRUE TRUE i j (resultX resultY resultZ i)
+            /*
             GET_ENTITY_TYPE i (k)
             IF k = ENTITY_TYPE_BUILDING
                 GET_COLPOINT_NORMAL_VECTOR j x y z
@@ -1199,6 +1443,20 @@ getXYZAimCoords:
                 z *= 10.0
                 CLEO_RETURN 0 resultX resultY resultZ x y z
             ENDIF
+            */
+
+            //my code (didn't work as I expected :( )
+            GET_ENTITY_TYPE i (k)
+            IF k = ENTITY_TYPE_BUILDING    
+                GET_COLPOINT_NORMAL_VECTOR j x y z
+                x *= 10.0
+                y *= 10.0
+                z *= 10.0
+                IF CLEO_CALL isClearInSight 0 scplayer (0.0 5.0 1.5) (1 0 0 0 0)    //Front
+                    CLEO_RETURN 0 resultX resultY resultZ x y z
+                ENDIF
+            ENDIF
+
             /*
             GET_ENTITY_TYPE i (k)
             IF k = ENTITY_TYPE_BUILDING
@@ -1218,6 +1476,43 @@ getXYZAimCoords:
         ENDIF
     ENDIF
 CLEO_RETURN 0 resultX resultY resultZ 0.0 0.0 0.0
+}
+{
+//CLEO_CALL get_object_near_char 0 scplayer 60.0 (iNewObj)
+get_object_near_char:
+    LVAR_INT scplayer   //in
+    LVAR_FLOAT fMaxDistance //in
+    LVAR_INT p i obj iNewObj
+    LVAR_FLOAT x[2] y[2] z[2] fDistance v1 v2
+    IF DOES_CHAR_EXIST scplayer
+        i = 0
+        WHILE GET_ANY_OBJECT_NO_SAVE_RECURSIVE i (i obj)
+            IF DOES_OBJECT_EXIST obj
+                GET_OFFSET_FROM_OBJECT_IN_WORLD_COORDS obj (0.0 0.0 0.0) (x[1] y[1] z[1])
+                GET_ACTIVE_CAMERA_COORDINATES (x[0] y[0] z[0])
+                GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (x[1] y[1] z[1]) (fDistance) 
+                IF fMaxDistance >= fDistance
+                    IF IS_OBJECT_ON_SCREEN obj
+                    AND IS_LINE_OF_SIGHT_CLEAR (x[0] y[0] z[0]) (x[1] y[1] z[1]) (0 0 0 1 0)   //(isSolid isCar isActor isObject isParticle)
+
+                        CONVERT_3D_TO_SCREEN_2D (x[1] y[1] z[1]) TRUE TRUE (v1 v2) (x[0] y[0])
+                        GET_DISTANCE_BETWEEN_COORDS_2D (339.0 179.0) (v1 v2) (fDistance)
+                        IF 70.0 > fDistance
+                            iNewObj = obj
+                            BREAK
+                        ENDIF
+
+                    ENDIF
+                ENDIF
+            ENDIF
+        ENDWHILE
+        IF DOES_OBJECT_EXIST iNewObj
+            RETURN_TRUE
+        ELSE
+            RETURN_FALSE
+        ENDIF
+    ENDIF
+CLEO_RETURN 0 iNewObj
 }
 
 
@@ -1325,7 +1620,7 @@ CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0
 CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= 
 CONST_INT varThrowFix           28    //sp_thob          ||1= Activated     || 0= Deactivated
-CONST_INT varBuidlingZipFlag    29    //sp_mlb           ||1= Activated     || 0= Deactivated
+CONST_INT varBuildingZipFlag    29    //sp_mlb           ||1= Activated     || 0= Deactivated
 
 CONST_INT varLevelChar          30    //sp_lvl    || Level
 CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)
