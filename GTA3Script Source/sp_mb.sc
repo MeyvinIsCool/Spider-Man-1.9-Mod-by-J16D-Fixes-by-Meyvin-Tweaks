@@ -136,20 +136,6 @@ main_loop:
 
                     ENDIF                  
 
-                    IF NOT IS_BUTTON_PRESSED PAD1 CROSS  // ~k~~PED_SPRINT~
-                    AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE        // ~k~~PED_FIREWEAPON~
-                    AND NOT IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER1   //~k~~PED_LOCK_TARGET~
-                        IF IS_CHAR_PLAYING_ANIM player_actor "fall_glide_A"
-                        OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_B"
-                        OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_C"
-                        OR IS_CHAR_PLAYING_ANIM player_actor "fall_glide_D"     
-                            IF fCharSpeed > 56.5    // for Ground Crush    
-                                WAIT 0
-                                fCharSpeed = 0.0
-                            ENDIF
-                        ENDIF  
-                    ENDIF
-
                 ENDIF                
             
             ENDIF

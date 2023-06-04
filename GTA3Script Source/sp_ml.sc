@@ -218,7 +218,7 @@ main_loop:
         ENDIF
 
     ENDIF
-/*
+
     // Web Zip Behind (BETA) - Scripted By MeyvinIsCool 
     IF IS_CHAR_REALLY_IN_AIR player_actor
         IF GOSUB is_not_player_playing_for_backzip
@@ -255,7 +255,7 @@ main_loop:
                 ENDIF
             ENDIF
         ENDIF   
-    ENDIF   */
+    ENDIF   
                 
     WAIT 0
 GOTO main_loop  

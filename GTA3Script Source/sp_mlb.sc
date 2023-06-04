@@ -167,7 +167,7 @@ get_building_side:
     
     //DRAW_CORONA x[0] y[0] z[0] 0.40 CORONATYPE_SHINYSTAR FLARETYPE_NONE 255 0 0
     //DRAW_CORONA x[1] y[1] z[1] 0.40 CORONATYPE_SHINYSTAR FLARETYPE_NONE 0 0 255    
-    PRINT_FORMATTED_NOW "VectorN1 %.2f %.2f %.2f ~n~VectorN2 %.2f %.2f %.2f ~n~idModel :~y~ %i" 1000 x[2] y[2] z[2] x[3] y[3] z[3] idModel  //DEBUG 
+    //PRINT_FORMATTED_NOW "VectorN1 %.2f %.2f %.2f ~n~VectorN2 %.2f %.2f %.2f ~n~idModel :~y~ %i" 1000 x[2] y[2] z[2] x[3] y[3] z[3] idModel  //DEBUG 
 
     IF NOT x[2] = x[3]
     OR NOT y[2] = y[3]
