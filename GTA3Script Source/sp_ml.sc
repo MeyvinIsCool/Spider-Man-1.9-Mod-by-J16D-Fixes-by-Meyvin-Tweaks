@@ -159,7 +159,7 @@ main_loop:
 
                 //IF IS_CHAR_REALLY_IN_AIR player_actor
                 IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -5.0) (1 0 0 1 0)   //AIR
-                    IF GOSUB is_not_player_playing_anims
+                    IF GOSUB is_not_player_playing_anims                   
                         GOSUB destroyWeb
                         GOSUB createWeb
                         WAIT 0
@@ -810,8 +810,16 @@ is_not_player_playing_anims:
                             AND NOT IS_CHAR_PLAYING_ANIM player_actor ("t_tower_A")
                             AND NOT IS_CHAR_PLAYING_ANIM player_actor ("jump_glide_F")
 
-                                RETURN_TRUE
-                                RETURN
+                                IF NOT IS_CHAR_PLAYING_ANIM player_actor ("groundToLampA")
+                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("airToLampA")
+                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("airToLampB")
+                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("airToLampB_B")   
+                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("groundToLampB")  
+                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("groundToLampD")   
+
+                                    RETURN_TRUE
+                                    RETURN
+                                ENDIF
                             ENDIF
                         ENDIF
                     ENDIF
@@ -2201,6 +2209,9 @@ CONST_INT varScrewBallProgress  15    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varBackpacksProgress  16    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varLandmarksProgress  17    //for stadistics ||MSpiderJ16Dv7
 
+CONST_INT varBuildingZip        18    //sp_mlb           ||1= Activated     || 0= Deactivated
+CONST_INT varBuildingZipFlag    19    //sp_mlb           ||1= Activated     || 0= Deactivated
+
 CONST_INT varAlternativeSwing   20    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varSwingBuilding      21    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varFixGround          22    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
@@ -2210,7 +2221,6 @@ CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0
 CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= 
 CONST_INT varThrowFix           28    //sp_thob          ||1= Activated     || 0= Deactivated
-CONST_INT varBuildingZipFlag    29    //sp_mlb           ||1= Activated     || 0= Deactivated
 
 CONST_INT varLevelChar          30    //sp_lvl    || Level
 CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)

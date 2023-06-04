@@ -38,6 +38,9 @@ CONST_INT varScrewBallProgress  15    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varBackpacksProgress  16    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varLandmarksProgress  17    //for stadistics ||MSpiderJ16Dv7
 
+CONST_INT varBuildingZip        18    //sp_mlb           ||1= Activated     || 0= Deactivated
+CONST_INT varBuildingZipFlag    19    //sp_mlb           ||1= Activated     || 0= Deactivated
+
 CONST_INT varAlternativeSwing   20    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varSwingBuilding      21    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varFixGround          22    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
@@ -46,6 +49,7 @@ CONST_INT varAimSetup           24    // 0:Manual Aim || 1:Auto Aim //sp_dw
 CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varThrowFix           28    //sp_thob          ||1= Activated     || 0= Deactivated
 
 CONST_INT varLevelChar          30    //sp_lvl    || Level
 CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)
@@ -125,7 +129,7 @@ ENDIF
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_pizza.cs"     // Pizza Time Mission (Only If The Mission Is Installed !)
     ENDIF        
 
-    // Web Zip To Building EXPERIMENTAL SCRIPT (MAY CAUSE BUGS AND CRASHES DUE TO OUTDATED CODES)
+    // Web Zip To Building (BETA)
     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_mlb.cs"
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_mlb.cs"     // Web Zip To Building
     ENDIF            
@@ -577,9 +581,7 @@ is_not_player_playing_anims:
             AND NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_jump_fall")
             AND NOT IS_CHAR_PLAYING_ANIM player_actor ("jump_wall_top_B")
             AND NOT IS_CHAR_PLAYING_ANIM player_actor ("jump_wall_top_A")
-                IF NOT IS_CHAR_PLAYING_ANIM player_actor ("groundToLampB")
-                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("groundToLampC")
-                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("airToLampA")
+                IF NOT IS_CHAR_PLAYING_ANIM player_actor ("airToLampA")
                 AND NOT IS_CHAR_PLAYING_ANIM player_actor ("airToLampB")
                 AND NOT IS_CHAR_PLAYING_ANIM player_actor ("airToLampC")
                 AND NOT IS_CHAR_PLAYING_ANIM player_actor ("jump_glide_F")
@@ -600,12 +602,17 @@ is_not_player_playing_anims:
                             AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_right")
                             AND NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_corner_L")
                             AND NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_corner_R")
-                            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("groundToLampA")
 
-                                RETURN_TRUE
-                                RETURN
+                                IF NOT IS_CHAR_PLAYING_ANIM player_actor ("groundToLampA")
+                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("airToLampA")
+                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("airToLampB")
+                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("airToLampB_B")   
+                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("groundToLampB")  
+                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("groundToLampD") 
+                                    RETURN_TRUE
+                                    RETURN
+                                ENDIF
                             ENDIF
-
                         ENDIF
                     ENDIF
                 ENDIF

@@ -31,6 +31,9 @@ CONST_INT varBackpacksProgress  16    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varLandmarksProgress  17    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varDrugDealProgress   18    //for stadistics ||MSpiderJ16Dv7
 
+CONST_INT varBuildingZip        18    //sp_mlb           ||1= Activated     || 0= Deactivated
+CONST_INT varBuildingZipFlag    19    //sp_mlb           ||1= Activated     || 0= Deactivated
+
 CONST_INT varAlternativeSwing   20    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varSwingBuilding      21    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varFixGround          22    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
@@ -39,6 +42,7 @@ CONST_INT varAimSetup           24    // 0:Manual Aim || 1:Auto Aim //sp_dw
 CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varThrowFix           28    //sp_thob          ||1= Activated     || 0= Deactivated
 
 CONST_INT varLevelChar          30    //sp_lvl    || Level
 CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)
@@ -969,7 +973,7 @@ show_menu:
                     BREAK
 
                 CASE menConfigSuit
-                    CLEO_CALL getDataJoystickUpDown 0 (107 100 iActiveRow) (iActiveRow)
+                    CLEO_CALL getDataJoystickUpDown 0 (108 100 iActiveRow) (iActiveRow)
                     IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                         SWITCH iActiveRow
                             CASE idAlternativeSwing_l   // 100
@@ -993,9 +997,12 @@ show_menu:
                             CASE idFriendlyN_l      //106
                                 GOSUB set_config_friendly_neighborhood
                                 BREAK
-                            CASE idThrowDoors_l
+                            CASE idThrowDoors_l     //107
                                 GOSUB set_config_throw_veh_doors
                                 BREAK
+                            CASE idZipBuilding_l    //108
+                                GOSUB set_config_zip_to_building
+                                BREAK                                
                         ENDSWITCH
                         CLEO_CALL play_SFX_Menu 0 8  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success   
 
@@ -1391,6 +1398,17 @@ set_config_throw_veh_doors:
     ENDIF
     CLEO_CALL storeThrowVehDoorsItem 0 iTempVar
     SET_CLEO_SHARED_VAR varThrowVehDoors iTempVar      // 0:OFF || 1:ON
+RETURN
+
+set_config_zip_to_building:
+    CLEO_CALL getZipBuildingItem 0 (iTempVar)
+    IF iTempVar = 1
+        iTempVar = 0
+    ELSE
+        iTempVar = 1
+    ENDIF
+    CLEO_CALL storeZipBuildingItem 0 iTempVar
+    SET_CLEO_SHARED_VAR varBuildingZip iTempVar      // 0:OFF || 1:ON
 RETURN
 ///---------------------------------------------------------------------
 
@@ -2355,8 +2373,8 @@ ProcessGame_and_DrawItems_Config_SUIT:
     DRAW_RECT (77.5 227.5) (2.5 2.5) (6 253 244 200)
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (85.0 157.5) (15.0 140.0) (6 253 244 0) (0.45) (0 0 0 1) (6 253 244 200) -1 -1 (0.0 0.0)   //LINE_SIDE_LEFT (VERTICAL+UNION)
     //---------
-    //id-> 100 - 106
-    CONST_INT iMaxRowConfigSuit 107
+    //id-> 100 - 108
+    CONST_INT iMaxRowConfigSuit 108
     CONST_INT iMinRowConfigSuit 100
     GET_FIXED_XY_ASPECT_RATIO (90.0 35.0) (xSize ySize)
     yCoord = 108.0
@@ -2389,9 +2407,12 @@ ProcessGame_and_DrawItems_Config_SUIT:
             CASE idFriendlyN_l          //106
                 CLEO_CALL getFriendlyNeighborhoodItem 0 (iTempVar)
                 BREAK
-            CASE idThrowDoors_l
+            CASE idThrowDoors_l         //107
                 CLEO_CALL getThrowVehDoorsItem 0 (iTempVar)
                 BREAK
+            CASE idZipBuilding_l        //108
+                CLEO_CALL getZipBuildingItem 0 (iTempVar)
+                BREAK                
         ENDSWITCH
         IF iTempVar = 1  //ON
             IF iRow = iActiveRow  //Active Item
@@ -2468,12 +2489,11 @@ ProcessGame_and_DrawMenu_RightPanel_CONFIG_SUIT:
                     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (520.0 278.0) (200.0 100.0) (0 0 0 0) (0.5) (0 0 0 0) (0 0 0 0) 337 19 (0.0 0.0)   //
                     BREAK
                 CASE idThrowDoors_l
-                    IF IS_PC_USING_JOYPAD
-                        CLEO_CALL GUI_DrawBoxOutline_WithText 0 (520.0 278.0) (200.0 100.0) (0 0 0 0) (0.5) (0 0 0 0) (0 0 0 0) 338 19 (0.0 0.0)   //
-                    ELSE
-                        CLEO_CALL GUI_DrawBoxOutline_WithText 0 (520.0 278.0) (200.0 100.0) (0 0 0 0) (0.5) (0 0 0 0) (0 0 0 0) 339 19 (0.0 0.0)   //
-                    ENDIF
+                    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (520.0 278.0) (200.0 100.0) (0 0 0 0) (0.5) (0 0 0 0) (0 0 0 0) 338 19 (0.0 0.0)   //
                     BREAK
+                CASE idZipBuilding_l
+                    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (520.0 278.0) (200.0 100.0) (0 0 0 0) (0.5) (0 0 0 0) (0 0 0 0) 339 19 (0.0 0.0)   //
+                    BREAK                
             ENDSWITCH
         ENDIF
         iRow ++
@@ -7479,6 +7499,25 @@ getAutoAimItem:
     READ_MEMORY (pActiveItem) 4 FALSE (pActiveItem)  
 CLEO_RETURN 0 pActiveItem
 }
+
+{
+//CLEO_CALL storeAutoAimItem 0 var
+storeZipBuildingItem:
+    LVAR_INT inVal 
+    LVAR_INT pActiveItem
+    GET_LABEL_POINTER GUI_Memory_ZipBuildingItem pActiveItem
+    WRITE_MEMORY pActiveItem 4 inVal FALSE
+CLEO_RETURN 0
+}
+{
+//CLEO_CALL getAutoAimItem 0 (var)
+getZipBuildingItem:
+    LVAR_INT pActiveItem
+    GET_LABEL_POINTER GUI_Memory_ZipBuildingItem (pActiveItem)
+    READ_MEMORY (pActiveItem) 4 FALSE (pActiveItem)  
+CLEO_RETURN 0 pActiveItem
+}
+
 {
 //CLEO_CALL storeSpiderDriveCarsItem 0 var
 storeSpiderDriveCarsItem:
@@ -8784,6 +8823,11 @@ DUMP
 00 00 00 00
 ENDDUMP
 
+GUI_Memory_ZipBuildingItem:
+DUMP
+00 00 00 00
+ENDDUMP
+
 GUI_Memory_SwingBuildingsItem:
 DUMP
 00 00 00 00
@@ -8965,6 +9009,7 @@ CONST_INT idAutoAim_l           104
 CONST_INT idSpiderCanDrive_l    105
 CONST_INT idFriendlyN_l         106
 CONST_INT idThrowDoors_l        107
+CONST_INT idZipBuilding_l       108
 
 CONST_INT idActivateTITLE_l     110
 CONST_INT idOption2_l           111
