@@ -18,13 +18,13 @@ Things I Fixed And Added On This Mod :
 - Added GInput (Recommended If You Are Using Controller)
 - Remade Screwball Trigger Now With 3D Blips - GTA3Script 
 - Restored Screwball PhotoBomb Challange (Now It Is Compatible With Every Resolution Which Fixes The Overlapping Bar !)
-- Added More Reservoirs
-- Added New Screwball Mission (It Is Merged So You Can Try Both Of The Original And My Custom Made Mission)
 - Added Remade Pizza Time Mission by MeyvinIsCool (Mission v2) (Thanks For Mr.Demon "Genos" Cyborg For Giving Me The Source Code)
 - Added Hit Counter (v2) (Still Need Some Improvements As It's Wont Detect The Suit Powers And May Have Some Bugs !!)
-- Added 4 New Suit Powers 
-- Added Ground Crush When Falling From High Altitude
+- Added 4 New Suit Powers (Iron Arms Still In WIP)
 - Added Only Side Mission #2 - No More Supplies (Thanks to GTA Loyalty) (Spanish Texts Available Inside The Addon Folder)
+- Added Drug Deal Crime Mission
+- Added Ground Crush When Falling From High Altitude
+- Added Web Zip To Building (BETA)
 - And MORE ....
 
 Need Help With Installation ... Watch My Video Showing You How To Install This Tweak ! Also Subscribe To The Channel To Stay Tuned With My Exclusive Updates For The Mod !
@@ -43,5 +43,6 @@ I Had So Much Fun Time Making These Fixes And Also Thanks To These People Who He
 - Teo (Collecting Suits And Suit Chest)
 - Mr.Andres5555 (Making Suits)
 - Bilyyy (Animations)
+- Zolani (Sounds)
 
 Sorry If I Missed Somebody .... Thank You !
