@@ -240,6 +240,9 @@ RETURN
 
 assign_task_jump:
     //-+-- Jump
+    IF IS_CHAR_PLAYING_ANIM player_actor ("WEAPON_crouch")  //fix bug on sp_mlb script (Web Zip To Building)
+        TASK_TOGGLE_DUCK player_actor FALSE
+    ENDIF 
     GOSUB REQUEST_SwingAnimations
     GET_CHAR_SPEED player_actor fCharSpeed
     fVelY = fCharSpeed * 0.2

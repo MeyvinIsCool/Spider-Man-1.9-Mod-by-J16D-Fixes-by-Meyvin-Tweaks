@@ -19,7 +19,7 @@ WAIT 0
 WAIT 0
 LVAR_INT player_actor toggleSpiderMod
 LVAR_FLOAT xAngle zAngle x[4] y[4] z[4] v1 v2 fDistance currentTime fCharSpeed
-LVAR_INT baseObject iWebActor iWebActorR obj iVeh sfx sfxB
+LVAR_INT baseObject baseObjectR iWebActor iWebActorR obj sfx sfxB
 LVAR_INT is_near_pole randomVal iTempVar is_near_car
 
 CONST_INT STOP 0 
@@ -218,7 +218,7 @@ main_loop:
         ENDIF
 
     ENDIF
-
+/*
     // Web Zip Behind (BETA) - Scripted By MeyvinIsCool 
     IF IS_CHAR_REALLY_IN_AIR player_actor
         IF GOSUB is_not_player_playing_for_backzip
@@ -227,27 +227,44 @@ main_loop:
 
                     IF NOT IS_CHAR_PLAYING_ANIM player_actor "zip_back"
                     AND IS_BUTTON_JUST_PRESSED PAD1 CIRCLE                // ~k~~PED_FIREWEAPON~
-                    AND IS_BUTTON_JUST_PRESSED PAD1 SQUARE            // PED_JUMP
 
-                        //CLEO_CALL setCharVelocity 0 player_actor 0.0 -0.95 1.0 10.0  
-                        CLEO_CALL setCharVelocity 0 player_actor 0.0 -1.5 0.65 10.0              
+                        //CLEO_CALL setCharVelocity 0 player_actor 0.0 -0.95 1.0 10.0                
                         GOSUB destroyTwoBackWebs
                         GOSUB createTwoBackWebs
-                            ATTACH_OBJECT_TO_CHAR baseObject player_actor (0.0 0.0 0.0) (0.0 0.0 180.0)            
-                        WAIT 0         
-                        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("LA_airToLampA" "mweb") 44.0 (0 1 1 1) -2
-                        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("SH_airToLampA" "mweb") 44.0 (0 1 1 1) -2                         
+                        TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("zip_back" "spider") 70.0 (0 1 1 0) -2
                         WAIT 0
-                        SET_CHAR_ANIM_SPEED iWebActor "LA_airToLampA" 0.76     
-                        SET_CHAR_ANIM_SPEED iWebActorR "SH_airToLampA" 0.76  
-                        GOSUB playWebSound                                                 
-                        GOSUB TASK_PLAY_BackWebZip                 
-                        WAIT 0                                           
+                        SET_CHAR_ANIM_SPEED player_actor "zip_back" 1.3                             
+
+                        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("w_wall_L_A" "mweb") 57.0 (0 1 1 1) -1
+                        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("w_wall_R_A" "mweb") 57.0 (0 1 1 1) -1
                         WAIT 0
-                        GOSUB destroyTwoWebs
+                        SET_CHAR_ANIM_SPEED iWebActor "w_wall_L_A" 3.5   
+                        SET_CHAR_ANIM_SPEED iWebActorR "w_wall_R_A" 3.5                       
+
                         IF DOES_OBJECT_EXIST baseObject
-                            DETACH_OBJECT baseObject (0.0 0.0 0.0) FALSE
-                        ENDIF   
+                        AND DOES_OBJECT_EXIST baseObjectR
+                            ATTACH_OBJECT_TO_CHAR baseObject player_actor (0.7 -8.5 -1.0) (0.0 0.0 180.0)
+                            ATTACH_OBJECT_TO_CHAR baseObjectR player_actor (-0.7 -8.5 -1.0) (0.0 0.0 180.0)
+                        ENDIF                                                                                          
+                        GOSUB playWebSound             
+
+                        timera = 0
+                        WHILE 300 > timera                                                  
+                            CLEO_CALL setCharVelocity 0 player_actor 0.0 -4.0 0.25 10.0
+                            IF DOES_OBJECT_EXIST baseObject
+                            AND DOES_OBJECT_EXIST baseObjectR
+                                DETACH_OBJECT baseObject (0.0 0.0 0.0) FALSE
+                                DETACH_OBJECT baseObjectR (0.0 0.0 0.0) FALSE
+                            ENDIF
+                            WAIT 0
+                        ENDWHILE
+
+                        timera = 0                      
+                        WHILE 500 > timera
+                            CLEO_CALL setCharVelocity 0 player_actor 0.0 0.0 0.0 10.0
+                            WAIT 0
+                        ENDWHILE                        
+                        GOSUB destroyTwoWebs
                         CLEAR_CHAR_TASKS player_actor
                         CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
 
@@ -256,6 +273,7 @@ main_loop:
             ENDIF
         ENDIF   
     ENDIF   
+*/
                 
     WAIT 0
 GOTO main_loop  
@@ -414,22 +432,6 @@ TASK_PLAY_WebZip:
     ENDSWITCH
 RETURN
 
-TASK_PLAY_BackWebZip:
-    CLEAR_CHAR_TASKS player_actor
-    CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("zip_back" "spider") 70.0 (0 1 1 0) -2
-    WAIT 0
-    SET_CHAR_ANIM_SPEED player_actor "zip_back" 1.3    
-    WHILE IS_CHAR_PLAYING_ANIM player_actor ("zip_back")
-        GET_CHAR_ANIM_CURRENT_TIME player_actor ("zip_back") (currentTime)
-        IF currentTime >= 0.98 //0.143
-            SET_CHAR_ANIM_PLAYING_FLAG player_actor ("zip_back") 0
-            BREAK  
-        ENDIF
-        WAIT 0         
-    ENDWHILE    
-RETURN
-
 playWebSound:
     REMOVE_AUDIO_STREAM sfx
     SWITCH randomVal
@@ -566,30 +568,38 @@ createTwoWebs:
 RETURN
 
 createTwoBackWebs:
-    IF NOT DOES_CHAR_EXIST iWebActor
+    IF NOT DOES_CHAR_EXIST iWebActor         // LOAD FOR THE MODELS
     AND NOT DOES_CHAR_EXIST iWebActorR
     AND NOT DOES_OBJECT_EXIST baseObject
+    AND NOT DOES_OBJECT_EXIST baseObjectR
         REQUEST_MODEL 1598
         LOAD_SPECIAL_CHARACTER 9 wmt
         LOAD_ALL_MODELS_NOW
-        CREATE_OBJECT_NO_SAVE 1598 0.0 0.0 0.0 FALSE FALSE (baseObject) 
+
+        CREATE_OBJECT_NO_SAVE 1598 0.0 0.0 0.0 FALSE FALSE (baseObject)
         SET_OBJECT_COLLISION baseObject FALSE
         SET_OBJECT_RECORDS_COLLISIONS baseObject FALSE
         SET_OBJECT_SCALE baseObject 0.01
         SET_OBJECT_PROOFS baseObject (1 1 1 1 1)
-        MARK_MODEL_AS_NO_LONGER_NEEDED 1598
 
-        CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (3.0 0.0 -10.0) iWebActor
+        CREATE_OBJECT_NO_SAVE 1598 0.0 0.0 0.0 FALSE FALSE (baseObjectR) 
+    	SET_OBJECT_PROOFS baseObjectR 1 1 1 1 1
+	    SET_OBJECT_COLLISION baseObjectR 0
+	    SET_OBJECT_SCALE baseObjectR 0.01
+        SET_OBJECT_PROOFS baseObjectR (1 1 1 1 1)          
+
+        CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (0.0 0.0 -10.0) iWebActor        // CREATES THE WEBS
+        CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (0.0 0.0 -10.0) iWebActorR
         SET_CHAR_COLLISION iWebActor 0
         SET_CHAR_NEVER_TARGETTED iWebActor 1
-        CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (-3.0 0.0 -10.0) iWebActorR
+
         SET_CHAR_COLLISION iWebActorR 0
         SET_CHAR_NEVER_TARGETTED iWebActorR 1
+
+        ATTACH_CHAR_TO_OBJECT iWebActor baseObject 0.0 0.0 0.0 0 0.0 0
+        ATTACH_CHAR_TO_OBJECT iWebActorR baseObjectR 0.0 0.0 0.0 0 0.0 0
+        MARK_MODEL_AS_NO_LONGER_NEEDED 1598
         UNLOAD_SPECIAL_CHARACTER 9
-        ATTACH_CHAR_TO_OBJECT iWebActor baseObject (0.0 0.0 0.0) 0 0.0 WEAPONTYPE_UNARMED
-        ATTACH_CHAR_TO_OBJECT iWebActorR baseObject (0.0 0.0 0.0) 0 0.0 WEAPONTYPE_UNARMED
-        GET_CHAR_HEADING player_actor (zAngle)
-        SET_OBJECT_HEADING baseObject zAngle       
     ENDIF
 RETURN
 
@@ -602,6 +612,9 @@ destroyTwoBackWebs:
     ENDIF
     IF DOES_OBJECT_EXIST baseObject
         DELETE_OBJECT baseObject
+    ENDIF
+    IF DOES_OBJECT_EXIST baseObjectR
+        DELETE_OBJECT baseObjectR
     ENDIF
 RETURN
 

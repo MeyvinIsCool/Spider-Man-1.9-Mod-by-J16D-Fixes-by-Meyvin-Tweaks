@@ -257,7 +257,7 @@ main_loop:
                             ENDIF
                         ENDIF
                         
-                        GENERATE_RANDOM_INT_IN_RANGE 0 7 (randomVal)    //random animation Swing (6 types by side)
+                        GENERATE_RANDOM_INT_IN_RANGE 0 6 (randomVal)    //random animation Swing (6 types by side)
                         //Fix animation D
                         IF randomVal = 3
                             GENERATE_RANDOM_FLOAT_IN_RANGE 1.150 1.450  (fMaxSwingPeriod)
@@ -2318,7 +2318,7 @@ spideyFrontWall:
         ENDIF
 
         // Web Zip While Wall Running (COMPLETED BETA) - Scripted By MeyvinIsCool
-        IF CLEO_CALL isClearInSightWall 0 player_actor (0.0 2.5 7.5) (1 0 0 0 0)
+        IF CLEO_CALL isClearInSightWall 0 player_actor (0.0 2.5 10.5) (1 0 0 0 0)
             IF NOT IS_CHAR_PLAYING_ANIM player_actor "zip_point_wall_run_up"
             AND IS_BUTTON_PRESSED PAD1 CROSS
             AND IS_BUTTON_JUST_PRESSED PAD1 CIRCLE // ~k~~PED_FIREWEAPON~
@@ -2327,30 +2327,34 @@ spideyFrontWall:
                 GOSUB REQUEST_webAnimations
                 GOSUB destroyWeb_Wall
                 GOSUB createWeb_Wall
-                TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "zip_point_wall_run_up" "spider" 25.0 (1 1 1 0) -2
+                TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "zip_point_wall_run_up" "spider" 50.0 (1 1 1 0) -2
                 WAIT 0
-                SET_CHAR_ANIM_SPEED player_actor "zip_point_wall_run_up" 1.35
-                TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("w_front_veh" "mweb") 57.0 (0 1 1 1) -1
-                TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("w_front_veh" "mweb") 57.0 (0 1 1 1) -1
+                //SET_CHAR_ANIM_SPEED player_actor "zip_point_wall_run_up" 1.35
+                SET_CHAR_ANIM_SPEED player_actor "zip_point_wall_run_up" 2.0
+
+                TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("w_wall_L_A" "mweb") 57.0 (0 1 1 1) -1
+                TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("w_wall_R_A" "mweb") 57.0 (0 1 1 1) -1
                 WAIT 0
-                SET_CHAR_ANIM_SPEED iWebActor "w_front_veh" 2.55      
-                SET_CHAR_ANIM_SPEED iWebActorR "w_front_veh" 2.55    
+                SET_CHAR_ANIM_SPEED iWebActor "w_wall_L_A" 2.0   
+                SET_CHAR_ANIM_SPEED iWebActorR "w_wall_R_A" 2.0    
                 GOSUB playWebSound
+
                 timera = 0
-                WHILE 500 > timera
-                    CLEO_CALL addForceToChar 0 player_actor 0.0 -1.2 1.2 10.0
+                WHILE 300 > timera
+                    CLEO_CALL addForceToChar 0 player_actor 0.0 -1.5 1.2 10.0
                     IF DOES_OBJECT_EXIST baseObject
                     AND DOES_OBJECT_EXIST baseObjectR
                         //ATTACH_OBJECT_TO_CHAR baseObject player_actor (-0.75 4.5 6.7) (75.0 0.0 0.0)
                         //ATTACH_OBJECT_TO_CHAR baseObjectR player_actor (0.3 4.5 6.7) (75.0 0.0 0.0)
-                        ATTACH_OBJECT_TO_CHAR baseObject player_actor (-0.6 4.5 6.2) (75.0 0.0 0.0)
-                        ATTACH_OBJECT_TO_CHAR baseObjectR player_actor (0.22 4.5 6.2) (75.0 0.0 0.0)                        
+                        ATTACH_OBJECT_TO_CHAR baseObject player_actor (-0.3 1.0 0.0) (75.0 0.0 5.5)
+                        ATTACH_OBJECT_TO_CHAR baseObjectR player_actor (0.23 1.0 0.0) (75.0 0.0 -5.5)                                             
                     ENDIF                                    
                     WAIT 0
                 ENDWHILE
+
                 timera = 0                      
-                WHILE 500 > timera
-                    CLEO_CALL addForceToChar 0 player_actor 0.0 1.6 2.0 22.0
+                WHILE 350 > timera
+                    CLEO_CALL addForceToChar 0 player_actor 0.0 0.35 1.0 20.0
                     IF DOES_OBJECT_EXIST baseObject
                     AND DOES_OBJECT_EXIST baseObjectR
                         DETACH_OBJECT baseObject (0.0 0.0 0.0) 0
@@ -2358,6 +2362,7 @@ spideyFrontWall:
                     ENDIF
                     WAIT 0
                 ENDWHILE
+
                 CLEAR_CHAR_TASKS player_actor
                 GOSUB destroyWeb_Wall
                 IF 0 > UDStick //Forward
@@ -2374,11 +2379,12 @@ spideyFrontWall:
                     WAIT 0
                     FREEZE_CHAR_POSITION player_actor FALSE
                 ENDIF
+
             ENDIF
         ELSE
             // do nothing
-        
         ENDIF
+
         //reset
         IF IS_KEY_PRESSED VK_TAB
         AND IS_KEY_PRESSED VK_SPACE
