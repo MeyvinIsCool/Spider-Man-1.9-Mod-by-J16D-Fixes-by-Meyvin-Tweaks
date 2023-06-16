@@ -45,17 +45,17 @@ main_loop:
                 ENDWHILE
             ENDIF
 
-            GET_CLEO_SHARED_VAR varBuildingZip (iTempVar)     ////MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+            GET_CLEO_SHARED_VAR varBuildingZip (iTempVar)     // MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 
             IF iTempVar = 1
 
-                GET_CLEO_SHARED_VAR varBuildingZipFlag (is_zip_to_building)
+                GET_CLEO_SHARED_VAR varBuildingZipFlag (is_zip_to_building) // sp_ml    ||1= Activated     || 0= Deactivated
+                GET_CLEO_SHARED_VAR varOnmission (iTempVar) // flag_player_on_mission ||0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
                 GOSUB activeInteriorCheck
 
-                IF GOSUB is_not_char_playing_car_missions_anims
+                IF NOT iTempVar = 2   //car chase     //Fix bug
                 AND is_in_interior = FALSE
                 AND is_zip_to_building = 1
-
 
                     //Compatible reservoirs 
                     IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor -2022.26 13.982 61.60 25.0
@@ -160,6 +160,7 @@ get_building_side:
     CLEO_CALL getXYZAimCoords 0 player_actor 25.0 1.0 (x[1] y[1] z[1]) (x[3] y[3] z[3]) //(fDistance)
     CLEO_CALL get_building_id 0 player_actor 25.0 0.0 (idModel)
     CLEO_CALL get_distance_between_coordinates 0 player_actor (x[0] y[0] z[0]) (fDistance) 
+    CLEO_CALL idModelExist 0 (idModel)                                  //check if model available within range    
 
     //DRAW_CORONA x[0] y[0] z[0] 0.40 CORONATYPE_SHINYSTAR FLARETYPE_NONE 255 0 0
     //DRAW_CORONA x[1] y[1] z[1] 0.40 CORONATYPE_SHINYSTAR FLARETYPE_NONE 0 0 255    
@@ -178,24 +179,23 @@ get_building_side:
         OR x[3] >= 8.00   
 
             IF CLEO_CALL isClearInSight 0 player_actor (0.0 5.0 1.5) (1 0 0 0 0)    //Front      
-            AND CLEO_CALL idModelExist 0 (idModel)                                  //check if model available within range
 
-                IF x[2] = 10.00
-                AND x[3] = 10.00        
+                IF x[2] >= 8.00
+                AND x[3] >= 8.00        
                     //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000                       
                     RETURN_FALSE
                     RETURN
                 ENDIF
 
-                IF x[2] = -10.00   
-                AND x[3] = 10.00
+                IF x[2] <= -8.00   
+                AND x[3] >= 8.00
                     //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000
                     RETURN_FALSE
                     RETURN
                 ENDIF
 
-                IF x[2] = 10.00   
-                AND x[3] = -10.00
+                IF x[2] >= 8.00   
+                AND x[3] <= -8.00
                     RETURN_FALSE    //to prevent zipping to unrelated (no idea how it works :) )
                     RETURN
                     IF z[2] = 10.00
@@ -210,45 +210,19 @@ get_building_side:
                     ENDIF
                 ENDIF
 
-                IF x[2] = 0.00   
-                AND x[3] = 10.00
 
-                    IF idModel = 9924
-                    OR idModel = 11308
-                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                        RETURN_FALSE
-                        RETURN            
-                    ELSE        
-                        IF z[2] = 10.0
-                        OR z[2] = -10.0
-                        OR z[3] = -10.0
-                        OR z[3] = 10.0
-                            //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                            RETURN_FALSE
-                            RETURN
-                        ELSE
-                            //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000      
-                            RETURN_TRUE
-                            RETURN
-                        ENDIF        
-                    ENDIF                    
-                ENDIF
-
-                IF x[2] = 10.00   
+                IF x[2] >= 8.00   
                 AND x[3] = 0.00
 
-                    IF idModel = 11246
-                    OR idModel = 11247
-                    OR idModel = 10938
-                    OR idModel = 3867
-                    OR idModel = 3761
+                    IF GOSUB does_model_id_match
+                    AND fDistance >= 16.0
                         //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
                         RETURN_FALSE
                         RETURN
                     ELSE  
-                        IF z[2] = 10.00
-                        OR z[3] = 10.00          
-                        OR z[3] = -10.00   
+                        IF z[2] >= 8.00
+                        OR z[3] >= 8.00          
+                        OR z[3] <= -8.00   
                             //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000    
                             RETURN_FALSE
                             RETURN
@@ -262,21 +236,74 @@ get_building_side:
                 ENDIF
 
                 IF x[2] = 0.00   
-                AND x[3] = -10.00
-                    IF idModel = 9924
-                    OR idModel = 10925
+                AND x[3] >= 8.00
+
+                    IF GOSUB does_model_id_match
+                    AND fDistance >= 16.0
+                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
+                        RETURN_FALSE
+                        RETURN            
+                    ELSE        
+                        IF z[2] >= 8.00
+                        OR z[2] >= -8.00
+                        OR z[3] <= -8.00
+                        OR z[3] <= 8.00
+                            //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
+                            RETURN_FALSE
+                            RETURN
+                        ELSE
+                            //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000      
+                            RETURN_TRUE
+                            RETURN
+                        ENDIF        
+                    ENDIF                    
+                ENDIF
+
+                IF x[2] <= -8.00   
+                AND x[3] = 0.00
+
+                    IF GOSUB does_model_id_match
+                    AND fDistance >= 16.0
+                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
+                        RETURN_FALSE
+                        RETURN
+                    ELSE              
+                        RETURN_FALSE
+                        IF y[2] >= 8.00 
+                        OR y[2] <= -8.00
+                        OR y[3] >= 8.00     
+                        OR y[3] <= -8.00
+                        OR z[2] >= 8.00
+                        OR z[2] <= -8.00
+                        OR z[3] >= 8.00
+                        OR z[3] <= -8.00
+                            //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
+                            RETURN_FALSE
+                            RETURN
+                        ELSE
+                            //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000
+                            RETURN_TRUE
+                            RETURN
+                        ENDIF
+                    ENDIF       
+
+                IF x[2] = 0.00   
+                AND x[3] <= -8.00
+
+                    IF GOSUB does_model_id_match
+                    AND fDistance >= 16.0
                         //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
                         RETURN_FALSE
                         RETURN            
                     ELSE  
-                        IF y[2] = 10.00
-                        OR y[2] = -10.00
-                        OR y[3] = 10.00
-                        OR y[3] = -10.00
-                        OR z[2] = 10.00
-                        OR z[2] = -10.00
-                        OR z[3] = 10.00 
-                        OR z[3] = -10.00  
+                        IF y[2] >= 8.00 
+                        OR y[2] <= -8.00
+                        OR y[3] >= 8.00     
+                        OR y[3] <= -8.00
+                        OR z[2] >= 8.00
+                        OR z[2] <= -8.00
+                        OR z[3] >= 8.00
+                        OR z[3] <= -8.00
                             //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
                             RETURN_FALSE
                             RETURN
@@ -287,37 +314,6 @@ get_building_side:
                         ENDIF
                     ENDIF
                 ENDIF
-
-                IF x[2] = -10.00   
-                AND x[3] = 0.00
-
-                    IF idModel = 11246
-                    OR idModel = 11247
-                    OR idModel = 10938
-                    OR idModel = 3867
-                    OR idModel = 3761
-                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                        RETURN_FALSE
-                        RETURN
-                    ELSE              
-                        RETURN_FALSE
-                        IF y[2] = 10.00 
-                        OR y[2] = -10.00
-                        OR y[3] = 10.00     
-                        OR y[3] = -10.00
-                        OR z[2] = 10.00
-                        OR z[2] = -10.00
-                        OR z[3] = 10.00
-                        OR z[3] = -10.00
-                            //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                            RETURN_FALSE
-                            RETURN
-                        ELSE
-                            //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000
-                            RETURN_TRUE
-                            RETURN
-                        ENDIF
-                    ENDIF       
 
                 ENDIF                     
             ENDIF              
@@ -334,8 +330,9 @@ get_building_side:
             IF CLEO_CALL isClearInSight 0 player_actor (0.0 5.0 1.5) (1 0 0 0 0)    //Front      
             AND CLEO_CALL idModelExist 0 (idModel)                                  //check if model available within range        
 
-                IF y[2] = 10.00 
-                AND y[3] = 10.00   
+                IF y[2] >= 8.00 
+                AND y[3] >= 8.00   
+
                     IF x[2] = 0.00
                     OR x[3] = 0.00    
                         //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                   
@@ -344,8 +341,9 @@ get_building_side:
                     ENDIF
                 ENDIF
 
-                IF y[2] = -10.00 
-                AND y[3] = -10.00   
+                IF y[2] <= -8.00 
+                AND y[3] <= -8.00   
+
                     IF x[2] = 0.00
                     OR x[3] = 0.00           
                         //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                             
@@ -354,22 +352,23 @@ get_building_side:
                     ENDIF
                 ENDIF
 
-                IF y[2] = 10.00 
+                IF y[2] >= 8.00
                 AND y[3] = 0.00
                     
-                    IF idModel = 10938
+                    IF GOSUB does_model_id_match
+                    AND fDistance >= 16.0
                         //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000  
                         RETURN_FALSE
                         RETURN
                     ELSE                
-                        IF x[2] = 10.00
+                        IF x[2] >= 0.1
                         //OR x[2] = -10.00
-                        OR x[3] = 10.00 
+                        OR x[3] >= 0.1 
                         //OR x[3] = -10.00
                         //OR z[2] = 10.00
-                        OR z[2] = -10.00
-                        OR z[3] = 10.00 
-                        OR z[3] = -10.00   
+                        OR z[2] <= -10.00
+                        OR z[3] >= 10.00 
+                        OR z[3] <= -10.00   
 
                             //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000  
                             RETURN_FALSE
@@ -383,41 +382,20 @@ get_building_side:
                     ENDIF
                 ENDIF
 
-                IF y[2] = 0.00 
-                AND y[3] = 10.00  
-                    RETURN_FALSE
-                    RETURN 
-                    IF x[2] = 10.00
-                    OR x[2] = -10.00
-                    OR x[3] = 10.00 
-                    OR x[3] = -10.00
-                    OR z[2] = 10.00
-                    OR z[2] = -10.00
-                    OR z[3] = 10.00 
-                    OR z[3] = -10.00   
-                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000
-                        RETURN_FALSE
-                        RETURN
-                    ELSE        
-                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                 
-                        RETURN_TRUE
-                        RETURN
-                    ENDIF
-                ENDIF
-
-                IF y[2] = -10.00 
+                IF y[2] <= -8.00
                 AND y[3] = 0.00   
 
-                    IF idModel = 10938
+                    IF GOSUB does_model_id_match
+                    AND fDistance >= 16.0
                         //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000  
                         RETURN_FALSE
                         RETURN
                     ELSE        
 
-                        IF x[2] = 10.00
-                        OR x[2] = -10.00
-                        OR x[3] = 10.00 
-                        OR x[3] = -10.00
+                        IF x[2] >= 0.1
+                        OR x[2] <= -0.1
+                        OR x[3] >= 0.1 
+                        OR x[3] <= -0.1
                         OR z[2] = 10.00
                         OR z[2] = -10.00
                         OR z[3] = 10.00 
@@ -436,11 +414,33 @@ get_building_side:
                 ENDIF
 
                 IF y[2] = 0.00 
-                AND y[3] = -10.00   
-                    IF x[2] = 10.00
-                    OR x[2] = -10.00
-                    OR x[3] = 10.00 
-                    OR x[3] = -10.00
+                AND y[3] >= 8.00 
+
+                    IF x[2] >= 0.1
+                    OR x[2] <= -0.1
+                    OR x[3] >= 0.1 
+                    OR x[3] <= -0.1
+                    OR z[2] = 10.00
+                    OR z[2] = -10.00
+                    OR z[3] = 10.00 
+                    OR z[3] = -10.00   
+                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000
+                        RETURN_FALSE
+                        RETURN
+                    ELSE        
+                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                 
+                        RETURN_TRUE
+                        RETURN
+                    ENDIF
+                ENDIF
+
+                IF y[2] = 0.00 
+                AND y[3] <= -8.00   
+                
+                    IF x[2] >= 0.1
+                    OR x[2] <= -0.1
+                    OR x[3] >= 0.1 
+                    OR x[3] <= -0.1
                     OR z[2] = 10.00
                     OR z[2] = -10.00
                     OR z[3] = 10.00 
@@ -472,49 +472,41 @@ get_building_side:
         OR z[2] <= -8.00
         OR z[3] <= -8.00
 
-            IF z[2] >= 9.00     //10.00
-            AND z[3] >= 9.00    //10.00
-                IF x[2] = 0.00
-                AND x[3] = 0.00    
-                    //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                   
-                    RETURN_FALSE
-                    RETURN
-                ENDIF
-            ENDIF
+            IF CLEO_CALL isClearInSight 0 player_actor (0.0 5.0 1.5) (1 0 0 0 0)    //Front      
+            AND CLEO_CALL idModelExist 0 (idModel)                                  //check if model available within range  
+                IF z[2] >= 9.00     //10.00
+                AND z[3] >= 9.00    //10.00
 
-            IF z[2] <= -9.00    //-10.00
-            AND z[3] <= -9.00   //-10.00
-                IF x[2] = 0.00
-                AND x[3] = 0.00    
-                    //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                   
-                    RETURN_FALSE
-                    RETURN
-                ENDIF
-            ENDIF                
 
-            IF z[2] >= 9.00     //10.00
-            AND z[3] = 0.00     //0.00
-            AND CLEO_CALL idModelExist 0 (idModel)                                  //check if model available within range
-    
-                IF fDistance >= 16.0
-                OR idModel = 6018
-                OR idModel = 10938
-                OR idModel = 11247
-                OR idModel = 11297
-                OR idModel = 11299
-                OR idModel = 11308
-                OR idModel = 11317
-                    //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                    RETURN_FALSE
-                    RETURN
-                ELSE       
-                 
-                    IF idModel = 11318 
-                    OR idModel = 11387  
+                    IF x[2] = 0.00
+                    AND x[3] = 0.00    
+                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                   
+                        RETURN_FALSE
+                        RETURN
+                    ENDIF
+                ENDIF
+
+                IF z[2] <= -9.00    //-10.00
+                AND z[3] <= -9.00   //-10.00
+
+                    IF x[2] = 0.00
+                    AND x[3] = 0.00    
+                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                   
+                        RETURN_FALSE
+                        RETURN
+                    ENDIF
+                ENDIF                
+
+                IF z[2] >= 9.00     //10.00
+                AND z[3] = 0.00     //0.00
+
+                    IF GOSUB does_model_id_match
+                    AND fDistance >= 16.0
                         //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
                         RETURN_FALSE
-                        RETURN     
-                    ELSE                   
+                        RETURN
+                    ELSE       
+            
                         IF x[2] >= 0.01
                         //OR x[2] = -10.00
                         OR x[3] >= 0.01
@@ -531,9 +523,9 @@ get_building_side:
                             RETURN_TRUE
                             RETURN
                         ENDIF    
-                    ENDIF  
-                ENDIF 
-            ENDIF             
+                    ENDIF 
+                ENDIF        
+            ENDIF     
         ENDIF  
 
 //-+------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -741,8 +733,8 @@ point_launch_air_building:
     GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 1.0 (x[0] y[0] z[0])
     SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
     WAIT 1
-    SET_CHAR_COLLISION player_actor TRUE
     CLEO_CALL setCharViewPointToCamera 0 player_actor
+    SET_CHAR_COLLISION player_actor TRUE
     y[2] = 0.75 //0.65  //2.0
     z[2] = 0.45 //0.45  //1.8
     fCharSpeed *= 1.25
@@ -1240,30 +1232,38 @@ does_skill_Point_Launch_enabled:
     ENDIF
 RETURN
 
-is_not_char_playing_car_missions_anims:
-    IF NOT IS_CHAR_PLAYING_ANIM player_actor ("c_idle_Z")
-    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_00")
-    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_01")
-    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_02")
-    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_00")
-        IF NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_01")
-        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_02")
-        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_B_00")
-        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_B_01")
-        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_B_00")
-        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_B_01")
-            IF NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_front")
-            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_fall")
-            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_center")
-            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_left")
-            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_right")
+does_model_id_match:
+    IF idModel = 3761
+    OR idModel = 3867
+    OR idModel = 6018
+    OR idModel = 9591
+    OR idModel = 9924
+    OR idModel = 10276
+    OR idModel = 10925
+    OR idModel = 10938 
+        RETURN_TRUE
+        RETURN
+    ELSE
+        IF idModel = 10948
+        OR idModel = 11246
+        OR idModel = 11247
+        OR idModel = 11297
+        OR idModel = 11299     
+        OR idModel = 11308
+        OR idModel = 11317    
+        OR idModel = 11318 
+            RETURN_TRUE
+            RETURN
+        ELSE
+            IF idModel = 11387    
                 RETURN_TRUE
                 RETURN
             ENDIF
         ENDIF
     ENDIF
     RETURN_FALSE
-RETURN
+RETURN        
+
 //-+----------------------------------------------------------
 
 }
