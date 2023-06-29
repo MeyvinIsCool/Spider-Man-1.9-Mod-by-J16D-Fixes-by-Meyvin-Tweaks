@@ -634,6 +634,7 @@ is_player_playing_anims:
         OR IS_CHAR_PLAYING_ANIM player_actor ("airToLampA")     //Angle controlled in sp_ml
         OR IS_CHAR_PLAYING_ANIM player_actor ("airToLampB")     //Angle controlled in sp_ml
         OR IS_CHAR_PLAYING_ANIM player_actor ("airToLampB_B")   //Angle controlled in sp_ml
+        OR IS_CHAR_PLAYING_ANIM player_actor "zip_back"         //Angle controlled in sp_ml
             RETURN_TRUE
             RETURN            
         ENDIF
