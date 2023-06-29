@@ -218,62 +218,71 @@ main_loop:
         ENDIF
 
     ENDIF
-/*
+
     // Web Zip Behind (BETA) - Scripted By MeyvinIsCool 
     IF IS_CHAR_REALLY_IN_AIR player_actor
         IF GOSUB is_not_player_playing_for_backzip
             IF GOSUB is_not_player_playing_swing_anims
                 IF GOSUB is_not_player_playing_webstrike_anims
+ 
+                    IF NOT IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~ 
+                    AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                    AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+                        IF IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~
+                        AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER1           // ~k~~PED_WEAPONAIM~
 
-                    IF NOT IS_CHAR_PLAYING_ANIM player_actor "zip_back"
-                    AND IS_BUTTON_JUST_PRESSED PAD1 CIRCLE                // ~k~~PED_FIREWEAPON~
+                            //CLEO_CALL setCharVelocity 0 player_actor 0.0 -0.95 1.0 10.0                
+                            GOSUB destroyTwoBackWebs
+                            GOSUB createTwoBackWebs
+                            WAIT 5
+                            TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("zip_back" "spider") 70.0 (0 1 1 0) -2
+                            WAIT 0
+                            SET_CHAR_ANIM_SPEED player_actor "zip_back" 1.3                             
 
-                        //CLEO_CALL setCharVelocity 0 player_actor 0.0 -0.95 1.0 10.0                
-                        GOSUB destroyTwoBackWebs
-                        GOSUB createTwoBackWebs
-                        TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("zip_back" "spider") 70.0 (0 1 1 0) -2
-                        WAIT 0
-                        SET_CHAR_ANIM_SPEED player_actor "zip_back" 1.3                             
+                            TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("w_wall_L_A" "mweb") 57.0 (0 1 1 1) -1
+                            TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("w_wall_R_A" "mweb") 57.0 (0 1 1 1) -1
+                            WAIT 0
+                            SET_CHAR_ANIM_SPEED iWebActor "w_wall_L_A" 3.5   
+                            SET_CHAR_ANIM_SPEED iWebActorR "w_wall_R_A" 3.5                       
 
-                        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("w_wall_L_A" "mweb") 57.0 (0 1 1 1) -1
-                        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("w_wall_R_A" "mweb") 57.0 (0 1 1 1) -1
-                        WAIT 0
-                        SET_CHAR_ANIM_SPEED iWebActor "w_wall_L_A" 3.5   
-                        SET_CHAR_ANIM_SPEED iWebActorR "w_wall_R_A" 3.5                       
-
-                        IF DOES_OBJECT_EXIST baseObject
-                        AND DOES_OBJECT_EXIST baseObjectR
-                            ATTACH_OBJECT_TO_CHAR baseObject player_actor (0.7 -8.5 -1.0) (0.0 0.0 180.0)
-                            ATTACH_OBJECT_TO_CHAR baseObjectR player_actor (-0.7 -8.5 -1.0) (0.0 0.0 180.0)
-                        ENDIF                                                                                          
-                        GOSUB playWebSound             
-
-                        timera = 0
-                        WHILE 300 > timera                                                  
-                            CLEO_CALL setCharVelocity 0 player_actor 0.0 -4.0 0.25 10.0
                             IF DOES_OBJECT_EXIST baseObject
                             AND DOES_OBJECT_EXIST baseObjectR
-                                DETACH_OBJECT baseObject (0.0 0.0 0.0) FALSE
-                                DETACH_OBJECT baseObjectR (0.0 0.0 0.0) FALSE
-                            ENDIF
-                            WAIT 0
-                        ENDWHILE
+                                ATTACH_OBJECT_TO_CHAR baseObject player_actor (0.7 -8.5 -1.0) (0.0 0.0 180.0)
+                                ATTACH_OBJECT_TO_CHAR baseObjectR player_actor (-0.7 -8.5 -1.0) (0.0 0.0 180.0)
+                            ENDIF                                                                                          
+                            GOSUB playWebSound             
 
-                        timera = 0                      
-                        WHILE 500 > timera
-                            CLEO_CALL setCharVelocity 0 player_actor 0.0 0.0 0.0 10.0
-                            WAIT 0
-                        ENDWHILE                        
-                        GOSUB destroyTwoWebs
-                        CLEAR_CHAR_TASKS player_actor
-                        CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
+                            timera = 0
+                            WHILE 300 > timera                                                  
+                                CLEO_CALL setCharVelocity 0 player_actor 0.0 -4.0 0.25 10.0
+                                IF DOES_OBJECT_EXIST baseObject
+                                AND DOES_OBJECT_EXIST baseObjectR
+                                    DETACH_OBJECT baseObject (0.0 0.0 0.0) FALSE
+                                    DETACH_OBJECT baseObjectR (0.0 0.0 0.0) FALSE
+                                ENDIF
+                                WAIT 0
+                            ENDWHILE
 
+                            timera = 0                      
+                            WHILE 500 > timera
+                                CLEO_CALL setCharVelocity 0 player_actor 0.0 0.0 0.0 10.0
+                                WAIT 0
+                            ENDWHILE                        
+                            GOSUB destroyTwoWebs
+                            CLEAR_CHAR_TASKS player_actor
+                            CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
+
+                            WHILE IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~
+                            AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER1           // ~k~~PED_WEAPONAIM~
+                                WAIT 0
+                            ENDWHILE
+                        ENDIF
                     ENDIF
                 ENDIF
             ENDIF
         ENDIF   
     ENDIF   
-*/
+
                 
     WAIT 0
 GOTO main_loop  
@@ -570,8 +579,7 @@ RETURN
 createTwoBackWebs:
     IF NOT DOES_CHAR_EXIST iWebActor         // LOAD FOR THE MODELS
     AND NOT DOES_CHAR_EXIST iWebActorR
-    AND NOT DOES_OBJECT_EXIST baseObject
-    AND NOT DOES_OBJECT_EXIST baseObjectR
+
         REQUEST_MODEL 1598
         LOAD_SPECIAL_CHARACTER 9 wmt
         LOAD_ALL_MODELS_NOW
@@ -700,64 +708,64 @@ RETURN
 
 is_not_player_playing_for_backzip:
     IF NOT IS_CHAR_PLAYING_ANIM player_actor ("pkJumpA")
-    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("pkJumpB")
-    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("pkJumpC")
-    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("pkJumpZ")
-    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("pkJumpD")
-    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("pkJumpE")
-    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("jumpToWall")
+    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("pkJumpB")
+    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("pkJumpC")
+    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("pkJumpZ")
+    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("pkJumpD")
+    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("pkJumpE")
+    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("jumpToWall")
 
         IF NOT IS_CHAR_PLAYING_ANIM player_actor ("webZip_A")
-        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("webZip_A_R")
-        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("webZip_B")
-        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("webZip_B_R")
-        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("jump_wall_top_C")
+        OR NOT IS_CHAR_PLAYING_ANIM player_actor ("webZip_A_R")
+        OR NOT IS_CHAR_PLAYING_ANIM player_actor ("webZip_B")
+        OR NOT IS_CHAR_PLAYING_ANIM player_actor ("webZip_B_R")
+        OR NOT IS_CHAR_PLAYING_ANIM player_actor ("jump_wall_top_C")
 
             IF NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_idle_A")
-            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_idle_B")
-            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("walk_wall")
-            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("run_wall")
-            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("jump_wall_top_A")
-            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("jump_wall_top_B")
+            OR NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_idle_B")
+            OR NOT IS_CHAR_PLAYING_ANIM player_actor ("walk_wall")
+            OR NOT IS_CHAR_PLAYING_ANIM player_actor ("run_wall")
+            OR NOT IS_CHAR_PLAYING_ANIM player_actor ("jump_wall_top_A")
+            OR NOT IS_CHAR_PLAYING_ANIM player_actor ("jump_wall_top_B")
                     
                 IF NOT IS_CHAR_PLAYING_ANIM player_actor ("run_wall_jump_R_A")
-                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("run_wall_jump_L_A")
-                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("run_wall_R_A")
-                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("run_wall_R_B")
-                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("run_wall_L_A")
-                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("run_wall_L_B")
+                OR NOT IS_CHAR_PLAYING_ANIM player_actor ("run_wall_jump_L_A")
+                OR NOT IS_CHAR_PLAYING_ANIM player_actor ("run_wall_R_A")
+                OR NOT IS_CHAR_PLAYING_ANIM player_actor ("run_wall_R_B")
+                OR NOT IS_CHAR_PLAYING_ANIM player_actor ("run_wall_L_A")
+                OR NOT IS_CHAR_PLAYING_ANIM player_actor ("run_wall_L_B")
 
                     IF NOT IS_CHAR_PLAYING_ANIM player_actor ("walk_wall_B")
-                    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_idle_C")
-                    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_idle_D")
-                    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("walkWallToIdle")
-                    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("idleToWalkWall_B")
-                    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("walkBWallToIdle")
+                    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_idle_C")
+                    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_idle_D")
+                    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("walkWallToIdle")
+                    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("idleToWalkWall_B")
+                    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("walkBWallToIdle")
 
                         IF NOT IS_CHAR_PLAYING_ANIM player_actor ("idleToWalkWall")
-                        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_jump_fall")
-                        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("t_tower_A")
-                        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("jump_glide_F")
+                        OR NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_jump_fall")
+                        OR NOT IS_CHAR_PLAYING_ANIM player_actor ("t_tower_A")
+                        OR NOT IS_CHAR_PLAYING_ANIM player_actor ("jump_glide_F")
 
                             IF NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_00")
-                            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_01")
-                            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_02")
-                            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_00")
-                            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_01")
-                            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_02")
+                            OR NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_01")
+                            OR NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_02")
+                            OR NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_00")
+                            OR NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_01")
+                            OR NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_02")
 
                                 IF NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_B_00")
-                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_B_00")
-                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_idle_Z")
-                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_front")
-                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_fall")
-                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_center")
+                                OR NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_B_00")
+                                OR NOT IS_CHAR_PLAYING_ANIM player_actor ("c_idle_Z")
+                                OR NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_front")
+                                OR NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_fall")
+                                OR NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_center")
 
                                     IF NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_left")
-                                    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_right")
-                                    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_corner_L")
-                                    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_corner_R")
-                                    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("groundToLampA")
+                                    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_right")
+                                    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_corner_L")
+                                    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("wall_corner_R")
+                                    OR NOT IS_CHAR_PLAYING_ANIM player_actor ("groundToLampA")
 
                                         RETURN_TRUE
                                         RETURN
