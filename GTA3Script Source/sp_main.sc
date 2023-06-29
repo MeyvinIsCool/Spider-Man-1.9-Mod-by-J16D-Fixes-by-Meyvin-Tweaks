@@ -257,7 +257,7 @@ main_loop:
                             ENDIF
                         ENDIF
                         
-                        GENERATE_RANDOM_INT_IN_RANGE 0 6 (randomVal)    //random animation Swing (6 types by side)
+                        GENERATE_RANDOM_INT_IN_RANGE 0 7 (randomVal)    //random animation Swing (6 types by side)
                         //Fix animation D
                         IF randomVal = 3
                             GENERATE_RANDOM_FLOAT_IN_RANGE 1.150 1.450  (fMaxSwingPeriod)
