@@ -1662,30 +1662,32 @@ play_arms_ground_anim:
             TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("iron_armsA" "spider") 26.0 (0 1 1 1) -1
             WAIT 5
             WHILE IS_CHAR_PLAYING_ANIM player_actor ("iron_armsA") 
-                GET_CHAR_ANIM_CURRENT_TIME player_actor ("iron_armsA") (fRandomVal[0])
 
+                GET_CLEO_SHARED_VAR varIronArmsCondition iTempVar   //Fix Object Attach Bug
+                GET_CHAR_ANIM_CURRENT_TIME player_actor ("iron_armsA") (fRandomVal[0])
                 IF fRandomVal[0] > 0.99
                     BREAK
                 ELSE
-                    PLAY_OBJECT_ANIM iChar ("iron_armsB" "spider") /*fdelta*/60.0 /*lockF*/1 /*loop*/0
-                    SET_OBJECT_ANIM_CURRENT_TIME iChar "iron_armsB" fRandomVal[0]
-                    SET_OBJECT_ANIM_SPEED iChar "iron_armsB" 0.0                                                                                                                                              
+                    IF DOES_OBJECT_EXIST iChar
+                        PLAY_OBJECT_ANIM iChar ("iron_armsB" "spider") /*fdelta*/60.0 /*lockF*/1 /*loop*/0
+                        SET_OBJECT_ANIM_CURRENT_TIME iChar "iron_armsB" fRandomVal[0]
+                        SET_OBJECT_ANIM_SPEED iChar "iron_armsB" 0.0     
+                    ENDIF                                                                                                                                         
+                ENDIF    
+
+                IF iTempVar = 1
+                    IF IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER1
+                    AND IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+                        GOSUB destroyArms_Object 
+                        //GOSUB create_iron_arms_render_object          
+                        BREAK
+                    ENDIF                          
                 ENDIF
 
-                IF NOT IS_CHAR_HOLDING_OBJECT player_actor iChar
-                    TASK_PICK_UP_OBJECT player_actor iChar (-0.08 0.0 0.0) (1 16) "NULL" "NULL" 1   // iChar = iObj2 , to save variables  
-                    GOSUB destroyArms_Object
-                    GOTO create_iron_arms_render_object                    
-                ENDIF      
+                GOSUB set_rotation 
 
-                GOSUB set_rotation                                                           
                 WAIT 0
-            ENDWHILE                        
-            timera = 0
-            WHILE 100 > timera      
-                GOSUB set_rotation                                               
-                WAIT 0     
-            ENDWHILE          
+            ENDWHILE                    
 
             GOSUB create_iron_arms_render_object
             GOSUB destroyArms_Object
@@ -3004,3 +3006,5 @@ CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
+
+CONST_INT varIronArmsCondition  59    //sp_po    ||1= Activated     || 0= Deactivated

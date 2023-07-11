@@ -45,6 +45,7 @@ main_loop:
                         IF GOSUB does_skill_Swing_Kick_enabled
                             // Swing Kick
                             IF IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~
+                            AND NOT IS_CHAR_PLAYING_ANIM player_actor "zip_back"
                                 ADD_TIMED_VAL_TO_FLOAT_LVAR (timed_Key) 1.0
                                 IF timed_Key > 25.0
                                     CLEAR_CHAR_TASKS player_actor

@@ -68,6 +68,9 @@ main_loop:
                                                     CREATE_FX_SYSTEM_ON_CHAR SP_SENSEB player_actor (0.16 0.0 0.0) 4 (fx_system)
                                                     ATTACH_FX_SYSTEM_TO_CHAR_BONE fx_system player_actor 5  //5:head
                                                     PLAY_AND_KILL_FX_SYSTEM fx_system
+                                                    GET_CLEO_SHARED_VAR varIronArmsCondition iTempVar
+                                                    iTempVar = 1
+                                                    SET_CLEO_SHARED_VAR varIronArmsCondition iTempVar                                                    
                                                     IF IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER1   //~k~~PED_LOCK_TARGET~
                                                         IF IS_BUTTON_PRESSED PAD1 SQUARE  // ~k~~PED_JUMPING~
                                                             GOSUB assign_task_perfect_dodge
@@ -79,6 +82,9 @@ main_loop:
                                                     CREATE_FX_SYSTEM_ON_CHAR SP_SENSEB player_actor (0.16 0.0 0.0) 4 (fx_system)
                                                     ATTACH_FX_SYSTEM_TO_CHAR_BONE fx_system player_actor 5  //5:head
                                                     PLAY_AND_KILL_FX_SYSTEM fx_system
+                                                    GET_CLEO_SHARED_VAR varIronArmsCondition iTempVar
+                                                    iTempVar = 1
+                                                    SET_CLEO_SHARED_VAR varIronArmsCondition iTempVar
                                                     IF IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER1   //~k~~PED_LOCK_TARGET~
                                                         IF IS_BUTTON_PRESSED PAD1 SQUARE  // ~k~~PED_JUMPING~
                                                             GOSUB assign_task_perfect_dodge
@@ -888,6 +894,7 @@ CONST_INT varAimSetup           24    // 0:Manual Aim || 1:Auto Aim //sp_dw
 CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varThrowFix           28    //sp_thob          ||1= Activated     || 0= Deactivated
 
 CONST_INT varLevelChar          30    //sp_lvl    || Level
 CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)
@@ -913,6 +920,8 @@ CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
+
+CONST_INT varIronArmsCondition  59    //sp_po    ||1= Activated     || 0= Deactivated
 
 
 
