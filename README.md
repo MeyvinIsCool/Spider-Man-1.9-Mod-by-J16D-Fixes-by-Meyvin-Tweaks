@@ -25,14 +25,12 @@ Things I Fixed And Added On This Mod :
 - Added Drug Deal Crime Mission
 - Added Ground Crush When Falling From High Altitude
 - Added Web Zip To Building (BETA)
+- Added Focus Bar (WIP)
 - And MORE ....
 
  Addon :
  
 - Added Web Zip Behind (Air Dodge) (Addon)
-  
-Need Help With Installation ... Watch My Video Showing You How To Install This Tweak ! Also Subscribe To The Channel To Stay Tuned With My Exclusive Updates For The Mod !
-Video Made by Me : https://youtu.be/cz08XMAYM-g
 	
 - I Also Made The Low Resolution Suits For Low End Computers BUT Make Sure To Install From The Main Mod FIRST Then Install This From The Optional Folder
 
