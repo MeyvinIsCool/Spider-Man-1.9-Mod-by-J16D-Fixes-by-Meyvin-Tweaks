@@ -1,9 +1,8 @@
-// by J16D
+// by Meyvin Tweaks
 // San Fierro On Drug Deal
 // Format:
 //      STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_dd.cs" x y z
 // Spider-Man Mod for GTA SA c.2018 - 2022
-// Fixes by MeyvinIsCool
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
@@ -113,10 +112,10 @@ main_loop:
                 iCounter ++
             ENDWHILE
 
-            IF kill_counter >= number_of_members    //next wave(s)
+            IF kill_counter >= number_of_members  
                 iTotalKills += kill_counter
                 max_wave ++
-                IF max_wave >= 1
+                IF max_wave = 1
                     GOTO mission_passed
                 ENDIF
             ENDIF
