@@ -1917,8 +1917,8 @@ spideyFrontWall:
                     GOSUB playSfxWall
                 ELSE
                     CLEO_CALL addForceToChar 0 player_actor (0.0 0.0 20.0) 10.0 //15.0
-                    GET_CAMERA_FOV fFov
-                    CAMERA_SET_LERP_FOV 95.0 fFov 100 TRUE   
+                    //GET_CAMERA_FOV fFov
+                    //CAMERA_SET_LERP_FOV 95.0 fFov 100 TRUE   
                     //GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 5.0) (x y z)
                     //CLEO_CALL setCameraVerticalWallRun 0 (x y z) 1.5
                 ENDIF
@@ -2014,8 +2014,8 @@ spideyFrontWall:
                         //This will run in a loop - throw player -up- "walking"
                         CLEO_CALL addForceToChar 0 player_actor (0.0 0.0 8.5) 4.0
 
-                        GET_CAMERA_FOV fFov
-                        CAMERA_SET_LERP_FOV 95.0 fFov 100 TRUE  
+                        //GET_CAMERA_FOV fFov
+                        //CAMERA_SET_LERP_FOV 95.0 fFov 100 TRUE  
                                               
                         //GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 5.0) (x y z)
                         //CLEO_CALL setCameraVerticalWallRun 0 (x y z) 1.5
@@ -2358,8 +2358,8 @@ spideyFrontWall:
                 IF IS_CHAR_PLAYING_ANIM player_actor "zip_point_wall_run_up"  
                     //RESTORE_CAMERA
                     //RESTORE_CAMERA_JUMPCUT                 
-                    GET_CAMERA_FOV fFov
-                    CAMERA_SET_LERP_FOV 95.0 fFov 1000 TRUE 
+                    //GET_CAMERA_FOV fFov
+                    //CAMERA_SET_LERP_FOV 95.0 fFov 1000 TRUE 
                 ENDIF
 
                 timera = 0
