@@ -1630,7 +1630,7 @@ RETURN
 createArms_Object:
     IF NOT DOES_OBJECT_EXIST iObj
         REQUEST_MODEL 3100      //k_poolballspt02
-        REQUEST_MODEL 6026      //iron_arms_hier_object  
+        REQUEST_MODEL 6028      //iron_arms_hier_object  
         LOAD_ALL_MODELS_NOW
 
         CREATE_OBJECT 3100 0.0 0.0 0.0 (iObj)
@@ -1639,7 +1639,7 @@ createArms_Object:
         //hier object
         //iChar = iObj2 
         GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[0] y[0] z[0])
-        CREATE_OBJECT 6026 (x[0] y[0] z[0]) (iChar)
+        CREATE_OBJECT 6028 (x[0] y[0] z[0]) (iChar)
         SET_OBJECT_SCALE iChar 0.001
         SET_OBJECT_COLLISION iChar FALSE
         SET_OBJECT_PROOFS iChar (1 1 1 1 1)
@@ -1647,8 +1647,37 @@ createArms_Object:
         TASK_PICK_UP_OBJECT player_actor iChar (-0.08 0.0 0.0) (1 16) "NULL" "NULL" 1   // iChar = iObj2 , to save variables  
         GOSUB set_rotation     
         //WAIT 1000 
-        MARK_MODEL_AS_NO_LONGER_NEEDED 6026
+        MARK_MODEL_AS_NO_LONGER_NEEDED 6028
         MARK_MODEL_AS_NO_LONGER_NEEDED 3100
+    ENDIF
+RETURN
+
+create_iron_arms_render_object:
+    i = 0
+    REQUEST_MODEL 6025
+    LOAD_ALL_MODELS_NOW
+    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 6025 4 (0.0 0.0 0.0) (0.0 0.0 0.0) i
+    SET_RENDER_OBJECT_ROTATION i (83.0 90.0 90.0)
+    //SET_RENDER_OBJECT_POSITION i (-0.2 0.2 0.36)
+    SET_RENDER_OBJECT_POSITION i (-0.65 0.2 0.01)
+RETURN
+
+
+destroyArms_Object:
+    IF DOES_OBJECT_EXIST iObj
+        DELETE_OBJECT iObj
+    ENDIF
+    IF DOES_OBJECT_EXIST iChar
+        DELETE_OBJECT iChar
+    ENDIF
+RETURN
+
+set_rotation:
+    IF DOES_OBJECT_EXIST iObj
+    AND DOES_OBJECT_EXIST iChar
+        GET_CHAR_HEADING player_actor (fAngle[0])
+        SET_OBJECT_ROTATION iObj 0.0 0.0 fAngle[0]
+        SET_OBJECT_ROTATION iChar 0.0 0.0 fAngle[0]
     ENDIF
 RETURN
 
@@ -1663,7 +1692,6 @@ play_arms_ground_anim:
             WAIT 5
             WHILE IS_CHAR_PLAYING_ANIM player_actor ("iron_armsA") 
 
-                GET_CLEO_SHARED_VAR varIronArmsCondition iTempVar   //Fix Object Attach Bug
                 GET_CHAR_ANIM_CURRENT_TIME player_actor ("iron_armsA") (fRandomVal[0])
                 IF fRandomVal[0] > 0.99
                     BREAK
@@ -1724,35 +1752,6 @@ play_arms_ground_anim_deactivate:
             ENDWHILE                    
             GOSUB destroyArms_Object
         ENDIF
-    ENDIF
-RETURN
-
-create_iron_arms_render_object:
-    i = 0
-    REQUEST_MODEL 6025
-    LOAD_ALL_MODELS_NOW
-    CREATE_RENDER_OBJECT_TO_CHAR_BONE player_actor 6025 4 (0.0 0.0 0.0) (0.0 0.0 0.0) i
-    SET_RENDER_OBJECT_ROTATION i (83.0 90.0 90.0)
-    //SET_RENDER_OBJECT_POSITION i (-0.2 0.2 0.36)
-    SET_RENDER_OBJECT_POSITION i (-0.65 0.2 0.01)
-RETURN
-
-
-destroyArms_Object:
-    IF DOES_OBJECT_EXIST iObj
-        DELETE_OBJECT iObj
-    ENDIF
-    IF DOES_OBJECT_EXIST iChar
-        DELETE_OBJECT iChar
-    ENDIF
-RETURN
-
-set_rotation:
-    IF DOES_OBJECT_EXIST iObj
-    AND DOES_OBJECT_EXIST iChar
-        GET_CHAR_HEADING player_actor (fAngle[0])
-        SET_OBJECT_ROTATION iObj 0.0 0.0 fAngle[0]
-        SET_OBJECT_ROTATION iChar 0.0 0.0 fAngle[0]
     ENDIF
 RETURN
 
@@ -3006,5 +3005,3 @@ CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
-
-CONST_INT varIronArmsCondition  59    //sp_po    ||1= Activated     || 0= Deactivated

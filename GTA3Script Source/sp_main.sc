@@ -76,6 +76,9 @@ CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
 
+CONST_INT varFocusCount         70    //sp_hit    || focus bar
+CONST_INT varUseFocus           71    //sp_hit    || focus bar
+
 CONST_INT player 0
 
 SCRIPT_START
@@ -85,7 +88,7 @@ LVAR_INT player_actor toggleSpiderMod isFuncEnabled
 LVAR_INT sideSwing  // 0:center || 1:left || 2:right
 LVAR_INT baseObject baseObjectR iWebActor iWebActorR
 LVAR_INT LRStick UDStick
-LVAR_FLOAT fProgress ftimera
+LVAR_FLOAT fProgress ftimera fFov
 LVAR_FLOAT fMaxSwingPeriod x y z fVelY fVelZ
 LVAR_FLOAT fLongitude fCharSpeed fAmplitude
 LVAR_FLOAT fSyncMaxAngle fSyncMinAngle fSyncAngle
@@ -101,7 +104,7 @@ IF GOSUB does_scripts_exist
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_ev.cs"      // Fight - Dodge (near & far distance)
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_evb.cs"     // Manual Dodge & Sliding dodge
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_hud.cs"     // Main Hud script
-    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lf.cs"      // Life Regeneration
+    //STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lf.cs"      // Life Regeneration
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lvl.cs"     // Level Control
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_mb.cs"      // On ground/jump script
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_me.cs"      // Melee Combo X4 | Air Combo x4 | Swing kick
@@ -132,7 +135,7 @@ ENDIF
     // Web Zip To Building (BETA)
     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_mlb.cs"
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_mlb.cs"     // Web Zip To Building
-    ENDIF            
+    ENDIF             
 
 //-+-- Start Internal Threads
     STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_cam_internalThread   // Camera Script
@@ -303,15 +306,18 @@ main_loop:
                                 IF fAmplitude > 40.0
                                     SHAKE_CAM 1
                                 ENDIF
+                                 
+                                IF fAmplitude >= 35.0
+                                AND fAmplitude <= 47.8
+                                    GET_CAMERA_FOV (fFov)
+                                    CAMERA_SET_LERP_FOV fFov 85.0 1000 FALSE                               
+                                ENDIF
+                                IF fAmplitude >= 48.0
+                                    GET_CAMERA_FOV (fFov)
+                                    CAMERA_SET_LERP_FOV 85.0 fFov 1000 FALSE  
+                                ENDIF                                   
+                                PRINT_FORMATTED_NOW "Velocity %3.f" 1111 fAmplitude
                                 */
-                                
-                                /*IF fAmplitude >= 40.0
-                                    CLEO_CALL setCameraLerpFov 0 fAmplitude
-                                ELSE
-                                    GET_CAMERA_FOV (fVelX)
-                                    CAMERA_SET_LERP_FOV 85.0 fVelX 1 FALSE
-                                ENDIF*/
-                                
                                 //SET_OBJECT_HEADING baseObject fZAnglePlayerAir
                             ELSE
                                 //end swing
@@ -855,7 +861,7 @@ does_scripts_exist:
     AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_ev.cs"
     AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_evb.cs"
     AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_hud.cs"
-    AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_lf.cs"
+    //AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_lf.cs"
     AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_lvl.cs"
         IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_mb.cs"
         AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_me.cs"
@@ -1900,16 +1906,19 @@ spideyFrontWall:
             ENDIF
             //-+--  Wall Run
             IF 0 > UDStick //Forward
-            AND IS_BUTTON_PRESSED PAD1 CROSS   // ~k~~PED_SPRINT~
+            AND IS_BUTTON_PRESSED PAD1 CROSS   // ~k~~PED_SPRINT~                        
+                
                 FREEZE_CHAR_POSITION player_actor FALSE
                 IF NOT IS_CHAR_PLAYING_ANIM player_actor "run_wall"
 
                     CLEO_CALL setCoordsInter 0 player_actor (0.0 5.0 0.0) 0.4 //0.60  //0.4
                     CLEAR_CHAR_TASKS player_actor
-                    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "run_wall" "spider" 9.0 (1 1 1 0) -2
+                    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "run_wall" "spider" 9.0 (1 1 1 0) -2                
                     GOSUB playSfxWall
                 ELSE
                     CLEO_CALL addForceToChar 0 player_actor (0.0 0.0 20.0) 10.0 //15.0
+                    GET_CAMERA_FOV fFov
+                    CAMERA_SET_LERP_FOV 95.0 fFov 100 TRUE   
                     //GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 5.0) (x y z)
                     //CLEO_CALL setCameraVerticalWallRun 0 (x y z) 1.5
                 ENDIF
@@ -1937,7 +1946,8 @@ spideyFrontWall:
                     AND NOT IS_CHAR_PLAYING_ANIM player_actor "idleToWalkWall_B"
 
                         SET_AUDIO_STREAM_STATE sfx STOP
-                        CLEO_CALL setCoordsInter 0 player_actor (0.0 5.0 0.0) 0.0 //0.08
+                        CLEO_CALL setCoordsInter 0 player_actor (0.0 5.0 0.0) 0.0 //0.08  
+
                         IF IS_CHAR_PLAYING_ANIM player_actor "wall_idle_A"
                         AND NOT IS_CHAR_PLAYING_ANIM player_actor "walk_wall"
                             TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "walk_wall" "spider" 31.0 (1 1 1 0) -2
@@ -2003,8 +2013,12 @@ spideyFrontWall:
                     ELSE
                         //This will run in a loop - throw player -up- "walking"
                         CLEO_CALL addForceToChar 0 player_actor (0.0 0.0 8.5) 4.0
+
+                        GET_CAMERA_FOV fFov
+                        CAMERA_SET_LERP_FOV 95.0 fFov 100 TRUE  
+                                              
                         //GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor (0.0 0.0 5.0) (x y z)
-                        //CLEO_CALL setCameraVerticalWallRun 0 (x y z) 1.0
+                        //CLEO_CALL setCameraVerticalWallRun 0 (x y z) 1.5
                     ENDIF
                     CLAMP_FLOAT fXAnglePlayerAir -45.0 45.0 (fXAnglePlayerAir)
                     SET_CHAR_ROTATION player_actor (0.0 fXAnglePlayerAir fZAnglePlayerAir)
@@ -2324,14 +2338,15 @@ spideyFrontWall:
             AND IS_BUTTON_PRESSED PAD1 CROSS
             AND IS_BUTTON_JUST_PRESSED PAD1 CIRCLE // ~k~~PED_FIREWEAPON~
             AND NOT IS_BUTTON_PRESSED PAD1 SQUARE // ~k~~PED_JUMPING~
-            AND 0 > UDStick  //Up
+            AND 0 > UDStick  //Up   
+                
                 GOSUB REQUEST_webAnimations
                 GOSUB destroyWeb_Wall
                 GOSUB createWeb_Wall
                 TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "zip_point_wall_run_up" "spider" 50.0 (1 1 1 0) -2
                 WAIT 0
                 //SET_CHAR_ANIM_SPEED player_actor "zip_point_wall_run_up" 1.35
-                SET_CHAR_ANIM_SPEED player_actor "zip_point_wall_run_up" 2.0
+                SET_CHAR_ANIM_SPEED player_actor "zip_point_wall_run_up" 2.0               
 
                 TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("w_wall_L_A" "mweb") 57.0 (0 1 1 1) -1
                 TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("w_wall_R_A" "mweb") 57.0 (0 1 1 1) -1
@@ -2339,6 +2354,13 @@ spideyFrontWall:
                 SET_CHAR_ANIM_SPEED iWebActor "w_wall_L_A" 2.0   
                 SET_CHAR_ANIM_SPEED iWebActorR "w_wall_R_A" 2.0    
                 GOSUB playWebSound
+
+                IF IS_CHAR_PLAYING_ANIM player_actor "zip_point_wall_run_up"  
+                    //RESTORE_CAMERA
+                    //RESTORE_CAMERA_JUMPCUT                 
+                    GET_CAMERA_FOV fFov
+                    CAMERA_SET_LERP_FOV 95.0 fFov 1000 TRUE 
+                ENDIF
 
                 timera = 0
                 WHILE 300 > timera

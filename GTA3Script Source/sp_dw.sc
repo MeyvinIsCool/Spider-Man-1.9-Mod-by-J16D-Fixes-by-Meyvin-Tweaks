@@ -1366,9 +1366,19 @@ assign_task_dodge_front_c:
             OPEN_SEQUENCE_TASK anim_seq
                 TASK_PLAY_ANIM_NON_INTERRUPTABLE -1 ("dodge_front_c_hita" "spider") 43.0 (0 1 1 0) -1
                 TASK_PLAY_ANIM_NON_INTERRUPTABLE -1 ("getup_front" "ped") 42.0 (0 1 1 0) -1
+                
                 GET_CLEO_SHARED_VAR varHitCount iHitCounter
                 iHitCounter ++
-                SET_CLEO_SHARED_VAR varHitCount iHitCounter                
+                SET_CLEO_SHARED_VAR varHitCount iHitCounter    
+
+                GET_CLEO_SHARED_VAR varFocusCount iHitCounter
+                iHitCounter ++
+                SET_CLEO_SHARED_VAR varFocusCount iHitCounter  
+
+                GET_CLEO_SHARED_VAR varUseFocus iHitCounter
+                iHitCounter ++
+                SET_CLEO_SHARED_VAR varUseFocus iHitCounter                                  
+
             CLOSE_SEQUENCE_TASK anim_seq
             PERFORM_SEQUENCE_TASK iChar anim_seq
         ENDIF
@@ -1452,7 +1462,15 @@ playWebStrikeSfx:
             ENDIF
             GET_CLEO_SHARED_VAR varHitCount iHitCounter
             iHitCounter ++
-            SET_CLEO_SHARED_VAR varHitCount iHitCounter            
+            SET_CLEO_SHARED_VAR varHitCount iHitCounter  
+
+            GET_CLEO_SHARED_VAR varFocusCount iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varFocusCount iHitCounter 
+
+            GET_CLEO_SHARED_VAR varUseFocus iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varUseFocus iHitCounter                          
             BREAK
         CASE 3
             REMOVE_AUDIO_STREAM sfx
@@ -1464,7 +1482,15 @@ playWebStrikeSfx:
             ENDIF
             GET_CLEO_SHARED_VAR varHitCount iHitCounter
             iHitCounter ++
-            SET_CLEO_SHARED_VAR varHitCount iHitCounter            
+            SET_CLEO_SHARED_VAR varHitCount iHitCounter 
+
+            GET_CLEO_SHARED_VAR varFocusCount iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varFocusCount iHitCounter 
+
+            GET_CLEO_SHARED_VAR varUseFocus iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varUseFocus iHitCounter             
             BREAK
     ENDSWITCH
     WAIT 0
@@ -1942,7 +1968,7 @@ CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 
 CONST_INT varPowersProgress     35    //sp_po     || current power progress
 CONST_INT varHitCount           36    //sp_hit    || hitcounting
 CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
-CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs s
+CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
@@ -1957,6 +1983,9 @@ CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
+
+CONST_INT varFocusCount         70    //sp_hit    || focus bar
+CONST_INT varUseFocus           71    //sp_hit    || focus bar
 
 
 

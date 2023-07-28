@@ -209,15 +209,34 @@ assign_air_swing_kick_task:
                             GET_CLEO_SHARED_VAR varHitCount iHitCounter
                             iHitCounter ++
                             SET_CLEO_SHARED_VAR varHitCount iHitCounter
+
+                            GET_CLEO_SHARED_VAR varFocusCount iHitCounter
+                            iHitCounter ++
+                            SET_CLEO_SHARED_VAR varFocusCount iHitCounter
+
+                            GET_CLEO_SHARED_VAR varUseFocus iHitCounter
+                            iHitCounter ++
+                            SET_CLEO_SHARED_VAR varUseFocus iHitCounter                             
+
                         ELSE
                             CLEO_CALL get_char_mass 0 iChar (fTempVar)
                             IF mass_lvl2 >= fTempVar //default
                                 TASK_PLAY_ANIM_NON_INTERRUPTABLE iChar ("swing_kick_hit_1" "dildo") 51.0 (0 1 1 0) -1
                                 WAIT 0
                                 SET_CHAR_ANIM_SPEED iChar "swing_kick_hit_1" 1.5
+
                                 GET_CLEO_SHARED_VAR varHitCount iHitCounter
                                 iHitCounter ++
                                 SET_CLEO_SHARED_VAR varHitCount iHitCounter
+
+                                GET_CLEO_SHARED_VAR varFocusCount iHitCounter
+                                iHitCounter ++
+                                SET_CLEO_SHARED_VAR varFocusCount iHitCounter
+
+                                GET_CLEO_SHARED_VAR varUseFocus iHitCounter
+                                iHitCounter ++
+                                SET_CLEO_SHARED_VAR varUseFocus iHitCounter                                  
+
                             ENDIF
                         ENDIF
                     ELSE
@@ -930,7 +949,16 @@ play_sfx_air_combos_hit:
             ENDIF
             GET_CLEO_SHARED_VAR varHitCount iHitCounter
             iHitCounter ++
-            SET_CLEO_SHARED_VAR varHitCount iHitCounter              
+            SET_CLEO_SHARED_VAR varHitCount iHitCounter 
+
+            GET_CLEO_SHARED_VAR varFocusCount iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varFocusCount iHitCounter       
+
+            GET_CLEO_SHARED_VAR varUseFocus iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varUseFocus iHitCounter                   
+
             BREAK
         CASE 1
             IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\punch_hit_c.mp3"
@@ -943,6 +971,15 @@ play_sfx_air_combos_hit:
             GET_CLEO_SHARED_VAR varHitCount iHitCounter
             iHitCounter ++
             SET_CLEO_SHARED_VAR varHitCount iHitCounter            
+
+            GET_CLEO_SHARED_VAR varFocusCount iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varFocusCount iHitCounter
+
+            GET_CLEO_SHARED_VAR varUseFocus iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varUseFocus iHitCounter  
+
             BREAK
         CASE 2
             IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\punch_hit_d.mp3"
@@ -954,7 +991,16 @@ play_sfx_air_combos_hit:
             ENDIF
             GET_CLEO_SHARED_VAR varHitCount iHitCounter
             iHitCounter ++
-            SET_CLEO_SHARED_VAR varHitCount iHitCounter            
+            SET_CLEO_SHARED_VAR varHitCount iHitCounter       
+
+            GET_CLEO_SHARED_VAR varFocusCount iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varFocusCount iHitCounter            
+
+            GET_CLEO_SHARED_VAR varUseFocus iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varUseFocus iHitCounter  
+
             BREAK
         CASE 3
             IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\punch_hit_e.mp3"
@@ -966,7 +1012,16 @@ play_sfx_air_combos_hit:
             ENDIF
             GET_CLEO_SHARED_VAR varHitCount iHitCounter
             iHitCounter ++
-            SET_CLEO_SHARED_VAR varHitCount iHitCounter            
+            SET_CLEO_SHARED_VAR varHitCount iHitCounter     
+
+            GET_CLEO_SHARED_VAR varFocusCount iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varFocusCount iHitCounter   
+
+            GET_CLEO_SHARED_VAR varUseFocus iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varUseFocus iHitCounter                       
+
             BREAK
         CASE 4
             IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\punch_hit_b.mp3"
@@ -978,7 +1033,16 @@ play_sfx_air_combos_hit:
             ENDIF
             GET_CLEO_SHARED_VAR varHitCount iHitCounter
             iHitCounter ++
-            SET_CLEO_SHARED_VAR varHitCount iHitCounter            
+            SET_CLEO_SHARED_VAR varHitCount iHitCounter 
+
+            GET_CLEO_SHARED_VAR varFocusCount iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varFocusCount iHitCounter            
+
+            GET_CLEO_SHARED_VAR varUseFocus iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varUseFocus iHitCounter  
+
             BREAK
         CASE 5
             IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\punch_finish.mp3"
@@ -990,7 +1054,16 @@ play_sfx_air_combos_hit:
             ENDIF
             GET_CLEO_SHARED_VAR varHitCount iHitCounter
             iHitCounter ++
-            SET_CLEO_SHARED_VAR varHitCount iHitCounter            
+            SET_CLEO_SHARED_VAR varHitCount iHitCounter 
+
+            GET_CLEO_SHARED_VAR varFocusCount iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varFocusCount iHitCounter            
+
+            GET_CLEO_SHARED_VAR varUseFocus iHitCounter
+            iHitCounter ++
+            SET_CLEO_SHARED_VAR varUseFocus iHitCounter  
+
             BREAK            
     ENDSWITCH
 RETURN
@@ -1207,3 +1280,6 @@ CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
+
+CONST_INT varFocusCount         70    //sp_hit    || focus bar
+CONST_INT varUseFocus           71    //sp_hit    || focus bar
