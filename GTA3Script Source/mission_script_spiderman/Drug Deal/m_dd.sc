@@ -96,7 +96,7 @@ main_loop:
         IF toggleSpiderMod = 1  //TRUE
 
             iCounter = 0
-            WHILE 10 >= iCounter
+            WHILE 10 > iCounter
                 CLEO_CALL get_stored_char 0 iCounter (iChar)
                 IF DOES_CHAR_EXIST iChar
                     IF IS_CHAR_DEAD iChar
@@ -112,7 +112,7 @@ main_loop:
                 iCounter ++
             ENDWHILE
 
-            IF kill_counter >= number_of_members  
+            IF kill_counter = number_of_members  
                 iTotalKills += kill_counter
                 max_wave ++
                 IF max_wave = 1
