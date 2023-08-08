@@ -46,5 +46,6 @@ I Had So Much Fun Time Making These Fixes And Also Thanks To These People Who He
 - Mr.Andres5555 (Making Suits)
 - Bilyyy (Animations)
 - Zolani (Sounds)
+- Tamaputra (Sounds)
 
 Sorry If I Missed Somebody .... Thank You !
