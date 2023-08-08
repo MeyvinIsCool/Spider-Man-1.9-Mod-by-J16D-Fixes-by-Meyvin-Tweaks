@@ -453,8 +453,7 @@ RETURN
 
 play_sfx_start_event_alert_dd:
     REMOVE_AUDIO_STREAM iSfx[0]
-    //GENERATE_RANDOM_INT_IN_RANGE 0 3 (iRandomVal)   // 0-2
-    iRandomVal = 0
+    GENERATE_RANDOM_INT_IN_RANGE 0 5 (iRandomVal)   // 0-2
     CLEO_CALL getLanguage 0 (iTempVar)
     IF iTempVar = 1    //(0:spanish|1:English)
         SWITCH iRandomVal
@@ -464,15 +463,75 @@ play_sfx_start_event_alert_dd:
                     SET_AUDIO_STREAM_STATE iSfx[0] 1
                 ENDIF
                 BREAK
+            CASE 1
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng2.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 2
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng3.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 3
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng4.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 4
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng5.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 5
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng6.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK                                                                                                
         ENDSWITCH
     ELSE    //SPANISH
         SWITCH iRandomVal   
             CASE 0
                 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
                     LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3" (iSfx[0])
-                    SET_AUDIO_STREAM_STATE iSfx[0] 1              
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
                 ENDIF
                 BREAK
+            CASE 1
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng2.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 2
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng3.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 3
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng4.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 4
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng5.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 5
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng6.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK  
         ENDSWITCH
     ENDIF
 RETURN
