@@ -10,7 +10,7 @@
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
-CONST_INT time_update 30000  //ms  
+CONST_INT time_update 20000  //ms  
 CONST_INT time_delay 60000  //ms    
 CONST_INT time_delay_after_mission 20000 //ms
 
