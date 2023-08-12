@@ -15,7 +15,7 @@ WAIT 0
 WAIT 0
 WAIT 0
 WAIT 0
-lVAR_INT player_actor flag_player_on_mission toggleSpiderMod isInMainMenu
+lVAR_INT player_actor flag_player_on_mission toggleSpiderMod isInMainMenu audio_line_is_active
 LVAR_INT iEventBlip
 
 GET_PLAYER_CHAR 0 player_actor
@@ -52,6 +52,8 @@ main_loop:
             GOSUB sub_Fade_out_500ms
             flag_player_on_mission = 1  //1:on_mission
             SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
+            audio_line_is_active = 0
+            SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active
             LOAD_AND_LAUNCH_CUSTOM_MISSION "SpiderJ16D\sams_m2"
             WHILE flag_player_on_mission > 0
                GOSUB readVars
@@ -155,6 +157,8 @@ CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
 CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
 
+CONST_INT varAudioActive     	49    // 0:OFF || 1:ON  ||global var to check -spech- audio playing
+
 CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2a            52    //sp_ev    ||1= Activated     || 0= Deactivated
@@ -164,5 +168,3 @@ CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
-
-CONST_INT varAudioActive     	45    // 0:OFF || 1:ON  ||global var to check -spech- audio playing
