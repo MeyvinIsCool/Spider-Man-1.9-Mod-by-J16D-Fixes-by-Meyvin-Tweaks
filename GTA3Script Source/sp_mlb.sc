@@ -46,14 +46,15 @@ main_loop:
             ENDIF
 
             GET_CLEO_SHARED_VAR varBuildingZip (iTempVar)     // MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+            GOSUB activeInteriorCheck
 
             IF iTempVar = 1
 
                 GET_CLEO_SHARED_VAR varBuildingZipFlag (is_zip_to_building) // sp_ml    ||1= Activated     || 0= Deactivated
-                GET_CLEO_SHARED_VAR varOnmission (iTempVar) // flag_player_on_mission ||0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
-                GOSUB activeInteriorCheck
+                //GET_CLEO_SHARED_VAR varOnmission (iTempVar) // flag_player_on_mission ||0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
 
-                IF NOT iTempVar = 2   //car chase     //Fix bug
+                //IF NOT iTempVar = 2   //car chase     //Fix bug
+                IF GOSUB is_not_player_playing_car_chase_anim
                 AND is_in_interior = FALSE
                 AND is_zip_to_building = 1
 
@@ -136,6 +137,8 @@ main_loop:
 
                         ENDIF
                     ENDIF
+                //ELSE
+                    //PRINT_FORMATTED_NOW "~r~Can't Web Zip At The Moment!" 1000                    
                 ENDIF
             ENDIF
         ELSE
@@ -1218,6 +1221,32 @@ is_not_player_playing_swing_anims:
 
             RETURN_TRUE
             RETURN
+        ENDIF
+    ENDIF
+    RETURN_FALSE
+RETURN
+
+is_not_player_playing_car_chase_anim:
+    IF NOT IS_CHAR_PLAYING_ANIM player_actor ("c_idle_Z")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_00")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_01")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_02")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_00")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_01")
+        IF NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_02")
+        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_B_00")
+        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_B_00")
+        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_B_01")
+        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_idle_Z")
+        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_front")
+        AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_fall")
+            IF NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_fall")
+            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_center")
+            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_left")
+            AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_hit_right")   
+                RETURN_TRUE
+                RETURN
+            ENDIF
         ENDIF
     ENDIF
     RETURN_FALSE

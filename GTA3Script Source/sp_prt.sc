@@ -19,6 +19,10 @@ INCLUDED:
     ID:9  ||CRIME ALERT
     ID:10 ||ELECTRO BOSS MISSION PASSED (UNUSED)
     ID:11 ||DRUG DEAL MISSION PASSED 
+    ID:12 ||ASSAULT MISSION PASSED 
+    ID:13 ||MUGGING MISSION PASSED
+    ID:14 ||CALLS IDENTIFICATOR
+    ID:15 ||JJ CALL PLAY
 FORMAT:
     ID:1
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id}
@@ -41,7 +45,15 @@ FORMAT:
     ID:10                       
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {mission id} {text1_id} {text2_id}
     ID:11                       
-        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {mission id} {text1_id} {text2_id}        
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {mission id} {text1_id} {text2_id}     
+    ID:12                       
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {mission id} {text1_id} {text2_id}      
+    ID:13                       
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {mission id} {text1_id} {text2_id} 
+    ID:14                       
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" {id} {character_id}
+    ID:15                       
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" {id} {call_type} {dialogue_id}                 
 
 */
 
@@ -70,9 +82,9 @@ SCRIPT_NAME sp_prt
 LVAR_INT idVar  //in
 LVAR_INT iTempVar2 iTempVar3 iTempVar4      //in
 //---
-LVAR_INT toggleSpiderMod isInMainMenu flag_player_on_mission
-LVAR_INT counter idPowers sfx r g b iTempVar crimealert
-LVAR_FLOAT sx sy px py
+LVAR_INT toggleSpiderMod isInMainMenu flag_player_on_mission is_radar_enabled
+LVAR_INT counter idPowers sfx r g b iTempVar crimealert audio_line_is_active
+LVAR_FLOAT sx sy px py fVolume
 
 USE_TEXT_COMMANDS TRUE
 SWITCH idVar
@@ -365,7 +377,175 @@ SWITCH idVar
             ENDIF
             WAIT 0
         ENDWHILE
-        BREAK                                  
+        BREAK 
+    CASE 12  //ID:12  ||ASSAULT MISSION PASSED
+        // IN: {id} {total xp} {mission xp} {extra time xp}
+        GOSUB play_sfx_mission_end
+        GOSUB load_textures_street_crimes
+        timera = 0
+        WHILE TRUE
+            GOSUB draw_assault_mission_succesful
+            GOSUB draw_street_crimes_key_press_succesful
+            IF timera > 2000
+                IF IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+                    WHILE IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+                        WAIT 0
+                    ENDWHILE
+                    BREAK
+                ENDIF
+            ENDIF
+            IF timera > 6000   //6 sec
+                BREAK
+            ENDIF
+            GOSUB readVars
+            IF isInMainMenu = 1     //1:true 0: false
+            OR toggleSpiderMod = 0
+                BREAK
+            ENDIF
+            WAIT 0
+        ENDWHILE
+        BREAK  
+    CASE 13  //ID:13  ||MUGGING MISSION PASSED
+        // IN: {id} {total xp} {mission xp} {extra time xp}
+        GOSUB play_sfx_mission_end
+        GOSUB load_textures_street_crimes
+        timera = 0
+        WHILE TRUE
+            GOSUB draw_mugging_mission_succesful
+            GOSUB draw_street_crimes_key_press_succesful
+            IF timera > 2000
+                IF IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+                    WHILE IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+                        WAIT 0
+                    ENDWHILE
+                    BREAK
+                ENDIF
+            ENDIF
+            IF timera > 6000   //6 sec
+                BREAK
+            ENDIF
+            GOSUB readVars
+            IF isInMainMenu = 1     //1:true 0: false
+            OR toggleSpiderMod = 0
+                BREAK
+            ENDIF
+            WAIT 0
+        ENDWHILE
+        BREAK  
+    CASE 14  //ID:14  ||CALLS IDENTIFICATOR
+        // IN: {id} {character_id}
+        GOSUB readVars
+        IF toggleSpiderMod = 1
+            IF isInMainMenu = 0    //1:true 0: false         
+                GOSUB load_textures_calls_cellphone
+                WHILE TRUE
+                    GOSUB readVars
+                    GET_CLEO_SHARED_VAR varHudRadar (is_radar_enabled)
+                    IF is_radar_enabled = 1     // 0:OFF || 1:ON
+                        px = 568.0
+                        py = 330.0
+                        GOSUB draw_calls_cellphone
+                        CLEO_CALL generate_anim_bars_speech 0 (533.0 330.0) (16 202 211 150)    //(46 117 156 150)
+                    ELSE
+                        px = 60.0
+                        py = 310.0           
+                        GOSUB draw_calls_cellphone
+                        CLEO_CALL generate_anim_bars_speech 0 (25.0 310.0) (16 202 211 150)    //(46 117 156 150)
+                    ENDIF
+                    IF audio_line_is_active = 0             
+                        BREAK
+                    ENDIF
+                    IF isInMainMenu = 1     //1:true 0: false
+                    OR toggleSpiderMod = 0
+                        audio_line_is_active = 0 
+                        SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active
+                        BREAK
+                    ENDIF             
+                    WAIT 0
+                ENDWHILE
+            ELSE
+                audio_line_is_active = 0 
+                SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active             
+                BREAK
+            ENDIF
+        ENDIF                
+        BREAK  
+    CASE 15  //ID:15  ||JJ CALL PLAY
+        // IN: {id} {call_type} {dialogue_id}
+        GOSUB readVars
+        IF toggleSpiderMod = 1
+            IF isInMainMenu = 0    //1:true 0: false 
+                GOSUB readVars
+                GOSUB play_sfx_call_inital
+                SWITCH iTempVar3
+                    CASE 0
+                        IF audio_line_is_active = 1
+                            WAIT 1000
+                            GOSUB play_sfx_cc_failed
+                        ELSE
+                            IF audio_line_is_active = 0
+                                BREAK
+                            ENDIF   
+                        ENDIF             
+                        BREAK
+                    CASE 1
+                        IF audio_line_is_active = 1
+                            WAIT 1000
+                            GOSUB play_sfx_dd_failed  
+                        ELSE
+                            IF audio_line_is_active = 0
+                                BREAK
+                            ENDIF   
+                        ENDIF                           
+                        BREAK
+                    CASE 2
+                        IF audio_line_is_active = 1
+                            WAIT 1000
+                            GOSUB play_sfx_ass_failed  
+                        ELSE
+                            IF audio_line_is_active = 0
+                                BREAK
+                            ENDIF 
+                        ENDIF                           
+                        BREAK
+                    CASE 3 
+                        IF audio_line_is_active = 1
+                            WAIT 1000
+                            GOSUB play_sfx_mug_failed 
+                        ELSE
+                            IF audio_line_is_active = 0
+                                BREAK
+                            ENDIF 
+                        ENDIF                           
+                        BREAK
+                    DEFAULT
+                        BREAK
+                ENDSWITCH      
+                WHILE TRUE
+                    GOSUB readVars
+                    IF audio_line_is_active = 0 
+                        SET_AUDIO_STREAM_STATE sfx 0 
+                        REMOVE_AUDIO_STREAM sfx
+                        iTempVar2 = 2
+                        GOSUB play_sfx_call_inital   
+                        WAIT 2000         
+                        BREAK
+                    ENDIF
+                    IF isInMainMenu = 1     //1:true 0: false
+                    OR toggleSpiderMod = 0
+                        audio_line_is_active = 0 
+                        SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active 
+                        BREAK
+                    ENDIF                        
+                    WAIT 0
+                ENDWHILE
+            ELSE
+                audio_line_is_active = 0 
+                SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active             
+                BREAK
+            ENDIF
+        ENDIF
+        BREAK                                                                   
     DEFAULT
         BREAK
 ENDSWITCH
@@ -385,6 +565,7 @@ readVars:
     GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
     GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
     GET_CLEO_SHARED_VAR varOnmission (flag_player_on_mission)
+    GET_CLEO_SHARED_VAR varAudioActive (audio_line_is_active)
 RETURN
 
 //-+----------------------------------- POWERS (sp_po.sc)
@@ -1054,13 +1235,210 @@ draw_drug_deal_mission_succesful:
     SET_SPRITES_DRAW_BEFORE_FADE TRUE
     DRAW_SPRITE tPBBackInfo (79.0 165.0) (sx sy) (255 255 255 235)
 RETURN
+
+//-+----------------------------------- ASSAULT
+draw_assault_mission_succesful:
+    //iTempVar2     // Total XP
+    //iTempVar3     // Mission completed XP
+    //iTempVar4     // Extra Time XP
+    GET_FIXED_XY_ASPECT_RATIO 25.0 25.0 (sx sy)
+    USE_TEXT_COMMANDS FALSE
+    SET_SPRITES_DRAW_BEFORE_FADE FALSE
+    DRAW_SPRITE idMapIcon5 (21.0 110.0) (sx sy) (255 255 255 235)
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (52.5 105.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 805 18 0.0 0.0  // Assault
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (115.5 105.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 487 20 0.0 0.0 // COMPLETED!
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (79.0 115.0) (120.0 20.0) (255 255 255 0) (0.75) (0 0 1 0) (255 255 255 250) -1 -1 0.0 0.0  //SIDES_LINES division
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (115.0 135.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 473 1 0.0 0.0 //  XP SUMMARY
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 145.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 170 19 0.0 0.0  // Side Missions
+    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 146.0) (50.0 15.0) (255 255 255 0) 122 19 0.0 0.0 iTempVar3  //+~1~
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 165.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 471 19 0.0 0.0  // Combat
+    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 166.0) (50.0 15.0) (255 255 255 0) 122 19 0.0 0.0 iTempVar4    //+~1~
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (79.0 180.0) (120.0 20.0) (255 255 255 0) (0.75) (0 0 1 0) (255 255 255 250) -1 -1 0.0 0.0  //SIDES_LINES division
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 197.5) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 472 20 0.0 0.0  // TOTAL XP EARNED
+    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 195.0) (50.0 15.0) (255 255 255 0) 121 21 0.0 0.0 iTempVar2    //~1~
+
+    //GET_FIXED_XY_ASPECT_RATIO 250.0 180.0 (sx sy)
+    sx = 187.50
+    sy = 168.00
+    USE_TEXT_COMMANDS FALSE
+    SET_SPRITES_DRAW_BEFORE_FADE TRUE
+    DRAW_SPRITE tPBBackInfo (79.0 165.0) (sx sy) (255 255 255 235)
+RETURN
+
+//-+----------------------------------- MUGGING
+draw_mugging_mission_succesful:
+    //iTempVar2     // Total XP
+    //iTempVar3     // Mission completed XP
+    //iTempVar4     // Extra Time XP
+    GET_FIXED_XY_ASPECT_RATIO 25.0 25.0 (sx sy)
+    USE_TEXT_COMMANDS FALSE
+    SET_SPRITES_DRAW_BEFORE_FADE FALSE
+    DRAW_SPRITE idMapIcon5 (21.0 110.0) (sx sy) (255 255 255 235)
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (52.5 105.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 806 18 0.0 0.0  // MUGGING
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (115.5 105.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 487 20 0.0 0.0 // COMPLETED!
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (79.0 115.0) (120.0 20.0) (255 255 255 0) (0.75) (0 0 1 0) (255 255 255 250) -1 -1 0.0 0.0  //SIDES_LINES division
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (115.0 135.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 473 1 0.0 0.0 //  XP SUMMARY
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 145.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 170 19 0.0 0.0  // Side Missions
+    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 146.0) (50.0 15.0) (255 255 255 0) 122 19 0.0 0.0 iTempVar3  //+~1~
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 165.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 471 19 0.0 0.0  // Combat
+    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 166.0) (50.0 15.0) (255 255 255 0) 122 19 0.0 0.0 iTempVar4    //+~1~
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (79.0 180.0) (120.0 20.0) (255 255 255 0) (0.75) (0 0 1 0) (255 255 255 250) -1 -1 0.0 0.0  //SIDES_LINES division
+
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 197.5) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 472 20 0.0 0.0  // TOTAL XP EARNED
+    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 195.0) (50.0 15.0) (255 255 255 0) 121 21 0.0 0.0 iTempVar2    //~1~
+
+    //GET_FIXED_XY_ASPECT_RATIO 250.0 180.0 (sx sy)
+    sx = 187.50
+    sy = 168.00
+    USE_TEXT_COMMANDS FALSE
+    SET_SPRITES_DRAW_BEFORE_FADE TRUE
+    DRAW_SPRITE tPBBackInfo (79.0 165.0) (sx sy) (255 255 255 235)
+RETURN
+
+//-+----------------------------------- JJJ Call
+load_textures_calls_cellphone:
+    IF DOES_DIRECTORY_EXIST "CLEO\SpiderJ16D"
+        LOAD_TEXTURE_DICTIONARY spsams
+        LOAD_SPRITE idCallBack "calls_b"
+        LOAD_SPRITE idCallBC "call_bc"
+        LOAD_SPRITE idCallMJ "call_mj"
+        LOAD_SPRITE idCallJJJ "call_jjj"
+    ELSE
+        PRINT_STRING_NOW "~r~ERROR: 'CLEO\SpiderJ16D' folder not found!" 6000
+        timera = 0
+        WHILE 5500 > timera
+            WAIT 0
+        ENDWHILE
+        TERMINATE_THIS_CUSTOM_SCRIPT
+    ENDIF
+RETURN
+
+draw_calls_cellphone:
+    sx = 125.0
+    sy = 80.0
+    USE_TEXT_COMMANDS FALSE
+    SET_SPRITES_DRAW_BEFORE_FADE TRUE
+    DRAW_SPRITE idCallBack (px py) (sx sy) (255 255 255 170)
+    SWITCH iTempVar2
+        CASE 0  //JJ Jameson
+            USE_TEXT_COMMANDS FALSE
+            SET_SPRITES_DRAW_BEFORE_FADE FALSE
+            DRAW_SPRITE idCallJJJ (px py) (sx sy) (255 255 255 235)
+            BREAK
+    ENDSWITCH
+RETURN
+
+//-+----------------------------------- JJJ Mission Failed Calls
+play_sfx_call_inital:
+    SWITCH iTempVar2
+		CASE 1
+            IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\p_call2.mp3" (sfx) 
+                SET_AUDIO_STREAM_STATE sfx 1
+				GET_AUDIO_SFX_VOLUME (fVolume)
+                fVolume *= 0.8
+				SET_AUDIO_STREAM_VOLUME sfx fVolume
+            ENDIF		
+			BREAK
+        CASE 2
+            IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\p_call_end.mp3" (sfx) 
+                SET_AUDIO_STREAM_STATE sfx 1
+				GET_AUDIO_SFX_VOLUME (fVolume)
+                fVolume *= 0.8
+				SET_AUDIO_STREAM_VOLUME sfx fVolume
+            ENDIF
+            BREAK
+    ENDSWITCH
+RETURN
+
+play_sfx_cc_failed:
+    IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\JJJ_CCF_1.mp3" (sfx)
+        SET_AUDIO_STREAM_STATE sfx 1
+        WAIT 0
+        GET_AUDIO_SFX_VOLUME (fVolume)
+        fVolume = 15.0
+        SET_AUDIO_STREAM_VOLUME sfx fVolume        
+        WAIT 0
+    ENDIF
+RETURN
+
+play_sfx_dd_failed:
+    IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\JJJ_DD_1.mp3" (sfx)
+        SET_AUDIO_STREAM_STATE sfx 1
+        WAIT 0
+        GET_AUDIO_SFX_VOLUME (fVolume)
+        fVolume = 15.0
+        SET_AUDIO_STREAM_VOLUME sfx fVolume        
+        WAIT 0
+    ENDIF
+RETURN
+
+play_sfx_ass_failed:
+    IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\JJJ_ASS_1.mp3" (sfx)
+        SET_AUDIO_STREAM_STATE sfx 1
+        WAIT 0
+        GET_AUDIO_SFX_VOLUME (fVolume)
+        fVolume = 5.0
+        SET_AUDIO_STREAM_VOLUME sfx fVolume        
+        WAIT 0
+    ENDIF
+RETURN
+
+play_sfx_mug_failed:
+    IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\JJJ_MUG_1.mp3" (sfx)
+        SET_AUDIO_STREAM_STATE sfx 1
+        WAIT 0
+        GET_AUDIO_SFX_VOLUME (fVolume)
+        fVolume = 5.0
+        SET_AUDIO_STREAM_VOLUME sfx fVolume        
+        WAIT 0
+    ENDIF
+RETURN
+
 //-+-----------------------------------
 
 }
 SCRIPT_END
 
-
 //-+--- CALL SCM HELPERS
+{
+//CLEO_CALL generate_anim_bars_speech 0 (posx posy) (r g b a)
+generate_anim_bars_speech:
+    LVAR_FLOAT posx posy    //in
+    LVAR_INT r g b a   //in
+    LVAR_FLOAT fSize1 fSize2 fSize3 fSize4 fSize5
+    LVAR_FLOAT fRand1 fRand2 fRand3 fRand4 fRand5
+    LVAR_FLOAT fPos1 fPos2 fPos3 fPos4 fPos5
+    LVAR_INT counter
+    counter = 0
+    WHILE 12 >= counter
+        fSize1 = 100.0
+        GENERATE_RANDOM_FLOAT_IN_RANGE 1.0 fSize1 (fRand1)
+        fSize1 -= fRand1
+        fSize1 /= 100.0
+        fSize1 *= -15.0
+        fPos1 = fSize1
+        fPos1 /= 2.0
+        fPos1 += posy
+        USE_TEXT_COMMANDS FALSE
+        DRAW_RECT posx fPos1 3.0 fSize1 r g b a
+        posx += 3.5
+        ++counter
+    ENDWHILE
+CLEO_RETURN 0
+}
 //-+--- Shine GUI
 {
 //CLEO_CALL GUI_DrawBoxOutline_WithText 0 /*pos*/(320.0 240.0) /*siz*/(200.0 200.0) /*color*/(0 0 0 180) /*ouline*/(1.4 1 1 1 1 200 200 200 200) /*gxtId*/ -1 /*formatId*/ 1 /*left padding*/ 3.0 /*top padding*/ 1.0
@@ -1651,6 +2029,8 @@ CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
 CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
 
+CONST_INT varAudioActive     	49    // 0:OFF || 1:ON  ||global var to check -spech- audio playing
+
 CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2a            52    //sp_ev    ||1= Activated     || 0= Deactivated
@@ -1704,3 +2084,8 @@ CONST_INT idBP10 46
 CONST_INT idMainMission 47
 CONST_INT idSideMission 48
 CONST_INT idCrimeReport 49
+
+CONST_INT idCallBack 60
+CONST_INT idCallBC 61
+CONST_INT idCallMJ 62
+CONST_INT idCallJJJ 63

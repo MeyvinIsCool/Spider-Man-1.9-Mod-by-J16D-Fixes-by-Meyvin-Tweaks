@@ -29,7 +29,6 @@ CONST_INT varCarChaseProgress   14    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varScrewBallProgress  15    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varBackpacksProgress  16    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varLandmarksProgress  17    //for stadistics ||MSpiderJ16Dv7
-CONST_INT varDrugDealProgress   18    //for stadistics ||MSpiderJ16Dv7
 
 CONST_INT varBuildingZip        18    //sp_mlb           ||1= Activated     || 0= Deactivated
 CONST_INT varBuildingZipFlag    19    //sp_mlb           ||1= Activated     || 0= Deactivated
@@ -58,6 +57,12 @@ CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
 CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
+
+CONST_INT varDrugDealProgress   45    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varAssaultProgress    46    //for stadistics ||MSpiderJ16Dv7 
+CONST_INT varMuggingProgress    47    //for stadistics ||MSpiderJ16Dv7 (Due to messy global shared vars , I have to add it here)
+
+CONST_INT varAudioActive     	49    // 0:OFF || 1:ON  ||global var to check -spech- audio playing
 
 CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated
@@ -143,6 +148,10 @@ READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_screwb" (iT
 SET_CLEO_SHARED_VAR varScrewBallProgress iTempVar
 READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_drdeal" (iTempVar)
 SET_CLEO_SHARED_VAR varDrugDealProgress iTempVar
+READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_assault" (iTempVar)
+SET_CLEO_SHARED_VAR varAssaultProgress iTempVar
+READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_mugging" (iTempVar)
+SET_CLEO_SHARED_VAR varMuggingProgress iTempVar
 READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_bpacks" (iTempVar)
 SET_CLEO_SHARED_VAR varBackpacksProgress iTempVar
 READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_lmarks" (iTempVar)
@@ -255,28 +264,30 @@ start:
                 SET_CLEO_SHARED_VAR varInMenu 1     // // 0:OFF || 1:ON
                 SET_FADING_COLOUR 0 0 0
                 DO_FADE 500 FADE_OUT
+                
+                CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
+                IF IS_CHAR_IN_ANY_CAR player_actor
                     CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-                    IF IS_CHAR_IN_ANY_CAR player_actor
-                        CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-                    ENDIF
-                    GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x y z)
-                    GET_CHAR_HEADING player_actor (fZAnglePlayerAir)
-                    CLEO_CALL storeCharWorldXYZCoords 0 x y z fZAnglePlayerAir
+                ENDIF
+                GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x y z)
+                GET_CHAR_HEADING player_actor (fZAnglePlayerAir)
+                CLEO_CALL storeCharWorldXYZCoords 0 x y z fZAnglePlayerAir
 
                 WHILE GET_FADING_STATUS 
                     WAIT 0
                 ENDWHILE
-                    //GET_CURRENT_WEATHER (iTempVar)
-                    //CLEO_CALL save_weather_info 0 iTempVar
-                    //FORCE_WEATHER_NOW SUNNY_SF
-                    //SET_EXTRA_COLOURS 33 TRUE
-                    
-                    //WRITE_MEMORY 0xB7C484 2 1 FALSE   //_forceInteriorWeather
-                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "config" "setA" (iTempVar)
-                    SET_CLEO_SHARED_VAR varLevelChar iTempVar
-                    READ_FLOAT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "config" "setB" (fCurrentLevel)
-                    CLEO_CALL store_backpack_current_progress 0 ()
-                    CLEO_CALL store_landmark_current_progress 0 ()
+                
+                //GET_CURRENT_WEATHER (iTempVar)
+                //CLEO_CALL save_weather_info 0 iTempVar
+                //FORCE_WEATHER_NOW SUNNY_SF
+                //SET_EXTRA_COLOURS 33 TRUE
+                
+                //WRITE_MEMORY 0xB7C484 2 1 FALSE   //_forceInteriorWeather
+                READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "config" "setA" (iTempVar)
+                SET_CLEO_SHARED_VAR varLevelChar iTempVar
+                READ_FLOAT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "config" "setB" (fCurrentLevel)
+                CLEO_CALL store_backpack_current_progress 0 ()
+                CLEO_CALL store_landmark_current_progress 0 ()
 
                 SET_AREA_VISIBLE 14
                 SET_CHAR_AREA_VISIBLE player_actor 14
@@ -6045,22 +6056,40 @@ ProcessGame_and_DrawItems_STATISTICS:
                 BREAK
             CASE 507
                 GET_CLEO_SHARED_VAR varDrugDealProgress (iTempVar)
-                BREAK              
+                BREAK   
             CASE 508
+                GET_CLEO_SHARED_VAR varAssaultProgress (iTempVar)
+                BREAK   
+            CASE 509
+                GET_CLEO_SHARED_VAR varMuggingProgress (iTempVar)
+                BREAK                                              
+            CASE 510
                 GET_CLEO_SHARED_VAR varBackpacksProgress (iTempVar)
                 BREAK            
-            CASE 509
+            CASE 511
                 GET_CLEO_SHARED_VAR varLandmarksProgress (iTempVar)
                 BREAK           
         ENDSWITCH
         CLEO_CALL GUI_DrawBoxOutline_WithText 0 (272.5 yCoord) (145.0 20.0) (0 0 0 190) (0.5) (1 0 1 0) (225 225 225 30) -1 5 (0.0 0.0) // lines sides
-        IF iRow > 507
+        IF iRow > 509
             CLEO_CALL GUI_DrawBox_WithNumber 0 (272.5 yCoord) (145.0 20.0) (0 0 0 0) 126 5 (0.0 -3.0) iTempVar  //~1~ / 10
         ELSE
             IF iRow = 503
                 CLEO_CALL GUI_DrawBox_WithNumber 0 (272.5 yCoord) (145.0 20.0) (0 0 0 0) 128 5 (0.0 -3.0) iTempVar  //~1~ / 50
             ELSE
-                CLEO_CALL GUI_DrawBox_WithNumber 0 (272.5 yCoord) (145.0 20.0) (0 0 0 0) 121 5 (0.0 -3.0) iTempVar  //~1~
+                IF iRow = 507
+                    CLEO_CALL GUI_DrawBox_WithNumber 0 (272.5 yCoord) (145.0 20.0) (0 0 0 0) 139 5 (0.0 -3.0) iTempVar  //~1~ / 60
+                ELSE   
+                    IF iRow = 508
+                        CLEO_CALL GUI_DrawBox_WithNumber 0 (272.5 yCoord) (145.0 20.0) (0 0 0 0) 141 5 (0.0 -3.0) iTempVar  //~1~ / 80
+                    ELSE
+                        IF iRow = 509
+                            CLEO_CALL GUI_DrawBox_WithNumber 0 (272.5 yCoord) (145.0 20.0) (0 0 0 0) 140 5 (0.0 -3.0) iTempVar  //~1~ / 70
+                        ELSE
+                            CLEO_CALL GUI_DrawBox_WithNumber 0 (272.5 yCoord) (145.0 20.0) (0 0 0 0) 121 5 (0.0 -3.0) iTempVar  //~1~
+                        ENDIF
+                    ENDIF
+                ENDIF
             ENDIF
         ENDIF
         iRow ++

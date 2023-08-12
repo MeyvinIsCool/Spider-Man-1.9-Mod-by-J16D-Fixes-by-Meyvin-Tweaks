@@ -49,7 +49,7 @@ main_loop:
                 GET_CLEO_SHARED_VAR varThrowVehDoors (iTempVar)     ////MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
                 IF iTempVar = 1
                     GET_CLEO_SHARED_VAR varOnmission (iTempVar) // flag_player_on_mission ||0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
-                    IF NOT iTempVar = 2   //car chase     //Fix crash
+                    //IF NOT iTempVar = 2   //car chase     //Fix crash
 
                         GET_CLEO_SHARED_VAR varThrowFix (is_near_car)
                         IF CLEO_CALL get_object_near_char 0 player_actor 20.0 (obj)
@@ -61,6 +61,7 @@ main_loop:
                                     //DRAW_CORONA (x[0] y[0] z[0]) (1.0) (CORONATYPE_SHINYSTAR, FLARETYPE_NONE) (255 0 0)
                                     IF DOES_OBJECT_EXIST obj
                                     AND NOT is_near_car = 1
+                                    AND GOSUB is_not_player_playing_car_anim
                                     AND NOT IS_CHAR_PLAYING_ANIM player_actor ("yank_object")
                                         GOSUB draw_indicator_object
                                         // L1 
@@ -81,12 +82,13 @@ main_loop:
                                                 ENDWHILE
                                             ENDIF  
                                         ENDIF
+                                    //ELSE
+                                        //PRINT_FORMATTED_NOW "~r~Can't Throw Objects At The Moment" 1
                                     ENDIF
-
                                 ENDIF
                             ENDIF    
                         ENDIF
-                    ENDIF                         
+                    //ENDIF                         
                 ENDIF
 
                 // Throw Vehicle Doors (COMPLETED) - Scripted By MeyvinIsCool
@@ -98,10 +100,12 @@ main_loop:
                     IF iTempVar = 1
                         GET_CLEO_SHARED_VAR varOnmission (iTempVar) // flag_player_on_mission ||0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
                         IF NOT iTempVar = 2   //car chase     //Fix crash
-                            //on ground                                 
+                            //on ground                          
+                            GET_CLEO_SHARED_VAR varThrowFix (is_near_car)       
                             IF CLEO_CALL getClosestVehicle 0 (iVeh)                             
                                 IF DOES_VEHICLE_EXIST iVeh
                                 AND IS_CAR_ON_SCREEN iVeh
+                                //AND GOSUB is_not_player_playing_car_anim
                                 AND NOT IS_CHAR_PLAYING_ANIM player_actor ("yank_object")
                                     GOSUB draw_indicator_vehicles                                                                                                                                                            
                                     // L1 
@@ -120,7 +124,9 @@ main_loop:
                                                 WAIT 0
                                             ENDWHILE
                                         ENDIF                                                                                                                                                     
-                                    ENDIF                                          
+                                    ENDIF    
+                                //ELSE
+                                    //PRINT_FORMATTED_NOW "~r~Can't Throw Objects At The Moment" 1                                                                          
                                 ENDIF                                                                                                 
                             ENDIF                              
                         ENDIF
@@ -445,6 +451,20 @@ playWebSound:
             ENDIF        
         BREAK
     ENDSWITCH
+RETURN
+
+is_not_player_playing_car_anim:
+    IF NOT IS_CHAR_PLAYING_ANIM player_actor ("c_idle_Z")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_00")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_01")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_left_A_02")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_00")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_01")
+    AND NOT IS_CHAR_PLAYING_ANIM player_actor ("c_right_A_02")
+        RETURN_TRUE
+        RETURN
+    ENDIF
+    RETURN_FALSE
 RETURN
 
 //-+----------------------------------------------------------

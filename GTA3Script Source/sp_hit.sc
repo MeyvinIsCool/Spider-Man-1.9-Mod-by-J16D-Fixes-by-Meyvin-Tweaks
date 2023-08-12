@@ -13,9 +13,9 @@ SCRIPT_START
 NOP
 SCRIPT_NAME sp_hit
 LVAR_INT player_actor toggleSpiderMod isInMainMenu toggleHUD hud_mode is_in_interior
-LVAR_INT iTempVar iTempVar2 iTempVar3 counter is_hud_enabled is_opening_door
+LVAR_INT iTempVar iTempVar2 counter is_hud_enabled is_opening_door
 LVAR_FLOAT x y z 
-LVAR_INT eventArgVar iChar iPed iHitCounter iLastCount pEntity iEntityType j
+LVAR_INT eventArgVar iChar iHitCounter iLastCount pEntity iEntityType j
 LVAR_INT flag_player_hit_counter
 
 GET_PLAYER_CHAR 0 player_actor

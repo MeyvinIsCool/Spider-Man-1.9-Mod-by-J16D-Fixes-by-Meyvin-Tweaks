@@ -106,11 +106,7 @@ main_loop:
                                     
                     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_hit.cs" 
                         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_hit.cs"    // Hit Counter Script
-                    ENDIF        
-
-                    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_fc.cs"
-                        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_fc.cs"     // Focus Bar Script (WIP)
-                    ENDIF                                        
+                    ENDIF   
 
                     WHILE toggleHUD = 1  // 0:OFF || 1:ON
                         GOSUB readVars
@@ -1534,9 +1530,6 @@ CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
-
-CONST_INT varFocusCount         70    //sp_hit    || focus bar
-CONST_INT varUseFocus           71    //sp_hit    || focus bar
 
 
 /*

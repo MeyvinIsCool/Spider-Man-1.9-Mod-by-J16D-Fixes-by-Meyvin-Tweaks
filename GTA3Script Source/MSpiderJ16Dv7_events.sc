@@ -5,6 +5,8 @@
 //   -Thug Hideouts (m_th.cs)
 //   -Street Crimes (m_w.cs)
 //   -Drug Deal (m_dd.cs)
+//   -Assault  (m_ass.cs)
+//   -Mugging  (m_mug.cs)
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
@@ -16,11 +18,11 @@ SCRIPT_START
 {
 SCRIPT_NAME m_ev
 
-LVAR_INT player_actor toggleSpiderMod iRandomMission
+LVAR_INT player_actor toggleSpiderMod iRandomMission counter
 LVAR_INT idZone[2] i iEventBlip iSfx[1]
-LVAR_FLOAT x[2] y[2] z[2] randm_x randm_y randm_z v1 v2 v3 v4 fDistance fVolume
+LVAR_FLOAT x[2] y[2] z[2] randm_x randm_y randm_z v1 v2 v3 v4 fDistance
 LVAR_INT iRandomVal iTempVar iDistance flag_player_on_mission isInMainMenu
-LVAR_INT crimealert
+LVAR_INT crimealert audio_line_is_active
 
 GET_PLAYER_CHAR 0 player_actor
 flag_player_on_mission = 0
@@ -58,9 +60,10 @@ CLEO_CALL storeLanguage 0 iTempVar
         ENDIF       
     ENDIF   
 
+intialization:
 timera = 0
-//iRandomMission = 1
-GENERATE_RANDOM_INT_IN_RANGE 1 3 iRandomMission
+//iRandomMission = 2
+GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
 
 GOSUB generate_random_coords
 GOSUB generate_random_coords_2
@@ -77,15 +80,43 @@ main_loop:
                             GOSUB car_chase_initial
                         ELSE
                             IF iRandomMission = 2
-                                GOSUB drug_deal_initial
+                                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\config.ini"
+                                    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_drdeal" (counter)
+                                    IF NOT counter >= 60    //Max Missions Reached                            
+                                        GOSUB drug_deal_initial
+                                    ELSE
+                                        GOTO intialization
+                                        //PRINT_FORMATTED_NOW "Max Mission Reached !" 2222
+                                    ENDIF
+                                ENDIF
+                            ELSE
+                                IF iRandomMission = 3
+                                    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\config.ini"
+                                        READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_assault" (counter)  
+                                        IF NOT counter >= 80    //Max Missions Reached                          
+                                            GOSUB assault_initial
+                                        ELSE
+                                            GOTO intialization
+                                        ENDIF
+                                    ENDIF
+                                ELSE
+                                    IF iRandomMission = 4
+                                        IF DOES_FILE_EXIST "CLEO\SpiderJ16D\config.ini"
+                                            READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_mugging" (counter)
+                                            IF NOT counter >= 70    //Max Missions Reached                                    
+                                                GOSUB mugging_initial
+                                            ELSE
+                                                GOTO intialization
+                                            ENDIF
+                                        ENDIF
+                                    ENDIF
+                                ENDIF
                             ENDIF
                         ENDIF
-                                      
+                        //PRINT_FORMATTED_NOW "timer %i mission %i" 1 timera iRandomMission    //debug       
                     ENDIF
              
                 ENDIF
-
-                //PRINT_FORMATTED_NOW "timer %i mission %i" 1 timera iRandomMission    //debug
 
             ELSE
                 GET_AUDIO_STREAM_STATE iSfx[0] (iTempVar)
@@ -116,11 +147,23 @@ drug_deal_initial:
     ENDIF  
 RETURN  
 
+assault_initial:
+    IF iRandomMission = 3                    
+        GOSUB assault_event
+    ENDIF  
+RETURN 
+
+mugging_initial:
+    IF iRandomMission = 4                    
+        GOSUB mugging_event
+    ENDIF  
+RETURN 
 
 readVars:
     GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
     GET_CLEO_SHARED_VAR varOnmission (flag_player_on_mission)
     GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
+    GET_CLEO_SHARED_VAR varAudioActive (audio_line_is_active)
 RETURN
 
 //---+--------------- CAR CHASE EVENT
@@ -131,14 +174,17 @@ car_chase_event:
         WAIT 900
     ELSE
         GOSUB readVars
-        IF flag_player_on_mission = 0   //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2    
+        IF flag_player_on_mission = 0   //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2  
+        AND iRandomMission = 1  
             GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[0] y[0] z[0])
             CLEO_CALL get_info_zone_id 0 x[0] y[0] z[0] (idZone[0])
             IF idZone[1] = idZone[0]
                 CLEO_CALL save_coords_car_chase_event 0 x[1] y[1] z[1]
                 timera = 0
                 ADD_SPRITE_BLIP_FOR_COORD x[1] y[1] z[1] RADAR_SPRITE_ENEMYATTACK (iEventBlip)
-                GOSUB play_sfx_start_event_alert_cc
+                IF audio_line_is_active = 0
+                    GOSUB play_sfx_start_event_alert_cc
+                ENDIF
                 crimealert = 0
                 SET_CLEO_SHARED_VAR varCrimeAlert crimealert
                 WAIT 0                
@@ -168,6 +214,8 @@ car_chase_event:
                             //start mission
                             flag_player_on_mission = 2  //2:car chase
                             SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
+                            iTempVar = 0
+                            SET_CLEO_SHARED_VAR varCrimeAlert iTempVar                            
                             IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_cc.cs"
                                 STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_cc.cs" x[1] y[1] z[1] // car_chase_mission
                             ENDIF                          
@@ -190,17 +238,31 @@ car_chase_event:
                         BREAK
                     ENDIF
                     IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0    
-                        GENERATE_RANDOM_INT_IN_RANGE 1 3 iRandomMission
-                        IF iRandomMission = 2  
-                            GOSUB update_zone_events_2
+                        IF DOES_BLIP_EXIST iEventBlip
+                            REMOVE_BLIP iEventBlip
                         ENDIF  
+                        WAIT 0    
+                        timera = 0              
+                        GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+                        WAIT 15 
+                        IF iRandomMission >= 2  
+                            GOSUB update_zone_events_2
+                        ENDIF      
+                        IF iRandomMission = 1   
+                            GENERATE_RANDOM_INT_IN_RANGE 2 5 iRandomMission
+                        ENDIF                   
                         BREAK
                     ENDIF
-                    IF timera > time_delay
-                        GENERATE_RANDOM_INT_IN_RANGE 1 3 iRandomMission
-                        IF iRandomMission = 2  
+                    IF timera > time_delay      
+                        timera = 0              
+                        GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+                        WAIT 15 
+                        IF iRandomMission >= 2  
                             GOSUB update_zone_events_2
-                        ENDIF                                            
+                        ENDIF             
+                        IF iRandomMission = 1   
+                            GENERATE_RANDOM_INT_IN_RANGE 2 5 iRandomMission
+                        ENDIF                                                                                                              
                         BREAK
                     ENDIF
                     IF NOT idZone[1] = idZone[0]
@@ -220,121 +282,430 @@ car_chase_event:
                     REMOVE_BLIP iEventBlip
                 ENDIF
                 GOSUB update_zone_events
+                IF DOES_BLIP_EXIST iEventBlip
+                    REMOVE_BLIP iEventBlip
+                ENDIF                      
 
             //ELSE
                 //PRINT_FORMATTED_NOW "zone: %i not equal %i" 1 idZone[0] idZone[1]  //debug
             ENDIF
         ELSE
             timera = 0
+            IF DOES_BLIP_EXIST iEventBlip
+                REMOVE_BLIP iEventBlip
+            ENDIF            
         ENDIF
     ENDIF
 RETURN 
 
 //---+--------------- DRUG DEAL EVENT
 drug_deal_event:
-    IF timera > time_update
-        GOSUB update_zone_events_2
-        //PRINT_FORMATTED_NOW "updated: %i" 1000 idZone[1]    //debug
-        WAIT 900
-    ELSE
-        GOSUB readVars
-        IF flag_player_on_mission = 0   //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2    
-            GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[0] y[0] z[0])
-            CLEO_CALL get_info_zone_id 0 x[0] y[0] z[0] (idZone[0])                    
-            IF idZone[1] = idZone[0]
-                CLEO_CALL save_coords_drug_deal_event 0 x[1] y[1] z[1]
-                timera = 0
-                ADD_SPRITE_BLIP_FOR_COORD x[1] y[1] z[1] RADAR_SPRITE_ENEMYATTACK (iEventBlip)
-                GOSUB play_sfx_start_event_alert_dd
-                crimealert = 0
-                SET_CLEO_SHARED_VAR varCrimeAlert crimealert
-                WAIT 0                
-                crimealert = 1
-                SET_CLEO_SHARED_VAR varCrimeAlert crimealert
-                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
-                    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 804 808    //{id} {mission_id} {text1_id} {text2_id}
-                ENDIF                
-            
-                WHILE idZone[1] = idZone[0]
-                    GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[0] y[0] z[0])
-                    CLEO_CALL get_info_zone_id 0 x[0] y[0] z[0] (idZone[0])
-                    //PRINT_FORMATTED_NOW "zone: %i = %i" 1 idZone[0] idZone[1]  //debug
-
-                    IF NOT DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_3d.cs"
-                        IF IS_POINT_ON_SCREEN x[1] y[1] z[1] 300.0
-                            GOSUB draw_on_screen_distance_coords
-                        ENDIF
+    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_drdeal" (counter) 
+    IF NOT counter >= 60    //Max Missions Reached
+        IF timera > time_update
+            GOSUB update_zone_events_2
+            //PRINT_FORMATTED_NOW "updated: %i" 1000 idZone[1]    //debug
+            WAIT 900
+        ELSE
+            GOSUB readVars      
+            IF flag_player_on_mission = 0   //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2    
+            AND iRandomMission = 2
+                GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[0] y[0] z[0])
+                CLEO_CALL get_info_zone_id 0 x[0] y[0] z[0] (idZone[0])                    
+                IF idZone[1] = idZone[0]
+                    CLEO_CALL save_coords_drug_deal_event 0 x[1] y[1] z[1]
+                    timera = 0
+                    ADD_SPRITE_BLIP_FOR_COORD x[1] y[1] z[1] RADAR_SPRITE_ENEMYATTACK (iEventBlip)
+                    IF audio_line_is_active = 0
+                        GOSUB play_sfx_start_event_alert_dd
                     ENDIF
+                    crimealert = 0
+                    SET_CLEO_SHARED_VAR varCrimeAlert crimealert
+                    WAIT 0                
+                    crimealert = 1
+                    SET_CLEO_SHARED_VAR varCrimeAlert crimealert
+                    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
+                        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 804 808    //{id} {mission_id} {text1_id} {text2_id}
+                    ENDIF                
+                
+                    WHILE idZone[1] = idZone[0]
+                        GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[0] y[0] z[0])
+                        CLEO_CALL get_info_zone_id 0 x[0] y[0] z[0] (idZone[0])
+                        //PRINT_FORMATTED_NOW "zone: %i = %i" 1 idZone[0] idZone[1]  //debug
 
-                    GOSUB readVars
-                    IF flag_player_on_mission = 0   //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
-                        IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 50.0   //10.0
+                        IF NOT DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_3d.cs"
+                            IF IS_POINT_ON_SCREEN x[1] y[1] z[1] 300.0
+                                GOSUB draw_on_screen_distance_coords
+                            ENDIF
+                        ENDIF
+
+                        GOSUB readVars
+                        IF flag_player_on_mission = 0   //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
+                            IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 50.0   //10.0
+                                IF DOES_BLIP_EXIST iEventBlip
+                                    REMOVE_BLIP iEventBlip
+                                ENDIF
+                                //start mission
+                                flag_player_on_mission = 4  //5:drug deal (street crime)
+                                SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
+                                iTempVar = 0
+                                SET_CLEO_SHARED_VAR varCrimeAlert iTempVar                                 
+                                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\m_dd.cs"
+                                    STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_dd.cs" x[1] y[1] z[1] // drug_deal_mission
+                                ENDIF                          
+                                WAIT 1000
+                                WHILE flag_player_on_mission > 0
+                                    GOSUB readVars
+                                    //PRINT_FORMATTED_NOW "mission: %i" 1 flag_player_on_mission
+                                    WAIT 0
+                                ENDWHILE
+
+                                timera = 0
+                                WHILE time_delay_after_mission > timera
+                                    WAIT 0
+                                ENDWHILE
+                                GOTO reset_location_2
+                            ENDIF
+                        ENDIF
+                        IF isInMainMenu = 1     //1:true 0: false
+                        OR toggleSpiderMod = 0  //FALSE
+                            BREAK
+                        ENDIF
+                        IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0
                             IF DOES_BLIP_EXIST iEventBlip
                                 REMOVE_BLIP iEventBlip
-                            ENDIF
-                            //start mission
-                            flag_player_on_mission = 5  //5:drug deal
-                            SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
-                            IF DOES_FILE_EXIST "CLEO\SpiderJ16D\m_dd.cs"
-                                STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_dd.cs" x[1] y[1] z[1] // drug_deal_mission
-                            ENDIF                          
-                            WAIT 1000
-                            WHILE flag_player_on_mission > 0
-                                GOSUB readVars
-                                //PRINT_FORMATTED_NOW "mission: %i" 1 flag_player_on_mission
-                                WAIT 0
-                            ENDWHILE
-
-                            timera = 0
-                            WHILE time_delay_after_mission > timera
-                                WAIT 0
-                            ENDWHILE
-                            GOTO reset_location_2
+                            ENDIF  
+                            WAIT 0                   
+                            timera = 0              
+                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+                            WAIT 15 
+                            IF iRandomMission = 1  
+                                GOSUB update_zone_events                         
+                            ENDIF 
+                            IF iRandomMission = 2  
+                                GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+                            ENDIF                                                                                             
+                            BREAK
                         ENDIF
-                    ENDIF
-                    IF isInMainMenu = 1     //1:true 0: false
-                    OR toggleSpiderMod = 0  //FALSE
-                        BREAK
-                    ENDIF
-                    IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0
-                        GENERATE_RANDOM_INT_IN_RANGE 1 3 iRandomMission
-                        IF iRandomMission = 1  
-                            GOSUB update_zone_events
-                        ENDIF   
-                        BREAK
-                    ENDIF
-                    IF timera > time_delay
-                        GENERATE_RANDOM_INT_IN_RANGE 1 3 iRandomMission
-                        IF iRandomMission = 1  
-                            GOSUB update_zone_events
-                        ENDIF                                      
-                        BREAK
-                    ENDIF      
-                    IF NOT idZone[1] = idZone[0]
-                        GOSUB update_zone_events_2
-                        BREAK
-                    ENDIF             
-                    WAIT 0
-                ENDWHILE
+                        IF timera > time_delay
+                            IF DOES_BLIP_EXIST iEventBlip
+                                REMOVE_BLIP iEventBlip
+                            ENDIF  
+                            WAIT 0        
+                            timera = 0              
+                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+                            WAIT 15 
+                            IF iRandomMission = 1  
+                                GOSUB update_zone_events                           
+                            ENDIF 
+                            IF iRandomMission = 2  
+                                GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+                            ENDIF                                                                                                                                
+                            BREAK
+                        ENDIF      
+                        IF NOT idZone[1] = idZone[0]
+                            GOSUB update_zone_events_2
+                            IF DOES_BLIP_EXIST iEventBlip
+                                REMOVE_BLIP iEventBlip
+                            ENDIF                        
+                            BREAK
+                        ENDIF             
+                        WAIT 0
+                    ENDWHILE
 
-                reset_location_2:
-                GET_AUDIO_STREAM_STATE iSfx[0] (iTempVar)
-                IF iTempVar = 1     //playing
-                    SET_AUDIO_STREAM_STATE iSfx[0] 0    //Stop
-                ENDIF
-                REMOVE_AUDIO_STREAM iSfx[0]
-                IF DOES_BLIP_EXIST iEventBlip
-                    REMOVE_BLIP iEventBlip
-                ENDIF
-                GOSUB update_zone_events_2
+                    reset_location_2:
+                    GET_AUDIO_STREAM_STATE iSfx[0] (iTempVar)
+                    IF iTempVar = 1     //playing
+                        SET_AUDIO_STREAM_STATE iSfx[0] 0    //Stop
+                    ENDIF
+                    REMOVE_AUDIO_STREAM iSfx[0]
+                    IF DOES_BLIP_EXIST iEventBlip
+                        REMOVE_BLIP iEventBlip
+                    ENDIF
+                    GOSUB update_zone_events_2
+                    IF DOES_BLIP_EXIST iEventBlip
+                        REMOVE_BLIP iEventBlip
+                    ENDIF                      
 
-            //ELSE
-                //PRINT_FORMATTED_NOW "zone: %i not equal %i" 1 idZone[0] idZone[1]  //debug
+                //ELSE
+                    //PRINT_FORMATTED_NOW "zone: %i not equal %i" 1 idZone[0] idZone[1]  //debug
+                ENDIF
             ENDIF
-        ELSE
-            timera = 0
         ENDIF
+    ELSE
+        GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+        GOSUB update_zone_events      
+        GOSUB update_zone_events_2         
     ENDIF
+RETURN
+
+//---+--------------- ASSAULT EVENT
+assault_event:
+    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_assault" (counter) 
+    IF NOT counter >= 80    //Max Missions Reached
+        IF timera > time_update
+            GOSUB update_zone_events_2
+            //PRINT_FORMATTED_NOW "updated: %i" 1000 idZone[1]    //debug
+            WAIT 900
+        ELSE
+            GOSUB readVars              
+            IF flag_player_on_mission = 0   //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2   
+            AND iRandomMission = 3 
+                GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[0] y[0] z[0])
+                CLEO_CALL get_info_zone_id 0 x[0] y[0] z[0] (idZone[0])                    
+                IF idZone[1] = idZone[0]
+                    CLEO_CALL save_coords_assault_event 0 x[1] y[1] z[1]
+                    timera = 0
+                    ADD_SPRITE_BLIP_FOR_COORD x[1] y[1] z[1] RADAR_SPRITE_ENEMYATTACK (iEventBlip)
+                    IF audio_line_is_active = 0
+                        GOSUB play_sfx_start_event_alert_ass
+                    ENDIF
+                    crimealert = 0
+                    SET_CLEO_SHARED_VAR varCrimeAlert crimealert
+                    WAIT 0                
+                    crimealert = 1
+                    SET_CLEO_SHARED_VAR varCrimeAlert crimealert
+                    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
+                        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 805 808    //{id} {mission_id} {text1_id} {text2_id}
+                    ENDIF                
+                
+                    WHILE idZone[1] = idZone[0]
+                        GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[0] y[0] z[0])
+                        CLEO_CALL get_info_zone_id 0 x[0] y[0] z[0] (idZone[0])
+                        //PRINT_FORMATTED_NOW "zone: %i = %i" 1 idZone[0] idZone[1]  //debug
+
+                        IF NOT DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_3d.cs"
+                            IF IS_POINT_ON_SCREEN x[1] y[1] z[1] 300.0
+                                GOSUB draw_on_screen_distance_coords
+                            ENDIF
+                        ENDIF
+
+                        GOSUB readVars
+                        IF flag_player_on_mission = 0   //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
+                            IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 50.0   //10.0
+                                IF DOES_BLIP_EXIST iEventBlip
+                                    REMOVE_BLIP iEventBlip
+                                ENDIF
+                                //start mission
+                                flag_player_on_mission = 4  //5:assault (street crime)
+                                SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
+                                iTempVar = 0
+                                SET_CLEO_SHARED_VAR varCrimeAlert iTempVar                                 
+                                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\m_ass.cs"
+                                    STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_ass.cs" x[1] y[1] z[1] // drug_deal_mission
+                                ENDIF                          
+                                WAIT 1000
+                                WHILE flag_player_on_mission > 0
+                                    GOSUB readVars
+                                    //PRINT_FORMATTED_NOW "mission: %i" 1 flag_player_on_mission
+                                    WAIT 0
+                                ENDWHILE
+
+                                timera = 0
+                                WHILE time_delay_after_mission > timera
+                                    WAIT 0
+                                ENDWHILE
+                                GOTO reset_location_2
+                            ENDIF
+                        ENDIF
+                        IF isInMainMenu = 1     //1:true 0: false
+                        OR toggleSpiderMod = 0  //FALSE
+                            BREAK
+                        ENDIF
+                        IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0
+                            timera = 0              
+                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+                            WAIT 15 
+                            IF DOES_BLIP_EXIST iEventBlip
+                                REMOVE_BLIP iEventBlip
+                            ENDIF  
+                            WAIT 0                               
+                            IF iRandomMission = 1  
+                                GOSUB update_zone_events                        
+                            ENDIF   
+                            IF iRandomMission = 3  
+                                GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+                            ENDIF                                                                                      
+                            BREAK
+                        ENDIF
+                        IF timera > time_delay
+                            IF DOES_BLIP_EXIST iEventBlip
+                                REMOVE_BLIP iEventBlip
+                            ENDIF  
+                            WAIT 0           
+                            timera = 0              
+                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+                            WAIT 15 
+                            WAIT 0
+                            IF iRandomMission = 1  
+                                GOSUB update_zone_events                        
+                            ENDIF                             
+                            IF iRandomMission = 2  
+                                GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+                            ENDIF                                                                                                                
+                            BREAK
+                        ENDIF      
+                        IF NOT idZone[1] = idZone[0]
+                            GOSUB update_zone_events_2
+                            IF DOES_BLIP_EXIST iEventBlip
+                                REMOVE_BLIP iEventBlip
+                            ENDIF                        
+                            BREAK
+                        ENDIF             
+                        WAIT 0
+                    ENDWHILE
+
+                //ELSE
+                    //PRINT_FORMATTED_NOW "zone: %i not equal %i" 1 idZone[0] idZone[1]  //debug
+                ENDIF
+            ELSE
+                IF timera > time_update
+                    timera = 0
+                    IF DOES_BLIP_EXIST iEventBlip
+                        REMOVE_BLIP iEventBlip
+                    ENDIF      
+                    GOSUB update_zone_events      
+                    GOSUB update_zone_events_2  
+                    GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission  
+                ENDIF                   
+            ENDIF
+        ENDIF
+    ELSE
+        GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+        GOSUB update_zone_events      
+        GOSUB update_zone_events_2         
+    ENDIF    
+RETURN
+
+//---+--------------- MUGGING EVENT
+mugging_event:
+    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_mugging" (counter)
+    IF NOT counter >= 70     
+        IF timera > time_update
+            GOSUB update_zone_events_2
+            //PRINT_FORMATTED_NOW "updated: %i" 1000 idZone[1]    //debug
+            WAIT 900
+        ELSE
+            GOSUB readVars     
+            IF flag_player_on_mission = 0   //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2   
+            AND iRandomMission = 4 
+                GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[0] y[0] z[0])
+                CLEO_CALL get_info_zone_id 0 x[0] y[0] z[0] (idZone[0])                    
+                IF idZone[1] = idZone[0]
+                    CLEO_CALL save_coords_mugging_event 0 x[1] y[1] z[1]
+                    timera = 0
+                    ADD_SPRITE_BLIP_FOR_COORD x[1] y[1] z[1] RADAR_SPRITE_ENEMYATTACK (iEventBlip)
+                    IF audio_line_is_active = 0
+                        GOSUB play_sfx_start_event_alert_mug
+                    ENDIF
+                    crimealert = 0
+                    SET_CLEO_SHARED_VAR varCrimeAlert crimealert
+                    WAIT 0                
+                    crimealert = 1
+                    SET_CLEO_SHARED_VAR varCrimeAlert crimealert
+                    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
+                        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 806 808    //{id} {mission_id} {text1_id} {text2_id}
+                    ENDIF                
+                
+                    WHILE idZone[1] = idZone[0]
+                        GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[0] y[0] z[0])
+                        CLEO_CALL get_info_zone_id 0 x[0] y[0] z[0] (idZone[0])
+                        //PRINT_FORMATTED_NOW "zone: %i = %i" 1 idZone[0] idZone[1]  //debug
+
+                        IF NOT DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_3d.cs"
+                            IF IS_POINT_ON_SCREEN x[1] y[1] z[1] 300.0
+                                GOSUB draw_on_screen_distance_coords
+                            ENDIF
+                        ENDIF
+
+                        GOSUB readVars
+                        IF flag_player_on_mission = 0   //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
+                            IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 50.0   //10.0
+                                IF DOES_BLIP_EXIST iEventBlip
+                                    REMOVE_BLIP iEventBlip
+                                ENDIF
+                                //start mission
+                                flag_player_on_mission = 4  //5:mugging (street crime)
+                                SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
+                                iTempVar = 0
+                                SET_CLEO_SHARED_VAR varCrimeAlert iTempVar                                 
+                                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\m_mug.cs"
+                                    STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_mug.cs" x[1] y[1] z[1] // drug_deal_mission
+                                ENDIF                          
+                                WAIT 1000
+                                WHILE flag_player_on_mission > 0
+                                    GOSUB readVars
+                                    //PRINT_FORMATTED_NOW "mission: %i" 1 flag_player_on_mission
+                                    WAIT 0
+                                ENDWHILE
+
+                                timera = 0
+                                WHILE time_delay_after_mission > timera
+                                    WAIT 0
+                                ENDWHILE
+                                GOTO reset_location_2
+                            ENDIF
+                        ENDIF
+                        IF isInMainMenu = 1     //1:true 0: false
+                        OR toggleSpiderMod = 0  //FALSE
+                            BREAK
+                        ENDIF
+                        IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0
+                            timera = 0              
+                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+                            WAIT 15 
+                            IF DOES_BLIP_EXIST iEventBlip
+                                REMOVE_BLIP iEventBlip
+                            ENDIF  
+                            WAIT 0                               
+                            IF iRandomMission = 1  
+                                GOSUB update_zone_events                          
+                            ENDIF                                                          
+                            BREAK
+                        ENDIF
+                        IF timera > time_delay
+                            timera = 0              
+                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+                            WAIT 15 
+                            WAIT 0
+                            IF iRandomMission = 1  
+                                GOSUB update_zone_events                        
+                            ENDIF                             
+                            IF iRandomMission = 2  
+                                GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+                            ENDIF                                                                                                
+                            BREAK
+                        ENDIF      
+                        IF NOT idZone[1] = idZone[0]
+                            GOSUB update_zone_events_2
+                            IF DOES_BLIP_EXIST iEventBlip
+                                REMOVE_BLIP iEventBlip
+                            ENDIF                        
+                            BREAK
+                        ENDIF             
+                        WAIT 0
+                    ENDWHILE
+
+                //ELSE
+                    //PRINT_FORMATTED_NOW "zone: %i not equal %i" 1 idZone[0] idZone[1]  //debug
+                ENDIF
+            ELSE
+                IF timera > time_update
+                    timera = 0
+                    IF DOES_BLIP_EXIST iEventBlip
+                        REMOVE_BLIP iEventBlip
+                    ENDIF      
+                    GOSUB update_zone_events      
+                    GOSUB update_zone_events_2  
+                    GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission  
+                ENDIF  
+            ENDIF
+        ENDIF
+    ELSE
+        GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+        GOSUB update_zone_events      
+        GOSUB update_zone_events_2         
+    ENDIF           
 RETURN
 
 draw_on_screen_distance_coords:
@@ -453,7 +824,7 @@ RETURN
 
 play_sfx_start_event_alert_dd:
     REMOVE_AUDIO_STREAM iSfx[0]
-    GENERATE_RANDOM_INT_IN_RANGE 0 5 (iRandomVal)   // 0-2
+    GENERATE_RANDOM_INT_IN_RANGE 0 6 (iRandomVal)   // 0-2
     CLEO_CALL getLanguage 0 (iTempVar)
     IF iTempVar = 1    //(0:spanish|1:English)
         SWITCH iRandomVal
@@ -464,35 +835,35 @@ play_sfx_start_event_alert_dd:
                 ENDIF
                 BREAK
             CASE 1
-                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng2.mp3"
                     LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng2.mp3" (iSfx[0])
                     SET_AUDIO_STREAM_STATE iSfx[0] 1
                 ENDIF
                 BREAK
             CASE 2
-                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng3.mp3"
                     LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng3.mp3" (iSfx[0])
                     SET_AUDIO_STREAM_STATE iSfx[0] 1
                 ENDIF
                 BREAK
             CASE 3
-                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng4.mp3"
                     LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng4.mp3" (iSfx[0])
                     SET_AUDIO_STREAM_STATE iSfx[0] 1
                 ENDIF
                 BREAK
             CASE 4
-                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng5.mp3"
                     LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng5.mp3" (iSfx[0])
                     SET_AUDIO_STREAM_STATE iSfx[0] 1
                 ENDIF
                 BREAK
             CASE 5
-                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng6.mp3"
                     LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng6.mp3" (iSfx[0])
                     SET_AUDIO_STREAM_STATE iSfx[0] 1
                 ENDIF
-                BREAK                                                                                                
+                BREAK                                                                                              
         ENDSWITCH
     ELSE    //SPANISH
         SWITCH iRandomVal   
@@ -503,31 +874,31 @@ play_sfx_start_event_alert_dd:
                 ENDIF
                 BREAK
             CASE 1
-                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng2.mp3"
                     LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng2.mp3" (iSfx[0])
                     SET_AUDIO_STREAM_STATE iSfx[0] 1
                 ENDIF
                 BREAK
             CASE 2
-                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng3.mp3"
                     LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng3.mp3" (iSfx[0])
                     SET_AUDIO_STREAM_STATE iSfx[0] 1
                 ENDIF
                 BREAK
             CASE 3
-                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng4.mp3"
                     LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng4.mp3" (iSfx[0])
                     SET_AUDIO_STREAM_STATE iSfx[0] 1
                 ENDIF
                 BREAK
             CASE 4
-                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng5.mp3"
                     LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng5.mp3" (iSfx[0])
                     SET_AUDIO_STREAM_STATE iSfx[0] 1
                 ENDIF
                 BREAK
             CASE 5
-                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng1.mp3"
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\dd_pa_eng6.mp3"
                     LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\dd_pa_eng6.mp3" (iSfx[0])
                     SET_AUDIO_STREAM_STATE iSfx[0] 1
                 ENDIF
@@ -535,6 +906,153 @@ play_sfx_start_event_alert_dd:
         ENDSWITCH
     ENDIF
 RETURN
+
+play_sfx_start_event_alert_ass:
+    REMOVE_AUDIO_STREAM iSfx[0]
+    GENERATE_RANDOM_INT_IN_RANGE 0 5 (iRandomVal)   // 0-2
+    CLEO_CALL getLanguage 0 (iTempVar)
+    IF iTempVar = 1    //(0:spanish|1:English)
+        SWITCH iRandomVal
+            CASE 0
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng1.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng1.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 1
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng2.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng2.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 2
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng3.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng3.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 3
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng4.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng4.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 4
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng5.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng5.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK                                                                                              
+        ENDSWITCH
+    ELSE    //SPANISH
+        SWITCH iRandomVal   
+            CASE 0
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng1.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng1.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 1
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng2.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng2.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 2
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng3.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng3.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 3
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng4.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng4.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 4
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng5.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng5.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK 
+        ENDSWITCH
+    ENDIF
+RETURN
+
+play_sfx_start_event_alert_mug:
+    REMOVE_AUDIO_STREAM iSfx[0]
+    GENERATE_RANDOM_INT_IN_RANGE 0 5 (iRandomVal)   // 0-2
+    CLEO_CALL getLanguage 0 (iTempVar)
+    IF iTempVar = 1    //(0:spanish|1:English)
+        SWITCH iRandomVal
+            CASE 0
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\mug_pa_eng1.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\mug_pa_eng1.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 1
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\mug_pa_eng2.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\mug_pa_eng2.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 2
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\mug_pa_eng3.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\mug_pa_eng3.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 3
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\mug_pa_eng4.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\mug_pa_eng4.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 4
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\mug_pa_eng5.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\mug_pa_eng5.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK                                                                                              
+        ENDSWITCH
+    ELSE    //SPANISH
+        SWITCH iRandomVal   
+            CASE 0
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng1.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng1.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 1
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng2.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng2.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 2
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng3.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng3.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 3
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng4.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng4.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK
+            CASE 4
+                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sfx\ass_pa_eng5.mp3"
+                    LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\ass_pa_eng5.mp3" (iSfx[0])
+                    SET_AUDIO_STREAM_STATE iSfx[0] 1
+                ENDIF
+                BREAK 
+        ENDSWITCH
+    ENDIF
+RETURN
+
 //-------------------
 }
 SCRIPT_END
@@ -647,6 +1165,38 @@ save_coords_drug_deal_event:
     ENDIF
 CLEO_RETURN 0
 }
+{
+//CLEO_CALL save_coords_car_chase_event 0 x y z
+save_coords_assault_event:
+    LVAR_FLOAT x y z //in
+    LVAR_INT iVar
+    IF DOES_FILE_EXIST "cleo\SpiderJ16D\config.ini"
+        GET_LABEL_POINTER bytes32 (iVar)
+        STRING_FORMAT (iVar) "%.2f %.2f %.2f" x y z
+        WRITE_STRING_TO_INI_FILE $iVar "cleo\SpiderJ16D\config.ini" "other" "assstart"
+    ELSE
+        PRINT_FORMATTED_NOW "ERROR coords file not found" 1500
+        WAIT 1500
+        CLEO_RETURN 0
+    ENDIF
+CLEO_RETURN 0
+}
+{
+//CLEO_CALL save_coords_car_chase_event 0 x y z
+save_coords_mugging_event:
+    LVAR_FLOAT x y z //in
+    LVAR_INT iVar
+    IF DOES_FILE_EXIST "cleo\SpiderJ16D\config.ini"
+        GET_LABEL_POINTER bytes32 (iVar)
+        STRING_FORMAT (iVar) "%.2f %.2f %.2f" x y z
+        WRITE_STRING_TO_INI_FILE $iVar "cleo\SpiderJ16D\config.ini" "other" "mugstart"
+    ELSE
+        PRINT_FORMATTED_NOW "ERROR coords file not found" 1500
+        WAIT 1500
+        CLEO_RETURN 0
+    ENDIF
+CLEO_RETURN 0
+}
 
 {
 //CLEO_CALL storeLanguage 0 var
@@ -705,7 +1255,6 @@ CONST_INT varCarChaseProgress   14    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varScrewBallProgress  15    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varBackpacksProgress  16    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varLandmarksProgress  17    //for stadistics ||MSpiderJ16Dv7
-CONST_INT varDrugDealProgress   18    //for stadistics ||MSpiderJ16Dv7
 
 CONST_INT varAlternativeSwing   20    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varSwingBuilding      21    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
@@ -731,6 +1280,12 @@ CONST_INT varCrimeAlert         39
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
 CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
+
+CONST_INT varDrugDealProgress   45    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varAssaultProgress    46    //for stadistics ||MSpiderJ16Dv7 
+CONST_INT varMuggingProgress    47    //for stadistics ||MSpiderJ16Dv7 (Due to messy global shared vars , I have to add it here)
+
+CONST_INT varAudioActive     	49    // 0:OFF || 1:ON  ||global var to check -spech- audio playing
 
 CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated

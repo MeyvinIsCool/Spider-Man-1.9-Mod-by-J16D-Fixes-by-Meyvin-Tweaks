@@ -72,6 +72,8 @@ CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
 CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
 
+CONST_INT varAudioActive     	49    // 0:OFF || 1:ON  ||global var to check -spech- audio playing
+
 CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2a            52    //sp_ev    ||1= Activated     || 0= Deactivated
@@ -91,7 +93,7 @@ SCRIPT_START
 SCRIPT_NAME sp_scrb
 LVAR_INT player_actor onmission iMissionVal
 LVAR_FLOAT x y z xSize ySize
-LVAR_INT toggleSpiderMod isInMainMenu
+LVAR_INT toggleSpiderMod isInMainMenu audio_line_is_active
 LVAR_INT flag_player_on_mission 
 LVAR_INT blipIcon 
 LVAR_INT ultimateScore 
@@ -171,6 +173,8 @@ WHILE TRUE
                                             USE_TEXT_COMMANDS FALSE
                                             IF iMissionVal = 1
                                                 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\Screwball Missions\screwball_challenge_a.cm"
+                                                    audio_line_is_active = 0 
+                                                    SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active                                               
                                                     WAIT 100
                                                     flag_player_on_mission = 1
                                                     WRITE_MEMORY 0xA476AC 4 flag_player_on_mission FALSE 	// $ONMISSION = 1

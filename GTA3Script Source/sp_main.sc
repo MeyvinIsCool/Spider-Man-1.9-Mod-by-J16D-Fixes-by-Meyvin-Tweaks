@@ -104,7 +104,7 @@ IF GOSUB does_scripts_exist
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_ev.cs"      // Fight - Dodge (near & far distance)
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_evb.cs"     // Manual Dodge & Sliding dodge
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_hud.cs"     // Main Hud script
-    //STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lf.cs"      // Life Regeneration
+    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lf.cs"      // Life Regeneration
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lvl.cs"     // Level Control
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_mb.cs"      // On ground/jump script
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_me.cs"      // Melee Combo X4 | Air Combo x4 | Swing kick
@@ -861,7 +861,7 @@ does_scripts_exist:
     AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_ev.cs"
     AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_evb.cs"
     AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_hud.cs"
-    //AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_lf.cs"
+    AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_lf.cs"
     AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_lvl.cs"
         IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_mb.cs"
         AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_me.cs"
