@@ -1,7 +1,7 @@
 // by Mr.Genos Cyborg
-// Spider-Man Mod for GTA SA c.2019
-// Pizza Time Mission With Fixes - MeyvinIsCool 
-// Remade Mission by MeyvinIsCool - GTA3Script
+// Spider-Man Mod for GTA SA c.2022
+// Pizza Time Mission With Fixes - Meyvin Tweaks
+// Remade Mission by Meyvin Tweaks - GTA3Script
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
@@ -43,29 +43,28 @@ CONST_INT delay_restart_mission 60000   //20 sec
 SCRIPT_START
 {
 SCRIPT_NAME sp_piz
+WAIT 0
+WAIT 0
+WAIT 0
+WAIT 0
+WAIT 0
+WAIT 0
 LVAR_INT player_actor
 LVAR_FLOAT sizeX sizeY
-LVAR_INT toggleSpiderMod isInMainMenu
+LVAR_INT toggleSpiderMod isInMainMenu audio_line_is_active
 LVAR_INT iRandomVal2 iTotalTime cTimerb_A iMinutes iSeconds iTime iExtraTimeScore
 LVAR_INT flag_player_on_mission flag_player_hit_counter
 LVAR_INT iEventBlip iEventBlip2
 LVAR_INT deliver iObj
 LVAR_INT cust1 cust2 cust3 cust4 cust5 cust6
-LVAR_INT i
+LVAR_INT i is_in_interior
 LVAR_INT sfx
 
 GET_PLAYER_CHAR 0 player_actor
 
-WAIT 0
-WAIT 0
-WAIT 0
-WAIT 0
-WAIT 0
-WAIT 0
-
 start:
 //Cash Waypoint - Main Mission
-ADD_SPRITE_BLIP_FOR_COORD (-1721.506 1354.953 7.186) RADAR_SPRITE_CASH (iEventBlip) //RADAR_SPRITE_WAYPOINT
+ADD_SPRITE_BLIP_FOR_COORD (-1721.506 1354.953 7.186) RADAR_SPRITE_FIRE (iEventBlip) 
 
 WHILE TRUE
     IF IS_PLAYER_PLAYING 0
@@ -73,7 +72,6 @@ WHILE TRUE
         IF toggleSpiderMod = 1  //TRUE
             IF isInMainMenu = 0     //1:true 0: false
                 IF LOCATE_STOPPED_CHAR_ANY_MEANS_3D player_actor -1721.506 1354.953 7.186 1.25 1.25 1.25 TRUE
-                //IF LOCATE_STOPPED_CHAR_ANY_MEANS_3D player_actor 0.0 0.0 0.0 1.25 1.25 1.25 TRUE
                     IF flag_player_on_mission = 0
                         REMOVE_BLIP iEventBlip
                         BREAK
@@ -82,7 +80,7 @@ WHILE TRUE
                         WAIT 2000
                     ENDIF
                 ENDIF
-            ENDIF
+            ENDIF         
         ELSE
             IF DOES_BLIP_EXIST iEventBlip
                 REMOVE_BLIP iEventBlip
@@ -100,6 +98,8 @@ flag_player_on_mission = 1  //3:criminal
 SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
 flag_player_hit_counter = 0
 SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON
+audio_line_is_active = 0
+SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active 
 WAIT 1
 GOSUB loadGeneralFiles
 
@@ -165,7 +165,7 @@ main_loop:
                 GOSUB deliver_customer6
             ENDIF                               
             IF deliver >= 6
-                GOSUB mission_passed
+                GOTO mission_passed
             ENDIF                           
             IF timerb > iTime
                 GOTO mission_failed
@@ -188,22 +188,40 @@ main_loop:
                 WAIT 1000
                 USE_TEXT_COMMANDS FALSE
                 WAIT 0
-                GOSUB mission_cleanup
+                GOSUB mission_failed
                 WAIT 1000                              
             ENDIF
+            IF isInMainMenu = 1     //1:true 0: false
+                WHILE isInMainMenu = 1     //1:true 0: false
+                    GOSUB readVars
+                    WAIT 0
+                ENDWHILE
+                WHILE GET_FADING_STATUS
+                    WAIT 0
+                ENDWHILE
+                WAIT 1000
+            ENDIF
+
         ELSE
             USE_TEXT_COMMANDS FALSE
             WAIT 0
-            GOSUB mission_cleanup
+            GOSUB mission_failed
             WAIT 2000
         ENDIF
     ENDIF
     WAIT 0
 GOTO main_loop  
 
+//------------------------------------------------
+
 readVars:
     GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
+    GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
     GET_CLEO_SHARED_VAR varOnmission (flag_player_on_mission)
+RETURN
+
+activeInteriorCheck:
+    GET_AREA_VISIBLE (is_in_interior)
 RETURN
 
 sub_FadeOut_700ms:
@@ -279,7 +297,7 @@ deliver_customer1:
         REMOVE_BLIP iEventBlip
 		REMOVE_SPHERE iEventBlip2
         GOSUB attach_pizza_1
-        LOAD_AUDIO_STREAM "CLEO\audio\Talk 1.MP3" sfx
+        LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\Talk 1.mp3" sfx
         SET_AUDIO_STREAM_STATE sfx 1
         PRINT_NOW TEXT1 3000 1 
         WAIT 3000
@@ -321,7 +339,7 @@ deliver_customer2:
         REMOVE_BLIP iEventBlip
 		REMOVE_SPHERE iEventBlip2    
         GOSUB attach_pizza_2
-        LOAD_AUDIO_STREAM "CLEO\audio\Talk 1.MP3" sfx
+        LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\Talk 1.mp3" sfx
         SET_AUDIO_STREAM_STATE sfx 1
         PRINT_NOW TEXT2 3000 1
         WAIT 3000
@@ -362,7 +380,7 @@ deliver_customer3:
         REMOVE_BLIP iEventBlip
         REMOVE_SPHERE iEventBlip2
         GOSUB attach_pizza_3
-        LOAD_AUDIO_STREAM "CLEO\audio\Talk 3.MP3" sfx
+        LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\Talk 3.mp3" sfx
         SET_AUDIO_STREAM_STATE sfx 1
         PRINT_NOW TEXT3 3000 1
         WAIT 3000
@@ -403,7 +421,7 @@ deliver_customer4:
         REMOVE_BLIP iEventBlip
         REMOVE_SPHERE iEventBlip2
         GOSUB attach_pizza_4
-        LOAD_AUDIO_STREAM "CLEO\audio\Talk 4.MP3" sfx
+        LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\Talk 4.mp3" sfx
         SET_AUDIO_STREAM_STATE sfx 1
         PRINT_NOW TEXT4 3000 1
         WAIT 3000
@@ -444,7 +462,7 @@ deliver_customer5:
         REMOVE_BLIP iEventBlip
         REMOVE_SPHERE iEventBlip2        
         GOSUB attach_pizza_5
-        LOAD_AUDIO_STREAM "CLEO\audio\Talk 3.MP3" sfx
+        LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\Talk 3.mp3" sfx
         SET_AUDIO_STREAM_STATE sfx 1
         PRINT_NOW TEXT5 3000 1
         WAIT 3000
@@ -485,7 +503,7 @@ deliver_customer6:
         REMOVE_BLIP iEventBlip
         REMOVE_SPHERE iEventBlip2        
         GOSUB attach_pizza_6
-        LOAD_AUDIO_STREAM "CLEO\audio\Talk 5.MP3" sfx
+        LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\Talk 5.mp3" sfx
         SET_AUDIO_STREAM_STATE sfx 1
         PRINT_NOW TEXT6 3000 1
         WAIT 3000
@@ -545,24 +563,30 @@ mission_passed:
 
     WAIT 7000
 
-    REMOVE_CHAR_ELEGANTLY cust1
-    REMOVE_CHAR_ELEGANTLY cust2
-    REMOVE_CHAR_ELEGANTLY cust3
-    REMOVE_CHAR_ELEGANTLY cust4
-    REMOVE_CHAR_ELEGANTLY cust5
-    REMOVE_CHAR_ELEGANTLY cust6
-    REMOVE_BLIP iEventBlip 
-    REMOVE_BLIP iEventBlip  
-    REMOVE_BLIP iEventBlip
-    REMOVE_BLIP iEventBlip
-    REMOVE_BLIP iEventBlip
-    REMOVE_BLIP iEventBlip
+    IF DOES_CHAR_EXIST cust1    
+        REMOVE_CHAR_ELEGANTLY cust1
+    ENDIF
+    IF DOES_CHAR_EXIST cust2    
+        REMOVE_CHAR_ELEGANTLY cust2
+    ENDIF
+    IF DOES_CHAR_EXIST cust3    
+        REMOVE_CHAR_ELEGANTLY cust3
+    ENDIF
+    IF DOES_CHAR_EXIST cust4    
+        REMOVE_CHAR_ELEGANTLY cust4
+    ENDIF
+    IF DOES_CHAR_EXIST cust5    
+        REMOVE_CHAR_ELEGANTLY cust5
+    ENDIF
+    IF DOES_CHAR_EXIST cust6 
+        REMOVE_CHAR_ELEGANTLY cust6
+    ENDIF       
+    IF DOES_BLIP_EXIST iEventBlip             
+        REMOVE_BLIP iEventBlip 
+    ENDIF
+
     REMOVE_SPHERE iEventBlip2
-    REMOVE_SPHERE iEventBlip2
-    REMOVE_SPHERE iEventBlip2
-    REMOVE_SPHERE iEventBlip2
-    REMOVE_SPHERE iEventBlip2     
-    REMOVE_SPHERE iEventBlip2  
+ 
     WAIT delay_restart_mission
 GOTO start
 
@@ -571,38 +595,30 @@ mission_failed:
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 3  //{id}
         WAIT 2000
     ENDIF
-    GOSUB mission_cleanup
-    WAIT delay_restart_mission   
-GOTO start
+    IF DOES_CHAR_EXIST cust1    
+        REMOVE_CHAR_ELEGANTLY cust1
+    ENDIF
+    IF DOES_CHAR_EXIST cust2    
+        REMOVE_CHAR_ELEGANTLY cust2
+    ENDIF
+    IF DOES_CHAR_EXIST cust3    
+        REMOVE_CHAR_ELEGANTLY cust3
+    ENDIF
+    IF DOES_CHAR_EXIST cust4    
+        REMOVE_CHAR_ELEGANTLY cust4
+    ENDIF
+    IF DOES_CHAR_EXIST cust5    
+        REMOVE_CHAR_ELEGANTLY cust5
+    ENDIF
+    IF DOES_CHAR_EXIST cust6 
+        REMOVE_CHAR_ELEGANTLY cust6
+    ENDIF 
+    IF DOES_BLIP_EXIST iEventBlip             
+        REMOVE_BLIP iEventBlip 
+    ENDIF
 
-mission_cleanup:
-    flag_player_on_mission = 0
-    SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
-    USE_TEXT_COMMANDS TRUE
-    USE_TEXT_COMMANDS FALSE
-    REMOVE_ANIMATION "spider"
-    REMOVE_ANIMATION "mweb"    
-    WAIT 0    
-    REMOVE_TEXTURE_DICTIONARY
-    DELETE_RENDER_OBJECT i
-    REMOVE_CHAR_ELEGANTLY cust1
-    REMOVE_CHAR_ELEGANTLY cust2
-    REMOVE_CHAR_ELEGANTLY cust3
-    REMOVE_CHAR_ELEGANTLY cust4
-    REMOVE_CHAR_ELEGANTLY cust5
-    REMOVE_CHAR_ELEGANTLY cust6
-    REMOVE_BLIP iEventBlip 
-    REMOVE_BLIP iEventBlip  
-    REMOVE_BLIP iEventBlip
-    REMOVE_BLIP iEventBlip
-    REMOVE_BLIP iEventBlip
-    REMOVE_BLIP iEventBlip
-    REMOVE_SPHERE iEventBlip2
-    REMOVE_SPHERE iEventBlip2
-    REMOVE_SPHERE iEventBlip2
-    REMOVE_SPHERE iEventBlip2
-    REMOVE_SPHERE iEventBlip2     
-    REMOVE_SPHERE iEventBlip2
+    REMOVE_SPHERE iEventBlip2    
+    WAIT delay_restart_mission   
 GOTO start
 
 loadGeneralFiles:
@@ -760,23 +776,6 @@ GUI_TextFormat_TitleScoreMedium_Colour:
     SET_TEXT_COLOUR 6 253 244 200  
     SET_TEXT_EDGE 1 (0 0 0 100)
 RETURN
-{
-//CLEO_CALL SetCharPosSimple 0 (char x y z)()
-SetCharPosSimple:
-    LVAR_INT hChar // In
-    LVAR_FLOAT x y z // In
-    LVAR_INT pPed pMatrix pCoord
-    GET_PED_POINTER hChar pPed
-    pMatrix = pPed + 0x14
-    READ_MEMORY pMatrix 4 FALSE (pMatrix)
-    pCoord = pMatrix + 0x30
-    WRITE_MEMORY pCoord 4 (x) FALSE
-    pCoord += 0x4 
-    WRITE_MEMORY pCoord 4 (y) FALSE
-    pCoord += 0x4
-    WRITE_MEMORY pCoord 4 (z) FALSE
-CLEO_RETURN 0 ()
-}
 {
 //CLEO_CALL getCurrentResolution 0 (fX fY)
 getCurrentResolution:
@@ -1168,7 +1167,7 @@ CONST_INT varHudBreath          8     //sp_hud    ||1= Activated     || 0= Deact
 CONST_INT varHudArmour          9     //sp_hud    ||1= Activated     || 0= Deactivated
 CONST_INT varHudWantedS         10    //sp_hud    ||1= Activated     || 0= Deactivated
 
-CONST_INT varOnmission          11    //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
+CONST_INT varOnmission          11    //0:Off ||1:on mission || 2:car chase || 3:thug hidouts || 4:street crimes || 5:boss2
 CONST_INT varCrimesProgress     12    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varPcampProgress      13    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varCarChaseProgress   14    //for stadistics ||MSpiderJ16Dv7
@@ -1193,12 +1192,13 @@ CONST_INT varWeapAmmo           33    //sp_wep    ||store current weap ammo
 CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 - 12
 CONST_INT varPowersProgress     35    //sp_po     || current power progress
 CONST_INT varHitCount           36    //sp_hit    || hitcounting
-CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
-CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
+CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
 CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
+
+CONST_INT varAudioActive     	49    // 0:OFF || 1:ON  ||global var to check -spech- audio playing
 
 CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated
