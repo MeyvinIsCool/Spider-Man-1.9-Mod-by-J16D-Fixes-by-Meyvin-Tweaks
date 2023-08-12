@@ -137,7 +137,10 @@ crimealert = 0
 SET_CLEO_SHARED_VAR varCrimeAlert crimealert
 WAIT 1
 crimealert = 1
+iTempVar = 0
+SET_CLEO_SHARED_VAR varAudioActive iTempVar 
 SET_CLEO_SHARED_VAR varCrimeAlert crimealert
+
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 802 808    //{id} {mission_id} {text1_id} {text2_id}
 ENDIF    
@@ -1299,6 +1302,8 @@ CONST_INT varCrimeAlert         39
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
 CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
+
+CONST_INT varAudioActive     	49    // 0:OFF || 1:ON  ||global var to check -spech- audio playing
 
 CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated

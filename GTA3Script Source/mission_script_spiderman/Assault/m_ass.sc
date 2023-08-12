@@ -1,14 +1,14 @@
 // by Meyvin Tweaks
-// San Fierro On Drug Deal
+// San Fierro On Assault
 // Format:
-//      STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_dd.cs" x y z
+//      STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_ass.cs" x y z
 // Spider-Man Mod for GTA SA c.2018 - 2022
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
-CONST_INT delay_time 1500  //ms
-CONST_INT delay_new_event 20000  //ms 20sec
-CONST_INT time_delay_start_crime 15000  //ms
+CONST_INT delay_time 3500  //ms
+CONST_INT delay_new_event 30000  //ms 30sec
+CONST_INT time_delay_start_crime 24000  //ms
 CONST_INT EVENT_AVAILABLE 1
 CONST_INT EVENT_NOT_AVAILABLE 0
 
@@ -23,7 +23,7 @@ CONST_INT player 0
 
 SCRIPT_START
 {
-SCRIPT_NAME m_dd
+SCRIPT_NAME m_ass
 WAIT 0
 LVAR_FLOAT xIn yIn zIn  // xVar yVar zVar  // in
 LVAR_INT player_actor iDM iChar iBlip toggleSpiderMod isInMainMenu flag_player_on_mission
@@ -31,13 +31,13 @@ LVAR_INT randomVal iCounter iTempVar iTempVar2
 LVAR_INT max_wave number_of_members kill_counter iTotalKills
 LVAR_FLOAT x[3] y[3] z[3] fPedMass
 LVAR_INT is_random_event_available 
-LVAR_INT obj iCoordFx
+LVAR_INT iCoordFx
 
 GET_PLAYER_CHAR 0 player_actor
 
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\config.ini"
-    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_drdeal" (iTempVar)
-    IF iTempVar = 60    //Max Missions Reached
+    READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_assault" (iTempVar)
+    IF iTempVar = 80    //Max Missions Reached
         WAIT 100
         TERMINATE_THIS_CUSTOM_SCRIPT
     ENDIF
@@ -47,9 +47,6 @@ ELSE
     TERMINATE_THIS_CUSTOM_SCRIPT
 ENDIF
 
-//GOSUB generate_random_events
-//CLEO_CALL get_map_coords 0 (x[2] y[2] z[2])
-//ADD_SPRITE_BLIP_FOR_COORD x[2] y[2] z[2] RADAR_SPRITE_GANG_N (iEventBlip)
 timerb = 0  //reset timer
 
 //Start Mission
@@ -58,7 +55,7 @@ CLEAR_AREA xIn yIn zIn 50.0 1
 
 //Initial Settings
 iTotalKills = 0
-number_of_members = 10
+number_of_members = 15
 max_wave = 0
 
 LOAD_TEXTURE_DICTIONARY spaim
@@ -77,18 +74,11 @@ WAIT 1
 iTempVar = 1
 SET_CLEO_SHARED_VAR varCrimeAlert iTempVar
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
-    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 804 808    //{id} {mission_id} {text1_id} {text2_id}
+    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 805 808    //{id} {mission_id} {text1_id} {text2_id}
 ENDIF    
+timera = 0
 
 GOSUB prepare_wave_deal
-
-xIn += 1.05
-yIn += 1.05
-zIn += 0.65
-CREATE_OBJECT_NO_OFFSET 2919 xIn yIn zIn (obj)  //kmb_holdall
-SET_OBJECT_SCALE obj 0.55
-SET_OBJECT_DYNAMIC obj TRUE
-timera = 0
 
 kill_counter = 0
 main_loop:
@@ -97,7 +87,7 @@ main_loop:
         IF toggleSpiderMod = 1  //TRUE
 
             iCounter = 0
-            WHILE 10 > iCounter
+            WHILE 15 > iCounter
                 CLEO_CALL get_stored_char 0 iCounter (iChar)
                 IF DOES_CHAR_EXIST iChar
                     IF IS_CHAR_DEAD iChar
@@ -164,6 +154,7 @@ mission_failed:
     WHILE GET_FADING_STATUS
         WAIT 0
     ENDWHILE
+
     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 3  //{id}
         WAIT 8000
@@ -177,8 +168,8 @@ mission_failed:
     ENDIF        
 
     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
-        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 15 1 1  //{id} {call_type} {id_dialogue}
-        WAIT 33500
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 15 1 2  //{id} {call_type} {id_dialogue}
+        WAIT 48000
         iTempVar = 0
         SET_CLEO_SHARED_VAR varAudioActive iTempVar             
     ENDIF 
@@ -193,16 +184,16 @@ mission_passed:
     iTempVar2 = 0
     iTempVar2 = iTempVar + iTotalKills
     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
-        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 11 iTempVar2 iTempVar iTotalKills    //{id} {total xp} {mission xp} {combat xp}
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 12 iTempVar2 iTempVar iTotalKills    //{id} {total xp} {mission xp} {combat xp}
         WAIT 2000
     ENDIF
     SET_CLEO_SHARED_VAR varStatusLevelChar iTempVar2   //set value of +300
 
-    GET_CLEO_SHARED_VAR varDrugDealProgress (randomVal)
+    GET_CLEO_SHARED_VAR varAssaultProgress (randomVal)
     randomVal ++
-    CLAMP_INT randomVal 0 60 (randomVal)    //60 Max
-    SET_CLEO_SHARED_VAR varDrugDealProgress randomVal
-    WRITE_INT_TO_INI_FILE randomVal "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_drdeal"
+    CLAMP_INT randomVal 0 80 (randomVal)    //80 Max
+    SET_CLEO_SHARED_VAR varAssaultProgress randomVal
+    WRITE_INT_TO_INI_FILE randomVal "CLEO\SpiderJ16D\config.ini" "stadistics" "sp_assault"
 GOTO mission_cleanup
 
 mission_cleanup:
@@ -219,7 +210,7 @@ clear_all_mission_files:
     REMOVE_DECISION_MAKER iDM
     GOSUB remove_loaded_models
     iCounter = 0
-    WHILE 10 >= iCounter
+    WHILE 15 >= iCounter
         CLEO_CALL get_stored_char 0 iCounter (iChar)
         IF DOES_CHAR_EXIST iChar
             DELETE_CHAR iChar
@@ -232,9 +223,6 @@ clear_all_mission_files:
         CLEO_CALL store_char 0 iCounter 0x0
         iCounter ++
     ENDWHILE
-    IF DOES_OBJECT_EXIST obj
-        DELETE_OBJECT obj
-    ENDIF
     WAIT 0
     REMOVE_TEXTURE_DICTIONARY
 RETURN
@@ -1237,12 +1225,12 @@ ENDDUMP
 
 char_buffer_bytes40:
 DUMP
-00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000  
 ENDDUMP
 
 marker_buffer_bytes40:
 DUMP
-00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000  
 ENDDUMP
 
 bytes32:

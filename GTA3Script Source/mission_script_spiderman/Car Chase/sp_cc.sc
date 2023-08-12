@@ -27,15 +27,20 @@ GOSUB REQUEST_Animations
 GOSUB REQUEST_Web_Animations
 GOSUB load_and_create_entities
 
+iTempVar = 0
+SET_CLEO_SHARED_VAR varCrimeAlert iTempVar
+SET_CLEO_SHARED_VAR varAudioActive iTempVar
+WAIT 1
 iTempVar = 1
 SET_CLEO_SHARED_VAR varCrimeAlert iTempVar
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 9 0 801 808    //{id} {mission_id} {text1_id} {text2_id}
-ENDIF                
+ENDIF               
 
 WHILE IS_CAR_WAITING_FOR_WORLD_COLLISION veh
     WAIT 0
 ENDWHILE
+
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_cd.cs"
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_cd.cs" veh char[0] char[1]  // police_chase
 ENDIF
@@ -119,12 +124,27 @@ mission_failed:
             WAIT 0
         ENDWHILE
         RESTORE_CAMERA
-        RESTORE_CAMERA_JUMPCUT
+        RESTORE_CAMERA_JUMPCUT      
 
         IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
             STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 3  //{id}
-            WAIT 2000
+            WAIT 8000
         ENDIF
+        
+        iTempVar = 1
+        SET_CLEO_SHARED_VAR varAudioActive iTempVar  
+                
+        IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
+            STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 14 0  //{id} {character_id}
+        ENDIF        
+
+        IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
+            STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 15 1 0  //{id} {call_type} {id_dialogue}
+            WAIT 39500
+            iTempVar = 0
+            SET_CLEO_SHARED_VAR varAudioActive iTempVar             
+        ENDIF         
+        
     //ENDIF
 GOTO mission_cleanup_B
 
@@ -430,6 +450,8 @@ ATTACH_CAMERA_TO_VEHICLE veh (1.0 -5.25 1.55) (0.15 0.0 0.1) 0.0 2 // Center-Rig
 
 WHILE TRUE
     CLEO_CALL setAngleFromCarToChar 0 veh player_actor
+    iTempVar = 0
+    SET_CLEO_SHARED_VAR varBuildingZipFlag (iTempVar)    
     //GET_CAR_SPEED veh (fTempVar)
     //PRINT_FORMATTED_NOW "vel: %f.2" 1 fTempVar
 
@@ -2617,6 +2639,9 @@ CONST_INT varScrewBallProgress  15    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varBackpacksProgress  16    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varLandmarksProgress  17    //for stadistics ||MSpiderJ16Dv7
 
+CONST_INT varBuildingZip        18    //sp_mlb           ||1= Activated     || 0= Deactivated
+CONST_INT varBuildingZipFlag    19    //sp_mlb           ||1= Activated     || 0= Deactivated
+
 CONST_INT varAlternativeSwing   20    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varSwingBuilding      21    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varFixGround          22    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
@@ -2641,6 +2666,8 @@ CONST_INT varCrimeAlert         39
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
 CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
+
+CONST_INT varAudioActive     	49    // 0:OFF || 1:ON  ||global var to check -spech- audio playing
 
 CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated

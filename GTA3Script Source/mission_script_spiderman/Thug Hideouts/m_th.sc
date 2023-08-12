@@ -26,7 +26,7 @@ WAIT 0
 LVAR_INT player_actor toggleSpiderMod flag_player_on_mission isInMainMenu
 LVAR_INT iDecisionHate iBlip iEventBlip flag_player_hit_counter 
 LVAR_INT char_thug counter kills_counter iRandomVal iRandomVal2
-LVAR_INT crimealert
+LVAR_INT crimealert audio_line_is_active
 LVAR_FLOAT fPedMass
 
 GET_PLAYER_CHAR 0 player_actor
@@ -68,6 +68,8 @@ flag_player_on_mission = 3  //3:criminal
 SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
 flag_player_hit_counter = 0
 SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter        // 0:OFF || 1:ON
+audio_line_is_active = 0
+SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active 
 
 GOSUB sub_Fade_600ms_and_Lock_Controls
 GOSUB create_enemys
@@ -831,6 +833,8 @@ CONST_INT varCrimeAlert         39
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
 CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
+
+CONST_INT varAudioActive     	49    // 0:OFF || 1:ON  ||global var to check -spech- audio playing
 
 CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated
