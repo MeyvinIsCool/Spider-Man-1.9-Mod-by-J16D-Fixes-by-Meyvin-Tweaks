@@ -6,7 +6,7 @@
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 // Time To Start Jameson Interview
-CONST_INT time_start_interview 5000   //ms - 2 minutes    120000
+CONST_INT time_start_interview 10000   //ms - 2 minutes    120000
 
 // Jameson Interview Time Length
 CONST_INT time_interview_1 43500      //ms - JJJ_PInterview_1
@@ -251,7 +251,6 @@ WHILE TRUE
                         GOSUB play_sfx_call_inital  
 
                         GENERATE_RANDOM_INT_IN_RANGE 0 10 iTempVar3
-                        iTempVar3 = 9
                         WHILE TRUE
                             SWITCH iTempVar3
                                 CASE 0

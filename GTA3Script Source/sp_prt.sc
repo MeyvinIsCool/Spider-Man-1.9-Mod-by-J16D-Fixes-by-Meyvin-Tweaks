@@ -436,33 +436,39 @@ SWITCH idVar
         // IN: {id} {character_id}
         GOSUB readVars
         IF toggleSpiderMod = 1
-            IF isInMainMenu = 0    //1:true 0: false         
-                GOSUB load_textures_calls_cellphone
-                WHILE TRUE
-                    GOSUB readVars
-                    GET_CLEO_SHARED_VAR varHudRadar (is_radar_enabled)
-                    IF is_radar_enabled = 1     // 0:OFF || 1:ON
-                        px = 568.0
-                        py = 330.0
-                        GOSUB draw_calls_cellphone
-                        CLEO_CALL generate_anim_bars_speech 0 (533.0 330.0) (16 202 211 150)    //(46 117 156 150)
-                    ELSE
-                        px = 60.0
-                        py = 310.0           
-                        GOSUB draw_calls_cellphone
-                        CLEO_CALL generate_anim_bars_speech 0 (25.0 310.0) (16 202 211 150)    //(46 117 156 150)
-                    ENDIF
-                    IF audio_line_is_active = 0             
-                        BREAK
-                    ENDIF
-                    IF isInMainMenu = 1     //1:true 0: false
-                    OR toggleSpiderMod = 0
-                        audio_line_is_active = 0 
-                        SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active
-                        BREAK
-                    ENDIF             
-                    WAIT 0
-                ENDWHILE
+            IF isInMainMenu = 0    //1:true 0: false     
+                IF audio_line_is_active = 0   
+                    audio_line_is_active = 1
+                    SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active                    
+                    GOSUB load_textures_calls_cellphone
+                    WHILE TRUE
+                        GOSUB readVars
+                        GET_CLEO_SHARED_VAR varHudRadar (is_radar_enabled)
+                        IF is_radar_enabled = 1     // 0:OFF || 1:ON
+                            px = 568.0
+                            py = 330.0
+                            GOSUB draw_calls_cellphone
+                            CLEO_CALL generate_anim_bars_speech 0 (533.0 330.0) (16 202 211 150)    //(46 117 156 150)
+                        ELSE
+                            px = 60.0
+                            py = 310.0           
+                            GOSUB draw_calls_cellphone
+                            CLEO_CALL generate_anim_bars_speech 0 (25.0 310.0) (16 202 211 150)    //(46 117 156 150)
+                        ENDIF
+                        IF audio_line_is_active = 0             
+                            BREAK
+                        ENDIF
+                        IF isInMainMenu = 1     //1:true 0: false
+                        OR toggleSpiderMod = 0
+                            audio_line_is_active = 0 
+                            SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active
+                            BREAK
+                        ENDIF             
+                        WAIT 0
+                    ENDWHILE
+                ELSE
+                    BREAK
+                ENDIF
             ELSE
                 audio_line_is_active = 0 
                 SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active             
@@ -475,70 +481,76 @@ SWITCH idVar
         GOSUB readVars
         IF toggleSpiderMod = 1
             IF isInMainMenu = 0    //1:true 0: false 
-                GOSUB readVars
-                GOSUB play_sfx_call_inital
-                SWITCH iTempVar3
-                    CASE 0
-                        IF audio_line_is_active = 1
-                            WAIT 1000
-                            GOSUB play_sfx_cc_failed
-                        ELSE
-                            IF audio_line_is_active = 0
-                                BREAK
-                            ENDIF   
-                        ENDIF             
-                        BREAK
-                    CASE 1
-                        IF audio_line_is_active = 1
-                            WAIT 1000
-                            GOSUB play_sfx_dd_failed  
-                        ELSE
-                            IF audio_line_is_active = 0
-                                BREAK
-                            ENDIF   
-                        ENDIF                           
-                        BREAK
-                    CASE 2
-                        IF audio_line_is_active = 1
-                            WAIT 1000
-                            GOSUB play_sfx_ass_failed  
-                        ELSE
-                            IF audio_line_is_active = 0
-                                BREAK
-                            ENDIF 
-                        ENDIF                           
-                        BREAK
-                    CASE 3 
-                        IF audio_line_is_active = 1
-                            WAIT 1000
-                            GOSUB play_sfx_mug_failed 
-                        ELSE
-                            IF audio_line_is_active = 0
-                                BREAK
-                            ENDIF 
-                        ENDIF                           
-                        BREAK
-                    DEFAULT
-                        BREAK
-                ENDSWITCH      
-                WHILE TRUE
+                IF audio_line_is_active = 0   
+                    audio_line_is_active = 1
+                    SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active             
                     GOSUB readVars
-                    IF audio_line_is_active = 0 
-                        SET_AUDIO_STREAM_STATE sfx 0 
-                        REMOVE_AUDIO_STREAM sfx
-                        iTempVar2 = 2
-                        GOSUB play_sfx_call_inital   
-                        WAIT 2000         
-                        BREAK
-                    ENDIF
-                    IF isInMainMenu = 1     //1:true 0: false
-                    OR toggleSpiderMod = 0
-                        audio_line_is_active = 0 
-                        SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active 
-                        BREAK
-                    ENDIF                        
-                    WAIT 0
-                ENDWHILE
+                    GOSUB play_sfx_call_inital
+                    SWITCH iTempVar3
+                        CASE 0
+                            IF audio_line_is_active = 1
+                                WAIT 1000
+                                GOSUB play_sfx_cc_failed
+                            ELSE
+                                IF audio_line_is_active = 0
+                                    BREAK
+                                ENDIF   
+                            ENDIF             
+                            BREAK
+                        CASE 1
+                            IF audio_line_is_active = 1
+                                WAIT 1000
+                                GOSUB play_sfx_dd_failed  
+                            ELSE
+                                IF audio_line_is_active = 0
+                                    BREAK
+                                ENDIF   
+                            ENDIF                           
+                            BREAK
+                        CASE 2
+                            IF audio_line_is_active = 1
+                                WAIT 1000
+                                GOSUB play_sfx_ass_failed  
+                            ELSE
+                                IF audio_line_is_active = 0
+                                    BREAK
+                                ENDIF 
+                            ENDIF                           
+                            BREAK
+                        CASE 3 
+                            IF audio_line_is_active = 1
+                                WAIT 1000
+                                GOSUB play_sfx_mug_failed 
+                            ELSE
+                                IF audio_line_is_active = 0
+                                    BREAK
+                                ENDIF 
+                            ENDIF                           
+                            BREAK
+                        DEFAULT
+                            BREAK
+                    ENDSWITCH      
+                    WHILE TRUE
+                        GOSUB readVars
+                        IF audio_line_is_active = 0 
+                            SET_AUDIO_STREAM_STATE sfx 0 
+                            REMOVE_AUDIO_STREAM sfx
+                            iTempVar2 = 2
+                            GOSUB play_sfx_call_inital   
+                            WAIT 2000         
+                            BREAK
+                        ENDIF
+                        IF isInMainMenu = 1     //1:true 0: false
+                        OR toggleSpiderMod = 0
+                            audio_line_is_active = 0 
+                            SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active 
+                            BREAK
+                        ENDIF                        
+                        WAIT 0
+                    ENDWHILE
+                ELSE
+                    BREAK
+                ENDIF
             ELSE
                 audio_line_is_active = 0 
                 SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active             
