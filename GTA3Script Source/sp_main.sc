@@ -66,6 +66,8 @@ CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
 CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
 
+CONST_INT varAudioActive     	49    // 0:OFF || 1:ON  ||global var to check -spech- audio playing
+
 CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2a            52    //sp_ev    ||1= Activated     || 0= Deactivated
@@ -104,7 +106,7 @@ IF GOSUB does_scripts_exist
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_ev.cs"      // Fight - Dodge (near & far distance)
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_evb.cs"     // Manual Dodge & Sliding dodge
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_hud.cs"     // Main Hud script
-    STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lf.cs"      // Life Regeneration
+    //STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lf.cs"      // Life Regeneration
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lvl.cs"     // Level Control
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_mb.cs"      // On ground/jump script
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_me.cs"      // Melee Combo X4 | Air Combo x4 | Swing kick
@@ -135,7 +137,11 @@ ENDIF
     // Web Zip To Building (BETA)
     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_mlb.cs"
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_mlb.cs"     // Web Zip To Building
-    ENDIF             
+    ENDIF       
+    
+    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_jcal.cs"
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_jcal.cs"     // JamesonCalls
+    ENDIF            
 
 //-+-- Start Internal Threads
     STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_cam_internalThread   // Camera Script
@@ -156,14 +162,14 @@ main_loop:
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
         GOSUB readVars
         IF toggleSpiderMod = 1  //TRUE
-
+        
             IF CLEO_CALL isActorInWater 0 player_actor
                 CLEAR_CHAR_TASKS player_actor
                 CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
                 WHILE CLEO_CALL isActorInWater 0 player_actor
                     WAIT 0
                 ENDWHILE
-            ENDIF              
+            ENDIF                        
 
             IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -5.0) (1 1 0 0 0)
                 //fix
@@ -861,7 +867,7 @@ does_scripts_exist:
     AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_ev.cs"
     AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_evb.cs"
     AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_hud.cs"
-    AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_lf.cs"
+    //AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_lf.cs"
     AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_lvl.cs"
         IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_mb.cs"
         AND DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_me.cs"

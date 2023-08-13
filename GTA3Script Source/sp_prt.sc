@@ -1364,7 +1364,7 @@ play_sfx_call_inital:
 RETURN
 
 play_sfx_cc_failed:
-    IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\JJJ_CCF_1.mp3" (sfx)
+    IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\JamesonCalls\JJJ_CCF_1.mp3" (sfx)
         SET_AUDIO_STREAM_STATE sfx 1
         WAIT 0
         GET_AUDIO_SFX_VOLUME (fVolume)
@@ -1375,7 +1375,7 @@ play_sfx_cc_failed:
 RETURN
 
 play_sfx_dd_failed:
-    IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\JJJ_DD_1.mp3" (sfx)
+    IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\JamesonCalls\JJJ_DDF_1.mp3" (sfx)
         SET_AUDIO_STREAM_STATE sfx 1
         WAIT 0
         GET_AUDIO_SFX_VOLUME (fVolume)
@@ -1386,7 +1386,7 @@ play_sfx_dd_failed:
 RETURN
 
 play_sfx_ass_failed:
-    IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\JJJ_ASS_1.mp3" (sfx)
+    IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\JamesonCalls\JJJ_ASSF_1.mp3" (sfx)
         SET_AUDIO_STREAM_STATE sfx 1
         WAIT 0
         GET_AUDIO_SFX_VOLUME (fVolume)
@@ -1397,7 +1397,7 @@ play_sfx_ass_failed:
 RETURN
 
 play_sfx_mug_failed:
-    IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\JJJ_MUG_1.mp3" (sfx)
+    IF LOAD_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\JamesonCalls\JJJ_MUGF_1.mp3" (sfx)
         SET_AUDIO_STREAM_STATE sfx 1
         WAIT 0
         GET_AUDIO_SFX_VOLUME (fVolume)
