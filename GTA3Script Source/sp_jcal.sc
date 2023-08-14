@@ -6,7 +6,7 @@
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 // Time To Start Jameson Interview
-CONST_INT time_start_interview 10000   //ms - 2 minutes    120000
+CONST_INT time_start_interview 120000   //ms - 2 minutes 
 
 // Jameson Interview Time Length
 CONST_INT time_interview_1 43500      //ms - JJJ_PInterview_1
