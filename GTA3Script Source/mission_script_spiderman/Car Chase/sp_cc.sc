@@ -130,9 +130,6 @@ mission_failed:
             STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 3  //{id}
             WAIT 8000
         ENDIF
-        
-        iTempVar = 1
-        SET_CLEO_SHARED_VAR varAudioActive iTempVar  
                 
         IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prt.cs"
             STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 14 0  //{id} {character_id}
