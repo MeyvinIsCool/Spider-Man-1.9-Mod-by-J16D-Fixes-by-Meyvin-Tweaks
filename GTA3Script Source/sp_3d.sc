@@ -12,7 +12,8 @@ LVAR_INT toggleSpiderMod isInMainMenu is_hud_enabled is_in_interior
 LVAR_INT flag_player_on_mission iTempVar
 
 // These must be the same as icon ID'S  ->listed at end
-CONST_INT idMapIcon0b 41    //RADAR_SPRITE_WAYPOINT
+CONST_INT idMapIcon0b 49    //RADAR_SPRITE_WAYPOINT
+CONST_INT idMapIcon0c 41    //RADAR_SPRITE_DATE_DRINK
 CONST_INT idMapIcon5 19     //RADAR_SPRITE_ENEMYATTACK
 CONST_INT idMapIcon6 48    //RADAR_SPRITE_DATE_DISCO
 CONST_INT idMapIcon7 58     //RADAR_SPRITE_GANG_B
@@ -22,7 +23,8 @@ CONST_INT idMapIcon10 55    //RADAR_SPRITE_IMPOUND
 CONST_INT idMapIcon11 20    //RADAR_SPRITE_FIRE
 
 LOAD_TEXTURE_DICTIONARY spaim
-LOAD_SPRITE idMapIcon0b "mk0_b"     //Way Point
+LOAD_SPRITE idMapIcon0c "mk0_c"     //Way Point
+LOAD_SPRITE idMapIcon0b "mk0_b"     //Side Mission WayPoint
 LOAD_SPRITE idMapIcon5 "mk5"        //Car Chase / Crimes
 LOAD_SPRITE idMapIcon6 "mk8"        //Screwball 
 LOAD_SPRITE idMapIcon7 "mk7"        //Thug Hideouts
@@ -140,6 +142,31 @@ draw_3d_blip:
                 DISPLAY_TEXT_WITH_NUMBER v1 v2 J16D440 iTempVar    //~1~ m
             ENDIF
             //PRINT_FORMATTED_NOW "xyz: %.2f %.2f %.2f icon:%d" 1 x y z iBlipIcon
+        ENDIF
+        IF iBlipIcon = RADAR_SPRITE_DATE_DRINK
+            iTempVar = iPoolStart + 8      //float fPosX; // 8
+            READ_MEMORY iTempVar 4 FALSE (x)
+            iTempVar = iPoolStart + 12      //float fPosY; // 12
+            READ_MEMORY iTempVar 4 FALSE (y)
+            iTempVar = iPoolStart + 16      //float fPosZ; // 16
+            READ_MEMORY iTempVar 4 FALSE (z)
+            z += 0.6
+            GET_OFFSET_FROM_CAMERA_IN_WORLD_COORDS 0.0 0.0 0.0 (x1 y1 z1)
+            GET_DISTANCE_BETWEEN_COORDS_3D (x y z) (x1 y1 z1) (fDistance)
+            IF fDistance > 10.0
+            AND 300.0 > fDistance
+                CONVERT_3D_TO_SCREEN_2D (x y z) TRUE TRUE (v1 v2) (v3 v3)
+                GET_FIXED_XY_ASPECT_RATIO 12.0 12.0 (v3 v3)
+                USE_TEXT_COMMANDS FALSE
+                SET_SPRITES_DRAW_BEFORE_FADE FALSE
+                DRAW_SPRITE iBlipIcon (v1 v2) (v3 v3) (255 255 255 235)
+                v1 -= 6.0
+                v2 += 6.0
+                iTempVar =# fDistance
+                GOSUB GUI_TextFormat_Text
+                USE_TEXT_COMMANDS FALSE
+                DISPLAY_TEXT_WITH_NUMBER v1 v2 J16D440 iTempVar    //~1~ m
+            ENDIF
         ENDIF
         counter++
     ENDWHILE

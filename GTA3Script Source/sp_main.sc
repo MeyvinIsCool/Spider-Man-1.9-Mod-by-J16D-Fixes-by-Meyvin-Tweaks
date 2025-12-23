@@ -66,8 +66,6 @@ CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
 CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
 
-CONST_INT varAudioActive     	49    // 0:OFF || 1:ON  ||global var to check -spech- audio playing
-
 CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2a            52    //sp_ev    ||1= Activated     || 0= Deactivated
@@ -86,11 +84,11 @@ CONST_INT player 0
 SCRIPT_START
 {
 SCRIPT_NAME sp_main
-LVAR_INT player_actor toggleSpiderMod isFuncEnabled
+LVAR_INT player_actor toggleSpiderMod isInMainMenu isFuncEnabled
 LVAR_INT sideSwing  // 0:center || 1:left || 2:right
 LVAR_INT baseObject baseObjectR iWebActor iWebActorR
 LVAR_INT LRStick UDStick
-LVAR_FLOAT fProgress ftimera fFov
+LVAR_FLOAT fProgress ftimera
 LVAR_FLOAT fMaxSwingPeriod x y z fVelY fVelZ
 LVAR_FLOAT fLongitude fCharSpeed fAmplitude
 LVAR_FLOAT fSyncMaxAngle fSyncMinAngle fSyncAngle
@@ -137,11 +135,7 @@ ENDIF
     // Web Zip To Building (BETA)
     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_mlb.cs"
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_mlb.cs"     // Web Zip To Building
-    ENDIF       
-    
-    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_jcal.cs"
-        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_jcal.cs"     // JamesonCalls
-    ENDIF            
+    ENDIF             
 
 //-+-- Start Internal Threads
     STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_cam_internalThread   // Camera Script
@@ -161,15 +155,15 @@ main_loop:
     IF IS_PLAYER_PLAYING player
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
         GOSUB readVars
-        IF toggleSpiderMod = 1  //TRUE
-        
+        IF toggleSpiderMod = 1  //TRUE           
+
             IF CLEO_CALL isActorInWater 0 player_actor
                 CLEAR_CHAR_TASKS player_actor
                 CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
                 WHILE CLEO_CALL isActorInWater 0 player_actor
                     WAIT 0
                 ENDWHILE
-            ENDIF                        
+            ENDIF              
 
             IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -5.0) (1 1 0 0 0)
                 //fix
@@ -815,6 +809,7 @@ RETURN
 
 readVars:
     GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
+    GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
 RETURN
 
 set_properties:

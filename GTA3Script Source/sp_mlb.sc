@@ -67,73 +67,76 @@ main_loop:
 
                         // Buildings
                         IF GOSUB get_building_side
-                            GOSUB draw_building_indicator
-                            //----------------------------------- Zip to Point
-                            // L2 + R2 
-                            IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                            AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                            AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~
-
-                                IF IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
+                            GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[1] y[1] z[1])
+                            //IF z[0] >= z[1]   // fix for stuck player                        
+                                GOSUB draw_building_indicator
+                                //----------------------------------- Zip to Point
+                                // L2 + R2 
+                                IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
                                 AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                                 AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                                AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~    
-                                    
-                                    IF GOSUB is_not_player_playing_swing_anims
+                                AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~
 
-                                        IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -3.0) (1 0 0 0 0)   //AIR
-                                            //----------------------------------- Zip if $player on Air
-                                            GOSUB REQUEST_Animations
-                                            GOSUB REQUEST_webAnimations
-                                            GOSUB in_air_zip_to_buidling
-                                                IF IS_BUTTON_PRESSED PAD1 SQUARE  // ~k~~PED_JUMPING~
-                                                    IF GOSUB does_skill_Point_Launch_enabled
-                                                        GOSUB point_launch_air_building                                                           
+                                    IF IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
+                                    AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                    AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+                                    AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~    
+                                        
+                                        IF GOSUB is_not_player_playing_swing_anims
+
+                                            IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -3.0) (1 0 0 0 0)   //AIR
+                                                //----------------------------------- Zip if $player on Air
+                                                GOSUB REQUEST_Animations
+                                                GOSUB REQUEST_webAnimations
+                                                GOSUB in_air_zip_to_buidling
+                                                    IF IS_BUTTON_PRESSED PAD1 SQUARE  // ~k~~PED_JUMPING~
+                                                        IF GOSUB does_skill_Point_Launch_enabled
+                                                            GOSUB point_launch_air_building                                                           
+                                                        ELSE
+                                                            GET_CHAR_HEADING player_actor (zAngle)
+                                                            GET_COORD_FROM_ANGLED_DISTANCE x[0] y[0] zAngle 0.2 (x[0] y[0])
+                                                            GOSUB stay_on_building_from_air                                                     
+                                                        ENDIF
                                                     ELSE
                                                         GET_CHAR_HEADING player_actor (zAngle)
                                                         GET_COORD_FROM_ANGLED_DISTANCE x[0] y[0] zAngle 0.2 (x[0] y[0])
-                                                        GOSUB stay_on_building_from_air                                                     
-                                                    ENDIF
-                                                ELSE
-                                                    GET_CHAR_HEADING player_actor (zAngle)
-                                                    GET_COORD_FROM_ANGLED_DISTANCE x[0] y[0] zAngle 0.2 (x[0] y[0])
-                                                    GOSUB stay_on_building_from_air                                                   
-                                                ENDIF                                                                                          
-                                                
+                                                        GOSUB stay_on_building_from_air                                                   
+                                                    ENDIF                                                                                          
+                                                    
 
-                                        ELSE
-                                            //----------------------------------- Zip if $player on Ground
-                                            GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[1] y[1] z[1])
-                                            IF z[0] >= z[1]   // fix for stuck player
+                                            ELSE
                                                 //----------------------------------- Zip if $player on Ground
-                                                GOSUB REQUEST_Animations
-                                                GOSUB REQUEST_webAnimations
-                                                GOSUB on_ground_zip_to_point
+                                                GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[1] y[1] z[1])
+                                                IF z[0] >= z[1]   // fix for stuck player
+                                                    //----------------------------------- Zip if $player on Ground
+                                                    GOSUB REQUEST_Animations
+                                                    GOSUB REQUEST_webAnimations
+                                                    GOSUB on_ground_zip_to_point
 
-                                                IF IS_BUTTON_PRESSED PAD1 SQUARE  // ~k~~PED_JUMPING~
-                                                    IF GOSUB does_skill_Point_Launch_enabled
-                                                        GOSUB point_launch_ground_building
+                                                    IF IS_BUTTON_PRESSED PAD1 SQUARE  // ~k~~PED_JUMPING~
+                                                        IF GOSUB does_skill_Point_Launch_enabled
+                                                            GOSUB point_launch_ground_building
+                                                        ELSE
+                                                            GET_CHAR_HEADING player_actor (zAngle)
+                                                            GET_COORD_FROM_ANGLED_DISTANCE x[0] y[0] zAngle 0.25 (x[0] y[0])
+                                                            GOSUB stay_on_building_from_ground
+                                                        ENDIF
                                                     ELSE
                                                         GET_CHAR_HEADING player_actor (zAngle)
                                                         GET_COORD_FROM_ANGLED_DISTANCE x[0] y[0] zAngle 0.25 (x[0] y[0])
                                                         GOSUB stay_on_building_from_ground
                                                     ENDIF
-                                                ELSE
-                                                    GET_CHAR_HEADING player_actor (zAngle)
-                                                    GET_COORD_FROM_ANGLED_DISTANCE x[0] y[0] zAngle 0.25 (x[0] y[0])
-                                                    GOSUB stay_on_building_from_ground
-                                                ENDIF
 
-                                                IF DOES_OBJECT_EXIST obj
-                                                    SET_OBJECT_COLLISION obj TRUE
-                                                ENDIF    
+                                                    IF DOES_OBJECT_EXIST obj
+                                                        SET_OBJECT_COLLISION obj TRUE
+                                                    ENDIF    
 
+                                                ENDIF                                            
                                             ENDIF
                                         ENDIF
                                     ENDIF
                                 ENDIF
-                            ENDIF
+                            //ENDIF
 
                         ENDIF
                     ENDIF
@@ -171,368 +174,99 @@ get_building_side:
 
     IF NOT x[2] = x[3]
     OR NOT y[2] = y[3]
-    OR NOT z[2] = z[3]
+    //OR NOT z[2] = z[3]
         
-// Collision's Normal Vector Conditions 
-//-+----------------------------------------------------------------------------------X Axis--------------------------------------------------------------------------
+        IF GOSUB is_sf_model_id_allowed
 
-        IF x[2] <= -8.00
-        OR x[3] <= -8.00
-        OR x[2] >= 8.00
-        OR x[3] >= 8.00   
-
-            IF CLEO_CALL isClearInSight 0 player_actor (0.0 5.0 1.5) (1 0 0 0 0)    //Front      
-
-                IF x[2] >= 8.00
-                AND x[3] >= 8.00        
-                    //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000                       
+            IF x[2] = 10.0         
+                IF x[3] = 10.0
+                OR x[3] = -10.0
+                OR y[3] = 10.0
+                OR y[3] = -10.0
+                OR z[3] = 10.0
+                OR z[3] = -10.0
                     RETURN_FALSE
                     RETURN
+                ELSE
+                    RETURN_TRUE
+                    RETURN
                 ENDIF
-
-                IF x[2] <= -8.00   
-                AND x[3] >= 8.00
-                    //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000
+            ENDIF
+            IF x[2] = -10.0
+                IF x[3] = 10.0
+                OR x[3] = -10.0
+                OR y[3] = 10.0
+                OR y[3] = -10.0
+                OR z[3] = 10.0
+                OR z[3] = -10.0
                     RETURN_FALSE
                     RETURN
-                ENDIF
-
-                IF x[2] >= 8.00   
-                AND x[3] <= -8.00
-                    RETURN_FALSE    //to prevent zipping to unrelated (no idea how it works :) )
+                ELSE
+                    RETURN_TRUE
                     RETURN
-                    IF z[2] = 10.00
-                    OR z[3] = 10.00    
-                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000              
-                        RETURN_FALSE
-                        RETURN
-                    ELSE
-                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000 
-                        RETURN_TRUE
-                        RETURN
-                    ENDIF
                 ENDIF
+            ENDIF
 
-
-                IF x[2] >= 8.00   
-                AND x[3] = 0.00
-
-                    IF GOSUB does_model_id_match
-                    AND fDistance >= 16.0
-                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                        RETURN_FALSE
-                        RETURN
-                    ELSE  
-                        IF z[2] >= 8.00
-                        OR z[3] >= 8.00          
-                        OR z[3] <= -8.00   
-                            //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000    
-                            RETURN_FALSE
-                            RETURN
-                        ELSE
-                            //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000
-                            RETURN_TRUE
-                            RETURN
-                        ENDIF     
-                    ENDIF  
-
+            IF y[2] = 10.0         
+                IF x[3] = 10.0
+                OR x[3] = -10.0
+                OR y[3] = 10.0
+                OR y[3] = -10.0
+                OR z[3] = 10.0
+                OR z[3] = -10.0
+                    RETURN_FALSE
+                    RETURN
+                ELSE
+                    RETURN_TRUE
+                    RETURN
                 ENDIF
+            ENDIF
 
-                IF x[2] = 0.00   
-                AND x[3] >= 8.00
-
-                    IF GOSUB does_model_id_match
-                    AND fDistance >= 16.0
-                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                        RETURN_FALSE
-                        RETURN            
-                    ELSE        
-                        IF z[2] >= 8.00
-                        OR z[2] >= -8.00
-                        OR z[3] <= -8.00
-                        OR z[3] <= 8.00
-                            //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                            RETURN_FALSE
-                            RETURN
-                        ELSE
-                            //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000      
-                            RETURN_TRUE
-                            RETURN
-                        ENDIF        
-                    ENDIF                    
+            IF y[2] = -10.0         
+                IF x[3] = 10.0
+                OR x[3] = -10.0
+                OR y[3] = 10.0
+                OR y[3] = -10.0
+                OR z[3] = 10.0
+                OR z[3] = -10.0
+                    RETURN_FALSE
+                    RETURN
+                ELSE
+                    RETURN_TRUE
+                    RETURN
                 ENDIF
+            ENDIF
 
-                IF x[2] <= -8.00   
-                AND x[3] = 0.00
-
-                    IF GOSUB does_model_id_match
-                    AND fDistance >= 16.0
-                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                        RETURN_FALSE
-                        RETURN
-                    ELSE              
-                        RETURN_FALSE
-                        IF y[2] >= 8.00 
-                        OR y[2] <= -8.00
-                        OR y[3] >= 8.00     
-                        OR y[3] <= -8.00
-                        OR z[2] >= 8.00
-                        OR z[2] <= -8.00
-                        OR z[3] >= 8.00
-                        OR z[3] <= -8.00
-                            //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                            RETURN_FALSE
-                            RETURN
-                        ELSE
-                            //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000
-                            RETURN_TRUE
-                            RETURN
-                        ENDIF
-                    ENDIF       
-
-                IF x[2] = 0.00   
-                AND x[3] <= -8.00
-
-                    IF GOSUB does_model_id_match
-                    AND fDistance >= 16.0
-                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                        RETURN_FALSE
-                        RETURN            
-                    ELSE  
-                        IF y[2] >= 8.00 
-                        OR y[2] <= -8.00
-                        OR y[3] >= 8.00     
-                        OR y[3] <= -8.00
-                        OR z[2] >= 8.00
-                        OR z[2] <= -8.00
-                        OR z[3] >= 8.00
-                        OR z[3] <= -8.00
-                            //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                            RETURN_FALSE
-                            RETURN
-                        ELSE
-                            //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000 
-                            RETURN_TRUE
-                            RETURN
-                        ENDIF
-                    ENDIF
+            IF z[2] = 10.0         
+                IF x[3] = 10.0
+                OR x[3] = -10.0
+                OR y[3] = 10.0
+                OR y[3] = -10.0
+                OR z[3] = 10.0
+                OR z[3] = -10.0
+                    RETURN_FALSE
+                    RETURN
+                ELSE
+                    RETURN_TRUE
+                    RETURN
                 ENDIF
+            ENDIF 
+            IF z[2] = -10.0
+                IF x[3] = 10.0
+                OR x[3] = -10.0
+                OR y[3] = 10.0
+                OR y[3] = -10.0
+                OR z[3] = 10.0
+                OR z[3] = -10.0
+                    RETURN_FALSE
+                    RETURN   
+                ELSE
+                    RETURN_TRUE
+                    RETURN
+                ENDIF             
+            ENDIF                      
 
-                ENDIF                     
-            ENDIF              
-        ENDIF         
-
-//-+------------------------------------------------------------------------------------------------------------------------------------------------------------------        
-
-//-+----------------------------------------------------------------------------------Y Axis--------------------------------------------------------------------------
-        IF y[2] <= -8.00
-        OR y[3] <= -8.00
-        OR y[2] >= 8.00
-        OR y[3] >= 8.00  
-
-            IF CLEO_CALL isClearInSight 0 player_actor (0.0 5.0 1.5) (1 0 0 0 0)    //Front      
-            AND CLEO_CALL idModelExist 0 (idModel)                                  //check if model available within range        
-
-                IF y[2] >= 8.00 
-                AND y[3] >= 8.00   
-
-                    IF x[2] = 0.00
-                    OR x[3] = 0.00    
-                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                   
-                        RETURN_FALSE
-                        RETURN
-                    ENDIF
-                ENDIF
-
-                IF y[2] <= -8.00 
-                AND y[3] <= -8.00   
-
-                    IF x[2] = 0.00
-                    OR x[3] = 0.00           
-                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                             
-                        RETURN_FALSE
-                        RETURN
-                    ENDIF
-                ENDIF
-
-                IF y[2] >= 8.00
-                AND y[3] = 0.00
-                    
-                    IF GOSUB does_model_id_match
-                    AND fDistance >= 16.0
-                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000  
-                        RETURN_FALSE
-                        RETURN
-                    ELSE                
-                        IF x[2] >= 0.1
-                        //OR x[2] = -10.00
-                        OR x[3] >= 0.1 
-                        //OR x[3] = -10.00
-                        //OR z[2] = 10.00
-                        OR z[2] <= -10.00
-                        OR z[3] >= 10.00 
-                        OR z[3] <= -10.00   
-
-                            //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000  
-                            RETURN_FALSE
-                            RETURN
-                        ELSE   
-                            //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                      
-                            RETURN_TRUE
-                            RETURN
-                        ENDIF
-
-                    ENDIF
-                ENDIF
-
-                IF y[2] <= -8.00
-                AND y[3] = 0.00   
-
-                    IF GOSUB does_model_id_match
-                    AND fDistance >= 16.0
-                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000  
-                        RETURN_FALSE
-                        RETURN
-                    ELSE        
-
-                        IF x[2] >= 0.1
-                        OR x[2] <= -0.1
-                        OR x[3] >= 0.1 
-                        OR x[3] <= -0.1
-                        OR z[2] = 10.00
-                        OR z[2] = -10.00
-                        OR z[3] = 10.00 
-                        OR z[3] = -10.00    
-                            //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000
-                            RETURN_FALSE
-                            RETURN
-                        ELSE         
-                            //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                
-                            RETURN_TRUE
-                            RETURN
-                        ENDIF
-
-                    ENDIF
-
-                ENDIF
-
-                IF y[2] = 0.00 
-                AND y[3] >= 8.00 
-
-                    IF x[2] >= 0.1
-                    OR x[2] <= -0.1
-                    OR x[3] >= 0.1 
-                    OR x[3] <= -0.1
-                    OR z[2] = 10.00
-                    OR z[2] = -10.00
-                    OR z[3] = 10.00 
-                    OR z[3] = -10.00   
-                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000
-                        RETURN_FALSE
-                        RETURN
-                    ELSE        
-                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                 
-                        RETURN_TRUE
-                        RETURN
-                    ENDIF
-                ENDIF
-
-                IF y[2] = 0.00 
-                AND y[3] <= -8.00   
-                
-                    IF x[2] >= 0.1
-                    OR x[2] <= -0.1
-                    OR x[3] >= 0.1 
-                    OR x[3] <= -0.1
-                    OR z[2] = 10.00
-                    OR z[2] = -10.00
-                    OR z[3] = 10.00 
-                    OR z[3] = -10.00                     
-                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                        RETURN_FALSE
-                        RETURN
-                    ELSE       
-                        IF x[2] >= 0.01         //avoid zip inside collisions
-                        OR x[2] <= 0.001
-                            //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                            RETURN_FALSE
-                            RETURN 
-                        ELSE                   
-                            //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                            
-                            RETURN_TRUE
-                            RETURN
-                        ENDIF
-                    ENDIF
-                ENDIF
-
-            ENDIF       
         ENDIF
-
-//-+---------------------------------------------------------------------Z Axis (This Vector Introducing Bugs So I Disabled It)--------------------------------------------------------------------------
- 
-        IF z[2] >= 8.00
-        OR z[3] >= 8.00  
-        OR z[2] <= -8.00
-        OR z[3] <= -8.00
-
-            IF CLEO_CALL isClearInSight 0 player_actor (0.0 5.0 1.5) (1 0 0 0 0)    //Front      
-            AND CLEO_CALL idModelExist 0 (idModel)                                  //check if model available within range  
-                IF z[2] >= 9.00     //10.00
-                AND z[3] >= 9.00    //10.00
-
-
-                    IF x[2] = 0.00
-                    AND x[3] = 0.00    
-                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                   
-                        RETURN_FALSE
-                        RETURN
-                    ENDIF
-                ENDIF
-
-                IF z[2] <= -9.00    //-10.00
-                AND z[3] <= -9.00   //-10.00
-
-                    IF x[2] = 0.00
-                    AND x[3] = 0.00    
-                        //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision" 2000                                   
-                        RETURN_FALSE
-                        RETURN
-                    ENDIF
-                ENDIF                
-
-                IF z[2] >= 9.00     //10.00
-                AND z[3] = 0.00     //0.00
-
-                    IF GOSUB does_model_id_match
-                    AND fDistance >= 16.0
-                        //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                        RETURN_FALSE
-                        RETURN
-                    ELSE       
-            
-                        IF x[2] >= 0.01
-                        //OR x[2] = -10.00
-                        OR x[3] >= 0.01
-                        OR x[3] <= -0.01
-                        OR y[2] >= 10.00  
-                        OR y[2] <= -9.00
-                        OR y[3] = 10.00
-                        OR y[3] = -10.00                  
-                            //PRINT_FORMATTED_NOW "~r~Code Got Wrong Collision" 2000 
-                            RETURN_FALSE
-                            RETURN
-                        ELSE 
-                            //PRINT_FORMATTED_NOW "~y~Code Got Correct Collision ~n~norm1 %.2f %.2f %.2f ~n~norm2 %.2f %.2f %.2f ~n~idModel :~y~ %i" 2000 x[2] y[2] z[2] x[3] y[3] z[3] idModel
-                            RETURN_TRUE
-                            RETURN
-                        ENDIF    
-                    ENDIF 
-                ENDIF        
-            ENDIF     
-        ENDIF  
-
-//-+------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
     ELSE    
         RETURN_FALSE
    ENDIF
@@ -891,13 +625,13 @@ on_ground_zip_to_point:
     WAIT 0
     WHILE IS_CHAR_PLAYING_ANIM player_actor ("groundToLampB")
         GET_CHAR_ANIM_CURRENT_TIME player_actor ("groundToLampB") (currentTime)
-        IF currentTime >= 0.20   // frame 4/20
+        IF currentTime >= 0.20   // frame 4/20    
             BREAK
         ENDIF
         WAIT 0
     ENDWHILE                                                
     GET_OFFSET_FROM_CHAR_IN_WORLD_COORDS player_actor 0.0 0.0 0.0 (x[1] y[1] z[1])
-    z[1] += 2.5
+    z[1] += 3.5
     SET_CHAR_COORDINATES_SIMPLE player_actor x[1] y[1] z[1]
     
     timera = 0
@@ -930,8 +664,8 @@ on_ground_zip_to_point:
             //PRINT_FORMATTED_NOW "vel:%.1f" 1 fCharSpeed //DEBUG
             
             IF NOT IS_LINE_OF_SIGHT_CLEAR (x[1] y[1] z[1]) (x[0] y[0] z[0]) (1 1 0 1 0)
-                CLEAR_CHAR_TASKS player_actor
-                CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
+                //CLEAR_CHAR_TASKS player_actor
+                //CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
                 WAIT 0
                 GOSUB destroyTwoWebs
                 RETURN
@@ -1261,36 +995,361 @@ does_skill_Point_Launch_enabled:
     ENDIF
 RETURN
 
-does_model_id_match:
-    IF idModel = 3761
-    OR idModel = 3867
-    OR idModel = 6018
-    OR idModel = 9591
-    OR idModel = 9924
-    OR idModel = 10276
-    OR idModel = 10925
-    OR idModel = 10938 
-        RETURN_TRUE
+is_sf_model_id_allowed:
+    IF idModel = 9929
+    OR idModel = 10194
+    OR idModel = 10195 
+    OR idModel = 10193 
+    OR idModel = 1226
+    OR idModel = 10196 
+    OR idModel = 10197
+    OR idModel = 9908
+        RETURN_TRUE    // allowed to point launch
         RETURN
     ELSE
-        IF idModel = 10948
-        OR idModel = 11246
-        OR idModel = 11247
-        OR idModel = 11297
-        OR idModel = 11299     
-        OR idModel = 11308
-        OR idModel = 11317    
-        OR idModel = 11318 
-            RETURN_TRUE
+        IF idModel = 9928
+        OR idModel = 9927
+        OR idModel = 9925
+        OR idModel = 9926
+        OR idModel = 9920
+        OR idModel = 9917
+        OR idModel = 10308
+        OR idModel = 9922        
+            RETURN_TRUE    // allowed to point launch
             RETURN
         ELSE
-            IF idModel = 11387    
-                RETURN_TRUE
+            IF idModel = 10142
+            OR idModel = 9921
+            OR idModel = 10101
+            OR idModel = 10052
+            OR idModel = 9919
+            OR idModel = 9924
+            OR idModel = 9906
+            //OR idModel = 
+                RETURN_TRUE    // allowed to point launch
                 RETURN
+            ELSE
+
+                IF idModel = 9923
+                OR idModel = 9916
+                OR idModel = 9918
+                OR idModel = 9907
+                OR idModel = 9953
+                OR idModel = 10143
+                OR idModel = 9949
+                OR idModel = 9911
+                    RETURN_TRUE    // allowed to point launch
+                    RETURN
+                ELSE
+                    IF idModel = 10049
+                    OR idModel = 10289
+                    OR idModel = 10080
+                    OR idModel = 9931
+                    OR idModel = 9951
+                    OR idModel = 10041
+                    OR idModel = 10063
+                    OR idModel = 10045
+                        RETURN_TRUE    // allowed to point launch
+                        RETURN
+                    ELSE
+                        IF idModel = 9952
+                        OR idModel = 10280
+                        OR idModel = 10300
+                        OR idModel = 9957
+                        OR idModel = 9910
+                        OR idModel = 9947
+                        OR idModel = 9914
+                        OR idModel = 10060
+                            RETURN_TRUE    // allowed to point launch
+                            RETURN
+                        ELSE
+
+                            IF idModel = 9901
+                            OR idModel = 9902
+                            OR idModel = 9912
+                            OR idModel = 10046
+                            OR idModel = 10306
+                            OR idModel = 9913
+                            OR idModel = 10086
+                            OR idModel = 10017
+                                RETURN_TRUE    // allowed to point launch
+                                RETURN
+                            ELSE
+                                IF idModel = 10056
+                                OR idModel = 10288
+                                OR idModel = 10020
+                                OR idModel = 10028
+                                OR idModel = 10287
+                                OR idModel = 10019
+                                OR idModel = 10022
+                                OR idModel = 10021
+                                    RETURN_TRUE    // allowed to point launch
+                                    RETURN  
+                                ELSE
+                                    IF idModel = 10048
+                                    OR idModel = 9903
+                                    OR idModel = 9950
+                                    OR idModel = 10084
+                                    OR idModel = 10027
+                                    OR idModel = 10050
+                                    OR idModel = 10014
+                                    OR idModel = 10053
+                                        RETURN_TRUE    // allowed to point launch
+                                        RETURN  
+                                    ELSE
+                                        IF idModel = 10188
+                                        OR idModel = 10055
+                                        OR idModel = 10013
+                                        OR idModel = 10016
+                                        OR idModel = 10871
+                                        OR idModel = 10187
+                                        OR idModel = 10278
+                                        OR idModel = 10189
+                                            RETURN_TRUE    // allowed to point launch
+                                            RETURN
+                                        ELSE
+
+                                            IF idModel = 10025
+                                            OR idModel = 10043
+                                            OR idModel = 10054
+                                            OR idModel = 10035
+                                            OR idModel = 10038
+                                            OR idModel = 10037
+                                            OR idModel = 10030
+                                            OR idModel = 10039
+                                                RETURN_TRUE    // allowed to point launch
+                                                RETURN
+                                            ELSE
+                                                IF idModel = 10031
+                                                OR idModel = 10950
+                                                OR idModel = 9595
+                                                OR idModel = 9599
+                                                OR idModel = 10951
+                                                OR idModel = 10925
+                                                OR idModel = 10948
+                                                OR idModel = 10946
+                                                    RETURN_TRUE    // allowed to point launch
+                                                    RETURN
+                                                ELSE
+                                                    IF idModel = 10949
+                                                    OR idModel = 10952
+                                                    OR idModel = 10953
+                                                    OR idModel = 10947
+                                                    OR idModel = 3805
+                                                    OR idModel = 3813
+                                                    OR idModel = 3804
+                                                    OR idModel = 9494
+                                                        RETURN_TRUE    // allowed to point launch
+                                                        RETURN
+                                                    ELSE
+                                                        IF idModel = 10619
+                                                        OR idModel = 9523
+                                                        OR idModel = 9573
+                                                        OR idModel = 9740
+                                                        OR idModel = 9739
+                                                        OR idModel = 11317
+                                                        OR idModel = 10610
+                                                        OR idModel = 10412
+                                                            RETURN_TRUE    // allowed to point launch
+                                                            RETURN
+                                                        ELSE
+                                                            IF idModel = 10975
+                                                            OR idModel = 10977
+                                                            OR idModel = 10978
+                                                            OR idModel = 9738
+                                                            OR idModel = 9948
+                                                            OR idModel = 10626
+                                                            OR idModel = 10621
+                                                            OR idModel = 1365
+                                                                RETURN_TRUE
+                                                                RETURN
+                                                            ELSE
+
+                                                                IF idModel = 10980
+                                                                OR idModel = 9834
+                                                                OR idModel = 9894
+                                                                OR idModel = 9764
+                                                                OR idModel = 10627
+                                                                OR idModel = 9524
+                                                                OR idModel = 9763
+                                                                OR idModel = 10979
+                                                                    RETURN_TRUE
+                                                                    RETURN
+                                                                ELSE
+                                                                    IF idModel = 11244
+                                                                    OR idModel = 10624
+                                                                    OR idModel = 9741
+                                                                    OR idModel = 10988
+                                                                    OR idModel = 10989
+                                                                    OR idModel = 10625
+                                                                    OR idModel = 9742
+                                                                    OR idModel = 11008
+                                                                        RETURN_TRUE
+                                                                        RETURN
+                                                                    ELSE
+                                                                        IF idModel = 9765
+                                                                        OR idModel = 10633
+                                                                        OR idModel = 11000
+                                                                        OR idModel = 9547
+                                                                        OR idModel = 9495
+                                                                        OR idModel = 10425
+                                                                        OR idModel = 9572
+                                                                        OR idModel = 10381
+                                                                            RETURN_TRUE
+                                                                            RETURN
+                                                                        ELSE
+
+                                                                            IF idModel = 10423
+                                                                            OR idModel = 9499
+                                                                            OR idModel = 9737
+                                                                            OR idModel = 9501
+                                                                            OR idModel = 3826
+                                                                            OR idModel = 3828
+                                                                            OR idModel = 9497
+                                                                            OR idModel = 3843
+                                                                                RETURN_TRUE
+                                                                                RETURN
+                                                                            ELSE
+                                                                                IF idModel = 3844
+                                                                                OR idModel = 10628
+                                                                                OR idModel = 9496
+                                                                                OR idModel = 10775
+                                                                                OR idModel = 10631
+                                                                                OR idModel = 10435
+                                                                                OR idModel = 3824
+                                                                                OR idModel = 10430
+                                                                                    RETURN_TRUE
+                                                                                    RETURN
+                                                                                ELSE
+                                                                                    IF idModel = 3845
+                                                                                    OR idModel = 3830
+                                                                                    OR idModel = 10630
+                                                                                    OR idModel = 10447
+                                                                                    OR idModel = 3820
+                                                                                    OR idModel = 10773
+                                                                                    OR idModel = 3842
+                                                                                    OR idModel = 3827
+                                                                                        RETURN_TRUE
+                                                                                        RETURN
+                                                                                    ELSE
+
+                                                                                        IF idModel = 3823      
+                                                                                        OR idModel = 10634
+                                                                                        OR idModel = 10391
+                                                                                        OR idModel = 10369       
+                                                                                        OR idModel = 10722
+                                                                                        OR idModel = 10392
+                                                                                        OR idModel = 11001
+                                                                                        OR idModel = 10439
+                                                                                            RETURN_TRUE
+                                                                                            RETURN
+                                                                                        ELSE    
+                                                                                            IF idModel = 10376
+                                                                                            OR idModel = 10377
+                                                                                            OR idModel = 10981
+                                                                                            OR idModel = 10991
+                                                                                            OR idModel = 10434
+                                                                                            OR idModel = 11326
+                                                                                            OR idModel = 11093
+                                                                                            OR idModel = 10393
+                                                                                                RETURN_TRUE
+                                                                                                RETURN
+                                                                                            ELSE
+
+                                                                                                IF idModel = 10432
+                                                                                                OR idModel = 10999
+                                                                                                OR idModel = 10996
+                                                                                                OR idModel = 11092
+                                                                                                OR idModel = 10998
+                                                                                                OR idModel = 10431
+                                                                                                OR idModel = 9540
+                                                                                                OR idModel = 10997
+                                                                                                    RETURN_TRUE
+                                                                                                    RETURN
+                                                                                                ELSE
+                                                                                                    IF idModel = 11002
+                                                                                                    OR idModel = 10388
+                                                                                                    OR idModel = 10994
+                                                                                                    OR idModel = 11004
+                                                                                                    OR idModel = 10427
+                                                                                                    OR idModel = 10995
+                                                                                                    OR idModel = 10982
+                                                                                                    OR idModel = 10993
+                                                                                                        RETURN_TRUE
+                                                                                                        RETURN
+                                                                                                    ELSE
+
+                                                                                                        IF idModel = 10945
+                                                                                                        OR idModel = 11015
+                                                                                                        OR idModel = 11010
+                                                                                                        OR idModel = 9895
+                                                                                                        OR idModel = 9502
+                                                                                                        OR idModel = 9503
+                                                                                                        OR idModel = 9516
+                                                                                                        OR idModel = 9765
+                                                                                                            RETURN_TRUE
+                                                                                                            RETURN
+                                                                                                        ELSE
+                                                                                                            IF idModel = 9593
+                                                                                                            OR idModel = 9835
+                                                                                                            OR idModel = 9529
+                                                                                                            OR idModel = 10990
+                                                                                                            OR idModel = 10390
+                                                                                                            OR idModel = 10428
+                                                                                                            OR idModel = 10429
+                                                                                                            OR idModel = 10368
+                                                                                                                RETURN_TRUE
+                                                                                                                RETURN
+                                                                                                            ELSE
+                                                                                                                IF idModel = 3829
+                                                                                                                OR idModel = 10398
+                                                                                                                OR idModel = 10383
+                                                                                                                OR idModel = 10380
+                                                                                                                OR idModel = 10379
+                                                                                                                OR idModel = 9834
+                                                                                                                OR idModel = 9504
+                                                                                                                OR idModel = 9513
+                                                                                                                    RETURN_TRUE
+                                                                                                                    RETURN
+                                                                                                                ELSE
+                                                                                                                    IF idModel = 10044
+                                                                                                                        RETURN_TRUE
+                                                                                                                        RETURN
+                                                                                                                    ELSE
+                                                                                                                        RETURN_FALSE
+                                                                                                                    ENDIF
+                                                                                                                ENDIF
+                                                                                                            ENDIF
+                                                                                                        ENDIF
+                                                                                                    ENDIF
+                                                                                                ENDIF
+                                                                                            ENDIF
+                                                                                        ENDIF
+                                                                                    ENDIF
+                                                                                ENDIF
+
+                                                                            ENDIF
+                                                                        ENDIF
+                                                                    ENDIF
+                                                                ENDIF
+                                                            ENDIF
+                                                        ENDIF
+                                                    ENDIF
+
+                                                ENDIF
+                                            ENDIF
+                                        ENDIF
+                                    ENDIF
+
+                                ENDIF
+                            ENDIF
+                        ENDIF
+                    ENDIF
+
+                ENDIF
             ENDIF
         ENDIF
     ENDIF
-    RETURN_FALSE
 RETURN        
 
 //-+----------------------------------------------------------

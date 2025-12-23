@@ -103,10 +103,23 @@ main_loop:
                                 BREAK
                         ENDSWITCH
                     ENDIF      
-                                    
-                    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_hit.cs" 
-                        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_hit.cs"    // Hit Counter Script
-                    ENDIF   
+
+                    //-+-----Some Hud Scripts Are Controlled On HUD Folder
+                    IF GOSUB is_health_bar_enabled
+                        //GOSUB drawHealth      //Old Way To Draw Health (Static Bar , codes are still intact)
+                        IF DOES_FILE_EXIST "CLEO\SpiderJ16D\HUD\sp_hl.cs" 
+                            STREAM_CUSTOM_SCRIPT "SpiderJ16D\HUD\sp_hl.cs"
+                        ENDIF
+                    ENDIF                            
+
+                    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\HUD\sp_hit.cs" 
+                        STREAM_CUSTOM_SCRIPT "SpiderJ16D\HUD\sp_hit.cs"    // Hit Counter Script (HUD Folder)
+                    ENDIF     
+
+                    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\HUD\sp_fc.cs"
+                        STREAM_CUSTOM_SCRIPT "SpiderJ16D\HUD\sp_fc.cs"     // Focus Bar Script (HUD Folder)
+                    ENDIF                                                                                  
+                    //-+-----------------------------------------------------
 
                     WHILE toggleHUD = 1  // 0:OFF || 1:ON
                         GOSUB readVars
@@ -121,10 +134,7 @@ main_loop:
                             USE_TEXT_COMMANDS FALSE // don't show textures
                         ELSE
                             IF is_in_interior = 0
-                                USE_TEXT_COMMANDS FALSE
-                                IF GOSUB is_health_bar_enabled
-                                    GOSUB drawHealth
-                                ENDIF
+                                USE_TEXT_COMMANDS FALSE                              
                                 IF GOSUB is_ammo_enabled
                                     GOSUB drawSpiderAmmoWeap
                                 ENDIF
@@ -148,7 +158,7 @@ main_loop:
                                 ELSE
                                     DISPLAY_HUD TRUE
                                 ENDIF
-                                GOSUB drawHitCounter                                   
+                                //GOSUB drawHitCounter                                   
                             ENDIF
                         ENDIF            
 
@@ -546,7 +556,7 @@ RETURN
 drawHealth:
     GOSUB getHealthMath
     GOSUB drawRedBackgroundDeath
-    //GET_FIXED_XY_ASPECT_RATIO (400.0 100.0) (sx sy)    //(300.0 93.33)
+    GET_FIXED_XY_ASPECT_RATIO (400.0 100.0) (sx sy)    //(300.0 93.33)
     sx = 300.00 
     sy = 93.33
     IF idHealthBar2 > idTex
@@ -1530,6 +1540,9 @@ CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
+
+CONST_INT varFocusCount         70    //sp_hit    || focus bar
+CONST_INT varUseFocus           71    //sp_hit    || focus bar
 
 
 /*

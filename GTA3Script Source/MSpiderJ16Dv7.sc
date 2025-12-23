@@ -219,6 +219,11 @@ iMaxRowQuantity = 5
 //yCoord = 224.0
 //CLEO_CALL storeScreenCoords 0 xCoord yCoord
 //CLEO_CALL getScreenCoords 0 (xCoord yCoord)
+
+WHILE GOSUB load_all_needed_files
+    WAIT 0
+ENDWHILE
+
 ///---------------------------------------------------------------------
 iTempVar = 0    // 1:is key combination pressed 
 
@@ -293,7 +298,7 @@ start:
                 SET_CHAR_AREA_VISIBLE player_actor 14
                 LOAD_SCENE 0.0 0.0 1100.0
                 GOSUB set_init_parameters
-                GOSUB load_all_needed_files
+                //GOSUB load_all_needed_files
                 GOSUB lock_player_controls
 
                 CLEO_CALL store_SFX_Menu 0
@@ -1284,13 +1289,13 @@ closeMenu:
 
     USE_TEXT_COMMANDS FALSE
     GOSUB deleteChar
-    REMOVE_ANIMATION "spider"
+    //REMOVE_ANIMATION "spider"
     CLEO_CALL release_SFX_Menu 0
 
     WHILE IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~  
         WAIT 0
     ENDWHILE
-    REMOVE_TEXTURE_DICTIONARY
+    //REMOVE_TEXTURE_DICTIONARY
 
     GOSUB unlock_player_controls
         CLEO_CALL getCharWorldXYZCoords 0 (x y z fZAnglePlayerAir)
@@ -8704,7 +8709,7 @@ CLEO_RETURN 0
 // Thread Memory
 GUI_Memory_toggleSpiderMod:
 DUMP
-00 00 00 00
+00 00 00 00 00
 ENDDUMP
 
 WORLD_weather:

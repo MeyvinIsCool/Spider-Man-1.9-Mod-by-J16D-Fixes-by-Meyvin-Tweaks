@@ -258,8 +258,8 @@ get_power_max_time:
             cool_down_time = 30000  //0:30
             BREAK
         CASE iron_arms      //id:10
-            max_time = 15000    //1:05    65000
-            cool_down_time = 3000  //2:00     120000
+            max_time = 165000    //1:05    65000
+            cool_down_time = 120000  //2:00     120000
             BREAK
         CASE defence_shield //id:11
             max_time = 15000    //0:15

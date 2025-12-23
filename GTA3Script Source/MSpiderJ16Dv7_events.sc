@@ -1,4 +1,5 @@
 // by J16D
+// New Mission by Meyvin Tweaks
 // start of Events included:
 //   -Car chase (sp_cc.cs)
 //   -Backpack  (m_bp.cs)
@@ -58,15 +59,14 @@ CLEO_CALL storeLanguage 0 iTempVar
         IF DOES_FILE_EXIST "CLEO\SpiderJ16D\m_w.cs"
             STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_w.cs"       // Street Crimes
         ENDIF       
-    ENDIF   
+    ENDIF  
 
-intialization:
 timera = 0
-//iRandomMission = 2
 GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
 
 GOSUB generate_random_coords
 GOSUB generate_random_coords_2
+
 
 main_loop:
     IF IS_PLAYER_PLAYING 0
@@ -85,7 +85,7 @@ main_loop:
                                     IF NOT counter >= 60    //Max Missions Reached                            
                                         GOSUB drug_deal_initial
                                     ELSE
-                                        GOTO intialization
+                                        GOTO initialization
                                         //PRINT_FORMATTED_NOW "Max Mission Reached !" 2222
                                     ENDIF
                                 ENDIF
@@ -96,7 +96,7 @@ main_loop:
                                         IF NOT counter >= 80    //Max Missions Reached                          
                                             GOSUB assault_initial
                                         ELSE
-                                            GOTO intialization
+                                            GOTO initialization
                                         ENDIF
                                     ENDIF
                                 ELSE
@@ -106,14 +106,16 @@ main_loop:
                                             IF NOT counter >= 70    //Max Missions Reached                                    
                                                 GOSUB mugging_initial
                                             ELSE
-                                                GOTO intialization
+                                                GOTO initialization
                                             ENDIF
                                         ENDIF
                                     ENDIF
                                 ENDIF
                             ENDIF
                         ENDIF
-                        //PRINT_FORMATTED_NOW "timer %i mission %i" 1 timera iRandomMission    //debug       
+                        
+                        //PRINT_FORMATTED_NOW "Mission %i Zone: %i = %i Timer" 1 iRandomMission idZone[0] idZone[1] timera  //debug
+
                     ENDIF
              
                 ENDIF
@@ -131,9 +133,21 @@ main_loop:
                 GOTO start
             ENDIF
         ENDIF
+
     ENDIF
     WAIT 0
 GOTO main_loop  
+
+//---+--------------- Mission Randomizer And Starting Initializations
+
+initialization:
+    timera = 0
+    //iRandomMission = 1
+    GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+
+    GOSUB generate_random_coords
+    GOSUB generate_random_coords_2
+RETURN
 
 car_chase_initial:
     IF iRandomMission = 1                    
@@ -237,40 +251,43 @@ car_chase_event:
                     OR toggleSpiderMod = 0  //FALSE
                         BREAK
                     ENDIF
-                    IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0    
-                        IF DOES_BLIP_EXIST iEventBlip
-                            REMOVE_BLIP iEventBlip
-                        ENDIF  
-                        WAIT 0    
+                    IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0     
                         timera = 0              
-                        GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
-                        WAIT 15 
-                        IF iRandomMission >= 2  
-                            GOSUB update_zone_events_2
-                        ENDIF      
-                        IF iRandomMission = 1   
-                            GENERATE_RANDOM_INT_IN_RANGE 2 5 iRandomMission
-                        ENDIF                   
+                        GOSUB reset_location     
+                        WHILE timera < time_update
+                            WAIT 0
+                        ENDWHILE                                       
                         BREAK
                     ENDIF
                     IF timera > time_delay      
                         timera = 0              
-                        GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
-                        WAIT 15 
-                        IF iRandomMission >= 2  
-                            GOSUB update_zone_events_2
-                        ENDIF             
-                        IF iRandomMission = 1   
-                            GENERATE_RANDOM_INT_IN_RANGE 2 5 iRandomMission
-                        ENDIF                                                                                                              
+                        GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission 
+                        GOSUB reset_location           
+                        WHILE timera < time_update
+                            WAIT 0
+                        ENDWHILE                                                                                                                              
                         BREAK
                     ENDIF
                     IF NOT idZone[1] = idZone[0]
-                        GOSUB update_zone_events
+                        timera = 0     
+                        GOSUB reset_location
+                        WHILE timera < time_update
+                            WAIT 0
+                        ENDWHILE                            
                         BREAK
-                    ENDIF                     
+                    ENDIF              
                     WAIT 0
                 ENDWHILE
+
+                IF DOES_BLIP_EXIST iEventBlip
+                    IF NOT idZone[1] = idZone[0]
+                        timera = 0     
+                        GOSUB reset_location
+                        WHILE timera < time_update
+                            WAIT 0
+                        ENDWHILE                           
+                    ENDIF 
+                ENDIF 
 
                 reset_location:
                 GET_AUDIO_STREAM_STATE iSfx[0] (iTempVar)
@@ -281,13 +298,21 @@ car_chase_event:
                 IF DOES_BLIP_EXIST iEventBlip
                     REMOVE_BLIP iEventBlip
                 ENDIF
-                GOSUB update_zone_events
+                GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+                IF iRandomMission = 1
+                    GOSUB update_zone_events
+                ELSE
+                    GOSUB update_zone_events_2
+                ENDIF
                 IF DOES_BLIP_EXIST iEventBlip
                     REMOVE_BLIP iEventBlip
-                ENDIF                      
+                ENDIF        
+
+                //PRINT_FORMATTED_NOW "zone: %i = %i" 1 idZone[0] idZone[1]  //debug              
 
             //ELSE
                 //PRINT_FORMATTED_NOW "zone: %i not equal %i" 1 idZone[0] idZone[1]  //debug
+
             ENDIF
         ELSE
             timera = 0
@@ -364,68 +389,55 @@ drug_deal_event:
                                 WHILE time_delay_after_mission > timera
                                     WAIT 0
                                 ENDWHILE
-                                GOTO reset_location_2
+                                GOTO reset_location
                             ENDIF
                         ENDIF
                         IF isInMainMenu = 1     //1:true 0: false
                         OR toggleSpiderMod = 0  //FALSE
                             BREAK
                         ENDIF
-                        IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0
-                            IF DOES_BLIP_EXIST iEventBlip
-                                REMOVE_BLIP iEventBlip
-                            ENDIF  
-                            WAIT 0                   
+                        IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0     
                             timera = 0              
-                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
-                            WAIT 15 
-                            IF iRandomMission = 1  
-                                GOSUB update_zone_events                         
-                            ENDIF 
-                            IF iRandomMission = 2  
-                                GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
-                            ENDIF                                                                                             
+                            GOSUB reset_location    
+                            WHILE timera < time_update
+                                WAIT 0
+                            ENDWHILE     
+                                 
                             BREAK
                         ENDIF
-                        IF timera > time_delay
-                            IF DOES_BLIP_EXIST iEventBlip
-                                REMOVE_BLIP iEventBlip
-                            ENDIF  
-                            WAIT 0        
+                        IF timera > time_delay      
                             timera = 0              
-                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
-                            WAIT 15 
-                            IF iRandomMission = 1  
-                                GOSUB update_zone_events                           
-                            ENDIF 
-                            IF iRandomMission = 2  
-                                GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
-                            ENDIF                                                                                                                                
+                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission 
+                            GOSUB reset_location           
+                            WHILE timera < time_update
+                                WAIT 0
+                            ENDWHILE 
+                                                                                                                            
                             BREAK
-                        ENDIF      
+                        ENDIF
                         IF NOT idZone[1] = idZone[0]
-                            GOSUB update_zone_events_2
-                            IF DOES_BLIP_EXIST iEventBlip
-                                REMOVE_BLIP iEventBlip
-                            ENDIF                        
+                            timera = 0     
+                            GOSUB reset_location
+                            WHILE timera < time_update
+                                WAIT 0
+                            ENDWHILE                             
+    
                             BREAK
-                        ENDIF             
+                        ENDIF              
                         WAIT 0
                     ENDWHILE
 
-                    reset_location_2:
-                    GET_AUDIO_STREAM_STATE iSfx[0] (iTempVar)
-                    IF iTempVar = 1     //playing
-                        SET_AUDIO_STREAM_STATE iSfx[0] 0    //Stop
-                    ENDIF
-                    REMOVE_AUDIO_STREAM iSfx[0]
                     IF DOES_BLIP_EXIST iEventBlip
-                        REMOVE_BLIP iEventBlip
-                    ENDIF
-                    GOSUB update_zone_events_2
-                    IF DOES_BLIP_EXIST iEventBlip
-                        REMOVE_BLIP iEventBlip
-                    ENDIF                      
+                        IF NOT idZone[1] = idZone[0]
+                            timera = 0     
+                            GOSUB reset_location
+                            WHILE timera < time_update
+                                WAIT 0
+                            ENDWHILE                           
+                        ENDIF 
+                    ENDIF                         
+
+                    //PRINT_FORMATTED_NOW "zone: %i = %i" 1 idZone[0] idZone[1]  //debug                    
 
                 //ELSE
                     //PRINT_FORMATTED_NOW "zone: %i not equal %i" 1 idZone[0] idZone[1]  //debug
@@ -505,69 +517,59 @@ assault_event:
                                 WHILE time_delay_after_mission > timera
                                     WAIT 0
                                 ENDWHILE
-                                GOTO reset_location_2
+                                GOTO reset_location
                             ENDIF
                         ENDIF
                         IF isInMainMenu = 1     //1:true 0: false
                         OR toggleSpiderMod = 0  //FALSE
                             BREAK
                         ENDIF
-                        IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0
+                        IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0     
                             timera = 0              
-                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
-                            WAIT 15 
-                            IF DOES_BLIP_EXIST iEventBlip
-                                REMOVE_BLIP iEventBlip
-                            ENDIF  
-                            WAIT 0                               
-                            IF iRandomMission = 1  
-                                GOSUB update_zone_events                        
-                            ENDIF   
-                            IF iRandomMission = 3  
-                                GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
-                            ENDIF                                                                                      
+                            GOSUB reset_location    
+                            WHILE timera < time_update
+                                WAIT 0
+                            ENDWHILE    
+                                  
                             BREAK
                         ENDIF
-                        IF timera > time_delay
-                            IF DOES_BLIP_EXIST iEventBlip
-                                REMOVE_BLIP iEventBlip
-                            ENDIF  
-                            WAIT 0           
+                        IF timera > time_delay      
                             timera = 0              
-                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
-                            WAIT 15 
-                            WAIT 0
-                            IF iRandomMission = 1  
-                                GOSUB update_zone_events                        
-                            ENDIF                             
-                            IF iRandomMission = 2  
-                                GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
-                            ENDIF                                                                                                                
+                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission 
+                            GOSUB reset_location           
+                            WHILE timera < time_update
+                                WAIT 0
+                            ENDWHILE                                                                                                                               
+    
                             BREAK
-                        ENDIF      
+                        ENDIF
                         IF NOT idZone[1] = idZone[0]
-                            GOSUB update_zone_events_2
-                            IF DOES_BLIP_EXIST iEventBlip
-                                REMOVE_BLIP iEventBlip
-                            ENDIF                        
+                            timera = 0     
+                            GOSUB reset_location
+                            WHILE timera < time_update
+                                WAIT 0
+                            ENDWHILE
+                           
                             BREAK
-                        ENDIF             
+                        ENDIF              
                         WAIT 0
                     ENDWHILE
 
+                    IF DOES_BLIP_EXIST iEventBlip
+                        IF NOT idZone[1] = idZone[0]
+                            timera = 0     
+                            GOSUB reset_location
+                            WHILE timera < time_update
+                                WAIT 0
+                            ENDWHILE                           
+                        ENDIF 
+                    ENDIF                          
+
+                    //PRINT_FORMATTED_NOW "zone: %i = %i" 1 idZone[0] idZone[1]  //debug
+
                 //ELSE
                     //PRINT_FORMATTED_NOW "zone: %i not equal %i" 1 idZone[0] idZone[1]  //debug
-                ENDIF
-            ELSE
-                IF timera > time_update
-                    timera = 0
-                    IF DOES_BLIP_EXIST iEventBlip
-                        REMOVE_BLIP iEventBlip
-                    ENDIF      
-                    GOSUB update_zone_events      
-                    GOSUB update_zone_events_2  
-                    GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission  
-                ENDIF                   
+                ENDIF                
             ENDIF
         ENDIF
     ELSE
@@ -643,62 +645,59 @@ mugging_event:
                                 WHILE time_delay_after_mission > timera
                                     WAIT 0
                                 ENDWHILE
-                                GOTO reset_location_2
+                                GOTO reset_location
                             ENDIF
                         ENDIF
                         IF isInMainMenu = 1     //1:true 0: false
                         OR toggleSpiderMod = 0  //FALSE
                             BREAK
                         ENDIF
-                        IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0
+                        IF NOT LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[1] y[1] z[1] 300.0     
                             timera = 0              
-                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
-                            WAIT 15 
-                            IF DOES_BLIP_EXIST iEventBlip
-                                REMOVE_BLIP iEventBlip
-                            ENDIF  
-                            WAIT 0                               
-                            IF iRandomMission = 1  
-                                GOSUB update_zone_events                          
-                            ENDIF                                                          
+                            GOSUB reset_location    
+                            WHILE timera < time_update
+                                WAIT 0
+                            ENDWHILE    
+                                  
                             BREAK
                         ENDIF
-                        IF timera > time_delay
+                        IF timera > time_delay      
                             timera = 0              
-                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
-                            WAIT 15 
-                            WAIT 0
-                            IF iRandomMission = 1  
-                                GOSUB update_zone_events                        
-                            ENDIF                             
-                            IF iRandomMission = 2  
-                                GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
-                            ENDIF                                                                                                
+                            GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission 
+                            GOSUB reset_location           
+                            WHILE timera < time_update
+                                WAIT 0
+                            ENDWHILE                                                                                                                               
+    
                             BREAK
-                        ENDIF      
+                        ENDIF
                         IF NOT idZone[1] = idZone[0]
-                            GOSUB update_zone_events_2
-                            IF DOES_BLIP_EXIST iEventBlip
-                                REMOVE_BLIP iEventBlip
-                            ENDIF                        
+                            timera = 0     
+                            GOSUB reset_location
+                            WHILE timera < time_update
+                                WAIT 0
+                            ENDWHILE
+                           
                             BREAK
-                        ENDIF             
+                        ENDIF              
                         WAIT 0
                     ENDWHILE
+
+                    IF DOES_BLIP_EXIST iEventBlip
+                        IF NOT idZone[1] = idZone[0]
+                            timera = 0     
+                            GOSUB reset_location
+                            WHILE timera < time_update
+                                WAIT 0
+                            ENDWHILE                           
+                        ENDIF 
+                    ENDIF                         
+
+                    //PRINT_FORMATTED_NOW "zone: %i = %i" 1 idZone[0] idZone[1]  //debug
 
                 //ELSE
                     //PRINT_FORMATTED_NOW "zone: %i not equal %i" 1 idZone[0] idZone[1]  //debug
                 ENDIF
-            ELSE
-                IF timera > time_update
-                    timera = 0
-                    IF DOES_BLIP_EXIST iEventBlip
-                        REMOVE_BLIP iEventBlip
-                    ENDIF      
-                    GOSUB update_zone_events      
-                    GOSUB update_zone_events_2  
-                    GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission  
-                ENDIF  
             ENDIF
         ENDIF
     ELSE

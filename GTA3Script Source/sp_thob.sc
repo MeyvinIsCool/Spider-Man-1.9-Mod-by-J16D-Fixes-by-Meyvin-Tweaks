@@ -566,6 +566,7 @@ get_object_offset_indicator:
                     OR DOES_OBJECT_HAVE_THIS_MODEL obj 1331     //Project Urbanize
                     OR DOES_OBJECT_HAVE_THIS_MODEL obj 1359     //Project Urbanize
                     OR DOES_OBJECT_HAVE_THIS_MODEL obj 1334     //Project Urbanize
+                    OR DOES_OBJECT_HAVE_THIS_MODEL obj 1211     //Fire Hydrant
                         GET_OBJECT_MODEL obj (idModel)
                         GET_MODEL_DIMENSIONS idModel (x[1] y[1] z[1]) (x[2] y[2] z[2])
                         x[1] = (x[1] + 0.5)    //0.45
