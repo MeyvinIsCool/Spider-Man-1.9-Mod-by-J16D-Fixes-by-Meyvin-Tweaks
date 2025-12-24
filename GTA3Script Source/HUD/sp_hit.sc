@@ -33,6 +33,19 @@ SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter
 SET_CLEO_SHARED_VAR varHitCount iHitCounter
 SET_CLEO_SHARED_VAR varFocusCount iHitCounter    //Focus Counter using varHitCount shared var
 
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GOSUB readVars 
+        IF toggleSpiderMod = 1
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
+
+
 main_loop:
     IF IS_PLAYER_PLAYING player
         GOSUB readVars
@@ -107,9 +120,10 @@ main_loop:
                 //DISPLAY_HUD TRUE
                 USE_TEXT_COMMANDS FALSE               
                 WAIT 25
-                REMOVE_TEXTURE_DICTIONARY
-                WAIT 0
-                TERMINATE_THIS_CUSTOM_SCRIPT
+                //REMOVE_TEXTURE_DICTIONARY
+                //WAIT 0
+                //TERMINATE_THIS_CUSTOM_SCRIPT
+                GOTO start_check
             ENDIF
         ENDIF         
         WAIT 1

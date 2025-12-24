@@ -29,6 +29,18 @@ hb_display_percent = 100.0
 hb_smooth_damage = 0.12 // faster when losing health
 hb_smooth_heal = 0.06   // slower when healing
 
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GOSUB readVars 
+        IF toggleSpiderMod = 1
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
+
 main_loop:
     IF IS_PLAYER_PLAYING player_actor
         GOSUB readVars
@@ -53,7 +65,10 @@ main_loop:
                         //OR IS_HUD_VISIBLE 
                         OR is_hud_enabled = TRUE
                         //OR is_opening_door = FALSE
-                            GOSUB drawHealth    // Draw Health
+                            GOSUB is_health_bar_enabled
+                            IF iTempVar3 = 1    //1:true 0: false
+                                GOSUB drawHealth    // Draw Health
+                            ENDIF
                         ELSE
                             USE_TEXT_COMMANDS FALSE
                         ENDIF      
@@ -79,21 +94,25 @@ main_loop:
                     ENDWHILE
          
                 ENDIF
-                    
             ELSE
-                end_hud_script:                    
+                end_hud_script:                   
                 USE_TEXT_COMMANDS FALSE
-                //DISPLAY_HUD TRUE   
-                USE_TEXT_COMMANDS FALSE           
+                //DISPLAY_HUD TRUE
+                USE_TEXT_COMMANDS FALSE               
                 WAIT 25
-                REMOVE_TEXTURE_DICTIONARY
-                WAIT 0
-                TERMINATE_THIS_CUSTOM_SCRIPT
+                //REMOVE_TEXTURE_DICTIONARY
+                //WAIT 0
+                //TERMINATE_THIS_CUSTOM_SCRIPT
+                GOTO start_check            
             ENDIF
         ENDIF         
     ENDIF
     WAIT 0
 GOTO main_loop
+
+is_health_bar_enabled:
+    GET_CLEO_SHARED_VAR varHudHealth (iTempVar3)
+RETURN
 
 drawHealth:
     GET_CHAR_HEALTH player_actor (iTempVar)
