@@ -23,13 +23,26 @@ CONST_INT time_interview_10 25500     //ms - JJJ_PInterview_10
 SCRIPT_START
 {
 SCRIPT_NAME sp_jcal
-WAIT 2000
 LVAR_INT player_actor iTempVar2 iTempVar3
 LVAR_INT toggleSpiderMod isInMainMenu flag_player_on_mission is_radar_enabled
 LVAR_INT counter sfx r g b iTempVar audio_line_is_active
 LVAR_FLOAT sx sy px py fVolume
 
 GET_PLAYER_CHAR 0 player_actor
+
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        GOSUB readVars    
+        IF toggleSpiderMod = 1
+            IF isInMainMenu = 0  
+                BREAK
+            ENDIF
+        ENDIF
+        WAIT 0
+    ENDWHILE
+ENDIF
 timera = 0
 
 //-+-- Start Internal Threads
@@ -51,6 +64,7 @@ main_loop:
                     IF audio_line_is_active = 0
 
                         GOSUB readVars
+                        PRINT_FORMATTED_NOW "TimerA: %i" 2000 timera
                         IF timera > time_start_interview
                             audio_line_is_active = 1
                             SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active
@@ -119,7 +133,8 @@ main_loop:
                 USE_TEXT_COMMANDS FALSE
                 WAIT 0
                 REMOVE_AUDIO_STREAM sfx
-                TERMINATE_THIS_CUSTOM_SCRIPT 
+                //TERMINATE_THIS_CUSTOM_SCRIPT 
+                GOTO start_check
             ENDIF             
         ENDIF   
     ENDIF

@@ -130,7 +130,11 @@ ENDIF
     // Pizza Time Mission
     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_pizza.cs"
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_pizza.cs"     // Pizza Time Mission (Only If The Mission Is Installed !)
-    ENDIF        
+    ENDIF   
+    // J Jonah Jameson's Interview Calls
+    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_jcal.cs"
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_jcal.cs"     // J Jonah Jameson's Interview Calls
+    ENDIF             
 
     // Web Zip To Building (BETA)
     IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_mlb.cs"
