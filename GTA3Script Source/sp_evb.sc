@@ -39,6 +39,18 @@ LVAR_INT LRStick UDStick
 
 GET_PLAYER_CHAR 0 player_actor
 
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GOSUB readVars 
+        IF toggleSpiderMod = 1
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
+
 main_loop:
     IF IS_PLAYER_PLAYING player
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
@@ -77,10 +89,15 @@ main_loop:
                 ENDIF
             ENDIF
         ELSE
-            REMOVE_AUDIO_STREAM sfx
-            REMOVE_ANIMATION "spider"
-            WAIT 0
-            TERMINATE_THIS_CUSTOM_SCRIPT
+            WAIT 1000
+            GOSUB readVars 
+            IF toggleSpiderMod = 0           
+                REMOVE_AUDIO_STREAM sfx
+                REMOVE_ANIMATION "spider"
+                WAIT 0
+                //TERMINATE_THIS_CUSTOM_SCRIPT
+                GOTO start_check
+            ENDIF
         ENDIF
     ENDIF
     WAIT 0

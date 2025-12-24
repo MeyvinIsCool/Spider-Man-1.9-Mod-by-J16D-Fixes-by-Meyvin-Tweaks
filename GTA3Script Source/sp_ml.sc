@@ -30,6 +30,18 @@ GOSUB REQUEST_webAnimations
 GOSUB loadTextures
 USE_TEXT_COMMANDS TRUE
 
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GOSUB readVars 
+        IF toggleSpiderMod = 1
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
+
 main_loop:
     IF IS_PLAYER_PLAYING player
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
@@ -207,14 +219,19 @@ main_loop:
 
         ELSE
             // Release files
-            REMOVE_ANIMATION "mweb"
-            REMOVE_ANIMATION "spider"
-            REMOVE_AUDIO_STREAM sfx
-            USE_TEXT_COMMANDS FALSE
-            WAIT 0
-            REMOVE_TEXTURE_DICTIONARY
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT
+            WAIT 1000
+            GOSUB readVars 
+            IF toggleSpiderMod = 0
+                REMOVE_ANIMATION "mweb"
+                REMOVE_ANIMATION "spider"
+                REMOVE_AUDIO_STREAM sfx
+                USE_TEXT_COMMANDS FALSE
+                WAIT 0
+                //REMOVE_TEXTURE_DICTIONARY
+                //WAIT 50
+                //TERMINATE_THIS_CUSTOM_SCRIPT
+                GOTO start_check
+            ENDIF
         ENDIF
 
     ENDIF

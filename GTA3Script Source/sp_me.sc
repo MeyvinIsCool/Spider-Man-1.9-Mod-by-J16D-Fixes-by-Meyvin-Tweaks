@@ -32,6 +32,18 @@ GET_PLAYER_CHAR 0 player_actor
 timed_Key = 0.0
 GOSUB REQUEST_FightAnimations
 
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GOSUB readVars 
+        IF toggleSpiderMod = 1
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
+
 main_loop:
     IF IS_PLAYER_PLAYING player
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
@@ -130,12 +142,17 @@ main_loop:
 
             ENDIF
         ELSE
-            GOSUB destroyWeb
-            REMOVE_AUDIO_STREAM sfx
-            REMOVE_ANIMATION "dildo"
-            REMOVE_ANIMATION "mweb"
-            WAIT 0
-            TERMINATE_THIS_CUSTOM_SCRIPT
+            WAIT 1000
+            GOSUB readVars 
+            IF toggleSpiderMod = 0        
+                GOSUB destroyWeb
+                REMOVE_AUDIO_STREAM sfx
+                REMOVE_ANIMATION "dildo"
+                REMOVE_ANIMATION "mweb"
+                WAIT 0
+                //TERMINATE_THIS_CUSTOM_SCRIPT
+                GOTO start_check
+            ENDIF
         ENDIF
     ENDIF
     WAIT 0

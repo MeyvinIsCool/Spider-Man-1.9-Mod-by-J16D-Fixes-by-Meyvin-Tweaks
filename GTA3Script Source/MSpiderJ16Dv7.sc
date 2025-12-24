@@ -223,6 +223,7 @@ iMaxRowQuantity = 5
 WHILE GOSUB load_all_needed_files
     WAIT 0
 ENDWHILE
+STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_main.cs"
 
 ///---------------------------------------------------------------------
 iTempVar = 0    // 1:is key combination pressed 
@@ -444,6 +445,7 @@ CONST_INT iPanel_hud_settings 1
 
 //---+------------------------- CONTROL SCRIPT--------------------------
 show_menu:
+    CLEO_CALL suitUnlock 0
     GOSUB drawItems
     SWITCH iPanel
         CASE idOptions_l
@@ -665,46 +667,52 @@ show_menu:
             SWITCH iPanelB
                 DEFAULT //NULL
                     CLEO_CALL getDataJoystickUpDown 0 (3 1 iActive) (iActive)
-                    IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                        SWITCH iActive
-                            CASE menSelSuit
-                                iPanelB = menSelSuit
-                                IF iMinRowSuitQuantity >= 6      // This Is To Make Sure That When Closing The Suit Selection The Suit Menu Reset Itself
-                                    iActiveRow = 1
-                                    iMinRowSuitQuantity = 1
-                                    iMaxRowQuantity = 6   
-                                ENDIF                                                                 
-                                BREAK
-                            CASE menPowerSuit
-                                iPanelB = menPowerSuit
-                                BREAK
-                            CASE menConfigSuit
-                                iPanelB = menConfigSuit
-                                BREAK
-                        ENDSWITCH
-                        CLEO_CALL play_SFX_Menu 0 0  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success   
-                        WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                            GOSUB drawItems
-                        ENDWHILE
-                        iSetCamera = TRUE
+                    CLEO_CALL getStatusSpiderMod 0 (iTempVar)
+                    IF iTempVar = 1 // OFF                     
+                        IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                            SWITCH iActive
+                                CASE menSelSuit
+                                    iPanelB = menSelSuit
+                                    IF iMinRowSuitQuantity >= 6      // This Is To Make Sure That When Closing The Suit Selection The Suit Menu Reset Itself
+                                        iActiveRow = 1
+                                        iMinRowSuitQuantity = 1
+                                        iMaxRowQuantity = 6   
+                                    ENDIF                                                                 
+                                    BREAK
+                                CASE menPowerSuit
+                                    iPanelB = menPowerSuit
+                                    BREAK
+                                CASE menConfigSuit
+                                    iPanelB = menConfigSuit
+                                    BREAK
+                            ENDSWITCH
+                            CLEO_CALL play_SFX_Menu 0 0  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success   
+                            WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                GOSUB drawItems
+                            ENDWHILE
+                            iSetCamera = TRUE
+                        ENDIF
                     ENDIF
                     //Force Quit
                     IF IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~  
-                        CLEO_CALL play_SFX_Menu 0 0  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success   
+                        CLEO_CALL play_SFX_Menu 0 0  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success 
                         GOTO closeMenu
                     ENDIF
                     BREAK
 
                 CASE menSelSuit
-                    CLEO_CALL GetDataJoystickMatrix5x5 0 (5 1 iActiveCol)(7 0 iActiveRow) (iActiveCol iActiveRow)
-                    IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                        CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success
-                        GOSUB setSkin
-                        GOSUB setWalkstyle
-                        WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                            GOSUB drawItems
-                        ENDWHILE
-                        iSetCamera = TRUE
+                    CLEO_CALL getStatusSpiderMod 0 (iTempVar)
+                    IF iTempVar = 1 // OFF                
+                        CLEO_CALL GetDataJoystickMatrix5x5 0 (5 1 iActiveCol)(7 0 iActiveRow) (iActiveCol iActiveRow)
+                        IF IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                            CLEO_CALL play_SFX_Menu 0 12  // ID:0-Sound Back || ID:4-Sound Move-UP || ID:8-Sound Move-Matrix || ID:12-Sound Success                        
+                            GOSUB setSkin
+                            GOSUB setWalkstyle
+                            WHILE IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+                                GOSUB drawItems
+                            ENDWHILE
+                            iSetCamera = TRUE
+                        ENDIF        
                     ENDIF
                     BREAK
 
@@ -1200,8 +1208,8 @@ show_menu:
 GOTO show_menu
 
 closeMenu:
+    CLEO_CALL GetSuitItem 0 iSelectedSuit
     //CLEO_CALL freezeGame 0 (0)
-    
     SET_FADING_COLOUR 0 0 0
     DO_FADE 600 FADE_OUT
 
@@ -1220,9 +1228,9 @@ closeMenu:
 
     CLEO_CALL getStatusSpiderMod 0 (toggleSpiderMod)
     IF toggleSpiderMod = 1
-        toggleSpiderMod = 0     // 0:OFF || 1:ON 
-        SET_CLEO_SHARED_VAR varStatusSpiderMod toggleSpiderMod // Turn Off running sp_main thread
-        CLEO_CALL storeStatusSpiderMod 0 toggleSpiderMod
+        //toggleSpiderMod = 0     // 0:OFF || 1:ON 
+        //SET_CLEO_SHARED_VAR varStatusSpiderMod toggleSpiderMod // Turn Off running sp_main thread
+        //CLEO_CALL storeStatusSpiderMod 0 toggleSpiderMod
         IF NOT iFireHead = 0
             KILL_FX_SYSTEM iFireHead
             iFireHead = 0
@@ -1232,22 +1240,22 @@ closeMenu:
         SET_CLEO_SHARED_VAR varStatusSpiderMod toggleSpiderMod // Turn On running sp_main thread
         CLEO_CALL storeStatusSpiderMod 0 toggleSpiderMod
         WAIT 150
-        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_main.cs"
+        //STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_main.cs"
 
-        GOSUB setSkin
+        GOSUB setSkin_MenuFix
         GOSUB setWalkstyle
 
-            IF iSelectedSuit = 20   //Spirit Spider
-                IF IS_FX_SYSTEM_AVAILABLE_WITH_NAME SP_BFLAME
-                    IF NOT iFireHead = 0
-                        KILL_FX_SYSTEM iFireHead
-                        iFireHead = 0
-                    ENDIF
-                    CREATE_FX_SYSTEM_ON_CHAR SP_BFLAME player_actor (0.06 0.0 0.01) 1 (iFireHead)
-                    ATTACH_FX_SYSTEM_TO_CHAR_BONE iFireHead player_actor 5  //5:head
-                    PLAY_FX_SYSTEM iFireHead
+        IF iSelectedSuit = 20   //Spirit Spider
+            IF IS_FX_SYSTEM_AVAILABLE_WITH_NAME SP_BFLAME
+                IF NOT iFireHead = 0
+                    KILL_FX_SYSTEM iFireHead
+                    iFireHead = 0
                 ENDIF
+                CREATE_FX_SYSTEM_ON_CHAR SP_BFLAME player_actor (0.06 0.0 0.01) 1 (iFireHead)
+                ATTACH_FX_SYSTEM_TO_CHAR_BONE iFireHead player_actor 5  //5:head
+                PLAY_FX_SYSTEM iFireHead
             ENDIF
+        ENDIF
 
         GIVE_MELEE_ATTACK_TO_CHAR player_actor 15 6 //Default
 
@@ -2135,7 +2143,6 @@ DrawWarningInfo_SUITS:
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (320.0 168.0) (320.0 112.0) (164 13 20 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 10 (0.0 0.0)    //TITLE_level format(10)
     iTempVar = idWarningMsg_l
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (320.0 280.0) (320.0 112.0) (255 255 255 0) (0.5) (0 0 0 0) (31 181 240 200) iTempVar 7 (0.0 0.0)   //TEXT
-
     USE_TEXT_COMMANDS FALSE
 RETURN
 
@@ -2529,7 +2536,7 @@ RETURN
 
 //---+---------------- SUB-MENU - SUITS MATRIX 5X5 --------------------
 ProcessGame_and_DrawItems_SUITS:
-    //matrix 5x5=25 + Scrolling System = 45 In Total                 
+    //matrix 5x5=25 + Scrolling System = 50 In Total                 
     IF iActiveRow = 0
         IF iMinRowSuitQuantity <= 6
             iActiveRow = 1
@@ -2582,7 +2589,6 @@ ProcessGame_and_DrawItems_SUITS:
     ENDIF   
     IF iMinRowSuitQuantity >= 16
         IF iActiveRow = 7
-            //CLAMP_INT iActiveCol 1 3 (iActiveCol)   //Limit 4 suits selection on 10th Row
             iActiveRow = 6
             iMinRowSuitQuantity = 21
             iMaxRowQuantity = 25   //10th Row 
@@ -2835,7 +2841,7 @@ get_unlock_code_suit:
             iTempVar = 3734
             BREAK                                                                                                                                                                                 
     ENDSWITCH
-    CLEO_CALL getSuitInfoUnclock 0 idTexture (pUnlockCode)
+    CLEO_CALL getSuitInfoUnlock 0 idTexture (pUnlockCode)
 RETURN
 
 DrawCheckMarks_SUITS:
@@ -4103,7 +4109,7 @@ DrawInfo_SUITS:
             //GET_FIXED_XY_ASPECT_RATIO (55.0 55.0) (xSize ySize) //40.0 35.0
             xSize = 41.25
             ySize = 51.33
-            CLEO_CALL getSuitInfoUnclock 0 counter (pUnlockCode)
+            CLEO_CALL getSuitInfoUnlock 0 counter (pUnlockCode)
             IF pUnlockCode = iTempVar
                 CLEO_CALL GUI_DrawBoxOutline_WithText 0 (597.5 63.75) (85.0 17.5) (31 181 240 0) (0.5) (0 0 1 0) (0 125 180 150) idTexture 6 (-42.5 0.0)   //NAME_SUIT (25-49)
                 USE_TEXT_COMMANDS FALSE
@@ -6428,7 +6434,7 @@ setSkin:
                     iTempVar = 3734
                     BREAK                                    
             ENDSWITCH
-            CLEO_CALL getSuitInfoUnclock 0 counter (pUnlockCode)
+            CLEO_CALL getSuitInfoUnlock 0 counter (pUnlockCode)
             IF pUnlockCode = iTempVar
                 STRING_FORMAT (_lName)"s%i" counter
                 LOAD_SPECIAL_CHARACTER 8 $_lName            
@@ -6443,6 +6449,18 @@ setSkin:
         ENDIF
         counter ++
     ENDWHILE
+RETURN
+
+setSkin_MenuFix:
+    CLEO_CALL GetSuitItem 0 (iSelectedSuit)
+    counter = iSelectedSuit
+    STRING_FORMAT (_lName)"s%i" counter
+    LOAD_SPECIAL_CHARACTER 8 $_lName  
+    IF NOT HAS_MODEL_LOADED SPECIAL08          
+        LOAD_ALL_MODELS_NOW
+    ENDIF
+    SET_PLAYER_MODEL 0 SPECIAL08                        
+    UNLOAD_SPECIAL_CHARACTER 8   
 RETURN
 
 setWalkstyle:
@@ -6539,7 +6557,6 @@ unlock_player_controls:
 RETURN
 
 ///---------------------------------------------------------------------
-
 
 load_all_needed_files:
     IF DOES_DIRECTORY_EXIST "CLEO\SpiderJ16D"
@@ -7604,8 +7621,8 @@ getThrowVehDoorsItem:
 CLEO_RETURN 0 pActiveItem
 }
 {
-//CLEO_CALL getSuitInfoUnclock 0 iSelectedSuit (iTempUnlockCode)
-getSuitInfoUnclock:
+//CLEO_CALL getSuitInfoUnlock 0 iSelectedSuit (iTempUnlockCode)
+getSuitInfoUnlock:
     LVAR_INT counter
     LVAR_INT pActiveItem pTempVar
     GET_LABEL_POINTER SUIT_data_Info (pActiveItem)
@@ -7627,6 +7644,15 @@ storeSuitInfoUnclock:
     pActiveItem += pTempVar
     WRITE_MEMORY pActiveItem 4 inVal FALSE     
 CLEO_RETURN 0
+}
+{
+//CLEO_CALL GetSuitItem 0 var
+GetSuitItem:
+    LVAR_INT inVal 
+    LVAR_INT pActiveItem
+    GET_LABEL_POINTER GUI_Memory_SuitItem pActiveItem
+    READ_MEMORY pActiveItem 4 FALSE inVal
+CLEO_RETURN 0 inVal
 }
 {
 //CLEO_CALL StoreSuitItem 0 var

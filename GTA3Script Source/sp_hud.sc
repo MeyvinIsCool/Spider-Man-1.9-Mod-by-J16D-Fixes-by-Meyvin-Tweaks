@@ -52,25 +52,33 @@ GET_PLAYER_CHAR 0 player_actor
 GOSUB loadHudTextures
 is_opening_door = FALSE
 is_hud_enabled = TRUE
-CLEO_CALL get_screen_aspect_ratio 0 iTempVar    // id:1 -16:9 | 2: -4:3 |3: - 16:10 |4: 5/4
-CLEO_CALL storeCurrentAspectRatio 0 iTempVar
 
-GET_CLEO_SHARED_VAR varHudRadar (iTempVar)
-CLEO_CALL storeHudRadar 0 iTempVar
-GET_CLEO_SHARED_VAR varHudHealth (iTempVar)
-CLEO_CALL storeHudHealth 0 iTempVar
-GET_CLEO_SHARED_VAR varHudAmmo (iTempVar)
-CLEO_CALL storeHudAmmo 0 iTempVar
-GET_CLEO_SHARED_VAR varHudMoney (iTempVar)
-CLEO_CALL storeHudMoney 0 iTempVar
-GET_CLEO_SHARED_VAR varHudTime (iTempVar)
-CLEO_CALL storeHudClockTime 0 iTempVar
-GET_CLEO_SHARED_VAR varHudBreath (iTempVar)
-CLEO_CALL storeHudBreath 0 iTempVar
-GET_CLEO_SHARED_VAR varHudArmour (iTempVar)
-CLEO_CALL storeHudArmour 0 iTempVar
-GET_CLEO_SHARED_VAR varHudWantedS (iTempVar)
-CLEO_CALL storeHudWantedLevel 0 iTempVar
+//-+-----Some Hud Elements Are Controlled On HUD Folder
+IF DOES_FILE_EXIST "CLEO\SpiderJ16D\HUD\sp_hl.cs" 
+    STREAM_CUSTOM_SCRIPT "SpiderJ16D\HUD\sp_hl.cs"
+ENDIF
+IF DOES_FILE_EXIST "CLEO\SpiderJ16D\HUD\sp_hit.cs" 
+    STREAM_CUSTOM_SCRIPT "SpiderJ16D\HUD\sp_hit.cs"    // Hit Counter Script (HUD Folder)
+ENDIF     
+                        
+IF DOES_FILE_EXIST "CLEO\SpiderJ16D\HUD\sp_fc.cs"
+    STREAM_CUSTOM_SCRIPT "SpiderJ16D\HUD\sp_fc.cs"     // Focus Bar Script (HUD Folder)
+ENDIF      
+
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        GOSUB readVars    
+        IF toggleSpiderMod = 1
+            IF isInMainMenu = 0  
+                WAIT 1000
+                BREAK
+            ENDIF
+        ENDIF
+        WAIT 0
+    ENDWHILE
+ENDIF
 
 main_loop:
     IF IS_PLAYER_PLAYING player
@@ -79,51 +87,61 @@ main_loop:
 
             IF isInMainMenu = 0     //1:true 0: false
                 
-                IF toggleHUD = 1  // 0:OFF || 1:ON
-
-                    IF GOSUB is_radar_enabled
-                        CLEO_CALL getCurrentAspectRatio 0 (iTempVar)
-                        SWITCH iTempVar // id:1 -16:9 | 2: -4:3 |3: - 16:10 |4: 5/4
-                            CASE 1  //16:9
-                                CLEO_CALL setRadarPostion 0 800.0 85.0 125.0 70.0   //Left|Top|Width|Height
-                                BREAK
-                            CASE 2  //4:3
-                                CLEO_CALL setRadarPostion 0 575.0 85.0 125.0 70.0   //Left|Top|Width|Height
-                                BREAK
-                            CASE 3  //16:10
-                                CLEO_CALL setRadarPostion 0 725.0 85.0 125.0 70.0   //Left|Top|Width|Height
-                                BREAK
-                            CASE 4  //5/4
-                                CLEO_CALL setRadarPostion 0 525.0 85.0 125.0 70.0   //Left|Top|Width|Height
-                                BREAK
-                            DEFAULT
-                                //This new line will make screens 1366x768 (16:8.9956076) compatible
-                                CLEO_CALL setRadarPostion 0 800.0 85.0 125.0 70.0   //Left|Top|Width|Height
-                                //CLEO_CALL setRadarPostion 0 575.0 85.0 125.0 70.0   //Left|Top|Width|Height
-                                BREAK
-                        ENDSWITCH
-                    ENDIF      
-
-                    //-+-----Some Hud Scripts Are Controlled On HUD Folder
-                    IF GOSUB is_health_bar_enabled
-                        //GOSUB drawHealth      //Old Way To Draw Health (Static Bar , codes are still intact)
-                        IF DOES_FILE_EXIST "CLEO\SpiderJ16D\HUD\sp_hl.cs" 
-                            STREAM_CUSTOM_SCRIPT "SpiderJ16D\HUD\sp_hl.cs"
-                        ENDIF
-                    ENDIF                            
-
-                    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\HUD\sp_hit.cs" 
-                        STREAM_CUSTOM_SCRIPT "SpiderJ16D\HUD\sp_hit.cs"    // Hit Counter Script (HUD Folder)
-                    ENDIF     
-
-                    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\HUD\sp_fc.cs"
-                        STREAM_CUSTOM_SCRIPT "SpiderJ16D\HUD\sp_fc.cs"     // Focus Bar Script (HUD Folder)
-                    ENDIF                                                                                  
-                    //-+-----------------------------------------------------
+                IF toggleHUD = 1  // 0:OFF || 1:ON                                                  
 
                     WHILE toggleHUD = 1  // 0:OFF || 1:ON
                         GOSUB readVars
-                        GOSUB hudCheck
+                        GOSUB hudCheck  
+
+                        GET_CLEO_SHARED_VAR varHudRadar (iTempVar3)
+                        CLEO_CALL storeHudRadar 0 (iTempVar3)
+                        GET_CLEO_SHARED_VAR varHudRadar (iTempVar)
+                        CLEO_CALL storeHudRadar 0 iTempVar      
+                        GET_CLEO_SHARED_VAR varHudHealth (iTempVar)
+                        CLEO_CALL storeHudHealth 0 iTempVar
+                        GET_CLEO_SHARED_VAR varHudAmmo (iTempVar)
+                        CLEO_CALL storeHudAmmo 0 iTempVar
+                        GET_CLEO_SHARED_VAR varHudMoney (iTempVar)
+                        CLEO_CALL storeHudMoney 0 iTempVar
+                        GET_CLEO_SHARED_VAR varHudTime (iTempVar)
+                        CLEO_CALL storeHudClockTime 0 iTempVar
+                        GET_CLEO_SHARED_VAR varHudBreath (iTempVar)
+                        CLEO_CALL storeHudBreath 0 iTempVar
+                        GET_CLEO_SHARED_VAR varHudArmour (iTempVar)
+                        CLEO_CALL storeHudArmour 0 iTempVar
+                        GET_CLEO_SHARED_VAR varHudWantedS (iTempVar)
+                        CLEO_CALL storeHudWantedLevel 0 iTempVar         
+
+                        CLEO_CALL get_screen_aspect_ratio 0 (iTempVar)      
+                        CLEO_CALL storeCurrentAspectRatio 0 (iTempVar)  
+
+                        CLEO_CALL getHudRadar 0 (iTempVar3)
+                        IF iTempVar3 = 1    //1:true 0: false
+                            CLEO_CALL getCurrentAspectRatio 0 (iTempVar)
+                            SWITCH iTempVar // id:1 -16:9 | 2: -4:3 |3: - 16:10 |4: 5/4
+                                CASE 1  //16:9
+                                    CLEO_CALL setRadarPostion 0 800.0 85.0 125.0 70.0   //Left|Top|Width|Height
+                                    BREAK
+                                CASE 2  //4:3
+                                    CLEO_CALL setRadarPostion 0 575.0 85.0 125.0 70.0   //Left|Top|Width|Height
+                                    BREAK
+                                CASE 3  //16:10
+                                    CLEO_CALL setRadarPostion 0 725.0 85.0 125.0 70.0   //Left|Top|Width|Height
+                                    BREAK
+                                CASE 4  //5/4
+                                    CLEO_CALL setRadarPostion 0 525.0 85.0 125.0 70.0   //Left|Top|Width|Height
+                                    BREAK
+                                DEFAULT
+                                    //This new line will make screens 1366x768 (16:8.9956076) compatible
+                                    CLEO_CALL setRadarPostion 0 800.0 85.0 125.0 70.0   //Left|Top|Width|Height
+                                    //CLEO_CALL setRadarPostion 0 575.0 85.0 125.0 70.0   //Left|Top|Width|Height
+                                    BREAK
+                            ENDSWITCH
+                        ELSE
+                            CLEO_CALL setRadarPostion 0 40.0 104.0 94.0 76.0   //Left|Top|Width|Height  ||Default
+                            DISPLAY_RADAR FALSE
+                        ENDIF  
+
                         //GOSUB openDoorCheck
                         //GOSUB activeInteriorCheck
                         IF IS_ON_SCRIPTED_CUTSCENE  // checks if the "widescreen" mode is active
@@ -166,7 +184,7 @@ main_loop:
                             USE_TEXT_COMMANDS FALSE
                             WHILE isInMainMenu = 1     //1:true 0: false
                                 GOSUB readVars
-                                IF toggleSpiderMod = 0 //FALSE
+                                IF toggleSpiderMod = 0
                                     GOTO end_hud_script
                                 ENDIF
                                 WAIT 0
@@ -199,20 +217,25 @@ main_loop:
         
         ELSE
             end_hud_script:
-            USE_TEXT_COMMANDS FALSE
-            IF GOSUB is_radar_enabled
-                CLEO_CALL getCurrentAspectRatio 0 (iTempVar)
-                IF 4 >= iTempVar
-                    //GOSUB resetGameHUD
-                    CLEO_CALL setRadarPostion 0 40.0 104.0 94.0 76.0   //Left|Top|Width|Height  ||Default
+            WAIT 1000
+            GOSUB readVars
+            IF toggleSpiderMod = 0
+                USE_TEXT_COMMANDS FALSE
+                IF GOSUB is_radar_enabled
+                    CLEO_CALL getCurrentAspectRatio 0 (iTempVar)
+                    IF 4 >= iTempVar
+                        //GOSUB resetGameHUD
+                        CLEO_CALL setRadarPostion 0 40.0 104.0 94.0 76.0   //Left|Top|Width|Height  ||Default
+                    ENDIF
                 ENDIF
+                //DISPLAY_HUD TRUE
+                USE_TEXT_COMMANDS FALSE
+                WAIT 25
+                //REMOVE_TEXTURE_DICTIONARY
+                //WAIT 0
+                //TERMINATE_THIS_CUSTOM_SCRIPT
+                GOTO start_check
             ENDIF
-            //DISPLAY_HUD TRUE
-            USE_TEXT_COMMANDS FALSE
-            WAIT 25
-            REMOVE_TEXTURE_DICTIONARY
-            WAIT 0
-            TERMINATE_THIS_CUSTOM_SCRIPT
         ENDIF
     ENDIF
     WAIT 0
@@ -552,7 +575,7 @@ loadHudTextures:
 RETURN
 //-+--------------------------------------------------------
 
-//-+-------------------- Health ----------------------------
+//-+-------------------- Health (OUTDATED -NOT USED) ----------------------------
 drawHealth:
     GOSUB getHealthMath
     GOSUB drawRedBackgroundDeath

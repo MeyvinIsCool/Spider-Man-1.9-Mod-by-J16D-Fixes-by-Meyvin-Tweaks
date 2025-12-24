@@ -29,8 +29,19 @@ GET_PLAYER_CHAR 0 player_actor
 GOSUB loadTextures
 USE_TEXT_COMMANDS TRUE
 
-main_loop:
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GOSUB readVars 
+        IF toggleSpiderMod = 1
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
 
+main_loop:
     IF IS_PLAYER_PLAYING player
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
 
@@ -137,14 +148,19 @@ main_loop:
             ENDIF
         ELSE
             // Release files
-            REMOVE_ANIMATION "mweb"
-            REMOVE_ANIMATION "spider"
-            REMOVE_AUDIO_STREAM sfx
-            USE_TEXT_COMMANDS FALSE
-            WAIT 0
-            REMOVE_TEXTURE_DICTIONARY
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT
+            WAIT 1000
+            GOSUB readVars 
+            IF toggleSpiderMod = 0                    
+                REMOVE_ANIMATION "mweb"
+                REMOVE_ANIMATION "spider"
+                REMOVE_AUDIO_STREAM sfx
+                USE_TEXT_COMMANDS FALSE
+                //WAIT 0
+                //REMOVE_TEXTURE_DICTIONARY
+                WAIT 50
+                //TERMINATE_THIS_CUSTOM_SCRIPT
+                GOTO start_check
+            ENDIF
         ENDIF        
     ENDIF 
     WAIT 0  
@@ -1053,3 +1069,6 @@ CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
+
+CONST_INT varFocusCount         70    //sp_hit    || focus bar
+CONST_INT varUseFocus           71    //sp_hit    || focus bar

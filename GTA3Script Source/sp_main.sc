@@ -137,6 +137,18 @@ ENDIF
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_mlb.cs"     // Web Zip To Building
     ENDIF             
 
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GOSUB readVars 
+        IF toggleSpiderMod = 1
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
+
 //-+-- Start Internal Threads
     STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_cam_internalThread   // Camera Script
     STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_tmp_internalThread   // Fix 01 Animation / BRASSKNUCKLE (Web Shooter) 
@@ -155,7 +167,7 @@ main_loop:
     IF IS_PLAYER_PLAYING player
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
         GOSUB readVars
-        IF toggleSpiderMod = 1  //TRUE           
+        IF toggleSpiderMod = 1  //TRUE        
 
             IF CLEO_CALL isActorInWater 0 player_actor
                 CLEAR_CHAR_TASKS player_actor
@@ -459,16 +471,21 @@ main_loop:
             // SET fall animation
             GOSUB set_fall_animation
         ELSE
-            REMOVE_ANIMATION "spider"
-            REMOVE_ANIMATION "mweb"
-            REMOVE_AUDIO_STREAM sfx
-            GOSUB restore_properties
-            CLEO_CALL disableZvelocityLimit 0 0
-            GOSUB destroyWeb
-            CLEAR_CHAR_TASKS player_actor
-            CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
-            WAIT 0
-            TERMINATE_THIS_CUSTOM_SCRIPT
+            WAIT 1000
+            GOSUB readVars
+            IF toggleSpiderMod = 0
+                REMOVE_ANIMATION "spider"
+                REMOVE_ANIMATION "mweb"
+                REMOVE_AUDIO_STREAM sfx
+                GOSUB restore_properties
+                CLEO_CALL disableZvelocityLimit 0 0
+                GOSUB destroyWeb
+                CLEAR_CHAR_TASKS player_actor
+                CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
+                WAIT 0
+                GOTO start_check
+                //TERMINATE_THIS_CUSTOM_SCRIPT
+            ENDIF
         ENDIF
 
     ENDIF

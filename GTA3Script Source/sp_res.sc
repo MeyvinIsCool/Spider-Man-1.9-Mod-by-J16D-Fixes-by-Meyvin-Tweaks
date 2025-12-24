@@ -35,26 +35,45 @@ WAIT 0
 STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_tte_InternalThread rwCrosshair
 WAIT 0
 
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GOSUB readVars 
+        IF toggleSpiderMod = 1
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
+
 WHILE TRUE
     IF IS_PLAYER_PLAYING player 
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
         GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
-        //IF toggleSpiderMod = 1 //TRUE
+        IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 1 //TRUE
                 REMOVE_ANIMATION "spider"
                 REMOVE_ANIMATION "mweb"
                 REMOVE_AUDIO_STREAM sfx
                 USE_TEXT_COMMANDS FALSE
-                WAIT 0
-                REMOVE_TEXTURE_DICTIONARY
+                //WAIT 0
+                //REMOVE_TEXTURE_DICTIONARY
                 WAIT 50
-                TERMINATE_THIS_CUSTOM_SCRIPT
+                //TERMINATE_THIS_CUSTOM_SCRIPT
+                GOTO start_check
             ENDIF
-        //ENDIF
+        ENDIF
     ENDIF
     WAIT 0
 ENDWHILE
+
+readVars:
+    GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
+    GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
+RETURN
+
 }
 SCRIPT_END
 

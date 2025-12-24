@@ -26,7 +26,19 @@ LVAR_FLOAT fCurrentTime x[2] y[2] z[2] zAngle fDistance
 LVAR_INT iTempVar iHitCounter
 
 GET_PLAYER_CHAR 0 player_actor
-//SET_CLEO_SHARED_VAR varDodgeSensitive 1       // 0:Default, only by hit || 1:Availabe While Fighting
+//SET_CLEO_SHARED_VAR varDodgeSensitive 1       // 0:Default, only by hit || 1:Available While Fighting
+
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GOSUB readVars 
+        IF toggleSpiderMod = 1
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
 
 main_loop:
     IF IS_PLAYER_PLAYING player
@@ -136,11 +148,16 @@ main_loop:
                 ENDIF
             ENDIF
         ELSE
-            REMOVE_AUDIO_STREAM sfx
-            REMOVE_AUDIO_STREAM sfx_B
-            REMOVE_ANIMATION "spider"
-            WAIT 0
-            TERMINATE_THIS_CUSTOM_SCRIPT
+            WAIT 1000
+            GOSUB readVars 
+            IF toggleSpiderMod = 0           
+                REMOVE_AUDIO_STREAM sfx
+                REMOVE_AUDIO_STREAM sfx_B
+                REMOVE_ANIMATION "spider"
+                WAIT 0
+                //TERMINATE_THIS_CUSTOM_SCRIPT
+                GOTO start_check
+            ENDIF
         ENDIF
     ENDIF
     WAIT 0

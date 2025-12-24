@@ -45,8 +45,18 @@ GET_PLAYER_CHAR 0 player_actor
 CLEO_CALL disableGreenTriangles 0 ()
 GOSUB loadTextures
 GOSUB REQUEST_Animations
-SET_PLAYER_CYCLE_WEAPON_BUTTON player FALSE
-SET_PLAYER_FIRE_BUTTON player FALSE
+
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GOSUB readVars 
+        IF toggleSpiderMod = 1
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
 
 main_loop:
     IF IS_PLAYER_PLAYING player
@@ -55,6 +65,8 @@ main_loop:
         GOSUB readVars
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
+                SET_PLAYER_CYCLE_WEAPON_BUTTON player FALSE
+                SET_PLAYER_FIRE_BUTTON player FALSE            
                 IF GOSUB is_not_player_playing_anims
 
                     GOSUB draw_indicator_to_target_char
@@ -101,15 +113,20 @@ main_loop:
                 ENDIF
             ENDIF
         ELSE
-            REMOVE_AUDIO_STREAM sfx
-            REMOVE_ANIMATION "spider"
-            SET_PLAYER_FIRE_BUTTON player TRUE
-            SET_PLAYER_CYCLE_WEAPON_BUTTON player TRUE
-            USE_TEXT_COMMANDS FALSE
-            WAIT 0
-            REMOVE_TEXTURE_DICTIONARY
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT   
+            WAIT 1000
+            GOSUB readVars 
+            IF toggleSpiderMod = 0           
+                REMOVE_AUDIO_STREAM sfx
+                REMOVE_ANIMATION "spider"
+                SET_PLAYER_FIRE_BUTTON player TRUE
+                SET_PLAYER_CYCLE_WEAPON_BUTTON player TRUE
+                USE_TEXT_COMMANDS FALSE
+                //WAIT 0
+                //REMOVE_TEXTURE_DICTIONARY
+                WAIT 50
+                //TERMINATE_THIS_CUSTOM_SCRIPT   
+                GOTO start_check
+            ENDIF
         ENDIF
 
     ENDIF

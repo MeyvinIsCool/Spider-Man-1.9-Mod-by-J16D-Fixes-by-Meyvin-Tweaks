@@ -24,6 +24,18 @@ LVAR_FLOAT fCharSpeed fAmplitude fZAnglePlayerAir currentTime fRandomVal[1]
 GET_PLAYER_CHAR 0 player_actor
 SET_PLAYER_JUMP_BUTTON player FALSE
 
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GOSUB readVars 
+        IF toggleSpiderMod = 1
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
+
 main_loop:
     IF IS_PLAYER_PLAYING player
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
@@ -141,12 +153,17 @@ main_loop:
             ENDIF
         ELSE
             // Release files
-            REMOVE_ANIMATION "spider"
-            REMOVE_ANIMATION "mweb"
-            REMOVE_AUDIO_STREAM sfx
-            SET_PLAYER_JUMP_BUTTON player TRUE
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT
+            WAIT 1000
+            GOSUB readVars 
+                IF toggleSpiderMod = 0            
+                REMOVE_ANIMATION "spider"
+                REMOVE_ANIMATION "mweb"
+                REMOVE_AUDIO_STREAM sfx
+                SET_PLAYER_JUMP_BUTTON player TRUE
+                WAIT 50
+                //TERMINATE_THIS_CUSTOM_SCRIPT
+                GOTO start_check
+            ENDIF
         ENDIF
     ENDIF
     WAIT 0

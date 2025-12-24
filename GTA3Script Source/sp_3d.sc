@@ -33,6 +33,18 @@ LOAD_SPRITE idMapIcon9 "mk9"        //Street Crimes
 LOAD_SPRITE idMapIcon10 "mk10"      //Surveillance Towers
 LOAD_SPRITE idMapIcon11 "mk11"      //Cash
 
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GOSUB readVars 
+        IF toggleSpiderMod = 1
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
+
 //ADD_SPRITE_BLIP_FOR_COORD -1691.91 1104.3081 94.0312 RADAR_SPRITE_GANG_N (iEventBlip) //RADAR_SPRITE_WAYPOINT
 WHILE TRUE
     IF IS_PLAYER_PLAYING 0
@@ -53,12 +65,16 @@ WHILE TRUE
                 ENDIF
             ENDIF
         ELSE
-            USE_TEXT_COMMANDS FALSE // don't show textures
-            USE_TEXT_COMMANDS FALSE // don't show textures
-            WAIT 0
-            REMOVE_TEXTURE_DICTIONARY
-            WAIT 50
-            TERMINATE_THIS_CUSTOM_SCRIPT
+            WAIT 1000
+            GOSUB readVars 
+            IF toggleSpiderMod = 0           
+                USE_TEXT_COMMANDS FALSE // don't show textures
+                WAIT 0
+                //REMOVE_TEXTURE_DICTIONARY
+                WAIT 50
+                //TERMINATE_THIS_CUSTOM_SCRIPT
+                GOTO start_check
+            ENDIF
         ENDIF
     ENDIF
     WAIT 0
