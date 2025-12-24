@@ -64,7 +64,6 @@ main_loop:
                     IF audio_line_is_active = 0
 
                         GOSUB readVars
-                        PRINT_FORMATTED_NOW "TimerA: %i" 2000 timera
                         IF timera > time_start_interview
                             audio_line_is_active = 1
                             SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active
