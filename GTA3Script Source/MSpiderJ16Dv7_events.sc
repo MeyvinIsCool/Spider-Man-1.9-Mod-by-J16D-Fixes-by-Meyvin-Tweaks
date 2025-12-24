@@ -46,21 +46,33 @@ ENDIF
 CLEO_CALL storeLanguage 0 iTempVar      
 
 //submissions
-    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\m_bp.cs"
-        STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_bp.cs"       // backpack
+IF DOES_FILE_EXIST "CLEO\SpiderJ16D\m_bp.cs"
+    STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_bp.cs"       // backpack
+ENDIF
+GOSUB readVars
+IF NOT flag_player_on_mission = 3   //3:thugs hidouts
+    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\m_th.cs"
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_th.cs"       // Thug Hideouts
     ENDIF
-    GOSUB readVars
-    IF NOT flag_player_on_mission = 3   //3:thugs hidouts
-        IF DOES_FILE_EXIST "CLEO\SpiderJ16D\m_th.cs"
-            STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_th.cs"       // Thug Hideouts
-        ENDIF
-    ENDIF
-    IF NOT flag_player_on_mission = 4   //4:street crimes
-        IF DOES_FILE_EXIST "CLEO\SpiderJ16D\m_w.cs"
-            STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_w.cs"       // Street Crimes
-        ENDIF       
-    ENDIF  
+ENDIF
+IF NOT flag_player_on_mission = 4   //4:street crimes
+    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\m_w.cs"
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\m_w.cs"       // Street Crimes
+    ENDIF       
+ENDIF  
 
+mission_init_reset:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GOSUB readVars 
+        IF toggleSpiderMod = 1
+        AND isInMainMenu = 0
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
 timera = 0
 GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
 
@@ -118,6 +130,17 @@ main_loop:
 
                     ENDIF
              
+                ELSE
+                    GET_AUDIO_STREAM_STATE iSfx[0] (iTempVar)
+                    IF iTempVar = 1     //playing
+                        SET_AUDIO_STREAM_STATE iSfx[0] 0    //Stop
+                    ENDIF
+                    REMOVE_AUDIO_STREAM iSfx[0]
+                    IF DOES_BLIP_EXIST iEventBlip
+                        REMOVE_BLIP iEventBlip
+                    ENDIF
+                    WAIT 50
+                    GOTO mission_init_reset                           
                 ENDIF
 
             ELSE
