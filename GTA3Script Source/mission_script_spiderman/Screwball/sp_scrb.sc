@@ -6,83 +6,6 @@
 // Official Page: https://forum.mixmods.com.br/f16-utilidades/t694-shine-gui-crie-interfaces-personalizadas
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
  
-//Size
-CONST_INT BYTE                 1
-CONST_INT WORD                 2
-CONST_INT DWORD                4
-CONST_INT SIZE_RWMEMORY        8
-CONST_INT SIZE_VECTOR          12
-CONST_INT SIZE_QUAT            16
-CONST_INT SIZE_COLPOINT_DATA   44
-CONST_INT SIZE_MATRIX          64 
-//TexturesID
-CONST_INT tPBBackScoreB     73
-CONST_INT tPBSBack1         74
-CONST_INT tPBSBack2         75
-CONST_INT tPBSBack3         76
-CONST_INT tPBSBack1Active   77
-CONST_INT tPBSBack2Active   78
-CONST_INT tPBSBack3Active   79
-CONST_INT iconSuccess       80     
-//-+---CONSTANTS--------------------
-//GLOBAL_CLEO_SHARED_VARS
-//100 slots - range 0 to 99
-CONST_INT varStatusSpiderMod    0     //1= Mod activated || 0= Mod Deactivated
-CONST_INT varHUD                1     //1= Activated     || 0= Deactivated
-CONST_INT varMusic              2     //1= Music On	    || 0= Music Off
-
-CONST_INT varHudRadar           3     //sp_hud - MSpiderJ16Dv7
-CONST_INT varHudHealth          4     //sp_hud    ||1= Activated     || 0= Deactivated
-CONST_INT varHudAmmo            5     //sp_hud    ||1= Activated     || 0= Deactivated
-CONST_INT varHudMoney           6     //sp_hud    ||1= Activated     || 0= Deactivated
-CONST_INT varHudTime            7     //sp_hud    ||1= Activated     || 0= Deactivated
-CONST_INT varHudBreath          8     //sp_hud    ||1= Activated     || 0= Deactivated
-CONST_INT varHudArmour          9     //sp_hud    ||1= Activated     || 0= Deactivated
-CONST_INT varHudWantedS         10    //sp_hud    ||1= Activated     || 0= Deactivated
-
-CONST_INT varOnmission          11    //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
-CONST_INT varCrimesProgress     12    //for stadistics ||MSpiderJ16Dv7
-CONST_INT varPcampProgress      13    //for stadistics ||MSpiderJ16Dv7
-CONST_INT varCarChaseProgress   14    //for stadistics ||MSpiderJ16Dv7
-CONST_INT varScrewBallProgress  15    //for stadistics ||MSpiderJ16Dv7
-CONST_INT varBackpacksProgress  16    //for stadistics ||MSpiderJ16Dv7
-CONST_INT varLandmarksProgress  17    //for stadistics ||MSpiderJ16Dv7
-
-CONST_INT varAlternativeSwing   20    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-CONST_INT varSwingBuilding      21    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-CONST_INT varFixGround          22    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-CONST_INT varMouseControl       23    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-CONST_INT varAimSetup           24    // 0:Manual Aim || 1:Auto Aim //sp_dw
-CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
-
-CONST_INT varLevelChar          30    //sp_lvl    || Level
-CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)
-
-CONST_INT varIdWebWeapon        32    //sp_mm     || 1-8 weap
-CONST_INT varWeapAmmo           33    //sp_wep    ||store current weap ammo
-CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 - 12
-CONST_INT varPowersProgress     35    //sp_po     || current power progress
-
-CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
-CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
-CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
-
-CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
-CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated
-CONST_INT varSkill2a            52    //sp_ev    ||1= Activated     || 0= Deactivated
-CONST_INT varSkill3             53    //sp_me    ||1= Activated     || 0= Deactivated
-CONST_INT varSkill3a            54    //sp_ml    ||1= Activated     || 0= Deactivated
-CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deactivated
-CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
-CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
-CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
-
-//-+-----------------------------------------------------------------------------------------
-
-CONST_INT player 0
-
 SCRIPT_START
 {
 SCRIPT_NAME sp_scrb
@@ -90,7 +13,7 @@ LVAR_INT player_actor onmission iMissionVal
 LVAR_FLOAT x y z xSize ySize
 LVAR_INT toggleSpiderMod isInMainMenu
 LVAR_INT flag_player_on_mission 
-LVAR_INT blipIcon 
+LVAR_INT iEventBlip 
 LVAR_INT ultimateScore 
 LVAR_INT spectacularScore 
 LVAR_INT amazingScore 
@@ -101,74 +24,66 @@ LVAR_INT iTotalScore
 
 GET_PLAYER_CHAR 0 player_actor
 
-WAIT 0
-WAIT 0
-WAIT 0
-WAIT 0
-WAIT 0
-WAIT 0
-
-flag_player_on_mission = 0
-WRITE_MEMORY 0xA476AC 4 flag_player_on_mission FALSE 	// $ONMISSION = 0
-
-x = -2204.3181 
-y = -126.6313 
-z = 61.81
-
-ADD_SPRITE_BLIP_FOR_COORD x y z RADAR_SPRITE_DATE_DISCO blipIcon
-
 ultimateScore = 13500   // Minimum score 13500  Ultimate level
 spectacularScore = 11500   // Minimum score 11500  Spectacular level
 amazingScore = 9500    // Minimum score 9500   Amazing Level
 
-LOAD_TEXTURE_DICTIONARY scrb
-LOAD_SPRITE tPBBackScoreB   "btimD"
-LOAD_SPRITE tPBSBack1       "rb1"
-LOAD_SPRITE tPBSBack2       "rb2"
-LOAD_SPRITE tPBSBack3       "rb3"
-LOAD_SPRITE tPBSBack1Active "rb11"
-LOAD_SPRITE tPBSBack2Active "rb22"
-LOAD_SPRITE tPBSBack3Active "rb33"
-LOAD_SPRITE iconSuccess     "Success"
-USE_TEXT_COMMANDS TRUE
-USE_TEXT_COMMANDS FALSE
+GOSUB loadTextures
+
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        GOSUB readVars    
+        IF toggleSpiderMod = 1
+            IF isInMainMenu = 0  
+                BREAK
+            ENDIF
+        ENDIF
+        WAIT 0
+    ENDWHILE
+ENDIF
+
+mission_trigger_check:
+IF flag_player_on_mission > 0
+    WHILE flag_player_on_mission > 0
+        GOSUB readVars
+        //PRINT_FORMATTED_NOW "Mission Trigger Disabled!" 2000
+        WAIT 0
+    ENDWHILE
+ENDIF
+ADD_SPRITE_BLIP_FOR_COORD -2204.3181 -126.6313 61.81 RADAR_SPRITE_DATE_DISCO iEventBlip
 
 WHILE TRUE
     IF IS_PLAYER_PLAYING 0     //$PLAYER_CHAR
-        GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
-        GET_CLEO_SHARED_VAR varOnmission (flag_player_on_mission)
+        GOSUB readVars
         IF toggleSpiderMod = 1  //TRUE
-            GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
             IF isInMainMenu = 0     //1:true 0: false
-                READ_MEMORY 0xA476AC 4 FALSE onmission
-                IF onmission = 0
+                IF flag_player_on_mission = 0
                     // First Challenge
-                    IF LOCATE_CHAR_ANY_MEANS_3D player_actor x y z 5.0 5.0 5.0 FALSE
+                    IF LOCATE_CHAR_ANY_MEANS_3D player_actor (-2204.3181 -126.6313 61.81) 5.0 5.0 5.0 FALSE
                         IF flag_player_on_mission = 0
                             READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "score" "sc0" iTotalScore
                             CLEO_CALL getRewardsInfo 0 0 reward1 reward2 reward3
                             timera = 0
-                            WHILE LOCATE_CHAR_ANY_MEANS_3D player_actor x y z 5.0 5.0 5.0 FALSE  
+                            WHILE LOCATE_CHAR_ANY_MEANS_3D player_actor (-2204.3181 -126.6313 61.81) 5.0 5.0 5.0 FALSE  
                                 WAIT 0      
                                 IF timera > 400
                                     GOSUB draw_mission_start
                                     GOSUB draw_key_press
                                     IF IS_BUTTON_PRESSED PAD1 TRIANGLE  // ~k~~VEHICLE_ENTER_EXIT~  
-
-                                        WHILE  IS_BUTTON_PRESSED PAD1 TRIANGLE  // ~k~~VEHICLE_ENTER_EXIT~  
+                                        WHILE IS_BUTTON_PRESSED PAD1 TRIANGLE  // ~k~~VEHICLE_ENTER_EXIT~  
                                             WAIT 0
                                         ENDWHILE
                                         WAIT 0
-                                        //GENERATE_RANDOM_INT_IN_RANGE 1 3 iMissionVal      // Removed A Mission
+                                    
                                         GENERATE_RANDOM_INT_IN_RANGE 1 2 iMissionVal        // Only Mission 1 Going To Start !
-                                        //PRINT_FORMATTED_NOW "iMissionVal %i" 1000 iMissionVal // DEBUG TO CHECK MISSION VARIATION
                                         USE_TEXT_COMMANDS TRUE
                                         USE_TEXT_COMMANDS FALSE
                                         IF iMissionVal = 1
                                             IF DOES_FILE_EXIST "CLEO\SpiderJ16D\Screwball Missions\screwball_challenge_a.cm"
                                                 WAIT 100
                                                 flag_player_on_mission = 1
-                                                WRITE_MEMORY 0xA476AC 4 flag_player_on_mission FALSE 	// $ONMISSION = 1
                                                 WAIT 0
                                                 LOAD_AND_LAUNCH_CUSTOM_MISSION "SpiderJ16D\Screwball Missions\screwball_challenge_a"
                                                 //PRINT_FORMATTED_NOW "Mission 1!" 1500 //DEBUG
@@ -188,15 +103,21 @@ WHILE TRUE
                         ENDIF                        
                     ENDIF
                     WAIT 0
-                ENDIF           
+                ENDIF  
+                IF flag_player_on_mission > 0
+                    REMOVE_BLIP iEventBlip
+                    WAIT 0
+                    GOTO mission_trigger_check
+                ENDIF                           
             ENDIF
         ELSE
-            IF DOES_BLIP_EXIST blipIcon
-                REMOVE_BLIP blipIcon
+            IF DOES_BLIP_EXIST iEventBlip
+                REMOVE_BLIP iEventBlip
             ENDIF
             USE_TEXT_COMMANDS FALSE
             WAIT 0
-            TERMINATE_THIS_CUSTOM_SCRIPT            
+            //TERMINATE_THIS_CUSTOM_SCRIPT   
+            GOTO start_check         
         ENDIF                           
     ENDIF
     WAIT 0 
@@ -217,7 +138,7 @@ draw_mission_start:
 
     //PRINT_FORMATTED_NOW "RW:%i RW:%i RW:%i" time 1 reward1 reward2 reward3  //DEBUG
 
-    IF  reward1 = 1
+    IF reward1 = 1
         CLEO_CALL GetXYSizeInScreen4x3ScaleBy640x480 0 50.0 90.0 xSize ySize   
         DRAW_SPRITE tPBSBack2Active 39.0 220.0 xSize ySize 255 255 255 235
         CLEO_CALL GetXYSizeInScreen4x3ScaleBy640x480 0 15.0 15.0 xSize ySize   
@@ -230,7 +151,7 @@ draw_mission_start:
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 39.0 200.0 30.0 15.0 255 255 255 0 1.0 0 0 0 0 255 255 253 230 92 13 0.0  // AMAZING~n~LEVEL
     CLEO_CALL GUI_DrawBox_WithNumber 0 39.0 185.0 30.0 15.0 255 255 255 0 121 7 0.0 amazingScore    //~1~
 
-    IF  reward2 = 1
+    IF reward2 = 1
         CLEO_CALL GetXYSizeInScreen4x3ScaleBy640x480 0 50.0 90.0 xSize ySize   
         DRAW_SPRITE tPBSBack1Active 79.0 220.0 xSize ySize 255 255 255 235
         CLEO_CALL GetXYSizeInScreen4x3ScaleBy640x480 0 15.0 15.0 xSize ySize   
@@ -242,7 +163,7 @@ draw_mission_start:
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 79.0 200.0 30.0 15.0 255 255 255 0 1.0 0 0 0 0 255 255 253 230 93 13 0.0  // SPECTACULAR~n~LEVEL
     CLEO_CALL GUI_DrawBox_WithNumber 0 79.0 185.0 30.0 15.0 255 255 255 0 121 7 0.0 spectacularScore    //~1~
 
-    IF  reward3 = 1
+    IF reward3 = 1
         CLEO_CALL GetXYSizeInScreen4x3ScaleBy640x480 0 50.0 90.0 xSize ySize   
         DRAW_SPRITE tPBSBack3Active 119.0 220.0 xSize ySize 255 255 255 235
         CLEO_CALL GetXYSizeInScreen4x3ScaleBy640x480 0 15.0 15.0 xSize ySize   
@@ -275,6 +196,24 @@ draw_key_press:
     SET_SPRITES_DRAW_BEFORE_FADE TRUE    
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 78.0 290.0 xSize ySize 19 18 13 100 1.0 0 0 0 0 255 255 253 230 idGXT 9 0.0
     USE_TEXT_COMMANDS FALSE      
+RETURN
+
+readVars:
+    GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
+    GET_CLEO_SHARED_VAR varOnmission (flag_player_on_mission)
+    GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
+RETURN
+
+loadTextures:
+    LOAD_TEXTURE_DICTIONARY scrb
+    LOAD_SPRITE tPBBackScoreB   "btimD"
+    LOAD_SPRITE tPBSBack1       "rb1"
+    LOAD_SPRITE tPBSBack2       "rb2"
+    LOAD_SPRITE tPBSBack3       "rb3"
+    LOAD_SPRITE tPBSBack1Active "rb11"
+    LOAD_SPRITE tPBSBack2Active "rb22"
+    LOAD_SPRITE tPBSBack3Active "rb33"
+    LOAD_SPRITE iconSuccess     "Success"
 RETURN
 
 }
@@ -788,3 +727,78 @@ GUI_Memory_ItemMenuActive_PulseAlpha_Step:
 DUMP
 00
 ENDDUMP
+
+//Size
+CONST_INT BYTE                 1
+CONST_INT WORD                 2
+CONST_INT DWORD                4
+CONST_INT SIZE_RWMEMORY        8
+CONST_INT SIZE_VECTOR          12
+CONST_INT SIZE_QUAT            16
+CONST_INT SIZE_COLPOINT_DATA   44
+CONST_INT SIZE_MATRIX          64 
+//TexturesID
+CONST_INT tPBBackScoreB     73
+CONST_INT tPBSBack1         74
+CONST_INT tPBSBack2         75
+CONST_INT tPBSBack3         76
+CONST_INT tPBSBack1Active   77
+CONST_INT tPBSBack2Active   78
+CONST_INT tPBSBack3Active   79
+CONST_INT iconSuccess       80     
+//-+---CONSTANTS--------------------
+//GLOBAL_CLEO_SHARED_VARS
+//100 slots - range 0 to 99
+CONST_INT varStatusSpiderMod    0     //1= Mod activated || 0= Mod Deactivated
+CONST_INT varHUD                1     //1= Activated     || 0= Deactivated
+CONST_INT varMusic              2     //1= Music On	    || 0= Music Off
+
+CONST_INT varHudRadar           3     //sp_hud - MSpiderJ16Dv7
+CONST_INT varHudHealth          4     //sp_hud    ||1= Activated     || 0= Deactivated
+CONST_INT varHudAmmo            5     //sp_hud    ||1= Activated     || 0= Deactivated
+CONST_INT varHudMoney           6     //sp_hud    ||1= Activated     || 0= Deactivated
+CONST_INT varHudTime            7     //sp_hud    ||1= Activated     || 0= Deactivated
+CONST_INT varHudBreath          8     //sp_hud    ||1= Activated     || 0= Deactivated
+CONST_INT varHudArmour          9     //sp_hud    ||1= Activated     || 0= Deactivated
+CONST_INT varHudWantedS         10    //sp_hud    ||1= Activated     || 0= Deactivated
+
+CONST_INT varOnmission          11    //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
+CONST_INT varCrimesProgress     12    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varPcampProgress      13    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varCarChaseProgress   14    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varScrewBallProgress  15    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varBackpacksProgress  16    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varLandmarksProgress  17    //for stadistics ||MSpiderJ16Dv7
+
+CONST_INT varAlternativeSwing   20    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varSwingBuilding      21    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varFixGround          22    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varMouseControl       23    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varAimSetup           24    // 0:Manual Aim || 1:Auto Aim //sp_dw
+CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+
+CONST_INT varLevelChar          30    //sp_lvl    || Level
+CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)
+
+CONST_INT varIdWebWeapon        32    //sp_mm     || 1-8 weap
+CONST_INT varWeapAmmo           33    //sp_wep    ||store current weap ammo
+CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 - 12
+CONST_INT varPowersProgress     35    //sp_po     || current power progress
+
+CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
+CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
+CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
+
+CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
+CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated
+CONST_INT varSkill2a            52    //sp_ev    ||1= Activated     || 0= Deactivated
+CONST_INT varSkill3             53    //sp_me    ||1= Activated     || 0= Deactivated
+CONST_INT varSkill3a            54    //sp_ml    ||1= Activated     || 0= Deactivated
+CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deactivated
+CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
+CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
+CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
+
+//-+-----------------------------------------------------------------------------------------
