@@ -14,24 +14,22 @@ Things I Fixed And Added On This Mod :
 - Fixed Menu Rendering Issues Whenever Using Lower Resolutions
 - Fixed Some Bugs With The Reservoir Scripts
 - New Script Improvements !
-- Added Web Zip While Wall Running (COMPLETED !!)
+- Added Web Zip While Wall Running
 - Added GInput (Recommended If You Are Using Controller)
 - Remade Screwball Trigger Now With 3D Blips - GTA3Script 
 - Restored Screwball PhotoBomb Challange (Now It Is Compatible With Every Resolution Which Fixes The Overlapping Bar !)
 - Added Remade Pizza Time Mission by MeyvinIsCool (Mission v2) (Thanks For Mr.Demon "Genos" Cyborg For Giving Me The Source Code)
 - Added Hit Counter (v2) (Still Need Some Improvements As It's Wont Detect The Suit Powers And May Have Some Bugs !!)
 - Added 4 New Suit Powers (Iron Arms Still In WIP)
-- Added Only Side Mission #2 - No More Supplies (Thanks to GTA Loyalty) (Spanish Texts Available Inside The Addon Folder)
-- Added Drug Deal Crime Mission
-- Added Ground Crush When Falling From High Altitude
+- Added Side Mission #2 - No More Supplies (Thanks to GTA Loyalty) (Spanish Texts Available Inside The Addon Folder)
+- Added More Crime Missions
+- Added Ground Crush When Falling From High Altitude (Planned to improve in the future)
 - Added Web Zip To Building (BETA)
 - Added Focus Bar (WIP)
 - And MORE ....
 
  Addon :
  
-- Added Web Zip Behind (Air Dodge) (Addon)
-	
 - I Also Made The Low Resolution Suits For Low End Computers BUT Make Sure To Install From The Main Mod FIRST Then Install This From The Optional Folder
 
 I Had So Much Fun Time Making These Fixes And Also Thanks To These People Who Helped Me A Lot !
