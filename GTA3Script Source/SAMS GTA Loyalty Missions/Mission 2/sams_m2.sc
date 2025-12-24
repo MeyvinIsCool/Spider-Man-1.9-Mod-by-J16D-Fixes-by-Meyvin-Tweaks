@@ -188,7 +188,7 @@ WHILE audio_line_is_active = 1
 ENDWHILE
 iTempVar1 = 1	// 0:combat end sfx || 1:blip sfx
 GOSUB state_play_sfx
-ADD_SPRITE_BLIP_FOR_COORD (-2120.938 529.5803 79.1693) RADAR_SPRITE_WAYPOINT (iEventBlip)
+ADD_SPRITE_BLIP_FOR_COORD (-2120.938 529.5803 79.1693) RADAR_SPRITE_DATE_DRINK (iEventBlip)
 ADD_SPHERE (-2120.938 529.5803 79.1693) 1.0 (iEventBlip2)
 
 mission_part1_A:
@@ -288,7 +288,7 @@ GOTO mission_part2
 dialogue_part2_A:
 iTempVar1 = 1	// 0:combat end sfx || 1:blip sfx
 GOSUB state_play_sfx
-ADD_SPRITE_BLIP_FOR_COORD (-1747.211 769.5076 167.6536) RADAR_SPRITE_WAYPOINT (iEventBlip)
+ADD_SPRITE_BLIP_FOR_COORD (-1747.211 769.5076 167.6536) RADAR_SPRITE_DATE_DRINK (iEventBlip)
 ADD_SPHERE (-1747.211 769.5076 167.6536) 1.0 (iEventBlip2)
 
 mission_part2_A:
@@ -388,7 +388,7 @@ GOTO mission_part3
 dialogue_part3_A:
 iTempVar1 = 1	// 0:combat end sfx || 1:blip sfx
 GOSUB state_play_sfx
-ADD_SPRITE_BLIP_FOR_COORD -2563.371 488.4675 47.7812 RADAR_SPRITE_WAYPOINT (iEventBlip)
+ADD_SPRITE_BLIP_FOR_COORD -2563.371 488.4675 47.7812 RADAR_SPRITE_DATE_DRINK (iEventBlip)
 ADD_SPHERE (-2563.371 488.4675 47.7812) 1.0 (iEventBlip2)
 
 mission_part3_A:

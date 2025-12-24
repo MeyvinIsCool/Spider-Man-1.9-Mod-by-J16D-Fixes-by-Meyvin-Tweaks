@@ -35,8 +35,16 @@ timera = 0
 WHILE 8000 > timera 
    WAIT 0
 ENDWHILE
-//Yellow waypoing - Main Mission
-ADD_SPRITE_BLIP_FOR_COORD (-1983.2416 806.5577 92.3203) RADAR_SPRITE_MCSTRAP (iEventBlip) //RADAR_SPRITE_WAYPOINT
+marker_init:
+IF flag_player_on_mission > 0
+    WHILE flag_player_on_mission > 0
+        GOSUB readVars
+        //PRINT_FORMATTED_NOW "Mission Trigger Disabled!" 2000
+        WAIT 0
+    ENDWHILE
+ENDIF
+//Yellow Waypoint - Main Mission
+ADD_SPRITE_BLIP_FOR_COORD (-1983.2416 806.5577 92.3203) RADAR_SPRITE_MCSTRAP (iEventBlip) //RADAR_SPRITE_MCSTRAP
 WAIT 500
 
 main_loop:
@@ -49,6 +57,7 @@ main_loop:
             CLEAR_HELP
             CLEAR_PRINTS
             USE_TEXT_COMMANDS FALSE
+
             GOSUB sub_Fade_out_500ms
             flag_player_on_mission = 1  //1:on_mission
             SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON
@@ -59,12 +68,13 @@ main_loop:
                GOSUB readVars
                WAIT 0
             ENDWHILE
+
             CLEAR_PRINTS
             USE_TEXT_COMMANDS FALSE
             WAIT 3000
             GOSUB readVars
             IF toggleSpiderMod = 1
-               ADD_SPRITE_BLIP_FOR_COORD (-1983.2416 806.5577 92.3203) RADAR_SPRITE_MCSTRAP (iEventBlip) //RADAR_SPRITE_WAYPOINT
+               ADD_SPRITE_BLIP_FOR_COORD (-1983.2416 806.5577 92.3203) RADAR_SPRITE_MCSTRAP (iEventBlip) //RADAR_SPRITE_MCSTRAP
                WAIT 500
             ELSE
                WAIT 500
@@ -75,7 +85,13 @@ main_loop:
             WAIT 2000
          ENDIF
       ENDIF
+
       GOSUB readVars
+      IF flag_player_on_mission > 0
+         REMOVE_BLIP iEventBlip
+         WAIT 0
+         GOTO marker_init
+      ENDIF      
       IF toggleSpiderMod = 0
          IF DOES_BLIP_EXIST iEventBlip
             REMOVE_BLIP iEventBlip
