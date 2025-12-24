@@ -215,7 +215,7 @@ mission_part1:
         flag_player_hit_counter = 1
         SET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter       // 0:OFF || 1:ON          
         GOSUB sub_unlock_player_controls
-        ADD_SPRITE_BLIP_FOR_COORD (346.9816 161.8278 1014.188) RADAR_SPRITE_WAYPOINT (iEventBlip)
+        ADD_SPRITE_BLIP_FOR_COORD (346.9816 161.8278 1014.188) RADAR_SPRITE_DATE_DRINK (iEventBlip)
         iTempVar1 = 1	// 0:combat end sfx || 1:blip sfx
         GOSUB state_play_sfx 
 
@@ -807,7 +807,7 @@ mission_part2_A_1:
 GOTO mission_part2_A_1
 
 init_part2_A_2:
-ADD_SPRITE_BLIP_FOR_COORD (347.559 165.272 1014.187) RADAR_SPRITE_WAYPOINT (iEventBlip)
+ADD_SPRITE_BLIP_FOR_COORD (347.559 165.272 1014.187) RADAR_SPRITE_DATE_DRINK (iEventBlip)
 iTempVar1 = 1	// 0:combat end sfx || 1:blip sfx
 GOSUB state_play_sfx    
 
@@ -999,29 +999,6 @@ mission_part2_A_2:
         ENDIF   
     ENDIF    
 
-    IF DOES_PICKUP_EXIST iObj[4]
-        GET_PICKUP_COORDINATES iObj[4] objX[0] objY[0] objZ[0]
-        GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (objX[0] objY[0] objZ[0]) (fObjDistance[0])
-
-        IF fObjDistance[0] > 10.0
-        AND 300.0 > fObjDistance[0]
-            CONVERT_3D_TO_SCREEN_2D (objX[0] objY[0] objZ[0]) TRUE TRUE (v1 v2) (v3 v3)
-            GET_FIXED_XY_ASPECT_RATIO 12.0 12.0 (v3 v3)
-            USE_TEXT_COMMANDS FALSE
-            GET_HUD_COLOUR 1 r g b a
-            SET_SPRITES_DRAW_BEFORE_FADE TRUE
-            DRAW_RECT v1 v2 6.5 8.0 0 0 0 a
-            SET_SPRITES_DRAW_BEFORE_FADE TRUE
-            DRAW_RECT v1 v2 4.5 6.0 r g b a
-            v1 -= 6.0
-            v2 += 6.0                
-            iTempVar =# fObjDistance[0]
-            GOSUB GUI_TextFormat_Text
-            USE_TEXT_COMMANDS FALSE
-            DISPLAY_TEXT_WITH_NUMBER v1 v2 J16D440 iTempVar    //~1~ m
-        ENDIF 
-    ENDIF 
-
     IF DOES_BLIP_EXIST (iEventBlip)
         GET_DISTANCE_BETWEEN_COORDS_3D (x[0] y[0] z[0]) (347.559 165.272 1014.187) (fObjDistance[1])
 
@@ -1063,7 +1040,7 @@ ENDIF
 IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sp_prtb.cs"
 	STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prtb.cs" 4 1 21 24 //{id} {mission_id} {text1_id} {text2_id}
 ENDIF  
-ADD_SPRITE_BLIP_FOR_COORD (351.3243 162.0824 1025.789) RADAR_SPRITE_WAYPOINT (iEventBlip)     
+ADD_SPRITE_BLIP_FOR_COORD (351.3243 162.0824 1025.789) RADAR_SPRITE_DATE_DRINK (iEventBlip)     
 iTempVar1 = 1	// 0:combat end sfx || 1:blip sfx
 GOSUB state_play_sfx 
 

@@ -18,6 +18,7 @@ WAIT 0
 WAIT 0
 WAIT 0
 WAIT 0
+WAIT 0
 lVAR_INT player_actor flag_player_on_mission toggleSpiderMod isInMainMenu audio_line_is_active
 LVAR_INT iEventBlip
 LVAR_INT time_hour time_min
@@ -29,7 +30,7 @@ WHILE TRUE
    IF IS_PLAYER_PLAYING 0
       GOSUB readVars
       IF toggleSpiderMod = 1
-         BREAK
+        BREAK
       ENDIF
    ENDIF
    WAIT 0
@@ -37,71 +38,84 @@ ENDWHILE
 //delay 8 sec
 timera = 0
 WHILE 8000 > timera 
-   WAIT 0
+    WAIT 0
 ENDWHILE
-//Yellow waypoing - Main Mission
-ADD_SPRITE_BLIP_FOR_COORD (-1904.5178 1042.2417 68.0078) RADAR_SPRITE_WAYPOINT (iEventBlip) 
+marker_init:
+IF flag_player_on_mission > 0
+    WHILE flag_player_on_mission > 0
+        GOSUB readVars
+        //PRINT_FORMATTED_NOW "Mission Trigger Disabled!" 2000
+        WAIT 0
+    ENDWHILE
+ENDIF
+//Blue Waypoint - Side Mission
+ADD_SPRITE_BLIP_FOR_COORD (-1904.5178 1042.2417 68.0078) RADAR_SPRITE_DATE_DRINK (iEventBlip) 
 WAIT 500
 
 main_loop:
-   IF IS_PLAYER_PLAYING 0
-      IF LOCATE_STOPPED_CHAR_ON_FOOT_3D player_actor (-1904.5178 1042.2417 68.0078) (2.0 2.0 2.0) TRUE
-        GOSUB readVars
-        IF time_hour >= 20
-        OR time_hour <= 5     
+    IF IS_PLAYER_PLAYING 0
+        IF LOCATE_STOPPED_CHAR_ON_FOOT_3D player_actor (-1904.5178 1042.2417 68.0078) (2.0 2.0 2.0) TRUE
+            GOSUB readVars
+            IF time_hour >= 20
+            OR time_hour <= 5     
 
-            IF flag_player_on_mission = 0
-            AND NOT IS_ON_MISSION
+                IF flag_player_on_mission = 0
 
-                REMOVE_BLIP iEventBlip
-            
-                IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sams_sm2.cm"
-                    CLEAR_HELP
-                    CLEAR_PRINTS                
-                    USE_TEXT_COMMANDS FALSE
-                    GOSUB sub_Fade_out_500ms
-                    flag_player_on_mission = 1  //1:on_mission
-                    SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON   
-                    audio_line_is_active = 0
-                    SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active                                     
-                    LOAD_AND_LAUNCH_CUSTOM_MISSION "SpiderJ16D\sams_sm2"
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    PRINT_FORMATTED_NOW "~r~Error! Mission 1 Not Found! Re-Install Spider-Man Mod!" 1500                    
-                ENDIF
-                WHILE flag_player_on_mission > 0
+                    REMOVE_BLIP iEventBlip
+                    IF DOES_FILE_EXIST "CLEO\SpiderJ16D\sams_sm2.cm"
+                        CLEAR_HELP
+                        CLEAR_PRINTS                
+                        USE_TEXT_COMMANDS FALSE
+                        GOSUB sub_Fade_out_500ms
+                        flag_player_on_mission = 1  //1:on_mission
+                        SET_CLEO_SHARED_VAR varOnmission flag_player_on_mission        // 0:OFF || 1:ON   
+                        audio_line_is_active = 0
+                        SET_CLEO_SHARED_VAR varAudioActive audio_line_is_active                                     
+                        LOAD_AND_LAUNCH_CUSTOM_MISSION "SpiderJ16D\sams_sm2"
+                    ELSE
+                        USE_TEXT_COMMANDS FALSE
+                        PRINT_FORMATTED_NOW "~r~Error! Mission 1 Not Found! Re-Install Spider-Man Mod!" 1500                    
+                    ENDIF
+                    WHILE flag_player_on_mission > 0
+                        GOSUB readVars
+                        WAIT 0
+                    ENDWHILE
+                    WAIT 3000
                     GOSUB readVars
-                    WAIT 0
-                ENDWHILE
-                WAIT 3000
-                GOSUB readVars
-                IF toggleSpiderMod = 1
-                    ADD_SPRITE_BLIP_FOR_COORD (-1904.5178 1042.2417 68.0078) RADAR_SPRITE_WAYPOINT (iEventBlip) //RADAR_SPRITE_WAYPOINT
-                    WAIT 500
-                ELSE
-                    WAIT 500
-                    GOTO start_sc
+                    IF toggleSpiderMod = 1
+                    OR isInMainMenu = 0
+                        ADD_SPRITE_BLIP_FOR_COORD (-1904.5178 1042.2417 68.0078) RADAR_SPRITE_DATE_DRINK (iEventBlip) //RADAR_SPRITE_WAYPOINT
+                        WAIT 500
+                    ELSE
+                        WAIT 500
+                        GOTO start_sc
+                    ENDIF
+                
+                ELSE    
+                    PRINT_FORMATTED_NOW "Finish your current mission first!" 2000
+                    WAIT 2000
                 ENDIF
-            
-            ELSE    
-                PRINT_FORMATTED_NOW "Finish your current mission first!" 2000
-                WAIT 2000
-            ENDIF
-        ELSE
-            PRINT_FORMATTED_NOW "You can only start this mission at night!" 2000
-            WAIT 2000        
-        ENDIF    
-      ENDIF
-      GOSUB readVars
-      IF toggleSpiderMod = 0
-         IF DOES_BLIP_EXIST iEventBlip
+            ELSE
+                PRINT_FORMATTED_NOW "You can only start this mission at night!" 2000  
+                REMOVE_BLIP iEventBlip
+                GOTO start_sc   
+            ENDIF           
+        ENDIF
+        GOSUB readVars
+        IF flag_player_on_mission > 0
             REMOVE_BLIP iEventBlip
-         ENDIF
-         WAIT 500
-         GOTO start_sc
-      ENDIF
-   ENDIF
-   WAIT 0
+            WAIT 0
+            GOTO marker_init
+        ENDIF           
+        IF toggleSpiderMod = 0
+            IF DOES_BLIP_EXIST iEventBlip
+                REMOVE_BLIP iEventBlip
+            ENDIF
+            WAIT 500
+            GOTO start_sc
+        ENDIF                
+    ENDIF
+    WAIT 0
 GOTO main_loop  
 
 readVars:
