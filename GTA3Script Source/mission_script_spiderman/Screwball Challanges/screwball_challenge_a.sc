@@ -116,7 +116,7 @@ MISSION_END
 
 {
 //-+---------------------------------Mission Start-(0)-------------------------------------
-LVAR_INT flag_player_on_mission
+LVAR_INT toggleSpiderMod flag_player_on_mission
 LVAR_INT flag_screwball_mission_passed
 // usefull vars
 LVAR_INT player_actor
@@ -144,6 +144,7 @@ LVAR_INT iPhotoBombCamID
 LVAR_INT ultimateScore
 LVAR_INT spectacularScore
 LVAR_INT amazingScore
+LVAR_INT actualScore
 LVAR_INT toggleMusic
 
 mission_start_init:
@@ -167,111 +168,133 @@ iTotalScore = 0
 ultimateScore = 13500   // Minimum score 13500  Ultimate level
 spectacularScore = 11500   // Minimum score 11500  Spectacular level
 amazingScore = 9500    // Minimum score 9500   Amazing Level
+
+GOSUB readVars
 READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "config" "LANG" (iLanguage)   // 0:SPA ||1:ENG
 
-    //START
-    DO_FADE 1000 FADE_OUT
-    WHILE GET_FADING_STATUS
-        WAIT 0
-    ENDWHILE
-    WAIT 100
-    // load files
-    GOSUB loadGeneralFiles
-    // get coords info
-    GOSUB getGeneralCoords
-    //set char position
-    REQUEST_COLLISION -2177.4756 -118.3089
-    WAIT 5
-    CLEO_CALL SetCharPosSimple 0 player_actor (-2177.4756 -118.3089 61.81)
-    SET_CHAR_HEADING player_actor 308.3596
-    WAIT 5
-    //TASK_TOGGLE_DUCK player_actor TRUE
-    FREEZE_CHAR_POSITION player_actor TRUE
-    SET_PLAYER_CONTROL 0 FALSE
-    SET_CHAR_HEADING player_actor 308.3596
-    RESTORE_CAMERA
-    RESTORE_CAMERA_JUMPCUT
-    //create web
-    GOSUB createTwoWebs
-    WAIT 100
-    // add marker and check point
-    counter = 0
-    GOSUB addRaceCheckpoint
-    SWITCH_WIDESCREEN TRUE      // To Fix Checkpoint Not Visible
+//START
+DO_FADE 1000 FADE_OUT
+WHILE GET_FADING_STATUS
     WAIT 0
-    DO_FADE 1000 FADE_IN
-    WAIT 1
-    SWITCH_WIDESCREEN FALSE     // To Fix Checkpoint Not Visible
-    WHILE GET_FADING_STATUS
-        WAIT 0
-    ENDWHILE
+ENDWHILE
+WAIT 100
+// load files
+GOSUB loadGeneralFiles
+// get coords info
+GOSUB getGeneralCoords
+//set char position
+REQUEST_COLLISION -2177.4756 -118.3089
+WAIT 5
+CLEO_CALL SetCharPosSimple 0 player_actor (-2177.4756 -118.3089 61.81)
+SET_CHAR_HEADING player_actor 308.3596
+WAIT 5
+//TASK_TOGGLE_DUCK player_actor TRUE
+FREEZE_CHAR_POSITION player_actor TRUE
+SET_PLAYER_CONTROL 0 FALSE
+SET_CHAR_HEADING player_actor 308.3596
+RESTORE_CAMERA
+RESTORE_CAMERA_JUMPCUT
+//create web
+GOSUB createTwoWebs
+WAIT 100
+// add marker and check point
+counter = 0
+GOSUB addRaceCheckpoint
+SWITCH_WIDESCREEN TRUE      // To Fix Checkpoint Not Visible
+WAIT 0
+DO_FADE 1000 FADE_IN
+WAIT 1
+SWITCH_WIDESCREEN FALSE     // To Fix Checkpoint Not Visible
+WHILE GET_FADING_STATUS
     WAIT 0
-    //PLAY BACKGROUND MUSIC
+ENDWHILE
+WAIT 0
+//PLAY BACKGROUND MUSIC
 
-    ///audio start counter
-    REPORT_MISSION_AUDIO_EVENT_AT_POSITION x[0] y[0] z[0] 1056
-    iCountDownNumber = 3
-    timera = 0
-    WHILE 1000 > timera
-        GOSUB draw_countDown_number
-        WAIT 0
-    ENDWHILE
-    REPORT_MISSION_AUDIO_EVENT_AT_POSITION x[0] y[0] z[0] 1056
-    iCountDownNumber = 2
-    timera = 0
-    WHILE 1000 > timera
-        GOSUB draw_countDown_number
-        WAIT 0
-    ENDWHILE
-    REPORT_MISSION_AUDIO_EVENT_AT_POSITION x[0] y[0] z[0] 1056
-    iCountDownNumber = 1
-    timera = 0
-    WHILE 1000 > timera
-        GOSUB draw_countDown_number
-        WAIT 0
-    ENDWHILE
-    REPORT_MISSION_AUDIO_EVENT_AT_POSITION x[0] y[0] z[0] 1057
+///audio start counter
+REPORT_MISSION_AUDIO_EVENT_AT_POSITION x[0] y[0] z[0] 1056
+iCountDownNumber = 3
+timera = 0
+WHILE 1000 > timera
+    GOSUB draw_countDown_number
     WAIT 0
-    FREEZE_CHAR_POSITION player_actor FALSE
-    SET_PLAYER_CONTROL 0 TRUE
+ENDWHILE
+REPORT_MISSION_AUDIO_EVENT_AT_POSITION x[0] y[0] z[0] 1056
+iCountDownNumber = 2
+timera = 0
+WHILE 1000 > timera
+    GOSUB draw_countDown_number
+    WAIT 0
+ENDWHILE
+REPORT_MISSION_AUDIO_EVENT_AT_POSITION x[0] y[0] z[0] 1056
+iCountDownNumber = 1
+timera = 0
+WHILE 1000 > timera
+    GOSUB draw_countDown_number
+    WAIT 0
+ENDWHILE
+REPORT_MISSION_AUDIO_EVENT_AT_POSITION x[0] y[0] z[0] 1057
+WAIT 0
+FREEZE_CHAR_POSITION player_actor FALSE
+SET_PLAYER_CONTROL 0 TRUE
 
-    //timer 
-    iTotalTime = 110000  // 110 sec    
-    timerb = 0      //timer
-    //first     (0)
-    iPhotoBombCamID = 0
-    flag_event_msg_voice = 0    // 0:false||1:true
-    checkpointA_loop:
-    IF IS_PLAYER_PLAYING player
+//timer 
+iTotalTime = 110000  // 110 sec    
+timerb = 0      //timer
+//first     (0)
+iPhotoBombCamID = 0
+flag_event_msg_voice = 0    // 0:false||1:true
 
-        IF IS_KEY_PRESSED VK_KEY_N
-            WHILE IS_KEY_PRESSED VK_KEY_N
-                GOSUB draw_total_score
-                GOSUB draw_key_press
-                WAIT 0
-            ENDWHILE
+checkpointA_loop:
+GOSUB readVars
+IF IS_PLAYER_PLAYING player
+AND toggleSpiderMod = 1
+
+    IF IS_KEY_PRESSED VK_KEY_N
+        WHILE IS_KEY_PRESSED VK_KEY_N
+            GOSUB draw_total_score
+            GOSUB draw_key_press
+            WAIT 0
+        ENDWHILE
+    ENDIF
+
+    GOSUB draw_timer
+    //origi - cx[0] cy[0] cz[0] czAngle[0]	|| czAngle[5]
+    x[1] = cx[0] 	//-2022.26
+    y[1] = cy[0]	//13.982
+    z[1] = cz[0]	//61.60
+    czAngle[5] = czAngle[0]
+    czAngle[5] -= 180.0
+    //-- Coords
+    x[0] = x[1] 
+    y[0] = y[1] - 9.982        
+    z[0] = z[1] - 1.0
+    IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[1] y[1] z[1]) (60.0 60.0 60.0) FALSE 
+        IF flag_event_msg_voice = 0 	// 0:false||1:true
+            flag_event_msg_voice = 1 	// 0:false||1:true
+            GOSUB sfxStartDialogue
         ENDIF
+        GOSUB draw_photo_bomb
+    ENDIF
 
-        GOSUB draw_timer
-        //origi - cx[0] cy[0] cz[0] czAngle[0]	|| czAngle[5]
-        x[1] = cx[0] 	//-2022.26
-        y[1] = cy[0]	//13.982
-        z[1] = cz[0]	//61.60
-        czAngle[5] = czAngle[0]
-        czAngle[5] -= 180.0
-        //-- Coords
-        x[0] = x[1] 
-        y[0] = y[1] - 9.982        
-        z[0] = z[1] - 1.0
-        IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[1] y[1] z[1]) (60.0 60.0 60.0) FALSE 
-            IF flag_event_msg_voice = 0 	// 0:false||1:true
-                flag_event_msg_voice = 1 	// 0:false||1:true
-                GOSUB sfxStartDialogue
+    IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -1.5) (1 0 0 0 0)
+        IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
+            GOSUB draw_indicator
+            IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
+            AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
+            AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+            AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
+                zAngle = czAngle[0]		//360.0
+                SET_CHAR_HEADING player_actor zAngle
+                    zAngle = czAngle[0]		//360.0
+                    GOSUB animSequence
+                GOTO reset_vars_to_checkpointB
             ENDIF
-            GOSUB draw_photo_bomb
-        ENDIF
-
-        IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -1.5) (1 0 0 0 0)
+        ELSE
+            x[0] = x[1] 
+            y[0] = y[1] + 9.982        
+            z[0] = z[1] - 1.0
             IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
                 GOSUB draw_indicator
                 IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
@@ -279,77 +302,80 @@ READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "config" "LANG" (iLanguage) 
                 AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                 AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
                 AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                    zAngle = czAngle[0]		//360.0
+                    zAngle = czAngle[5] 	//180.0
                     SET_CHAR_HEADING player_actor zAngle
-                        zAngle = czAngle[0]		//360.0
+                        zAngle = czAngle[5] 	//180.0
                         GOSUB animSequence
                     GOTO reset_vars_to_checkpointB
                 ENDIF
-            ELSE
-                x[0] = x[1] 
-                y[0] = y[1] + 9.982        
-                z[0] = z[1] - 1.0
-                IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
-                    GOSUB draw_indicator
-                    IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                    AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                    AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                    AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                    AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                        zAngle = czAngle[5] 	//180.0
-                        SET_CHAR_HEADING player_actor zAngle
-                            zAngle = czAngle[5] 	//180.0
-                            GOSUB animSequence
-                        GOTO reset_vars_to_checkpointB
-                    ENDIF
-                ENDIF
             ENDIF
         ENDIF
-        IF timerb > iTotalTime
-            GOTO mission_failed
-        ENDIF
-    ELSE
+    ENDIF
+    IF timerb > iTotalTime
         GOTO mission_failed
     ENDIF
-    WAIT 0
-    GOTO checkpointA_loop
+ELSE
+    GOTO mission_failed
+ENDIF
+WAIT 0
+GOTO checkpointA_loop
 
-    // Second   (1)
-    reset_vars_to_checkpointB:
-    iPlusScore =# fTotalScore
-    iMissionScore += iPlusScore
+// Second   (1)
+reset_vars_to_checkpointB:
+iPlusScore =# fTotalScore
+iMissionScore += iPlusScore
 
-    counter = 0
-    GOSUB deleteRaceCheckpoint
-    GOSUB sfxEndDialogue
-    flag_event_msg_voice = 0 	// 0:false||1:true
+counter = 0
+GOSUB deleteRaceCheckpoint
+GOSUB sfxEndDialogue
+flag_event_msg_voice = 0 	// 0:false||1:true
 
-    //create next checkpoint
-    iPhotoBombCamID = 1
-    counter = 1
-    GOSUB addRaceCheckpoint
+//create next checkpoint
+iPhotoBombCamID = 1
+counter = 1
+GOSUB addRaceCheckpoint
 
-    checkpointB_loop:
-    IF IS_PLAYER_PLAYING player
-        GOSUB draw_timer
-        //tw_a1 - cx[1] cy[1] cz[1] czAngle[1]	|| czAngle[6]
-        x[1] = cx[1]
-        y[1] = cy[1]
-        z[1] = cz[1]
-        czAngle[6] = czAngle[1]
-        czAngle[6] += 180.0
-        //-- Coords
-        x[0] = x[1] - 9.982
-        y[0] = y[1]         
-        z[0] = z[1] - 0.7
-        IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[1] y[1] z[1]) (60.0 60.0 60.0) FALSE 
-            IF flag_event_msg_voice = 0 	// 0:false||1:true
-                flag_event_msg_voice = 1 	// 0:false||1:true
-                GOSUB sfxStartDialogue
-            ENDIF
-            GOSUB draw_photo_bomb
+checkpointB_loop:
+GOSUB readVars
+IF IS_PLAYER_PLAYING player
+AND toggleSpiderMod = 1
+
+    GOSUB draw_timer
+    //tw_a1 - cx[1] cy[1] cz[1] czAngle[1]	|| czAngle[6]
+    x[1] = cx[1]
+    y[1] = cy[1]
+    z[1] = cz[1]
+    czAngle[6] = czAngle[1]
+    czAngle[6] += 180.0
+    //-- Coords
+    x[0] = x[1] - 9.982
+    y[0] = y[1]         
+    z[0] = z[1] - 0.7
+    IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[1] y[1] z[1]) (60.0 60.0 60.0) FALSE 
+        IF flag_event_msg_voice = 0 	// 0:false||1:true
+            flag_event_msg_voice = 1 	// 0:false||1:true
+            GOSUB sfxStartDialogue
         ENDIF
-        IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -1.5) (1 0 0 0 0)
+        GOSUB draw_photo_bomb
+    ENDIF
+    IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -1.5) (1 0 0 0 0)
+        IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
+            GOSUB draw_indicator
+            IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
+            AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
+            AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+            AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
+                zAngle = czAngle[6]	
+                SET_CHAR_HEADING player_actor zAngle
+                    zAngle = czAngle[6]	
+                    GOSUB animSequence
+                GOTO reset_vars_to_checkpointC
+            ENDIF
+        ELSE
+            x[0] = x[1] + 9.982  
+            y[0] = y[1]
+            z[0] = z[1] - 0.7
             IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
                 GOSUB draw_indicator
                 IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
@@ -357,75 +383,78 @@ READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "config" "LANG" (iLanguage) 
                 AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                 AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
                 AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                    zAngle = czAngle[6]	
+                    zAngle = czAngle[1] 
                     SET_CHAR_HEADING player_actor zAngle
-                        zAngle = czAngle[6]	
+                        zAngle = czAngle[1]
                         GOSUB animSequence
                     GOTO reset_vars_to_checkpointC
                 ENDIF
-            ELSE
-                x[0] = x[1] + 9.982  
-                y[0] = y[1]
-                z[0] = z[1] - 0.7
-                IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
-                    GOSUB draw_indicator
-                    IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                    AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                    AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                    AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                    AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                        zAngle = czAngle[1] 
-                        SET_CHAR_HEADING player_actor zAngle
-                            zAngle = czAngle[1]
-                            GOSUB animSequence
-                        GOTO reset_vars_to_checkpointC
-                    ENDIF
-                ENDIF
             ENDIF
         ENDIF
-        IF timerb > iTotalTime
-            GOTO mission_failed
-        ENDIF
-    ELSE
+    ENDIF
+    IF timerb > iTotalTime
         GOTO mission_failed
     ENDIF
-        WAIT 0
-    GOTO checkpointB_loop
+ELSE
+    GOTO mission_failed
+ENDIF
+WAIT 0
+GOTO checkpointB_loop
 
-    // Third    (2)
-    reset_vars_to_checkpointC:
-    iPlusScore =# fTotalScore
-    iMissionScore += iPlusScore
-    counter = 1
-    GOSUB deleteRaceCheckpoint
-    GOSUB sfxEndDialogue
-    flag_event_msg_voice = 0 	// 0:false||1:true
+// Third    (2)
+reset_vars_to_checkpointC:
+iPlusScore =# fTotalScore
+iMissionScore += iPlusScore
+counter = 1
+GOSUB deleteRaceCheckpoint
+GOSUB sfxEndDialogue
+flag_event_msg_voice = 0 	// 0:false||1:true
 
-    iPhotoBombCamID = 2
-    counter = 2
-    GOSUB addRaceCheckpoint
+iPhotoBombCamID = 2
+counter = 2
+GOSUB addRaceCheckpoint
 
-    checkpointC_loop:
-    IF IS_PLAYER_PLAYING player
-        GOSUB draw_timer
-        //tw_a2 - cx[2] cy[2] cz[2] czAngle[2]	|| czAngle[7]
-        x[1] = cx[2]
-        y[1] = cy[2]
-        z[1] = cz[2]
-        czAngle[7] = czAngle[2]
-        czAngle[7] -= 180.0
-        //-- Coords
-        x[0] = x[1] 
-        y[0] = y[1] - 9.982        
-        z[0] = z[1] - 0.65
-        IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[1] y[1] z[1]) (60.0 60.0 60.0) FALSE 
-            IF flag_event_msg_voice = 0 	// 0:false||1:true
-                flag_event_msg_voice = 1 	// 0:false||1:true
-                GOSUB sfxStartDialogue
-            ENDIF
-            GOSUB draw_photo_bomb
+checkpointC_loop:
+GOSUB readVars
+IF IS_PLAYER_PLAYING player
+AND toggleSpiderMod = 1
+
+    GOSUB draw_timer
+    //tw_a2 - cx[2] cy[2] cz[2] czAngle[2]	|| czAngle[7]
+    x[1] = cx[2]
+    y[1] = cy[2]
+    z[1] = cz[2]
+    czAngle[7] = czAngle[2]
+    czAngle[7] -= 180.0
+    //-- Coords
+    x[0] = x[1] 
+    y[0] = y[1] - 9.982        
+    z[0] = z[1] - 0.65
+    IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[1] y[1] z[1]) (60.0 60.0 60.0) FALSE 
+        IF flag_event_msg_voice = 0 	// 0:false||1:true
+            flag_event_msg_voice = 1 	// 0:false||1:true
+            GOSUB sfxStartDialogue
         ENDIF
-        IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -1.5) (1 0 0 0 0)
+        GOSUB draw_photo_bomb
+    ENDIF
+    IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -1.5) (1 0 0 0 0)
+        IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
+            GOSUB draw_indicator
+            IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
+            AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
+            AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+            AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
+                zAngle = czAngle[2]	
+                SET_CHAR_HEADING player_actor zAngle
+                    zAngle = czAngle[2]	
+                    GOSUB animSequence
+                GOTO reset_vars_to_checkpointD
+            ENDIF
+        ELSE
+            x[0] = x[1] 
+            y[0] = y[1] + 9.982        
+            z[0] = z[1] - 0.65
             IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
                 GOSUB draw_indicator
                 IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
@@ -433,77 +462,80 @@ READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "config" "LANG" (iLanguage) 
                 AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                 AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
                 AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                    zAngle = czAngle[2]	
+                    zAngle = czAngle[7] 
                     SET_CHAR_HEADING player_actor zAngle
-                        zAngle = czAngle[2]	
+                        zAngle = czAngle[7]
                         GOSUB animSequence
                     GOTO reset_vars_to_checkpointD
                 ENDIF
-            ELSE
-                x[0] = x[1] 
-                y[0] = y[1] + 9.982        
-                z[0] = z[1] - 0.65
-                IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
-                    GOSUB draw_indicator
-                    IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                    AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                    AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                    AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                    AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                        zAngle = czAngle[7] 
-                        SET_CHAR_HEADING player_actor zAngle
-                            zAngle = czAngle[7]
-                            GOSUB animSequence
-                        GOTO reset_vars_to_checkpointD
-                    ENDIF
-                ENDIF
             ENDIF
         ENDIF
-        IF timerb > iTotalTime
-            GOTO mission_failed
-        ENDIF
-    ELSE
+    ENDIF
+    IF timerb > iTotalTime
         GOTO mission_failed
     ENDIF
-        WAIT 0
-    GOTO checkpointC_loop
+ELSE
+    GOTO mission_failed
+ENDIF
+WAIT 0
+GOTO checkpointC_loop
 
 
-    // Fourth   (3)
-    reset_vars_to_checkpointD:
-    iPlusScore =# fTotalScore
-    iMissionScore += iPlusScore
+// Fourth   (3)
+reset_vars_to_checkpointD:
+iPlusScore =# fTotalScore
+iMissionScore += iPlusScore
 
-    counter = 2
-    GOSUB deleteRaceCheckpoint
-    GOSUB sfxEndDialogue
-    flag_event_msg_voice = 0 	// 0:false||1:true
+counter = 2
+GOSUB deleteRaceCheckpoint
+GOSUB sfxEndDialogue
+flag_event_msg_voice = 0 	// 0:false||1:true
 
-    iPhotoBombCamID = 3
-    counter = 3
-    GOSUB addRaceCheckpoint
+iPhotoBombCamID = 3
+counter = 3
+GOSUB addRaceCheckpoint
 
-    checkpointD_loop:
-    IF IS_PLAYER_PLAYING player
-        GOSUB draw_timer
-        //tw_a3 - cx[3] cy[3] cz[3] czAngle[3]	|| czAngle[8]
-        x[1] = cx[3]
-        y[1] = cy[3]
-        z[1] = cz[3]
-        czAngle[8] = czAngle[3]
-        czAngle[8] -= 180.0
-        //-- Coords
-        x[0] = x[1] - 9.982
-        y[0] = y[1]  
-        z[0] = z[1] - 0.65
-        IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[1] y[1] z[1]) (60.0 60.0 60.0) FALSE 
-            IF flag_event_msg_voice = 0 	// 0:false||1:true
-                flag_event_msg_voice = 1 	// 0:false||1:true
-                GOSUB sfxStartDialogue
-            ENDIF
-            GOSUB draw_photo_bomb
+checkpointD_loop:
+GOSUB readVars
+IF IS_PLAYER_PLAYING player
+AND toggleSpiderMod = 1
+
+    GOSUB draw_timer
+    //tw_a3 - cx[3] cy[3] cz[3] czAngle[3]	|| czAngle[8]
+    x[1] = cx[3]
+    y[1] = cy[3]
+    z[1] = cz[3]
+    czAngle[8] = czAngle[3]
+    czAngle[8] -= 180.0
+    //-- Coords
+    x[0] = x[1] - 9.982
+    y[0] = y[1]  
+    z[0] = z[1] - 0.65
+    IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[1] y[1] z[1]) (60.0 60.0 60.0) FALSE 
+        IF flag_event_msg_voice = 0 	// 0:false||1:true
+            flag_event_msg_voice = 1 	// 0:false||1:true
+            GOSUB sfxStartDialogue
         ENDIF
-        IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -1.5) (1 0 0 0 0)
+        GOSUB draw_photo_bomb
+    ENDIF
+    IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -1.5) (1 0 0 0 0)
+        IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
+            GOSUB draw_indicator
+            IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
+            AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
+            AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+            AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
+                zAngle = czAngle[3]	
+                SET_CHAR_HEADING player_actor zAngle
+                    zAngle = czAngle[3]	
+                    GOSUB animSequence
+                GOTO reset_vars_to_checkpointE
+            ENDIF
+        ELSE
+            x[0] = x[1] + 9.982  
+            y[0] = y[1]
+            z[0] = z[1] - 0.65
             IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
                 GOSUB draw_indicator
                 IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
@@ -511,76 +543,79 @@ READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "config" "LANG" (iLanguage) 
                 AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                 AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
                 AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                    zAngle = czAngle[3]	
+                    zAngle = czAngle[8] 
                     SET_CHAR_HEADING player_actor zAngle
-                        zAngle = czAngle[3]	
+                        zAngle = czAngle[8]
                         GOSUB animSequence
                     GOTO reset_vars_to_checkpointE
                 ENDIF
-            ELSE
-                x[0] = x[1] + 9.982  
-                y[0] = y[1]
-                z[0] = z[1] - 0.65
-                IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
-                    GOSUB draw_indicator
-                    IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                    AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                    AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                    AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                    AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                        zAngle = czAngle[8] 
-                        SET_CHAR_HEADING player_actor zAngle
-                            zAngle = czAngle[8]
-                            GOSUB animSequence
-                        GOTO reset_vars_to_checkpointE
-                    ENDIF
-                ENDIF
             ENDIF
         ENDIF
-        IF timerb > iTotalTime
-            GOTO mission_failed
-        ENDIF
-    ELSE
+    ENDIF
+    IF timerb > iTotalTime
         GOTO mission_failed
     ENDIF
-        WAIT 0
-    GOTO checkpointD_loop
+ELSE
+    GOTO mission_failed
+ENDIF
+WAIT 0
+GOTO checkpointD_loop
 
-    //Fifth     (4)
-    reset_vars_to_checkpointE:
-    iPlusScore =# fTotalScore
-    iMissionScore += iPlusScore
+//Fifth     (4)
+reset_vars_to_checkpointE:
+iPlusScore =# fTotalScore
+iMissionScore += iPlusScore
 
-    counter = 3
-    GOSUB deleteRaceCheckpoint
-    GOSUB sfxEndDialogue
-    flag_event_msg_voice = 0 	// 0:false||1:true
+counter = 3
+GOSUB deleteRaceCheckpoint
+GOSUB sfxEndDialogue
+flag_event_msg_voice = 0 	// 0:false||1:true
 
-    iPhotoBombCamID = 4
-    counter = 4
-    GOSUB addRaceCheckpoint
+iPhotoBombCamID = 4
+counter = 4
+GOSUB addRaceCheckpoint
 
-    checkpointE_loop:
-    IF IS_PLAYER_PLAYING player
-        GOSUB draw_timer
-        //tw_a4 - cx[4] cy[4] cz[4] czAngle[4]	|| czAngle[9]
-        x[1] = cx[4]
-        y[1] = cy[4]
-        z[1] = cz[4]
-        czAngle[9] = czAngle[4]
-        czAngle[9] -= 180.0
-        //-- Coords
-        x[0] = x[1] 
-        y[0] = y[1] - 9.982        
-        z[0] = z[1] - 0.70
-        IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[1] y[1] z[1]) (60.0 60.0 60.0) FALSE 
-            IF flag_event_msg_voice = 0 	// 0:false||1:true
-                flag_event_msg_voice = 1 	// 0:false||1:true
-                GOSUB sfxStartDialogue
-            ENDIF
-            GOSUB draw_photo_bomb
+checkpointE_loop:
+GOSUB readVars
+IF IS_PLAYER_PLAYING player
+AND toggleSpiderMod = 1
+
+    GOSUB draw_timer
+    //tw_a4 - cx[4] cy[4] cz[4] czAngle[4]	|| czAngle[9]
+    x[1] = cx[4]
+    y[1] = cy[4]
+    z[1] = cz[4]
+    czAngle[9] = czAngle[4]
+    czAngle[9] -= 180.0
+    //-- Coords
+    x[0] = x[1] 
+    y[0] = y[1] - 9.982        
+    z[0] = z[1] - 0.70
+    IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[1] y[1] z[1]) (60.0 60.0 60.0) FALSE 
+        IF flag_event_msg_voice = 0 	// 0:false||1:true
+            flag_event_msg_voice = 1 	// 0:false||1:true
+            GOSUB sfxStartDialogue
         ENDIF
-        IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -1.5) (1 0 0 0 0)
+        GOSUB draw_photo_bomb
+    ENDIF
+    IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -1.5) (1 0 0 0 0)
+        IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
+            GOSUB draw_indicator
+            IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
+            AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
+            AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
+            AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
+            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
+                zAngle = czAngle[9]	
+                SET_CHAR_HEADING player_actor zAngle
+                    zAngle = czAngle[9]	
+                    GOSUB animSequence
+                GOTO finish_mission
+            ENDIF
+        ELSE
+            x[0] = x[1] 
+            y[0] = y[1] + 9.982        
+            z[0] = z[1] - 0.70
             IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
                 GOSUB draw_indicator
                 IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
@@ -588,40 +623,23 @@ READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "config" "LANG" (iLanguage) 
                 AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                 AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
                 AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                    zAngle = czAngle[9]	
+                    zAngle = czAngle[4] 
                     SET_CHAR_HEADING player_actor zAngle
-                        zAngle = czAngle[9]	
+                        zAngle = czAngle[4]
                         GOSUB animSequence
                     GOTO finish_mission
                 ENDIF
-            ELSE
-                x[0] = x[1] 
-                y[0] = y[1] + 9.982        
-                z[0] = z[1] - 0.70
-                IF LOCATE_CHAR_ANY_MEANS_3D player_actor (x[0] y[0] z[0]) (10.0 10.0 10.0) FALSE 
-                    GOSUB draw_indicator
-                    IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                    AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                    AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                    AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                    AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                        zAngle = czAngle[4] 
-                        SET_CHAR_HEADING player_actor zAngle
-                            zAngle = czAngle[4]
-                            GOSUB animSequence
-                        GOTO finish_mission
-                    ENDIF
-                ENDIF
             ENDIF
         ENDIF
-        IF timerb > iTotalTime
-            GOTO mission_failed
-        ENDIF
-    ELSE
+    ENDIF
+    IF timerb > iTotalTime
         GOTO mission_failed
     ENDIF
-        WAIT 0
-    GOTO checkpointE_loop
+ELSE
+    GOTO mission_failed
+ENDIF
+WAIT 0
+GOTO checkpointE_loop
 
 //Finish
 finish_mission:
@@ -645,7 +663,7 @@ ELSE
 ENDIF
 iTotalScore = iMissionScore
 iTotalScore += iExtraTimeScore
-LVAR_INT actualScore
+
 READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "score" "sc0" (actualScore)
 IF iTotalScore > actualScore
     WRITE_INT_TO_INI_FILE iTotalScore "CLEO\SpiderJ16D\config.ini" "score" "sc0"
@@ -656,6 +674,7 @@ GOSUB destroyTwoWebs
 //GOSUB sfxEndDialogue
 GOSUB sfxFinishMissionDialogue
 flag_event_msg_voice = 0 	// 0:false||1:true
+
 WAIT 1000
 GOTO mission_passed
 //-+-----------------------------------------------------------------------------------------
@@ -780,6 +799,9 @@ RETURN
 
 
 //-+---------------------------------GOSUB HELPERS---------------------------------------
+readVars:
+    GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
+RETURN
 
 animSequence:
     fScoreCounter = 0.0
