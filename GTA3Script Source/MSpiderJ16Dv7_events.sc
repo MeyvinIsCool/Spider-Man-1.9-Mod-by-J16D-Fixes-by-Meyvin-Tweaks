@@ -61,6 +61,12 @@ IF NOT flag_player_on_mission = 4   //4:street crimes
     ENDIF       
 ENDIF  
 
+timera = 0
+GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
+
+GOSUB generate_random_coords
+GOSUB generate_random_coords_2
+
 mission_init_reset:
 GOSUB readVars
 IF toggleSpiderMod = 0
@@ -73,12 +79,6 @@ IF toggleSpiderMod = 0
         ENDIF
     ENDWHILE
 ENDIF
-timera = 0
-GENERATE_RANDOM_INT_IN_RANGE 1 5 iRandomMission
-
-GOSUB generate_random_coords
-GOSUB generate_random_coords_2
-
 
 main_loop:
     IF IS_PLAYER_PLAYING 0
