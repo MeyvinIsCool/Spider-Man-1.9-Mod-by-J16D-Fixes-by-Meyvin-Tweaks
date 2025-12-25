@@ -267,7 +267,7 @@ drawFocusBar:
         ENDIF
     ENDIF
     // Focus Bar Use
-    IF iFocus >= 5
+    IF iFocus > 0
         IF IS_BUTTON_JUST_PRESSED PAD1 DPADLEFT
             STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lf.cs"     // Life Regeneration
         ENDIF

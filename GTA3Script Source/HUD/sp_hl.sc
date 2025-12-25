@@ -163,7 +163,7 @@ drawHealth:
     USE_TEXT_COMMANDS FALSE
     SET_SPRITES_DRAW_BEFORE_FADE TRUE
     IF flag_player_hit_counter = 1
-        IF iTempVar <= 23
+        IF iTempVar <= 20
             DRAW_SPRITE idHB (105.15 41.05) (sx sy) (155 30 30 255)
             // Draw Health Bar On (pass smoothed percent)
             sx = 160.45
@@ -196,7 +196,7 @@ drawHealthNumber:
 RETURN
 
 drawRedBackgroundDeath:
-    IF iTempVar < 23
+    IF iTempVar <= 20
         CLEO_CALL getCurrentResolution 0 (sx sy) 
         GET_FIXED_XY_ASPECT_RATIO (sx sy) (sx sy)    //(300.0 93.33)
         USE_TEXT_COMMANDS FALSE
