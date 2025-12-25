@@ -1,14 +1,31 @@
 // by J16D
-// Life Regeneration (ALPHA, Does not represent the final version)
-// Spider-Man Mod for GTA SA c.2018 - 2021
+// Fixes by Meyvin Tweaks
+// Life Regeneration / Finisher (Not yet implemented) (WIP)
+// Spider-Man Mod for GTA SA c.2018 - 2026
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
+
 //data
-CONST_INT inital_delay 600 //ms
-CONST_INT delay 3000 //ms
-CONST_FLOAT speed 0.01
+CONST_INT inital_delay 50 //ms
+CONST_FLOAT speed 0.05
 CONST_INT player 0
+
+CONST_INT iFocusPoint_1 1
+CONST_INT iFocusPoint_2 2
+CONST_INT iFocusPoint_3 3
+CONST_INT iFocusPoint_4 4
+CONST_INT iFocusPoint_5 5
+CONST_INT iFocusPoint_6 6
+CONST_INT iFocusPoint_7 7
+CONST_INT iFocusPoint_8 8
+CONST_INT iFocusPoint_9 9
+CONST_INT iFocusPoint_10 10
+CONST_INT iFocusPoint_11 11
+CONST_INT iFocusPoint_12 12
+CONST_INT iFocusPoint_13 13
+CONST_INT iFocusPoint_14 14
+CONST_INT iFocusPoint_15 15
 
 SCRIPT_START
 {
@@ -19,10 +36,9 @@ WAIT 0
 WAIT 0
 WAIT 0
 LVAR_INT player_actor toggleSpiderMod
-LVAR_INT iFocusCounter pl_health pl_max_health 
-LVAR_INT iCurrentHealth
-LVAR_FLOAT fCurrentMaxHealth fCurrentHealth fPercentHealth
-LVAR_FLOAT fTempVar
+LVAR_INT iFocusCounter pl_health pl_max_health
+LVAR_INT iHealPoint
+LVAR_FLOAT fCurrentMaxHealth
  
 GET_PLAYER_CHAR 0 player_actor
 
@@ -30,38 +46,27 @@ main_loop:
     IF IS_PLAYER_PLAYING player
         IF NOT HAS_CHAR_BEEN_ARRESTED player_actor
             IF NOT IS_CHAR_DEAD player_actor
-                GOSUB readVars
-                IF toggleSpiderMod = 1 //TRUE
+                GET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                GOSUB getCurrentHealth
+                IF pl_health < pl_max_health
+                    GOSUB focus_heal
 
-                    GOSUB getCurrentHealth
-                    IF pl_health < pl_max_health
+                    timera = 0
+                    WHILE inital_delay >= timera
+                        GOSUB getHealthMath
+                        WAIT 0
+                    ENDWHILE
 
-                        GET_CLEO_SHARED_VAR varUseFocus iFocusCounter
-                        iFocusCounter -= 15
-                        SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
-
-                        timera = 0
-                        WHILE inital_delay >= timera
-
-                            GOSUB getHealthMath
-                            SET_CHAR_HEALTH player_actor iCurrentHealth
-                            SET_CHAR_PROOFS player_actor FALSE FALSE FALSE TRUE FALSE
-                            //PRINT_FORMATTED_NOW "max:%i curr:%i" 1 pl_max_health pl_health    //debug
-
+                    IF IS_BUTTON_PRESSED PAD1 DPADDOWN
+                        WHILE IS_BUTTON_PRESSED PAD1 DPADDOWN
                             WAIT 0
                         ENDWHILE
-
-                        IF timera >= inital_delay
-                            USE_TEXT_COMMANDS FALSE
-                            WAIT 50
-                            TERMINATE_THIS_CUSTOM_SCRIPT    
-                        ENDIF                        
-
-                    ENDIF
-                ELSE
-                    USE_TEXT_COMMANDS FALSE
-                    WAIT 50
-                    TERMINATE_THIS_CUSTOM_SCRIPT
+                    ENDIF  
+                    IF timera >= inital_delay
+                        USE_TEXT_COMMANDS FALSE
+                        WAIT 50
+                        TERMINATE_THIS_CUSTOM_SCRIPT    
+                    ENDIF                        
                 ENDIF
             ENDIF        
         ENDIF
@@ -80,14 +85,103 @@ getCurrentHealth:
 RETURN
 
 getHealthMath:
-    GET_CHAR_HEALTH_PERCENT player_actor (fPercentHealth)
-    fPercentHealth /= 100.0
-    fPercentHealth +=@ speed
-    CLAMP_FLOAT fPercentHealth 0.0 1.0 (fPercentHealth)
-    fTempVar = fCurrentMaxHealth
-    fTempVar *= fPercentHealth
-    iCurrentHealth =# fTempVar
+    GET_CHAR_HEALTH player_actor (pl_health)
+    pl_health += iHealPoint
+    SET_CHAR_HEALTH player_actor (pl_health)
 RETURN
+
+focus_heal:
+    IF iFocusCounter >= 15
+        iFocusCounter -= 15
+        iHealPoint = iFocusPoint_15
+        SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+    ELSE
+        IF iFocusCounter = 14
+            iFocusCounter -= 14
+            iHealPoint = iFocusPoint_14
+            SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+        ELSE
+            IF iFocusCounter = 13
+                iFocusCounter -= 13
+                iHealPoint = iFocusPoint_13
+                SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+            ELSE 
+                IF iFocusCounter = 12
+                    iFocusCounter -= 12
+                    iHealPoint = iFocusPoint_12
+                    SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                ELSE 
+                    IF iFocusCounter = 11
+                        iFocusCounter -= 11
+                        iHealPoint = iFocusPoint_11
+                        SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                    ELSE 
+                        IF iFocusCounter = 10
+                            iFocusCounter -= 10
+                            iHealPoint = iFocusPoint_10
+                            SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                        ELSE  
+                            IF iFocusCounter = 9
+                                iFocusCounter -= 9
+                                iHealPoint = iFocusPoint_9
+                                SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                            ELSE    
+                                IF iFocusCounter = 8
+                                    iFocusCounter -= 8
+                                    iHealPoint = iFocusPoint_8
+                                    SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                                ELSE    
+                                    IF iFocusCounter = 7
+                                        iFocusCounter -= 7
+                                        iHealPoint = iFocusPoint_7
+                                        SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                                    ELSE    
+                                        IF iFocusCounter = 6
+                                            iFocusCounter -= 6
+                                            iHealPoint = iFocusPoint_6
+                                            SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                                        ELSE       
+                                            IF iFocusCounter = 5
+                                                iFocusCounter -= 5
+                                                iHealPoint = iFocusPoint_5
+                                                SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                                            ELSE    
+                                                IF iFocusCounter = 4
+                                                    iFocusCounter -= 4
+                                                    iHealPoint = iFocusPoint_4
+                                                    SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                                                ELSE    
+                                                    IF iFocusCounter = 3
+                                                        iFocusCounter -= 3
+                                                        iHealPoint = iFocusPoint_3
+                                                        SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                                                    ELSE   
+                                                        IF iFocusCounter = 2
+                                                            iFocusCounter -= 2
+                                                            iHealPoint = iFocusPoint_2
+                                                            SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                                                        ELSE    
+                                                            IF iFocusCounter = 1
+                                                                iFocusCounter -= 1
+                                                                iHealPoint = iFocusPoint_1
+                                                                SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                                                            ENDIF  
+                                                        ENDIF
+                                                    ENDIF
+                                                ENDIF
+                                            ENDIF
+                                        ENDIF
+                                    ENDIF
+                                ENDIF
+                            ENDIF
+                        ENDIF
+                    ENDIF
+                ENDIF
+            ENDIF
+        ENDIF
+    ENDIF                                            
+RETURN
+
 }
 SCRIPT_END
 
