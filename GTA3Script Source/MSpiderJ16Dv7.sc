@@ -1622,12 +1622,12 @@ ProcessGame_and_DrawItems_upper_Panel:
 
     // DRAW_LEVEL_PROGRESS
     CLEO_CALL drawBar 0 fCurrentLevel
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (587.0 9.0) (82.5 6.0) (0 0 0 0) (0.25) (1 1 1 1) (19 247 232 200) -1 -1 (0.0 0.0) //LINE_SIDES
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (587.0 9.0) (82.5 6.0) (0 0 0 0) (0.5) (1 1 1 1) (19 247 232 200) -1 -1 (0.0 0.0) //LINE_SIDES
     iTempVar =# fCurrentLevel
     CLEO_CALL GUI_DrawBox_WithNumber 0 (553.0 19.0) (15.0 5.0) (29 38 53 0) 121 14 (0.0 0.0) iTempVar  //~1~
     iTempVar = 1000
     CLEO_CALL GUI_DrawBox_WithNumber 0 (572.0 19.0) (15.0 5.0) (29 38 53 0) 125 15 (0.0 0.0) iTempVar  // ~1~ XP
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (587.0 19.0) (83.0 11.0) (0 0 0 0) (0.25) (0 0 1 0) (19 247 232 200) -1 -1 (0.0 0.0) //LINE_DOWN_SIDE
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (587.0 19.0) (83.0 11.0) (0 0 0 0) (0.5) (0 0 1 0) (19 247 232 200) -1 -1 (0.0 0.0) //LINE_DOWN_SIDE
 
     USE_TEXT_COMMANDS FALSE
 RETURN
@@ -2035,7 +2035,7 @@ ProcessGame_and_DrawMenu_MAP_Legend_A:
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (75.0 60.0) (100.0 20.0) (1 206 251 200) (0.5) (0 0 0 0) (0 125 180 150) -1 -1 (0.0 0.0)    //UPPER_ZONE_NAME
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (75.0 60.0) (100.0 20.0) (0 0 0 0) (0.5) (0 0 0 0) (0 125 180 150) 167 7 (-40.0 0.0)    //San Fierro
 
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (100.0 220.0) (150.0 300.0) (14 20 32 255) (0.6) (1 1 1 1) (0 125 180 150) -1 -1 (0.0 0.0)    //BLUE_BACKGROUND
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (100.0 220.0) (150.0 300.0) (14 20 32 255) (0.65) (1 1 1 1) (0 125 180 150) -1 -1 (0.0 0.0)    //BLUE_BACKGROUND
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (100.0 82.5) (150.0 25.0) (19 77 88 50) (0.25) (0 0 1 0) (25 255 251 200) -1 -1 (0.0 0.0)    //empty
 
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (100.0 390.0) (150.0 20.0) (16 43 52 200) (0.5) (0 0 0 0) (0 125 180 150) 178 5 (0.0 0.0)    //LOWER_PROGRESS ||Show Legend
