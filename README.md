@@ -42,7 +42,8 @@ I Had So Much Fun Time Making These Fixes And Also Thanks To These People Who He
 - Aperture Gamer (Help To Make Additional Features On The Mod)
 - Teo (Collecting Suits And Suit Chest)
 - Mr.Andres5555 (Making Suits)
-- Bilyyy (Animations)
+- Billyyy (Animations)
+- WIGAME (Animations)
 - Zolani (Sounds)
 - Tamaputra (Sounds)
 
