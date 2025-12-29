@@ -714,19 +714,22 @@ mission_cleanup:
     REMOVE_ANIMATION "mweb"
     REMOVE_AUDIO_STREAM iSfx[0]
     REMOVE_AUDIO_STREAM iSfx[1]
+
     LVAR_INT sfxState
     GET_AUDIO_STREAM_STATE iSfx[2] (sfxState)
     WHILE sfxState = 1  // Playing
         GET_AUDIO_STREAM_STATE iSfx[2] (sfxState)
         WAIT 0
     ENDWHILE
+
     REMOVE_AUDIO_STREAM iSfx[2]
-    USE_TEXT_COMMANDS TRUE
+    //USE_TEXT_COMMANDS TRUE
     USE_TEXT_COMMANDS FALSE
     WAIT 0
     REMOVE_TEXTURE_DICTIONARY
 	MISSION_HAS_FINISHED
     SET_PLAYER_CYCLE_WEAPON_BUTTON 0 FALSE
+    SET_PLAYER_DISPLAY_VITAL_STATS_BUTTON 0 FALSE
 RETURN
 //-+-----------------------------------------------------------------------------------------
 
