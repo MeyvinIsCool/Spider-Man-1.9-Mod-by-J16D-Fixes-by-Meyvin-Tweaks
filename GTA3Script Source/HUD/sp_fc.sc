@@ -8,14 +8,15 @@ SCRIPT_START
 {
 SCRIPT_NAME sp_fc
 LVAR_INT player_actor toggleSpiderMod isInMainMenu toggleHUD hud_mode is_in_interior
-LVAR_INT iTempVar iTempVar2 is_hud_enabled is_opening_door
-LVAR_FLOAT x y z sx sy
-LVAR_INT iFocusHit iFocus iLastCount eventArgVar iChar pEntity iEntityType j 
+LVAR_INT iTempVar iTempVar2 iTempVar3 is_hud_enabled is_opening_door
+LVAR_FLOAT sx sy
+LVAR_INT iFocusHit iFocus iLastCount
 LVAR_INT flag_player_hit_counter
 
 GET_PLAYER_CHAR 0 player_actor
 iFocusHit = 0
 iFocus = 0
+iTempVar3 = 0
 SET_CLEO_SHARED_VAR varFocusCount iFocusHit             //Focus Counter
 SET_CLEO_SHARED_VAR varUseFocus iFocus       //Hits Counter
 
@@ -78,9 +79,34 @@ main_loop:
                             WAIT 0
                             ENDWHILE       
                         ENDIF
-
                     ENDWHILE           
                 ENDIF
+
+                focusbar_UI:
+                GET_CLEO_SHARED_VAR varUseFocus iFocus
+                IF iFocus = 15
+                    GOSUB readVars
+                    IF isInMainMenu = 0
+                        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 10
+                        iTempVar3 = 1
+                    ENDIF
+                ELSE
+                    IF iFocus = 30
+                        GOSUB readVars
+                        IF isInMainMenu = 0
+                            STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 10
+                            iTempVar3 = 2
+                        ENDIF
+                    ELSE
+                        IF iFocus = 45
+                            GOSUB readVars
+                            IF isInMainMenu = 0
+                                STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 10
+                                iTempVar3 = 3
+                            ENDIF  
+                        ENDIF
+                    ENDIF
+                ENDIF                
                     
             ELSE
                 end_hud_script:                 
@@ -110,7 +136,6 @@ GOTO REQUEST_Animations
 
 drawFocusBar:   
     GET_CLEO_SHARED_VAR varHitCountFlag flag_player_hit_counter
-
     GET_CLEO_SHARED_VAR varFocusCount iFocusHit     // Checks For Increase Value From Other Scripts
     GET_CLEO_SHARED_VAR varUseFocus iFocus  
 
@@ -119,7 +144,6 @@ drawFocusBar:
         SET_CLEO_SHARED_VAR varUseFocus iFocus
         iLastCount = iFocusHit
     ENDIF
-    //PRINT_FORMATTED_NOW "~y~Focus Bar Value: %i ~y~ iHitValue: %i iLastCount: %i" 1000 iFocus iFocusHit iLastCount 
 
     IF iFocus > 45
         iFocus = 45
@@ -150,7 +174,7 @@ drawFocusBar:
         ELSE    
             IF iFocus >= 1
             AND iFocus <= 3
-                DRAW_SPRITE idFBar1 (143.6 67.5) (sx sy) (255 255 255 255)    
+                DRAW_SPRITE idFBar1 (143.6 67.5) (sx sy) (255 255 255 255)              
             ELSE
                 IF iFocus >= 4
                 AND iFocus <= 5
@@ -173,7 +197,11 @@ drawFocusBar:
                                     DRAW_SPRITE idFBar6 (143.6 67.5) (sx sy) (255 255 255 255)    
                                 ELSE
                                     IF iFocus = 15
-                                        DRAW_SPRITE idFBar7 (143.6 67.5) (sx sy) (255 255 255 255)  // focusbar_charged_1   
+                                        DRAW_SPRITE idFBar7 (143.6 67.5) (sx sy) (255 255 255 255)  // focusbar_charged_1  
+                                        IF NOT iTempVar3 >= 1
+                                            iTempVar3 = 1
+                                            GOTO focusbar_UI
+                                        ENDIF                                                                            
                                     ELSE                                        
                                         IF iFocus >= 16
                                         AND iFocus <= 17
@@ -207,6 +235,12 @@ drawFocusBar:
                                                                     ELSE    
                                                                         IF iFocus = 30
                                                                             DRAW_SPRITE idFBar16 (143.6 67.5) (sx sy) (255 255 255 255)    // focusbar_charged_2
+                                                                            IF iTempVar3 >= 1
+                                                                                IF NOT iTempVar3 >= 2
+                                                                                    iTempVar3 = 2
+                                                                                    GOTO focusbar_UI
+                                                                                ENDIF
+                                                                            ENDIF                                                                              
                                                                         ELSE  
                                                                             IF iFocus = 31
                                                                                 DRAW_SPRITE idFBar17 (143.6 67.5) (sx sy) (255 255 255 255)    
@@ -237,8 +271,14 @@ drawFocusBar:
                                                                                                         AND iFocus <= 44
                                                                                                             DRAW_SPRITE idFBar24 (143.6 67.5) (sx sy) (255 255 255 255)    
                                                                                                         ELSE         
-                                                                                                            IF iFocus = 45
-                                                                                                                DRAW_SPRITE idFBar25 (143.6 67.5) (sx sy) (255 255 255 255)    
+                                                                                                            IF iFocus = 45                                                      
+                                                                                                                DRAW_SPRITE idFBar25 (143.6 67.5) (sx sy) (255 255 255 255)    // focusbar_charged_3 
+                                                                                                                IF iTempVar3 >= 1
+                                                                                                                    IF NOT iTempVar3 >= 3
+                                                                                                                        iTempVar3 = 3
+                                                                                                                        GOTO focusbar_UI
+                                                                                                                    ENDIF
+                                                                                                                ENDIF                                                                                                                   
                                                                                                             ENDIF
                                                                                                         ENDIF
                                                                                                     ENDIF
@@ -266,12 +306,32 @@ drawFocusBar:
             ENDIF
         ENDIF
     ENDIF
+
+    IF iFocus >= 0
+        GET_CLEO_SHARED_VAR varUseFocus iFocus
+        IF iFocus <= 14
+            iTempVar3 = 0
+        ELSE
+            IF iFocus >= 15
+            AND iFocus <= 29
+                iTempVar3 = 1
+            ELSE
+                IF iFocus >= 30
+                AND iFocus <= 44
+                    iTempVar3 = 2
+                ENDIF
+            ENDIF
+        ENDIF    
+        //PRINT_FORMATTED_NOW "iFocus: %i iTempVar3: %i" 2000 iFocus iTempVar3
+    ENDIF
+
     // Focus Bar Use
     IF iFocus > 0
         IF IS_BUTTON_JUST_PRESSED PAD1 DPADLEFT
             STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lf.cs"     // Life Regeneration
         ENDIF
     ENDIF
+
     WAIT 0
 RETURN
 
