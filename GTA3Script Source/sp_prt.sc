@@ -17,7 +17,7 @@ INCLUDED:
     ID:7  ||PIZZA TIME MISSION PASSED
     ID:8  ||MISSION ALERT
     ID:9  ||CRIME ALERT
-    ID:10 ||ELECTRO BOSS MISSION PASSED (UNUSED)
+    ID:10 ||FOCUS BAR FULL
     ID:11 ||DRUG DEAL MISSION PASSED 
     ID:12 ||ASSAULT MISSION PASSED 
     ID:13 ||MUGGING MISSION PASSED
@@ -43,7 +43,7 @@ FORMAT:
     ID:9
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {mission id} {text1_id} {text2_id}  
     ID:10                       
-        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {mission id} {text1_id} {text2_id}
+        STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id}
     ID:11                       
         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id} {mission id} {text1_id} {text2_id}     
     ID:12                       
@@ -324,24 +324,14 @@ SWITCH idVar
             WAIT 0
         ENDWHILE                
         BREAK 
-    CASE 10  //ID:10  ||ELECTRO BOSS FIGHT MISSION PASSED   (UNUSED)
-        // IN: {id} {total xp} {mission xp} {combat xp}
-        GOSUB play_sfx_mission_end
-        GOSUB load_textures_street_crimes
+    CASE 10  //ID:10  ||FOCUS BAR FULL (sp_fc.cs)
+        // IN: {id} 
+        GOSUB load_texture_focus_bar_full
+        GOSUB play_sfx_power_ready
         timera = 0
-        WHILE TRUE
-            GOSUB draw_electro_boss_mission_succesful
-            GOSUB draw_street_crimes_key_press_succesful
-            IF timera > 2000
-                IF IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                    WHILE IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                        WAIT 0
-                    ENDWHILE
-                    BREAK
-                ENDIF
-            ENDIF
-            IF timera > 6000   //6 sec
-                BREAK
+        WHILE 3500 >= timera
+            IF NOT IS_ON_SCRIPTED_CUTSCENE  // checks if the "widescreen" mode is active
+                GOSUB drawFocusBarFull
             ENDIF
             GOSUB readVars
             IF isInMainMenu = 1     //1:true 0: false
@@ -1098,51 +1088,19 @@ draw_pizza_time_mission_succesful:
     DRAW_SPRITE tPBBackInfo (79.0 165.0) (sx sy) (255 255 255 235)
 RETURN
 
-//-+----------------------------------- ELECTRO BOSS FIGHT
+//-+----------------------------------- FOCUS BAR FULL
 
-draw_electro_boss_mission_succesful:
-    //iTempVar2     // Total XP
-    //iTempVar3     // Mission completed XP
-    //iTempVar4     // Combat XP
-    GET_FIXED_XY_ASPECT_RATIO 25.0 25.0 (sx sy)
+drawFocusBarFull:
+    GET_FIXED_XY_ASPECT_RATIO (230.0 60.0) (sx sy)
     USE_TEXT_COMMANDS FALSE
     SET_SPRITES_DRAW_BEFORE_FADE FALSE
-    DRAW_SPRITE idMapIcon5 (21.0 110.0) (sx sy) (255 255 255 235)
-
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (58.5 105.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 975 18 0.0 0.0  // Happy Birthday Electro
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (115.5 105.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 487 20 0.0 0.0 // COMPLETED!
-
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (79.0 115.0) (120.0 20.0) (255 255 255 0) (0.75) (0 0 1 0) (255 255 255 250) -1 -1 0.0 0.0  //SIDES_LINES division
-
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (115.0 135.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 473 1 0.0 0.0 //  XP SUMMARY
-
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 145.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 977 19 0.0 0.0  // Defeat Electro
-    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 146.0) (50.0 15.0) (255 255 255 0) 122 19 0.0 0.0 iTempVar3  //+~1~
-
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 165.0) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 471 19 0.0 0.0  // Combat
-    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 166.0) (50.0 15.0) (255 255 255 0) 122 19 0.0 0.0 iTempVar4    //+~1~
-
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (79.0 180.0) (120.0 20.0) (255 255 255 0) (0.75) (0 0 1 0) (255 255 255 250) -1 -1 0.0 0.0  //SIDES_LINES division
-
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (60.0 197.5) (50.0 15.0) (255 255 255 0) (1.0) (0 0 0 0) (255 255 253 230) 472 20 0.0 0.0  // TOTAL XP EARNED
-    CLEO_CALL GUI_DrawBox_WithNumber 0 (120.0 195.0) (50.0 15.0) (255 255 255 0) 121 21 0.0 0.0 iTempVar2    //~1~
-
-    //GET_FIXED_XY_ASPECT_RATIO 250.0 180.0 (sx sy)
-    sx = 187.50
-    sy = 168.00
-    USE_TEXT_COMMANDS FALSE
-    SET_SPRITES_DRAW_BEFORE_FADE TRUE
-    DRAW_SPRITE tPBBackInfo (79.0 165.0) (sx sy) (255 255 255 235)
+    DRAW_SPRITE idFocusFull (320.0 50.0) (sx sy) (255 255 255 200)       
 RETURN
 
-
-
-load_textures_mission_label:
+load_texture_focus_bar_full:
     IF DOES_DIRECTORY_EXIST "CLEO\SpiderJ16D"
-        LOAD_TEXTURE_DICTIONARY spsams
-        LOAD_SPRITE idMainMission "m_main"
-        LOAD_SPRITE idSideMission "m_side"
-        LOAD_SPRITE idCrimeReport "crime_report"
+        LOAD_TEXTURE_DICTIONARY sptbx
+        LOAD_SPRITE idFocusFull "sp_back_fc"
     ELSE
         PRINT_STRING_NOW "~r~ERROR: 'CLEO\SpiderJ16D' folder not found!" 6000
         timera = 0
@@ -1153,6 +1111,7 @@ load_textures_mission_label:
     ENDIF
 RETURN
 
+//-+----------------------------------- MISSION LABELS
 draw_mission_labels:
     // IN: {id} {mission_id} {text1_id} {text2_id}
     //iTempVar2 = mission_id
@@ -1206,6 +1165,22 @@ draw_crime_mission_labels:
     py = 127.5
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (px py) (sx sy) (0 0 0 0) (1.0) (0 0 0 0) (255 255 253 230) iTempVar4 15 -30.0 0.0
     USE_TEXT_COMMANDS FALSE
+RETURN
+
+load_textures_mission_label:
+    IF DOES_DIRECTORY_EXIST "CLEO\SpiderJ16D"
+        LOAD_TEXTURE_DICTIONARY spsams
+        LOAD_SPRITE idMainMission "m_main"
+        LOAD_SPRITE idSideMission "m_side"
+        LOAD_SPRITE idCrimeReport "crime_report"
+    ELSE
+        PRINT_STRING_NOW "~r~ERROR: 'CLEO\SpiderJ16D' folder not found!" 6000
+        timera = 0
+        WHILE 5500 > timera
+            WAIT 0
+        ENDWHILE
+        TERMINATE_THIS_CUSTOM_SCRIPT
+    ENDIF
 RETURN
 
 //-+----------------------------------- DRUG DEAL
@@ -2092,6 +2067,8 @@ CONST_INT idBP10 46
 CONST_INT idMainMission 47
 CONST_INT idSideMission 48
 CONST_INT idCrimeReport 49
+
+CONST_INT idFocusFull 50
 
 CONST_INT idCallBack 60
 CONST_INT idCallBC 61
