@@ -35,7 +35,7 @@ WAIT 0
 WAIT 0
 WAIT 0
 LVAR_INT player_actor toggleSpiderMod isInMainMenu   //1:true 0: false
-LVAR_INT LRStick UDStick is_web_thrown iTempVar randomVal total_dmg
+LVAR_INT is_web_thrown iTempVar randomVal total_dmg
 LVAR_INT hInput iChar sfx fx_web anim_seq fx_system iHitCounter
 LVAR_FLOAT x[3] y[3] z[3] v1 v2 
 LVAR_FLOAT fCurrentTime zAngle xAngle fDistance
