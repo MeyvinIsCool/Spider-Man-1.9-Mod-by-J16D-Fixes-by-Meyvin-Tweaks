@@ -47,7 +47,8 @@ Thanks To These People Who Helped Me A Lot !
 
 Sorry If I Missed Somebody .... Thank You !
 
-<img width="232" height="227" alt="SpideyXMaryJane" src="https://github.com/user-attachments/assets/03dbacc1-fe22-4490-b458-895cedee46fa" />
+<img width="880" height="1043" alt="SpideyXMaryJane" src="https://github.com/user-attachments/assets/a7a85568-e14c-4e9c-bed5-b8ec166c6d63" />
+
 
 
 
