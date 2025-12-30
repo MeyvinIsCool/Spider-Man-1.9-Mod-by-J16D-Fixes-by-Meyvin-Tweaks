@@ -12,7 +12,6 @@ CONST_INT player 0
 SCRIPT_START
 {
 SCRIPT_NAME sp_res
-WAIT 0
 
 LVAR_INT player_actor baseObject iWebActor iWebActorR sfx
 LVAR_INT flag_photo_mode onmission toggleSpiderMod isInMainMenu
@@ -24,13 +23,8 @@ GET_PLAYER_CHAR 0 player_actor
 flag_photo_mode = 0     // 0:false||1:true  
 onmission = 0
 
-GET_PLAYER_CHAR 0 player_actor
-
-REQUEST_ANIMATION "spider"
-REQUEST_ANIMATION "mweb"
-LOAD_TEXTURE_DICTIONARY scrb
-LOAD_SPRITE objCrosshair "ilock"
-LOAD_ALL_MODELS_NOW
+GOSUB loadTextures
+WAIT 150
 
 /*
 STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_tta_InternalThread rwCrosshair
@@ -194,20 +188,28 @@ main_loop:
                     ENDIF
                     //PRINT_FORMATTED_NOW "Tower: %i" 2000 iTower
                 ENDIF
-            ENDIF
-        ELSE
+            ELSE
+                GOSUB readVars 
+                IF toggleSpiderMod = 0                   
+                    USE_TEXT_COMMANDS FALSE
+                    //WAIT 0
+                    //REMOVE_TEXTURE_DICTIONARY
+                    WAIT 0
+                    //TERMINATE_THIS_CUSTOM_SCRIPT
+                    GOTO start_check 
+                ENDIF
+            ENDIF           
+        /*ELSE
             GOSUB readVars 
             IF toggleSpiderMod = 0                   
-                REMOVE_ANIMATION "mweb"
-                REMOVE_ANIMATION "spider"
-                REMOVE_AUDIO_STREAM sfx
                 USE_TEXT_COMMANDS FALSE
                 //WAIT 0
                 //REMOVE_TEXTURE_DICTIONARY
-                WAIT 5
+                WAIT 0
                 //TERMINATE_THIS_CUSTOM_SCRIPT
                 GOTO start_check
-            ENDIF        
+            ENDIF
+            */        
         ENDIF
     ENDIF
     WAIT 0
@@ -554,6 +556,20 @@ playWebSound:
         BREAK
     ENDSWITCH
 RETURN
+
+loadTextures:
+    IF NOT HAS_ANIMATION_LOADED "spider"
+    OR NOT HAS_ANIMATION_LOADED "mweb"
+        REQUEST_ANIMATION "spider"
+        REQUEST_ANIMATION "mweb"
+        LOAD_TEXTURE_DICTIONARY scrb
+        LOAD_SPRITE objCrosshair "ilock"
+        LOAD_ALL_MODELS_NOW        
+    ENDIF
+    // loads when restarting the game
+    LOAD_SPRITE objCrosshair "ilock"    
+RETURN
+
 }
 SCRIPT_END
 
