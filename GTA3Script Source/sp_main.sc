@@ -1,7 +1,7 @@
 // by J16D
 // Main swing script
 // Fixes by Meyvin Tweaks
-// Spider-Man Mod for GTA SA c.2018 - 2022
+// Spider-Man Mod for GTA SA c.2018 - 2026
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
@@ -104,7 +104,6 @@ IF GOSUB does_scripts_exist
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_ev.cs"      // Fight - Dodge (near & far distance)
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_evb.cs"     // Manual Dodge & Sliding dodge
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_hud.cs"     // Main Hud script
-    //STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lf.cs"      // Life Regeneration
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lvl.cs"     // Level Control
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_mb.cs"      // On ground/jump script
     STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_me.cs"      // Melee Combo X4 | Air Combo x4 | Swing kick
@@ -145,11 +144,11 @@ start_check:
 GOSUB readVars
 IF toggleSpiderMod = 0
     WHILE toggleSpiderMod = 0
-        WAIT 0
         GOSUB readVars 
         IF toggleSpiderMod = 1
             BREAK
         ENDIF
+        WAIT 0
     ENDWHILE
 ENDIF
 
@@ -636,6 +635,7 @@ is_not_player_playing_anims:
                                 AND NOT IS_CHAR_PLAYING_ANIM player_actor ("airToLampB_B")   
                                 AND NOT IS_CHAR_PLAYING_ANIM player_actor ("groundToLampB")  
                                 AND NOT IS_CHAR_PLAYING_ANIM player_actor ("groundToLampD") 
+                                AND NOT IS_CHAR_PLAYING_ANIM player_actor ("t_tower_A") 
                                     RETURN_TRUE
                                     RETURN
                                 ENDIF
@@ -2464,15 +2464,26 @@ LVAR_INT player_actor toggleSpiderMod isInMainMenu
 LVAR_FLOAT currentTime
 GET_PLAYER_CHAR 0 player_actor 
 
+tmp_start_check_internalThread:
+GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod) 
+        IF toggleSpiderMod = 1
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
+
 WHILE TRUE
     IF IS_PLAYER_PLAYING player
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
-
         GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
         GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
         IF toggleSpiderMod = 1 //TRUE
             IF isInMainMenu = 0     //1:true 0: false
-
+            
                 IF IS_CHAR_PLAYING_ANIM player_actor ("swing_E_A")
                     WHILE IS_CHAR_PLAYING_ANIM player_actor ("swing_E_A")
                         GET_CHAR_ANIM_CURRENT_TIME player_actor ("swing_E_A") (currentTime)
@@ -2568,10 +2579,13 @@ WHILE TRUE
                 ENDIF
             
             ENDIF
-        //ELSE
-            //USE_TEXT_COMMANDS FALSE
-            //WAIT 50
-            //TERMINATE_THIS_CUSTOM_SCRIPT
+            GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
+            IF toggleSpiderMod = 0
+                USE_TEXT_COMMANDS FALSE
+                WAIT 50
+                //TERMINATE_THIS_CUSTOM_SCRIPT
+                GOTO tmp_start_check_internalThread
+            ENDIF
         ENDIF
     ENDIF
     WAIT 0

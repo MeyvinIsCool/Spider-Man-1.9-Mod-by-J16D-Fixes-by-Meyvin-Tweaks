@@ -1,7 +1,7 @@
 // by J16D
 // Reservoir Scripts
-// Spider-Man Mod for GTA SA c.2018 - 2022
-// Fixes And Custom Added Reservoirs By Meyvin Tweaks
+// Spider-Man Mod for GTA SA c.2018 - 2026
+// Fixes By Meyvin Tweaks
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
@@ -12,28 +12,38 @@ CONST_INT player 0
 SCRIPT_START
 {
 SCRIPT_NAME sp_res
-WAIT 1000
-LVAR_INT player_actor toggleSpiderMod isInMainMenu rwCrosshair sfx
-LVAR_INT onmission
+WAIT 0
+
+LVAR_INT player_actor baseObject iWebActor iWebActorR sfx
+LVAR_INT flag_photo_mode onmission toggleSpiderMod isInMainMenu
+LVAR_FLOAT x[2] y[2] z[2]
+LVAR_FLOAT v1 v2 sizeX sizeY fCharSpeed currentTime zAngle fFov
+LVAR_INT randomVal iTower
 
 GET_PLAYER_CHAR 0 player_actor
+flag_photo_mode = 0     // 0:false||1:true  
+onmission = 0
+
+GET_PLAYER_CHAR 0 player_actor
+
 REQUEST_ANIMATION "spider"
 REQUEST_ANIMATION "mweb"
 LOAD_TEXTURE_DICTIONARY scrb
 LOAD_SPRITE objCrosshair "ilock"
-GET_TEXTURE_FROM_SPRITE objCrosshair (rwCrosshair)
 LOAD_ALL_MODELS_NOW
 
+/*
 STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_tta_InternalThread rwCrosshair
 WAIT 0
 STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_ttb_InternalThread rwCrosshair
 WAIT 0
-STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_ttc_InternalThread rwCrosshair
+STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_ttc_InternalThread rwCrosshair   // Old method , causes crash upon reloading save game or new game
 WAIT 0
 STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_ttd_InternalThread rwCrosshair
 WAIT 0
 STREAM_CUSTOM_SCRIPT_FROM_LABEL sp_tte_InternalThread rwCrosshair
 WAIT 0
+*/
 
 start_check:
 GOSUB readVars
@@ -47,114 +57,315 @@ IF toggleSpiderMod = 0
     ENDWHILE
 ENDIF
 
-WHILE TRUE
+main_loop:
     IF IS_PLAYER_PLAYING player 
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
-        GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
-        GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
+        GOSUB readVars
         IF toggleSpiderMod = 1 //TRUE
-            IF isInMainMenu = 1 //TRUE
-                REMOVE_ANIMATION "spider"
-                REMOVE_ANIMATION "mweb"
-                REMOVE_AUDIO_STREAM sfx
-                USE_TEXT_COMMANDS FALSE
-                //WAIT 0
-                //REMOVE_TEXTURE_DICTIONARY
-                WAIT 50
-                //TERMINATE_THIS_CUSTOM_SCRIPT
-                GOTO start_check
-            ENDIF
-        ENDIF
-    ENDIF
-    WAIT 0
-ENDWHILE
-
-readVars:
-    GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
-    GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
-RETURN
-
-}
-SCRIPT_END
-
-//-+--- Thread 1
-{
-// iPhotoBombCamID = 0
-sp_tta_InternalThread:      //Reservoir 1
-LVAR_INT rwCrosshair    //in
-LVAR_INT player_actor baseObject iWebActor iWebActorR sfx
-LVAR_INT flag_photo_mode onmission toggleSpiderMod isInMainMenu
-LVAR_FLOAT x[2] y[2] z[2]
-LVAR_FLOAT v1 v2 sizeX sizeY fCharSpeed currentTime zAngle fFov
-LVAR_INT randomVal 
-GET_PLAYER_CHAR 0 player_actor
-flag_photo_mode = 0     // 0:false||1:true  
-
-WHILE TRUE
-    IF IS_PLAYER_PLAYING player 
-    AND NOT IS_CHAR_IN_ANY_CAR player_actor
-        GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
-        GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
-        IF toggleSpiderMod = 1 //TRUE
-            IF isInMainMenu = 0     //1:true 0: false
-                GET_CLEO_SHARED_VAR varReservoirInactive (onmission)
-                IF onmission = 0 
-                    //Tower
-                    x[1] = -2022.26
-                    y[1] = 13.982
-                    z[1] = 61.60
-                    //-- Coords
-                    x[0] = x[1] + 0.08
-                    y[0] = y[1] - 9.982        
-                    z[0] = z[1] - 1.0
+            IF isInMainMenu = 0 //TRUE
+                GOSUB readVars
+                IF onmission = 0                        
                     IF IS_CHAR_REALLY_IN_AIR player_actor
-                        IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 8.0
-                            GOSUB draw_indicator_r1
+
+                        GOSUB tower_nearby 
+                        IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
+                            GOSUB draw_indicator
                             IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
                             AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
                             AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                             AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
                             AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                                zAngle = 360.0
-                                SET_CHAR_HEADING player_actor zAngle
-                                GOSUB destroyTwoWebs_r1
-                                GOSUB createTwoWebs_r1
+                                IF iTower = 1
                                     zAngle = 360.0
-                                    GOSUB animSequence_r1
-                                GOSUB destroyTwoWebs_r1       
-                                WAIT 500     
+                                    SET_CHAR_HEADING player_actor zAngle
+                                    GOSUB destroyTwoWebs
+                                    GOSUB createTwoWebs
+
+                                    zAngle = 360.0
+                                    GOSUB animSequence
+                                    GOSUB destroyTwoWebs       
+                                ENDIF
+                                IF iTower = 2
+                                    zAngle = 270.0
+                                    SET_CHAR_HEADING player_actor zAngle
+                                    GOSUB destroyTwoWebs
+                                    GOSUB createTwoWebs
+
+                                    zAngle = 270.0
+                                    GOSUB animSequence
+                                    GOSUB destroyTwoWebs 
+                                ENDIF
+                                IF iTower = 3
+                                    zAngle = 360.0
+                                    SET_CHAR_HEADING player_actor zAngle
+                                    GOSUB destroyTwoWebs
+                                    GOSUB createTwoWebs
+
+                                    zAngle = 360.0
+                                    GOSUB animSequence
+                                    GOSUB destroyTwoWebs 
+                                ENDIF
+                                IF iTower = 4
+                                    zAngle = 270.0
+                                    SET_CHAR_HEADING player_actor zAngle
+                                    GOSUB destroyTwoWebs
+                                    GOSUB createTwoWebs
+
+                                    zAngle = 270.0
+                                    GOSUB animSequence
+                                    GOSUB destroyTwoWebs 
+                                ENDIF
+                                IF iTower = 5
+                                    zAngle = 360.0
+                                    SET_CHAR_HEADING player_actor zAngle
+                                    GOSUB destroyTwoWebs
+                                    GOSUB createTwoWebs
+
+                                    zAngle = 360.0
+                                    GOSUB animSequence
+                                    GOSUB destroyTwoWebs 
+                                ENDIF                                                                                                
+                                WAIT 500 
                             ENDIF
                         ELSE
-                            x[0] = x[1] + 0.08
-                            y[0] = y[1] + 9.982        
-                            z[0] = z[1] - 1.0
-                            IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 8.0
-                                GOSUB draw_indicator_r1
+
+                            GOSUB tower_nearby_2    // opposite angle
+                            IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
+                                GOSUB draw_indicator
                                 IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
                                 AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
                                 AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
                                 AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
                                 AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                                    zAngle = 180.0
-                                    SET_CHAR_HEADING player_actor zAngle
-                                    GOSUB destroyTwoWebs_r1
-                                    GOSUB createTwoWebs_r1
+                                    IF iTower = 1
                                         zAngle = 180.0
-                                        GOSUB animSequence_r1
-                                    GOSUB destroyTwoWebs_r1
-                                    WAIT 500
+                                        SET_CHAR_HEADING player_actor zAngle
+                                        GOSUB destroyTwoWebs
+                                        GOSUB createTwoWebs
+
+                                        zAngle = 180.0
+                                        GOSUB animSequence
+                                        GOSUB destroyTwoWebs
+                                    ENDIF
+                                    IF iTower = 2
+                                        zAngle = 90.0
+                                        SET_CHAR_HEADING player_actor zAngle
+                                        GOSUB destroyTwoWebs
+                                        GOSUB createTwoWebs
+
+                                        zAngle = 90.0
+                                        GOSUB animSequence
+                                        GOSUB destroyTwoWebs
+                                    ENDIF
+                                    IF iTower = 3
+                                        zAngle = 180.0
+                                        SET_CHAR_HEADING player_actor zAngle
+                                        GOSUB destroyTwoWebs
+                                        GOSUB createTwoWebs
+
+                                        zAngle = 180.0
+                                        GOSUB animSequence
+                                        GOSUB destroyTwoWebs
+                                    ENDIF      
+                                    IF iTower = 4
+                                        zAngle = 90.0
+                                        SET_CHAR_HEADING player_actor zAngle
+                                        GOSUB destroyTwoWebs
+                                        GOSUB createTwoWebs
+
+                                        zAngle = 90.0
+                                        GOSUB animSequence
+                                        GOSUB destroyTwoWebs
+                                    ENDIF      
+                                    IF iTower = 5
+                                        zAngle = 180.0
+                                        SET_CHAR_HEADING player_actor zAngle
+                                        GOSUB destroyTwoWebs
+                                        GOSUB createTwoWebs
+
+                                        zAngle = 180.0
+                                        GOSUB animSequence
+                                        GOSUB destroyTwoWebs
+                                    ENDIF                                                                                                            
+                                WAIT 500
                                 ENDIF
                             ENDIF
                         ENDIF
                     ENDIF
+                    //PRINT_FORMATTED_NOW "Tower: %i" 2000 iTower
                 ENDIF
-            ENDIF            
             ENDIF
+        ELSE
+            GOSUB readVars 
+            IF toggleSpiderMod = 0                   
+                REMOVE_ANIMATION "mweb"
+                REMOVE_ANIMATION "spider"
+                REMOVE_AUDIO_STREAM sfx
+                USE_TEXT_COMMANDS FALSE
+                //WAIT 0
+                //REMOVE_TEXTURE_DICTIONARY
+                WAIT 5
+                //TERMINATE_THIS_CUSTOM_SCRIPT
+                GOTO start_check
+            ENDIF        
         ENDIF
+    ENDIF
     WAIT 0
-ENDWHILE
+GOTO main_loop
 
-animSequence_r1:
+readVars:
+    GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
+    GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
+    GET_CLEO_SHARED_VAR varReservoirInactive (onmission)
+RETURN
+
+tower_nearby:
+    //Tower 1
+    x[1] = -2022.26
+    y[1] = 13.982
+    z[1] = 61.60
+    //-- Coords 1
+    x[0] = x[1] + 0.08
+    y[0] = y[1] - 9.982        
+    z[0] = z[1] - 1.0
+    IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
+        iTower = 1
+        RETURN_TRUE
+        RETURN
+    ELSE
+        //Tower 2
+        x[1] = -2192.0 
+        y[1] = 389.789 
+        z[1] = 64.624
+        //-- Coords 2
+        x[0] = x[1] - 9.982
+        y[0] = y[1] - 0.08        
+        z[0] = z[1] - 0.75
+        IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
+            iTower = 2
+            RETURN_TRUE
+            RETURN
+        ELSE
+            //Tower 3
+            x[1] = -1873.89
+            y[1] = 900.735
+            z[1] = 65.2756
+            //-- Coords
+            x[0] = x[1] - 0.08
+            y[0] = y[1] - 9.982        
+            z[0] = z[1] - 0.70    
+            IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
+                iTower = 3
+                RETURN_TRUE
+                RETURN    
+            ELSE
+                //Tower 4
+                x[1] = -1812.37 
+                y[1] = 1039.22 
+                z[1] = 82.0859
+                //-- Coords
+                x[0] = x[1] - 9.982
+                y[0] = y[1] + 0.08    
+                z[0] = z[1] - 0.70
+                IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
+                    iTower = 4
+                    RETURN_TRUE
+                    RETURN    
+                ELSE
+                    //Tower 5
+                    x[1] = -1589.35
+                    y[1] = 951.715
+                    z[1] = 34.5971
+                    //-- Coords
+                    x[0] = x[1] + 0.08
+                    y[0] = y[1] - 9.982        
+                    z[0] = z[1] - 0.75 
+                    IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
+                        iTower = 5
+                        RETURN_TRUE
+                        RETURN    
+                    ENDIF
+                ENDIF
+            ENDIF
+        ENDIF                                                                                  
+    ENDIF
+    RETURN_FALSE
+RETURN
+
+tower_nearby_2:
+    //Tower 1
+    x[1] = -2022.26
+    y[1] = 13.982
+    z[1] = 61.60
+    //-- Coords 1
+    x[0] = x[1] + 0.08
+    y[0] = y[1] + 9.982        
+    z[0] = z[1] - 1.0
+    IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
+        iTower = 1
+        RETURN_TRUE
+        RETURN
+    ELSE
+        //Tower 2
+        x[1] = -2192.0 
+        y[1] = 389.789 
+        z[1] = 64.624
+        //-- Coords 2
+        x[0] = x[1] + 9.982  
+        y[0] = y[1] - 0.08      
+        z[0] = z[1] - 0.75   
+        IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
+            iTower = 2
+            RETURN_TRUE
+            RETURN
+        ELSE
+            //Tower 3
+            x[1] = -1873.89
+            y[1] = 900.735
+            z[1] = 65.2756
+            //-- Coords
+            x[0] = x[1] - 0.08
+            y[0] = y[1] + 9.982        
+            z[0] = z[1] - 0.70 
+            IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
+                iTower = 3
+                RETURN_TRUE
+                RETURN    
+            ELSE
+                //Tower 4
+                x[1] = -1812.37 
+                y[1] = 1039.22 
+                z[1] = 82.0859
+                //-- Coords
+                x[0] = x[1] + 9.982  
+                y[0] = y[1] + 0.08      
+                z[0] = z[1] - 0.70
+                IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
+                    iTower = 4
+                    RETURN_TRUE
+                    RETURN    
+                ELSE
+                    //Tower 5
+                    x[1] = -1589.35
+                    y[1] = 951.715
+                    z[1] = 34.5971
+                    //-- Coords
+                    x[0] = x[1] + 0.08
+                    y[0] = y[1] + 9.982        
+                    z[0] = z[1] - 0.75
+                    IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
+                        iTower = 5
+                        RETURN_TRUE
+                        RETURN    
+                    ENDIF
+                ENDIF
+            ENDIF
+        ENDIF                                                                                  
+    ENDIF
+    RETURN_FALSE
+RETURN
+
+animSequence:
     GET_CHAR_SPEED player_actor (fCharSpeed)
     WAIT 0
     SET_CHAR_COLLISION player_actor FALSE
@@ -176,7 +387,7 @@ animSequence_r1:
         CLAMP_FLOAT fCharSpeed 7.0 13.0 (fCharSpeed)
     ENDIF      
     WAIT 0   
-    GOSUB playWebSound_r1
+    GOSUB playWebSound
     TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "t_tower_A" "spider" 91.0 (0 1 1 0) -2
     IF DOES_CHAR_EXIST iWebActor
     AND DOES_CHAR_EXIST iWebActorR
@@ -217,9 +428,9 @@ animSequence_r1:
                     //CAMERA_SET_LERP_FOV 105.0 fFov 5 FALSE
                     DETACH_OBJECT baseObject (0.0 0.0 0.0) FALSE
                     SET_OBJECT_COORDINATES baseObject (x[0] y[0] z[0])
-                    GOSUB playSFXSound_r1
+                    GOSUB playSFXSound
                 ENDIF
-                GOSUB add_force_to_char_r1
+                GOSUB add_force_to_char
                 IF  currentTime > 0.778     //frame 70/90
                     BREAK
                 ENDIF
@@ -231,7 +442,7 @@ animSequence_r1:
     RESTORE_CAMERA_JUMPCUT
 RETURN
 
-add_force_to_char_r1:
+add_force_to_char:
     IF  0.722 > currentTime     //frame 65/90
         CLEO_CALL addForceToChar 0 player_actor 0.0 1.0 0.0 fCharSpeed
         fCharSpeed -=@ 0.1 //0.01
@@ -246,17 +457,19 @@ add_force_to_char_r1:
     ENDIF
 RETURN
 
-draw_indicator_r1:
+draw_indicator:
     IF flag_photo_mode = 0  // 0:false||1:true
         IF IS_POINT_ON_SCREEN (x[1] y[1] z[1]) 0.5
             CONVERT_3D_TO_SCREEN_2D (x[1] y[1] z[1]) TRUE TRUE (v1 v2) (sizeX sizeY)
-            DRAW_TEXTURE_PLUS rwCrosshair DRAW_EVENT_BEFORE_HUD (v1 v2) (40.0 40.0) 0.0 0.0 TRUE 0 0 (255 255 255 200)
+            GET_FIXED_XY_ASPECT_RATIO 40.0 40.0 (sizeX sizeY)
+            //DRAW_TEXTURE_PLUS objCrosshair DRAW_EVENT_BEFORE_HUD (v1 v2) (40.0 40.0) 0.0 0.0 TRUE 0 0 (255 255 255 200)
+            DRAW_SPRITE objCrosshair (v1 v2) (sizeX sizeY) (255 255 255 200)
             USE_TEXT_COMMANDS FALSE
         ENDIF
     ENDIF
 RETURN
 
-createTwoWebs_r1:
+createTwoWebs:
     IF NOT DOES_CHAR_EXIST iWebActor
     AND NOT DOES_CHAR_EXIST iWebActorR
     AND NOT DOES_OBJECT_EXIST baseObject
@@ -290,7 +503,7 @@ createTwoWebs_r1:
     ENDIF
 RETURN
 
-destroyTwoWebs_r1:
+destroyTwoWebs:
     IF DOES_CHAR_EXIST iWebActor
         DELETE_CHAR iWebActor
     ENDIF
@@ -302,7 +515,7 @@ destroyTwoWebs_r1:
     ENDIF
 RETURN
 
-playSFXSound_r1:
+playSFXSound:
     REMOVE_AUDIO_STREAM sfx
     IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\web1_f.mp3" (sfx)
         SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
@@ -311,7 +524,7 @@ playSFXSound_r1:
     ENDIF
 RETURN
 
-playWebSound_r1:
+playWebSound:
     REMOVE_AUDIO_STREAM sfx
     GENERATE_RANDOM_INT_IN_RANGE 0 4 (randomVal)
     SWITCH randomVal
@@ -342,1098 +555,7 @@ playWebSound_r1:
     ENDSWITCH
 RETURN
 }
-
-//-+--- Thread 2
-{
-// iPhotoBombCamID = 1
-sp_ttb_InternalThread:      //Reservoir 2
-LVAR_INT rwCrosshair    //in
-LVAR_INT player_actor baseObject iWebActor iWebActorR sfx
-LVAR_INT flag_photo_mode onmission toggleSpiderMod isInMainMenu
-LVAR_FLOAT x[2] y[2] z[2]
-LVAR_FLOAT v1 v2 sizeX sizeY fCharSpeed currentTime zAngle fFov
-LVAR_INT randomVal 
-GET_PLAYER_CHAR 0 player_actor
-flag_photo_mode = 0     // 0:false||1:true
-onmission = 0 
-
-WHILE TRUE
-    IF IS_PLAYER_PLAYING player 
-    AND NOT IS_CHAR_IN_ANY_CAR player_actor
-        GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
-        GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
-        IF toggleSpiderMod = 1 //TRUE
-            IF isInMainMenu = 0     //1:true 0: false
-                GET_CLEO_SHARED_VAR varReservoirInactive (onmission)
-                IF onmission = 0 
-                    //Tower
-                    x[1] = -2192.0 
-                    y[1] = 389.789 
-                    z[1] = 64.624
-                    //-- Coords
-                    x[0] = x[1] - 9.982
-                    y[0] = y[1] - 0.08        
-                    z[0] = z[1] - 0.75
-                    IF IS_CHAR_REALLY_IN_AIR player_actor
-                        IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
-                            GOSUB draw_indicator_r2
-                            IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                            AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                            AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                            AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                                zAngle = 270.0
-                                SET_CHAR_HEADING player_actor zAngle
-                                GOSUB destroyTwoWebs_r2
-                                GOSUB createTwoWebs_r2
-                                    zAngle = 270.0
-                                    GOSUB animSequence_r2
-                                GOSUB destroyTwoWebs_r2       
-                                WAIT 500     
-                            ENDIF
-                        ELSE
-                            x[0] = x[1] + 9.982  
-                            y[0] = y[1] - 0.08      
-                            z[0] = z[1] - 0.75
-                            IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
-                                GOSUB draw_indicator_r2
-                                IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                                AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                                AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                                AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                                AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                                    zAngle = 90.0
-                                    SET_CHAR_HEADING player_actor zAngle
-                                    GOSUB destroyTwoWebs_r2
-                                    GOSUB createTwoWebs_r2
-                                        zAngle = 90.0
-                                        GOSUB animSequence_r2
-                                    GOSUB destroyTwoWebs_r2
-                                    WAIT 500
-                                ENDIF
-                            ENDIF
-                        ENDIF
-                    ENDIF
-                ENDIF
-            ENDIF
-            ENDIF
-        ENDIF
-    WAIT 0
-ENDWHILE
-
-animSequence_r2:
-    GET_CHAR_SPEED player_actor (fCharSpeed)
-    WAIT 0
-    SET_CHAR_COLLISION player_actor FALSE
-    WAIT 1
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    WAIT 0
-    SET_CHAR_COLLISION player_actor TRUE
-    WAIT 0
-    /*WAIT 0
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    WAIT 1
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    WAIT 0*/
-    IF flag_photo_mode = 0
-        fCharSpeed += 10.0
-        CLAMP_FLOAT fCharSpeed 6.0 15.0 (fCharSpeed)
-    ELSE        //Default
-        fCharSpeed += 13.0
-        CLAMP_FLOAT fCharSpeed 7.0 13.0 (fCharSpeed)
-    ENDIF
-    IF fCharSpeed < 13.0
-        GET_CHAR_SPEED player_actor (fCharSpeed)
-        fCharSpeed += 13.0
-        CLAMP_FLOAT fCharSpeed 7.0 13.0 (fCharSpeed)
-    ENDIF     
-    WAIT 0
-    GOSUB playWebSound_r2
-    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "t_tower_A" "spider" 91.0 (0 1 1 0) -2
-    IF DOES_CHAR_EXIST iWebActor
-    AND DOES_CHAR_EXIST iWebActorR
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("w_tower_L_A" "mweb") 91.0 (0 1 1 1) -2
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("w_tower_R_A" "mweb") 91.0 (0 1 1 1) -2
-    ENDIF
-    WAIT 0
-    SET_CHAR_ANIM_SPEED player_actor "t_tower_A" 1.6 //1.2
-    IF DOES_CHAR_EXIST iWebActor
-    AND DOES_CHAR_EXIST iWebActorR
-        SET_CHAR_ANIM_PLAYING_FLAG iWebActor ("w_tower_L_A") 0
-        SET_CHAR_ANIM_PLAYING_FLAG iWebActorR ("w_tower_R_A") 0
-    ENDIF
-    IF DOES_OBJECT_EXIST baseObject
-        ATTACH_OBJECT_TO_CHAR baseObject player_actor (0.0 0.0 0.0) (0.0 0.0 0.0)
-    ENDIF
-    IF IS_CHAR_PLAYING_ANIM player_actor ("t_tower_A")
-        WHILE IS_CHAR_PLAYING_ANIM player_actor ("t_tower_A")
-            SET_CHAR_HEADING player_actor zAngle
-            GET_CHAR_ANIM_CURRENT_TIME player_actor ("t_tower_A") (currentTime)
-            IF DOES_CHAR_EXIST iWebActor
-            AND DOES_CHAR_EXIST iWebActorR
-                SET_CHAR_ANIM_CURRENT_TIME iWebActor ("w_tower_L_A") currentTime
-                SET_CHAR_ANIM_CURRENT_TIME iWebActorR ("w_tower_R_A") currentTime
-            ENDIF
-            CLEO_CALL setCameraOnChar 0 (x[1] y[1] z[1]) player_actor flag_photo_mode    // 1:normal||0:Photo_mode
-
-            IF 0.200 >= currentTime     //frame 18/90
-                IF flag_photo_mode = 0    //Smooth
-                    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-                    CLEO_CALL addForceToChar 0 player_actor 0.0 0.01 0.0 3.5
-                ELSE                //Default  (for photo mode)         
-                    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0] 
-                ENDIF
-            ELSE
-                IF IS_OBJECT_ATTACHED baseObject
-                    //GET_CAMERA_FOV fFov
-                    //CAMERA_SET_LERP_FOV 105.0 fFov 5 FALSE
-                    DETACH_OBJECT baseObject (0.0 0.0 0.0) FALSE
-                    SET_OBJECT_COORDINATES baseObject (x[0] y[0] z[0])
-                    GOSUB playSFXSound_r2
-                ENDIF
-                GOSUB add_force_to_char_r2
-                IF  currentTime > 0.778     //frame 70/90
-                    BREAK
-                ENDIF
-            ENDIF
-            WAIT 0
-        ENDWHILE
-    ENDIF
-    RESTORE_CAMERA
-    RESTORE_CAMERA_JUMPCUT
-RETURN
-
-add_force_to_char_r2:
-    IF  0.722 > currentTime     //frame 65/90
-        CLEO_CALL addForceToChar 0 player_actor 0.0 1.0 0.0 fCharSpeed
-        fCharSpeed -=@ 0.1 //0.01
-        IF 4.0 > fCharSpeed
-            fCharSpeed = 4.0
-        ENDIF              
-    ELSE
-        IF  0.778 >= currentTime     //frame 70/90
-            fCharSpeed +=@ 0.1
-            CLEO_CALL addForceToChar 0 player_actor 0.0 1.0 0.0 fCharSpeed
-        ENDIF
-    ENDIF
-RETURN
-
-draw_indicator_r2:
-    IF flag_photo_mode = 0  // 0:false||1:true
-        IF IS_POINT_ON_SCREEN (x[1] y[1] z[1]) 0.5
-            CONVERT_3D_TO_SCREEN_2D (x[1] y[1] z[1]) TRUE TRUE (v1 v2) (sizeX sizeY)
-            DRAW_TEXTURE_PLUS rwCrosshair DRAW_EVENT_BEFORE_HUD (v1 v2) (40.0 40.0) 0.0 0.0 TRUE 0 0 (255 255 255 200)
-            USE_TEXT_COMMANDS FALSE
-        ENDIF
-    ENDIF
-RETURN
-
-createTwoWebs_r2:
-    IF NOT DOES_CHAR_EXIST iWebActor
-    AND NOT DOES_CHAR_EXIST iWebActorR
-    AND NOT DOES_OBJECT_EXIST baseObject
-        REQUEST_MODEL 1598
-        LOAD_SPECIAL_CHARACTER 9 wmt
-        LOAD_ALL_MODELS_NOW
-
-        //CREATE_OBJECT 1598 0.0 0.0 0.0 (baseObject)
-        CREATE_OBJECT_NO_SAVE 1598 0.0 0.0 0.0 FALSE FALSE (baseObject)
-        SET_OBJECT_COLLISION baseObject FALSE
-        SET_OBJECT_RECORDS_COLLISIONS baseObject FALSE
-        SET_OBJECT_SCALE baseObject 0.01
-        SET_OBJECT_PROOFS baseObject (1 1 1 1 1)
-        MARK_MODEL_AS_NO_LONGER_NEEDED 1598
-
-        CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (0.0 0.0 -10.0) iWebActor
-        SET_CHAR_COLLISION iWebActor 0
-        SET_CHAR_NEVER_TARGETTED iWebActor 1
-        CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (0.0 0.0 -10.0) iWebActorR
-        SET_CHAR_COLLISION iWebActorR 0
-        SET_CHAR_NEVER_TARGETTED iWebActorR 1
-        UNLOAD_SPECIAL_CHARACTER 9
-
-        ATTACH_CHAR_TO_OBJECT iWebActor baseObject (0.0 0.0 0.0) 0 0.0 WEAPONTYPE_UNARMED
-        ATTACH_CHAR_TO_OBJECT iWebActorR baseObject (0.0 0.0 0.0) 0 0.0 WEAPONTYPE_UNARMED
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("m_idleWeb" "mweb") 5.0 (1 1 1 1) -2
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("m_idleWeb" "mweb") 5.0 (1 1 1 1) -2
-
-        GET_CHAR_HEADING player_actor (zAngle)
-        SET_OBJECT_HEADING baseObject zAngle        
-    ENDIF
-RETURN
-
-destroyTwoWebs_r2:
-    IF DOES_CHAR_EXIST iWebActor
-        DELETE_CHAR iWebActor
-    ENDIF
-    IF DOES_CHAR_EXIST iWebActorR
-        DELETE_CHAR iWebActorR
-    ENDIF
-    IF DOES_OBJECT_EXIST baseObject
-        DELETE_OBJECT baseObject
-    ENDIF
-RETURN
-
-playSFXSound_r2:
-    REMOVE_AUDIO_STREAM sfx
-    IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\web1_f.mp3" (sfx)
-        SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-        SET_AUDIO_STREAM_STATE sfx 1 
-        SET_AUDIO_STREAM_VOLUME sfx 0.5
-    ENDIF
-RETURN
-
-playWebSound_r2:
-    REMOVE_AUDIO_STREAM sfx
-    GENERATE_RANDOM_INT_IN_RANGE 0 4 (randomVal)
-    SWITCH randomVal
-        CASE 0
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull1.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF
-        BREAK
-        CASE 1
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull2.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF        
-        BREAK
-        CASE 2
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull3.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF        
-        BREAK
-        CASE 3
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull4.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF        
-        BREAK
-    ENDSWITCH
-RETURN
-}
-
-//-+--- Thread 3
-{
-// iPhotoBombCamID = 2
-sp_ttc_InternalThread:      //Reservoir 3
-LVAR_INT rwCrosshair    //in
-LVAR_INT player_actor baseObject iWebActor iWebActorR sfx
-LVAR_INT flag_photo_mode onmission toggleSpiderMod isInMainMenu
-LVAR_FLOAT x[2] y[2] z[2]
-LVAR_FLOAT v1 v2 sizeX sizeY fCharSpeed currentTime zAngle fFov
-LVAR_INT randomVal 
-GET_PLAYER_CHAR 0 player_actor
-flag_photo_mode = 0     // 0:false||1:true
-onmission = 0 
-
-WHILE TRUE
-    IF IS_PLAYER_PLAYING player 
-    AND NOT IS_CHAR_IN_ANY_CAR player_actor
-        GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
-        GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
-        IF toggleSpiderMod = 1 //TRUE
-            IF isInMainMenu = 0     //1:true 0: false
-                GET_CLEO_SHARED_VAR varReservoirInactive (onmission)
-                IF onmission = 0 
-                    //Tower
-                    x[1] = -1873.89
-                    y[1] = 900.735
-                    z[1] = 65.2756
-                    //-- Coords
-                    x[0] = x[1] - 0.08
-                    y[0] = y[1] - 9.982        
-                    z[0] = z[1] - 0.70
-                    IF IS_CHAR_REALLY_IN_AIR player_actor
-                        IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
-                            GOSUB draw_indicator_r3
-                            IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                            AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                            AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                            AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                                zAngle = 360.0
-                                SET_CHAR_HEADING player_actor zAngle
-                                GOSUB destroyTwoWebs_r3
-                                GOSUB createTwoWebs_r3
-                                    zAngle = 360.0
-                                    GOSUB animSequence_r3
-                                GOSUB destroyTwoWebs_r3       
-                                WAIT 500     
-                            ENDIF
-                        ELSE
-                            x[0] = x[1] - 0.08
-                            y[0] = y[1] + 9.982        
-                            z[0] = z[1] - 0.70
-                            IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
-                                GOSUB draw_indicator_r3
-                                IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                                AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                                AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                                AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                                AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                                    zAngle = 180.0
-                                    SET_CHAR_HEADING player_actor zAngle
-                                    GOSUB destroyTwoWebs_r3
-                                    GOSUB createTwoWebs_r3
-                                        zAngle = 180.0
-                                        GOSUB animSequence_r3
-                                    GOSUB destroyTwoWebs_r3
-                                    WAIT 500
-                                ENDIF
-                            ENDIF
-                        ENDIF
-                    ENDIF
-                ENDIF
-            ENDIF
-            ENDIF
-        ENDIF
-    WAIT 0
-ENDWHILE
-
-animSequence_r3:
-    GET_CHAR_SPEED player_actor (fCharSpeed)
-    WAIT 0
-    SET_CHAR_COLLISION player_actor FALSE
-    WAIT 1
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    WAIT 0
-    SET_CHAR_COLLISION player_actor TRUE
-    WAIT 0
-    /*
-    WAIT 0
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    WAIT 1
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    WAIT 0*/
-    IF flag_photo_mode = 0
-        fCharSpeed += 10.0
-        CLAMP_FLOAT fCharSpeed 6.0 15.0 (fCharSpeed)
-    ELSE        //Default
-        fCharSpeed += 13.0
-        CLAMP_FLOAT fCharSpeed 7.0 13.0 (fCharSpeed)
-    ENDIF
-    IF fCharSpeed < 13.0
-        GET_CHAR_SPEED player_actor (fCharSpeed)
-        fCharSpeed += 13.0
-        CLAMP_FLOAT fCharSpeed 7.0 13.0 (fCharSpeed)
-    ENDIF     
-    WAIT 0        
-    GOSUB playWebSound_r3
-    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "t_tower_A" "spider" 91.0 (0 1 1 0) -2
-    IF DOES_CHAR_EXIST iWebActor
-    AND DOES_CHAR_EXIST iWebActorR
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("w_tower_L_A" "mweb") 91.0 (0 1 1 1) -2
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("w_tower_R_A" "mweb") 91.0 (0 1 1 1) -2
-    ENDIF
-    WAIT 0
-    SET_CHAR_ANIM_SPEED player_actor "t_tower_A" 1.6 //1.2
-    IF DOES_CHAR_EXIST iWebActor
-    AND DOES_CHAR_EXIST iWebActorR
-        SET_CHAR_ANIM_PLAYING_FLAG iWebActor ("w_tower_L_A") 0
-        SET_CHAR_ANIM_PLAYING_FLAG iWebActorR ("w_tower_R_A") 0
-    ENDIF
-    IF DOES_OBJECT_EXIST baseObject
-        ATTACH_OBJECT_TO_CHAR baseObject player_actor (0.0 0.0 0.0) (0.0 0.0 0.0)
-    ENDIF
-    IF IS_CHAR_PLAYING_ANIM player_actor ("t_tower_A")
-        WHILE IS_CHAR_PLAYING_ANIM player_actor ("t_tower_A")
-            SET_CHAR_HEADING player_actor zAngle
-            GET_CHAR_ANIM_CURRENT_TIME player_actor ("t_tower_A") (currentTime)
-            IF DOES_CHAR_EXIST iWebActor
-            AND DOES_CHAR_EXIST iWebActorR
-                SET_CHAR_ANIM_CURRENT_TIME iWebActor ("w_tower_L_A") currentTime
-                SET_CHAR_ANIM_CURRENT_TIME iWebActorR ("w_tower_R_A") currentTime
-            ENDIF
-            CLEO_CALL setCameraOnChar 0 (x[1] y[1] z[1]) player_actor flag_photo_mode    // 1:normal||0:Photo_mode
-
-            IF 0.200 >= currentTime     //frame 18/90
-                IF flag_photo_mode = 0    //Smooth
-                    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-                    CLEO_CALL addForceToChar 0 player_actor 0.0 0.01 0.0 3.5
-                ELSE                //Default  (for photo mode)         
-                    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0] 
-                ENDIF
-            ELSE
-                IF IS_OBJECT_ATTACHED baseObject
-                    //GET_CAMERA_FOV fFov
-                    //CAMERA_SET_LERP_FOV 105.0 fFov 5 FALSE
-                    DETACH_OBJECT baseObject (0.0 0.0 0.0) FALSE
-                    SET_OBJECT_COORDINATES baseObject (x[0] y[0] z[0])
-                    GOSUB playSFXSound_r3
-                ENDIF
-                GOSUB add_force_to_char_r3
-                IF  currentTime > 0.778     //frame 70/90
-                    BREAK
-                ENDIF
-            ENDIF
-            WAIT 0
-        ENDWHILE
-    ENDIF
-    RESTORE_CAMERA
-    RESTORE_CAMERA_JUMPCUT
-RETURN
-
-add_force_to_char_r3:
-    IF  0.722 > currentTime     //frame 65/90
-        CLEO_CALL addForceToChar 0 player_actor 0.0 1.0 0.0 fCharSpeed
-        fCharSpeed -=@ 0.1 //0.01
-        IF 4.0 > fCharSpeed
-            fCharSpeed = 4.0
-        ENDIF              
-    ELSE
-        IF  0.778 >= currentTime     //frame 70/90
-            fCharSpeed +=@ 0.1
-            CLEO_CALL addForceToChar 0 player_actor 0.0 1.0 0.0 fCharSpeed
-        ENDIF
-    ENDIF
-RETURN
-
-draw_indicator_r3:
-    IF flag_photo_mode = 0  // 0:false||1:true
-        IF IS_POINT_ON_SCREEN (x[1] y[1] z[1]) 0.5
-            CONVERT_3D_TO_SCREEN_2D (x[1] y[1] z[1]) TRUE TRUE (v1 v2) (sizeX sizeY)
-            DRAW_TEXTURE_PLUS rwCrosshair DRAW_EVENT_BEFORE_HUD (v1 v2) (40.0 40.0) 0.0 0.0 TRUE 0 0 (255 255 255 200)
-            USE_TEXT_COMMANDS FALSE
-        ENDIF
-    ENDIF
-RETURN
-
-createTwoWebs_r3:
-    IF NOT DOES_CHAR_EXIST iWebActor
-    AND NOT DOES_CHAR_EXIST iWebActorR
-    AND NOT DOES_OBJECT_EXIST baseObject
-        REQUEST_MODEL 1598
-        LOAD_SPECIAL_CHARACTER 9 wmt
-        LOAD_ALL_MODELS_NOW
-
-        //CREATE_OBJECT 1598 0.0 0.0 0.0 (baseObject)
-        CREATE_OBJECT_NO_SAVE 1598 0.0 0.0 0.0 FALSE FALSE (baseObject)
-        SET_OBJECT_COLLISION baseObject FALSE
-        SET_OBJECT_RECORDS_COLLISIONS baseObject FALSE
-        SET_OBJECT_SCALE baseObject 0.01
-        SET_OBJECT_PROOFS baseObject (1 1 1 1 1)
-        MARK_MODEL_AS_NO_LONGER_NEEDED 1598
-
-        CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (0.0 0.0 -10.0) iWebActor
-        SET_CHAR_COLLISION iWebActor 0
-        SET_CHAR_NEVER_TARGETTED iWebActor 1
-        CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (0.0 0.0 -10.0) iWebActorR
-        SET_CHAR_COLLISION iWebActorR 0
-        SET_CHAR_NEVER_TARGETTED iWebActorR 1
-        UNLOAD_SPECIAL_CHARACTER 9
-
-        ATTACH_CHAR_TO_OBJECT iWebActor baseObject (0.0 0.0 0.0) 0 0.0 WEAPONTYPE_UNARMED
-        ATTACH_CHAR_TO_OBJECT iWebActorR baseObject (0.0 0.0 0.0) 0 0.0 WEAPONTYPE_UNARMED
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("m_idleWeb" "mweb") 5.0 (1 1 1 1) -2
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("m_idleWeb" "mweb") 5.0 (1 1 1 1) -2
-
-        GET_CHAR_HEADING player_actor (zAngle)
-        SET_OBJECT_HEADING baseObject zAngle        
-    ENDIF
-RETURN
-
-destroyTwoWebs_r3:
-    IF DOES_CHAR_EXIST iWebActor
-        DELETE_CHAR iWebActor
-    ENDIF
-    IF DOES_CHAR_EXIST iWebActorR
-        DELETE_CHAR iWebActorR
-    ENDIF
-    IF DOES_OBJECT_EXIST baseObject
-        DELETE_OBJECT baseObject
-    ENDIF
-RETURN
-
-playSFXSound_r3:
-    REMOVE_AUDIO_STREAM sfx
-    IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\web1_f.mp3" (sfx)
-        SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-        SET_AUDIO_STREAM_STATE sfx 1 
-        SET_AUDIO_STREAM_VOLUME sfx 0.5
-    ENDIF
-RETURN
-
-playWebSound_r3:
-    REMOVE_AUDIO_STREAM sfx
-    GENERATE_RANDOM_INT_IN_RANGE 0 4 (randomVal)
-    SWITCH randomVal
-        CASE 0
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull1.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF
-        BREAK
-        CASE 1
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull2.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF        
-        BREAK
-        CASE 2
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull3.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF        
-        BREAK
-        CASE 3
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull4.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF        
-        BREAK
-    ENDSWITCH
-RETURN
-}
-
-//-+--- Thread 4
-{
-// iPhotoBombCamID = 3
-sp_ttd_InternalThread:      //Reservoir 4
-LVAR_INT rwCrosshair    //in
-LVAR_INT player_actor baseObject iWebActor iWebActorR sfx
-LVAR_INT flag_photo_mode onmission toggleSpiderMod isInMainMenu
-LVAR_FLOAT x[2] y[2] z[2]
-LVAR_FLOAT v1 v2 sizeX sizeY fCharSpeed currentTime zAngle fFov
-LVAR_INT randomVal 
-GET_PLAYER_CHAR 0 player_actor
-flag_photo_mode = 0     // 0:false||1:true
-onmission = 0 
-
-WHILE TRUE
-    IF IS_PLAYER_PLAYING player 
-    AND NOT IS_CHAR_IN_ANY_CAR player_actor
-        GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
-        GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
-        IF toggleSpiderMod = 1 //TRUE
-            IF isInMainMenu = 0     //1:true 0: false
-                GET_CLEO_SHARED_VAR varReservoirInactive (onmission)
-                IF onmission = 0 
-                    //Tower
-                    x[1] = -1812.37 
-                    y[1] = 1039.22 
-                    z[1] = 82.0859
-                    //-- Coords
-                    x[0] = x[1] - 9.982
-                    y[0] = y[1] + 0.08    
-                    z[0] = z[1] - 0.70
-                    IF IS_CHAR_REALLY_IN_AIR player_actor
-                        IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
-                            GOSUB draw_indicator_r4
-                            IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                            AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                            AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                            AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                                zAngle = 270.0
-                                SET_CHAR_HEADING player_actor zAngle
-                                GOSUB destroyTwoWebs_r4
-                                GOSUB createTwoWebs_r4
-                                    zAngle = 270.0
-                                    GOSUB animSequence_r4
-                                GOSUB destroyTwoWebs_r4     
-                                WAIT 500     
-                            ENDIF
-                        ELSE
-                            x[0] = x[1] + 9.982  
-                            y[0] = y[1] + 0.08      
-                            z[0] = z[1] - 0.70
-                            IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
-                                GOSUB draw_indicator_r4
-                                IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                                AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                                AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                                AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                                AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                                    zAngle = 90.0
-                                    SET_CHAR_HEADING player_actor zAngle
-                                    GOSUB destroyTwoWebs_r4
-                                    GOSUB createTwoWebs_r4
-                                        zAngle = 90.0
-                                        GOSUB animSequence_r4
-                                    GOSUB destroyTwoWebs_r4
-                                    WAIT 500
-                                ENDIF
-                            ENDIF
-                        ENDIF
-                    ENDIF
-                ENDIF
-            ENDIF
-            ENDIF
-        ENDIF
-    WAIT 0
-ENDWHILE
-
-animSequence_r4:
-    GET_CHAR_SPEED player_actor (fCharSpeed)
-    WAIT 0
-    SET_CHAR_COLLISION player_actor FALSE
-    WAIT 1
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    WAIT 0
-    SET_CHAR_COLLISION player_actor TRUE
-    WAIT 0
-    /*WAIT 0
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    WAIT 1
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    WAIT 0*/
-    IF flag_photo_mode = 0
-            fCharSpeed += 13.0
-            CLAMP_FLOAT fCharSpeed 10.0 15.0 (fCharSpeed)
-    ELSE        //Default
-        fCharSpeed += 13.0
-        CLAMP_FLOAT fCharSpeed 7.0 13.0 (fCharSpeed)
-    ENDIF
-    IF fCharSpeed < 13.0
-        GET_CHAR_SPEED player_actor (fCharSpeed)
-        fCharSpeed += 13.0
-        CLAMP_FLOAT fCharSpeed 7.0 13.0 (fCharSpeed)
-    ENDIF     
-    WAIT 0
-    GOSUB playWebSound_r4
-    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "t_tower_A" "spider" 91.0 (0 1 1 0) -2
-    IF DOES_CHAR_EXIST iWebActor
-    AND DOES_CHAR_EXIST iWebActorR
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("w_tower_L_A" "mweb") 91.0 (0 1 1 1) -2
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("w_tower_R_A" "mweb") 91.0 (0 1 1 1) -2
-    ENDIF
-    WAIT 0
-    SET_CHAR_ANIM_SPEED player_actor "t_tower_A" 1.6 //1.2
-    IF DOES_CHAR_EXIST iWebActor
-    AND DOES_CHAR_EXIST iWebActorR
-        SET_CHAR_ANIM_PLAYING_FLAG iWebActor ("w_tower_L_A") 0
-        SET_CHAR_ANIM_PLAYING_FLAG iWebActorR ("w_tower_R_A") 0
-    ENDIF
-    IF DOES_OBJECT_EXIST baseObject
-        ATTACH_OBJECT_TO_CHAR baseObject player_actor (0.0 0.0 0.0) (0.0 0.0 0.0)
-    ENDIF
-    IF IS_CHAR_PLAYING_ANIM player_actor ("t_tower_A")
-        WHILE IS_CHAR_PLAYING_ANIM player_actor ("t_tower_A")
-            SET_CHAR_HEADING player_actor zAngle
-            GET_CHAR_ANIM_CURRENT_TIME player_actor ("t_tower_A") (currentTime)
-            IF DOES_CHAR_EXIST iWebActor
-            AND DOES_CHAR_EXIST iWebActorR
-                SET_CHAR_ANIM_CURRENT_TIME iWebActor ("w_tower_L_A") currentTime
-                SET_CHAR_ANIM_CURRENT_TIME iWebActorR ("w_tower_R_A") currentTime
-            ENDIF
-            CLEO_CALL setCameraOnChar 0 (x[1] y[1] z[1]) player_actor flag_photo_mode    // 1:normal||0:Photo_mode
-
-            IF 0.200 >= currentTime     //frame 18/90
-                IF flag_photo_mode = 0    //Smooth
-                    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-                    CLEO_CALL addForceToChar 0 player_actor 0.0 0.01 0.0 3.5
-                ELSE                //Default  (for photo mode)         
-                    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0] 
-                ENDIF
-            ELSE
-                IF IS_OBJECT_ATTACHED baseObject
-                    //GET_CAMERA_FOV fFov
-                    //CAMERA_SET_LERP_FOV 105.0 fFov 5 FALSE
-                    DETACH_OBJECT baseObject (0.0 0.0 0.0) FALSE
-                    SET_OBJECT_COORDINATES baseObject (x[0] y[0] z[0])
-                    GOSUB playSFXSound_r4
-                ENDIF
-                GOSUB add_force_to_char_r4
-                IF  currentTime > 0.778     //frame 70/90
-                    BREAK
-                ENDIF
-            ENDIF
-            WAIT 0
-        ENDWHILE
-    ENDIF
-    RESTORE_CAMERA
-    RESTORE_CAMERA_JUMPCUT
-RETURN
-
-add_force_to_char_r4:
-    IF  0.722 > currentTime     //frame 65/90
-        CLEO_CALL addForceToChar 0 player_actor 0.0 1.0 0.0 fCharSpeed
-        fCharSpeed -=@ 0.1 //0.01
-        IF 4.0 > fCharSpeed
-            fCharSpeed = 4.0
-        ENDIF              
-    ELSE
-        IF  0.778 >= currentTime     //frame 70/90
-            fCharSpeed +=@ 0.1
-            CLEO_CALL addForceToChar 0 player_actor 0.0 1.0 0.0 fCharSpeed
-        ENDIF
-    ENDIF
-RETURN
-
-draw_indicator_r4:
-    IF flag_photo_mode = 0  // 0:false||1:true
-        IF IS_POINT_ON_SCREEN (x[1] y[1] z[1]) 0.5
-            CONVERT_3D_TO_SCREEN_2D (x[1] y[1] z[1]) TRUE TRUE (v1 v2) (sizeX sizeY)
-            DRAW_TEXTURE_PLUS rwCrosshair DRAW_EVENT_BEFORE_HUD (v1 v2) (40.0 40.0) 0.0 0.0 TRUE 0 0 (255 255 255 200)
-            USE_TEXT_COMMANDS FALSE
-        ENDIF
-    ENDIF
-RETURN
-
-createTwoWebs_r4:
-    IF NOT DOES_CHAR_EXIST iWebActor
-    AND NOT DOES_CHAR_EXIST iWebActorR
-    AND NOT DOES_OBJECT_EXIST baseObject
-        REQUEST_MODEL 1598
-        LOAD_SPECIAL_CHARACTER 9 wmt
-        LOAD_ALL_MODELS_NOW
-
-        //CREATE_OBJECT 1598 0.0 0.0 0.0 (baseObject)
-        CREATE_OBJECT_NO_SAVE 1598 0.0 0.0 0.0 FALSE FALSE (baseObject)
-        SET_OBJECT_COLLISION baseObject FALSE
-        SET_OBJECT_RECORDS_COLLISIONS baseObject FALSE
-        SET_OBJECT_SCALE baseObject 0.01
-        SET_OBJECT_PROOFS baseObject (1 1 1 1 1)
-        MARK_MODEL_AS_NO_LONGER_NEEDED 1598
-
-        CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (0.0 0.0 -10.0) iWebActor
-        SET_CHAR_COLLISION iWebActor 0
-        SET_CHAR_NEVER_TARGETTED iWebActor 1
-        CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (0.0 0.0 -10.0) iWebActorR
-        SET_CHAR_COLLISION iWebActorR 0
-        SET_CHAR_NEVER_TARGETTED iWebActorR 1
-        UNLOAD_SPECIAL_CHARACTER 9
-
-        ATTACH_CHAR_TO_OBJECT iWebActor baseObject (0.0 0.0 0.0) 0 0.0 WEAPONTYPE_UNARMED
-        ATTACH_CHAR_TO_OBJECT iWebActorR baseObject (0.0 0.0 0.0) 0 0.0 WEAPONTYPE_UNARMED
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("m_idleWeb" "mweb") 5.0 (1 1 1 1) -2
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("m_idleWeb" "mweb") 5.0 (1 1 1 1) -2
-
-        GET_CHAR_HEADING player_actor (zAngle)
-        SET_OBJECT_HEADING baseObject zAngle        
-    ENDIF
-RETURN
-
-destroyTwoWebs_r4:
-    IF DOES_CHAR_EXIST iWebActor
-        DELETE_CHAR iWebActor
-    ENDIF
-    IF DOES_CHAR_EXIST iWebActorR
-        DELETE_CHAR iWebActorR
-    ENDIF
-    IF DOES_OBJECT_EXIST baseObject
-        DELETE_OBJECT baseObject
-    ENDIF
-RETURN
-
-playSFXSound_r4:
-    REMOVE_AUDIO_STREAM sfx
-    IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\web1_f.mp3" (sfx)
-        SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-        SET_AUDIO_STREAM_STATE sfx 1 
-        SET_AUDIO_STREAM_VOLUME sfx 0.5
-    ENDIF
-RETURN
-
-playWebSound_r4:
-    REMOVE_AUDIO_STREAM sfx
-    GENERATE_RANDOM_INT_IN_RANGE 0 4 (randomVal)
-    SWITCH randomVal
-        CASE 0
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull1.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF
-        BREAK
-        CASE 1
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull2.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF        
-        BREAK
-        CASE 2
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull3.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF        
-        BREAK
-        CASE 3
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull4.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF        
-        BREAK
-    ENDSWITCH
-RETURN
-}
-
-//-+--- Thread 5
-{
-// iPhotoBombCamID = 4
-sp_tte_InternalThread:      //Reservoir 5
-LVAR_INT rwCrosshair    //in
-LVAR_INT player_actor baseObject iWebActor iWebActorR sfx
-LVAR_INT flag_photo_mode onmission toggleSpiderMod isInMainMenu
-LVAR_FLOAT x[2] y[2] z[2]
-LVAR_FLOAT v1 v2 sizeX sizeY fCharSpeed currentTime zAngle fFov
-LVAR_INT randomVal 
-GET_PLAYER_CHAR 0 player_actor
-flag_photo_mode = 0     // 0:false||1:true
-onmission = 0 
-
-WHILE TRUE
-    IF IS_PLAYER_PLAYING player 
-    AND NOT IS_CHAR_IN_ANY_CAR player_actor
-        GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
-        GET_CLEO_SHARED_VAR varInMenu (isInMainMenu)
-        IF toggleSpiderMod = 1 //TRUE
-            IF isInMainMenu = 0     //1:true 0: false
-                GET_CLEO_SHARED_VAR varReservoirInactive (onmission)
-                IF onmission = 0 
-                    //Tower
-                    x[1] = -1589.35
-                    y[1] = 951.715
-                    z[1] = 34.5971
-                    //-- Coords
-                    x[0] = x[1] + 0.08
-                    y[0] = y[1] - 9.982        
-                    z[0] = z[1] - 0.75
-                    IF IS_CHAR_REALLY_IN_AIR player_actor
-                        IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
-                            GOSUB draw_indicator_r5
-                            IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                            AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                            AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                            AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                            AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                                zAngle = 360.0
-                                SET_CHAR_HEADING player_actor zAngle
-                                GOSUB destroyTwoWebs_r5
-                                GOSUB createTwoWebs_r5
-                                    zAngle = 360.0
-                                    GOSUB animSequence_r5
-                                GOSUB destroyTwoWebs_r5 
-                                WAIT 500     
-                            ENDIF
-                        ELSE
-                            x[0] = x[1] + 0.08
-                            y[0] = y[1] + 9.982        
-                            z[0] = z[1] - 0.75
-                            IF LOCATE_CHAR_DISTANCE_TO_COORDINATES player_actor x[0] y[0] z[0] 10.0
-                                GOSUB draw_indicator_r5
-                                IF IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2         // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
-                                AND IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2       // ~k~~PED_CYCLE_WEAPON_RIGHT~/ 
-                                AND NOT IS_BUTTON_PRESSED PAD1 CROSS            // ~k~~PED_SPRINT~
-                                AND NOT IS_BUTTON_PRESSED PAD1 SQUARE           // ~k~~PED_JUMPING~
-                                AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE           // ~k~~PED_FIREWEAPON~   
-                                    zAngle = 180.0
-                                    SET_CHAR_HEADING player_actor zAngle
-                                    GOSUB destroyTwoWebs_r5
-                                    GOSUB createTwoWebs_r5
-                                        zAngle = 180.0
-                                        GOSUB animSequence_r5
-                                    GOSUB destroyTwoWebs_r5
-                                    WAIT 500
-                                ENDIF
-                            ENDIF
-                        ENDIF
-                    ENDIF
-                ENDIF
-            ENDIF
-            ENDIF
-        ENDIF
-    WAIT 0
-ENDWHILE
-
-animSequence_r5:
-    GET_CHAR_SPEED player_actor (fCharSpeed)
-    WAIT 0
-    SET_CHAR_COLLISION player_actor FALSE
-    WAIT 1
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    WAIT 0
-    SET_CHAR_COLLISION player_actor TRUE
-    WAIT 0
-    /*
-    WAIT 0
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    WAIT 1
-    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-    WAIT 0
-    */
-    IF flag_photo_mode = 0
-        fCharSpeed += 10.0
-        CLAMP_FLOAT fCharSpeed 6.0 15.0 (fCharSpeed)
-    ELSE        //Default
-        fCharSpeed += 13.0
-        CLAMP_FLOAT fCharSpeed 7.0 13.0 (fCharSpeed)
-    ENDIF
-    IF fCharSpeed < 13.0
-        GET_CHAR_SPEED player_actor (fCharSpeed)
-        fCharSpeed += 13.0
-        CLAMP_FLOAT fCharSpeed 7.0 13.0 (fCharSpeed)
-    ENDIF
-    WAIT 0     
-    GOSUB playWebSound_r5
-    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor "t_tower_A" "spider" 91.0 (0 1 1 0) -2
-    IF DOES_CHAR_EXIST iWebActor
-    AND DOES_CHAR_EXIST iWebActorR
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("w_tower_L_A" "mweb") 91.0 (0 1 1 1) -2
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("w_tower_R_A" "mweb") 91.0 (0 1 1 1) -2
-    ENDIF
-    WAIT 0
-    SET_CHAR_ANIM_SPEED player_actor "t_tower_A" 1.6 //1.2
-    IF DOES_CHAR_EXIST iWebActor
-    AND DOES_CHAR_EXIST iWebActorR
-        SET_CHAR_ANIM_PLAYING_FLAG iWebActor ("w_tower_L_A") 0
-        SET_CHAR_ANIM_PLAYING_FLAG iWebActorR ("w_tower_R_A") 0
-    ENDIF
-    IF DOES_OBJECT_EXIST baseObject
-        ATTACH_OBJECT_TO_CHAR baseObject player_actor (0.0 0.0 0.0) (0.0 0.0 0.0)
-    ENDIF
-    IF IS_CHAR_PLAYING_ANIM player_actor ("t_tower_A")
-        WHILE IS_CHAR_PLAYING_ANIM player_actor ("t_tower_A")
-            SET_CHAR_HEADING player_actor zAngle
-            GET_CHAR_ANIM_CURRENT_TIME player_actor ("t_tower_A") (currentTime)
-            IF DOES_CHAR_EXIST iWebActor
-            AND DOES_CHAR_EXIST iWebActorR
-                SET_CHAR_ANIM_CURRENT_TIME iWebActor ("w_tower_L_A") currentTime
-                SET_CHAR_ANIM_CURRENT_TIME iWebActorR ("w_tower_R_A") currentTime
-            ENDIF
-            CLEO_CALL setCameraOnChar 0 (x[1] y[1] z[1]) player_actor flag_photo_mode    // 1:normal||0:Photo_mode
-
-            IF 0.200 >= currentTime     //frame 18/90
-                IF flag_photo_mode = 0    //Smooth
-                    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0]
-                    CLEO_CALL addForceToChar 0 player_actor 0.0 0.01 0.0 3.5
-                ELSE                //Default  (for photo mode)         
-                    SET_CHAR_COORDINATES_SIMPLE player_actor x[0] y[0] z[0] 
-                ENDIF
-            ELSE
-                IF IS_OBJECT_ATTACHED baseObject
-                    GET_CAMERA_FOV fFov
-                    //CAMERA_SET_LERP_FOV 105.0 fFov 5 FALSE
-                    DETACH_OBJECT baseObject (0.0 0.0 0.0) FALSE
-                    SET_OBJECT_COORDINATES baseObject (x[0] y[0] z[0])
-                    GOSUB playSFXSound_r5
-                ENDIF
-                GOSUB add_force_to_char_r5
-                IF  currentTime > 0.778     //frame 70/90
-                    BREAK
-                ENDIF
-            ENDIF
-            WAIT 0
-        ENDWHILE
-    ENDIF
-    RESTORE_CAMERA
-    RESTORE_CAMERA_JUMPCUT
-RETURN
-
-add_force_to_char_r5:
-    IF  0.722 > currentTime     //frame 65/90
-        CLEO_CALL addForceToChar 0 player_actor 0.0 1.0 0.0 fCharSpeed
-        fCharSpeed -=@ 0.1 //0.01
-        IF 4.0 > fCharSpeed
-            fCharSpeed = 4.0
-        ENDIF              
-    ELSE
-        IF  0.778 >= currentTime     //frame 70/90
-            fCharSpeed +=@ 0.1
-            CLEO_CALL addForceToChar 0 player_actor 0.0 1.0 0.0 fCharSpeed
-        ENDIF
-    ENDIF
-RETURN
-
-draw_indicator_r5:
-    IF flag_photo_mode = 0  // 0:false||1:true
-        IF IS_POINT_ON_SCREEN (x[1] y[1] z[1]) 0.5
-            CONVERT_3D_TO_SCREEN_2D (x[1] y[1] z[1]) TRUE TRUE (v1 v2) (sizeX sizeY)
-            DRAW_TEXTURE_PLUS rwCrosshair DRAW_EVENT_BEFORE_HUD (v1 v2) (40.0 40.0) 0.0 0.0 TRUE 0 0 (255 255 255 200)
-            USE_TEXT_COMMANDS FALSE
-        ENDIF
-    ENDIF
-RETURN
-
-createTwoWebs_r5:
-    IF NOT DOES_CHAR_EXIST iWebActor
-    AND NOT DOES_CHAR_EXIST iWebActorR
-    AND NOT DOES_OBJECT_EXIST baseObject
-        REQUEST_MODEL 1598
-        LOAD_SPECIAL_CHARACTER 9 wmt
-        LOAD_ALL_MODELS_NOW
-
-        //CREATE_OBJECT 1598 0.0 0.0 0.0 (baseObject)
-        CREATE_OBJECT_NO_SAVE 1598 0.0 0.0 0.0 FALSE FALSE (baseObject)
-        SET_OBJECT_COLLISION baseObject FALSE
-        SET_OBJECT_RECORDS_COLLISIONS baseObject FALSE
-        SET_OBJECT_SCALE baseObject 0.01
-        SET_OBJECT_PROOFS baseObject (1 1 1 1 1)
-        MARK_MODEL_AS_NO_LONGER_NEEDED 1598
-
-        CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (0.0 0.0 -10.0) iWebActor
-        SET_CHAR_COLLISION iWebActor 0
-        SET_CHAR_NEVER_TARGETTED iWebActor 1
-        CREATE_CHAR PEDTYPE_CIVMALE SPECIAL09 (0.0 0.0 -10.0) iWebActorR
-        SET_CHAR_COLLISION iWebActorR 0
-        SET_CHAR_NEVER_TARGETTED iWebActorR 1
-        UNLOAD_SPECIAL_CHARACTER 9
-
-        ATTACH_CHAR_TO_OBJECT iWebActor baseObject (0.0 0.0 0.0) 0 0.0 WEAPONTYPE_UNARMED
-        ATTACH_CHAR_TO_OBJECT iWebActorR baseObject (0.0 0.0 0.0) 0 0.0 WEAPONTYPE_UNARMED
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActor ("m_idleWeb" "mweb") 5.0 (1 1 1 1) -2
-        TASK_PLAY_ANIM_NON_INTERRUPTABLE iWebActorR ("m_idleWeb" "mweb") 5.0 (1 1 1 1) -2
-
-        GET_CHAR_HEADING player_actor (zAngle)
-        SET_OBJECT_HEADING baseObject zAngle        
-    ENDIF
-RETURN
-
-destroyTwoWebs_r5:
-    IF DOES_CHAR_EXIST iWebActor
-        DELETE_CHAR iWebActor
-    ENDIF
-    IF DOES_CHAR_EXIST iWebActorR
-        DELETE_CHAR iWebActorR
-    ENDIF
-    IF DOES_OBJECT_EXIST baseObject
-        DELETE_OBJECT baseObject
-    ENDIF
-RETURN
-
-playSFXSound_r5:
-    REMOVE_AUDIO_STREAM sfx
-    IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\web1_f.mp3" (sfx)
-        SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-        SET_AUDIO_STREAM_STATE sfx 1 
-        SET_AUDIO_STREAM_VOLUME sfx 0.5
-    ENDIF
-RETURN
-
-playWebSound_r5:
-    REMOVE_AUDIO_STREAM sfx
-    GENERATE_RANDOM_INT_IN_RANGE 0 4 (randomVal)
-    SWITCH randomVal
-        CASE 0
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull1.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF
-        BREAK
-        CASE 1
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull2.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF        
-        BREAK
-        CASE 2
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull3.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF        
-        BREAK
-        CASE 3
-            IF LOAD_3D_AUDIO_STREAM "CLEO\SpiderJ16D\sfx\webPull4.mp3" (sfx)
-                SET_PLAY_3D_AUDIO_STREAM_AT_CHAR sfx player_actor
-                SET_AUDIO_STREAM_STATE sfx 1 
-            ENDIF        
-        BREAK
-    ENDSWITCH
-RETURN
-}
-
+SCRIPT_END
 
 //-+---------------------------------CALLSCM HELPERS---------------------------------------
 {
@@ -1559,18 +681,24 @@ CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
 
+CONST_INT varFocusCount         70    //sp_hit    || focus bar
+CONST_INT varUseFocus           71    //sp_hit    || focus bar
+
 //-+-----------------------------------------------------------------------------------------
 /*
 tw_a1
+-2022.26 13.982 61.60
+359.9484
+tw_a2
 -2192.0 389.789 64.624
 90.9726
-tw_a2
+tw_a3
 -1873.89 900.735 65.2756
 359.9484
-tw_a3
+tw_a4
 -1812.37 1039.22 82.0859
 270.9562
-tw_a4
+tw_a5
 -1589.35 951.715 34.5971
 179.9319
 */
