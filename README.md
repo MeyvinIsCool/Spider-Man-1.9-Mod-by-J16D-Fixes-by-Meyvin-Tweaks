@@ -14,19 +14,18 @@ Changelog :
 - Fixed Menu Rendering Issues Whenever Using Lower Resolutions
 - Remade The Reservoir Script To Reduce Streaming Memory
 - Fixed a Crash When Reloading a Save Game Or Starting New Game While The Mod Is Enabled
-- New Script Improvements !
 - Added Web Zip While Wall Running
 - Added GInput (Recommended If You Are Using Controller)
-- Remade Screwball Trigger Now With 3D Blips - GTA3Script 
 - Restored Screwball PhotoBomb Challange (Now It Is Compatible With Every Resolution Which Fixes The Overlapping Bar !)
-- Added Remade Pizza Time Mission by MeyvinIsCool (Mission v2) (Thanks For Mr.Demon "Genos" Cyborg For Giving Me The Source Code)
-- Added Hit Counter (v2) (Still Need Some Improvements As It's Wont Detect The Suit Powers And May Have Some Bugs !!)
-- Added 4 New Suit Powers (Iron Arms Still In WIP)
+- Adapted Pizza Time Mission by Genos
+- Added Hit Counter
+- Added 4 New Suit Powers (Iron Arms Still In Development)
 - Added Side Mission #2 - No More Supplies (Thanks to GTA Loyalty) (Spanish Texts Available Inside The Addon Folder)
 - Added More Crime Missions
 - Added Ground Crush When Falling From High Altitude (Planned to improve in the future)
 - Added Web Zip To Building (BETA)
-- Added Focus Bar (WIP)
+- Added Focus Bar (ALPHA)
+- Script Improvements !
 - And MORE ....
 
  Addon :
