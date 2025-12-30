@@ -1,4 +1,4 @@
-<img width="1000" height="1000" alt="GitHub" src="https://github.com/user-attachments/assets/a19befc8-de0b-4fde-ba30-ad4574a91310" />
+<img width="1000" height="1000" alt="Github" src="https://github.com/user-attachments/assets/edbc1b77-6b96-446e-9a0e-a31cdbea3a28" />
 
 Spider-Man-1.9 Mod by J16D Fixes by Meyvin Tweaks
 
