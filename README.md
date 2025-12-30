@@ -1,8 +1,8 @@
-# Spider-Man-1.9 Mod by J16D Fixes by Meyvin Tweaks
-I Made These Fixes On These Scripts And Also Improvements In Order To Make This Mod Much More Complete And As Well As Adding Some New Addtions , Making It More Enjoyable !
+<img width="1000" height="1000" alt="GitHub" src="https://github.com/user-attachments/assets/a19befc8-de0b-4fde-ba30-ad4574a91310" />
 
-Things I Fixed And Added On This Mod :
+Spider-Man-1.9 Mod by J16D Fixes by Meyvin Tweaks
 
+Changelog :
 - Added Functional Scrolling System On Menu + 20 New Suits Added ! (You Will Need To Reach Level 52 In Order To Unlock All 50 Suits)
 - Cinimatic Jump Restored
 - A Web Swinging Animation Restored
@@ -30,11 +30,9 @@ Things I Fixed And Added On This Mod :
 - And MORE ....
 
  Addon :
- 
 - I Also Made The Low Resolution Suits For Low End Computers BUT Make Sure To Install From The Main Mod FIRST Then Install This From The Optional Folder
 
-I Had So Much Fun Time Making These Fixes And Also Thanks To These People Who Helped Me A Lot !
-
+Thanks To These People Who Helped Me A Lot !
 - J16D or jayd00 On GitHub (Coding)
 - The Rahijo (Retexturing)
 - Junior Djjr (Coding + Tips And Code Optimizations)
@@ -49,3 +47,8 @@ I Had So Much Fun Time Making These Fixes And Also Thanks To These People Who He
 - Tamaputra (Sounds)
 
 Sorry If I Missed Somebody .... Thank You !
+
+<img width="232" height="227" alt="SpideyXMaryJane" src="https://github.com/user-attachments/assets/03dbacc1-fe22-4490-b458-895cedee46fa" />
+
+
+
