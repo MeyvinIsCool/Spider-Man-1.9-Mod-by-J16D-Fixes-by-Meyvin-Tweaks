@@ -44,6 +44,19 @@ GET_PLAYER_CHAR 0 player_actor
 //idPowers = 1
 //SET_CLEO_SHARED_VAR varIdPowers idPowers
 //SET_CLEO_SHARED_VAR varPowersProgress 100
+
+start_check:
+GOSUB readVars
+IF toggleSpiderMod = 0
+    WHILE toggleSpiderMod = 0
+        WAIT 0
+        GOSUB readVars 
+        IF toggleSpiderMod = 1
+            BREAK
+        ENDIF
+    ENDWHILE
+ENDIF
+
 GOSUB get_power_max_time
 
 main_loop:
@@ -204,10 +217,15 @@ main_loop:
             ENDIF
         ELSE
             end_sp_po:
-            REMOVE_AUDIO_STREAM sfx
-            REMOVE_ANIMATION "spider"
-            WAIT 0
-            TERMINATE_THIS_CUSTOM_SCRIPT           
+            WAIT 1000
+            GOSUB readVars
+            IF toggleSpiderMod = 0            
+                REMOVE_AUDIO_STREAM sfx
+                REMOVE_ANIMATION "spider"
+                WAIT 0
+                GOTO start_check
+                //TERMINATE_THIS_CUSTOM_SCRIPT           
+            ENDIF
         ENDIF
     ENDIF
     WAIT 0
