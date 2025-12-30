@@ -4165,11 +4165,11 @@ RETURN
 ProcessGame_and_DrawItems_POWER_SUITS:
     //matrix 5x2=10 + 3
     //POWER MENU
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (215.0 190.0) (260.0 240.0) (2 40 49 150) (0.6) (1 1 1 1) (0 125 180 200) -1 -1 (0.0 0.0)   //BLUE_BACK_MAIN_POWER_SUITS
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (215.0 190.0) (260.0 240.0) (2 40 49 150) (0.62) (1 1 1 1) (0 125 180 200) -1 -1 (0.0 0.0)   //BLUE_BACK_MAIN_POWER_SUITS
     iTempVar = idSuitPower_l
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (215.0 80.0) (250.0 15.0) (6 253 244 0) (0.6) (0 0 1 0) (6 253 244 200) iTempVar 2 (-110.0 0.0)   //TITLE_POWER_SUIT
     //----lines side - left
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (81.25 80.0) (7.5 15.0) (6 253 244 0) (0.6) (0 0 1 0) (6 253 244 200) -1 -1 (0.0 0.0)   //LINE_SIDE_LEFT (SUIT-)
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (81.25 80.0) (7.5 15.0) (6 253 244 0) (0.5) (0 0 1 0) (6 253 244 200) -1 -1 (0.0 0.0)   //LINE_SIDE_LEFT (SUIT-)
     USE_TEXT_COMMANDS FALSE
     DRAW_RECT (77.5 87.5) (2.5 2.5) (6 253 244 200)
     CLEO_CALL GUI_DrawBoxOutline_WithText 0 (73.75 145.0) (7.5 15.0) (6 253 244 0) (0.5) (0 0 1 0) (6 253 244 200) -1 -1 (0.0 0.0)   //LINE_SIDE_LEFT (POWER-)
