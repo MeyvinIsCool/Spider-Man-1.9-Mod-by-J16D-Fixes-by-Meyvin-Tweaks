@@ -12,7 +12,8 @@ Things I Fixed And Added On This Mod :
 - Fixed Money Bar Not Visible
 - Fixed Webshooters Textures
 - Fixed Menu Rendering Issues Whenever Using Lower Resolutions
-- Fixed Some Bugs With The Reservoir Scripts
+- Remade The Reservoir Script To Reduce Streaming Memory
+- Fixed a Crash When Reloading a Save Game Or Starting New Game While The Mod Is Enabled
 - New Script Improvements !
 - Added Web Zip While Wall Running
 - Added GInput (Recommended If You Are Using Controller)
