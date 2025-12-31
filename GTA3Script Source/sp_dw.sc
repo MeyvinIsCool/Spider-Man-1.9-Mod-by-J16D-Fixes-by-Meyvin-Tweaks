@@ -1,5 +1,5 @@
 // by J16D
-// Draw Indicator | webstrike & Stealth
+// Draw Indicator | Webstrike , Stealth & Disarm Enemies (yank weapons)
 // Fixes by Meyvin Tweaks
 // Spider-Man Mod for GTA SA c.2018 - 2022
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
@@ -36,13 +36,12 @@ WAIT 0
 WAIT 0
 LVAR_INT player_actor toggleSpiderMod isInMainMenu   //1:true 0: false
 LVAR_INT is_web_thrown iTempVar randomVal total_dmg
-LVAR_INT hInput iChar sfx fx_web anim_seq fx_system iHitCounter
+LVAR_INT iChar sfx fx_web anim_seq fx_system iHitCounter
 LVAR_FLOAT x[3] y[3] z[3] v1 v2 
 LVAR_FLOAT fCurrentTime zAngle xAngle fDistance
 
 GET_PLAYER_CHAR 0 player_actor
 
-CLEO_CALL disableGreenTriangles 0 ()
 GOSUB loadTextures
 GOSUB REQUEST_Animations
 
@@ -58,6 +57,8 @@ IF toggleSpiderMod = 0
     ENDWHILE
 ENDIF
 
+CLEO_CALL disableGreenTriangles 0 ()
+
 main_loop:
     IF IS_PLAYER_PLAYING player
     AND NOT IS_CHAR_IN_ANY_CAR player_actor
@@ -72,11 +73,14 @@ main_loop:
                     GOSUB draw_indicator_to_target_char
                     GOSUB assign_task_webstrike
 
+                    // dissarm enemies with weapons
+                    GOSUB assign_yank_weapon                                                   
+
                     IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -3.0) (1 1 0 0 0)
                         //in air
                         //not done yet --- web shoot on air
                     ELSE
-                        //on ground
+                        //on ground                    
                         IF IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER1   //~k~~PED_LOCK_TARGET~ 
                             WHILE IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER1   //~k~~PED_LOCK_TARGET~ 
                                 GOSUB draw_indicator_to_target_char
@@ -708,6 +712,104 @@ playEmptyAmmoWebShootSfx:
     WAIT 0
 RETURN
 //----------------------------------------------------------
+
+//-+---------------------yank-weapon-(TESTING)-------------------------
+assign_yank_weapon:
+    //-+- Yank-Weapon
+    IF IS_BUTTON_PRESSED PAD1 DPADUP    // ~k~~GROUP_CONTROL_FWD~
+    AND NOT IS_BUTTON_PRESSED PAD1 CIRCLE        // ~k~~PED_FIREWEAPON~
+    AND NOT IS_BUTTON_PRESSED PAD1 RIGHTSHOULDER2   // ~k~~PED_CYCLE_WEAPON_RIGHT~/
+    AND NOT IS_BUTTON_PRESSED PAD1 LEFTSHOULDER2    // ~k~~PED_CYCLE_WEAPON_LEFT~/ 
+    AND NOT IS_BUTTON_PRESSED PAD1 LEFTSHOULDER1    //~k~~PED_ANSWER_PHONE~/ ~k~~PED_FIREWEAPON_ALT~
+        IF IS_CHAR_REALLY_IN_AIR player_actor
+                //do nothing
+        ELSE
+            IF DOES_CHAR_EXIST iChar
+                IF HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_M4
+                OR HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_AK47
+                OR HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_TEC9
+                OR HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_PISTOL
+                OR HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_DESERT_EAGLE
+                OR HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_SHOTGUN
+                OR HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_KNIFE
+                OR HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_MICRO_UZI
+                    GOSUB process_yank_weapon
+                ELSE
+                    IF HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_BASEBALLBAT
+                    OR HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_MP5
+                    OR HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_COUNTRYRIFLE
+                    OR HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_SPAS12_SHOTGUN
+                    OR HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_SHOVEL
+                    OR HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_PISTOL_SILENCED
+                    OR HAS_CHAR_GOT_WEAPON iChar WEAPONTYPE_SAWNOFF_SHOTGUN  
+                        GOSUB process_yank_weapon
+                    ENDIF
+                ENDIF
+            ENDIF
+        ENDIF
+
+        WHILE IS_BUTTON_PRESSED PAD1 DPADUP    // ~k~~GROUP_CONTROL_FWD~
+            WAIT 0
+        ENDWHILE
+    ENDIF
+RETURN
+
+process_yank_weapon:
+    IF DOES_CHAR_EXIST iChar
+    AND NOT IS_CHAR_DEAD iChar
+        IF GOSUB is_not_char_playing_anims
+            IF NOT IS_CHAR_FALLEN_ON_GROUND iChar    
+                GOSUB REQUEST_Animations
+                GOSUB set_zAngle_on_ground
+                GOSUB assign_yank_weapon_ground_in
+
+                IF IS_CHAR_PLAYING_ANIM player_actor ("yank_weap" )
+                    GOSUB delay_yank_weapon_ground_in
+
+                    WHILE IS_CHAR_PLAYING_ANIM player_actor ("yank_weap")
+                        GET_CHAR_ANIM_CURRENT_TIME player_actor ("yank_weap") (fCurrentTime)                    
+                        IF fCurrentTime >= 0.456   
+                            REMOVE_ALL_CHAR_WEAPONS iChar
+                            CLEAR_CHAR_TASKS iChar
+                            CLEAR_CHAR_TASKS_IMMEDIATELY iChar
+
+                            DAMAGE_CHAR iChar 3 TRUE    
+                            CLEAR_CHAR_TASKS player_actor
+                        ENDIF
+                        WAIT 0
+                    ENDWHILE
+
+                ENDIF
+            ENDIF
+        ENDIF
+    ENDIF
+RETURN
+
+assign_yank_weapon_ground_in:
+    CLEAR_CHAR_TASKS player_actor
+    CLEAR_CHAR_TASKS_IMMEDIATELY player_actor
+    TASK_PLAY_ANIM_NON_INTERRUPTABLE player_actor ("yank_weap" "spider") 15.0 (0 1 1 1) -1
+    WAIT 1
+RETURN
+
+delay_yank_weapon_ground_in:
+    iTempVar = 1
+    WHILE IS_CHAR_PLAYING_ANIM player_actor ("yank_weap")
+        GET_CHAR_ANIM_CURRENT_TIME player_actor ("yank_weap") (fCurrentTime)
+        IF fCurrentTime > 0.117 //frame 4/34
+            CLEO_CALL draw_line_from_player_bone_to_char_bone 0 player_actor 25 iChar 2     //25:BONE_RIGHTHAND||35:BONE_LEFTHAND
+            CLEO_CALL draw_line_from_player_bone_to_char_bone 0 player_actor 35 iChar 2     //35:BONE_LEFTHAND||25:BONE_RIGHTHAND
+            GOSUB playWebStrikeSfx
+            iTempVar = 0
+        ENDIF
+        IF fCurrentTime >= 0.823   //frame 28/34
+            CLEAR_CHAR_TASKS player_actor
+            CLEAR_CHAR_TASKS_IMMEDIATELY player_actor          
+            BREAK
+        ENDIF
+        WAIT 0
+    ENDWHILE
+RETURN
 
 //-+---------------------web-strike-------------------------
 assign_task_webstrike:
