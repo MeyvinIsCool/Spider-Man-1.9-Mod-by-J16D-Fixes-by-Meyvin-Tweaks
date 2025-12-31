@@ -1,7 +1,7 @@
 // by J16D
 // Draw Indicator | Webstrike , Stealth & Disarm Enemies (yank weapons)
 // Fixes by Meyvin Tweaks
-// Spider-Man Mod for GTA SA c.2018 - 2022
+// Spider-Man Mod for GTA SA c.2018 - 2026
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
@@ -44,6 +44,7 @@ GET_PLAYER_CHAR 0 player_actor
 
 GOSUB loadTextures
 GOSUB REQUEST_Animations
+CLEO_CALL enableGreenTriangles 0 ()
 
 start_check:
 GOSUB readVars
@@ -74,7 +75,7 @@ main_loop:
                     GOSUB assign_task_webstrike
 
                     // dissarm enemies with weapons
-                    GOSUB assign_yank_weapon                                                   
+                    //GOSUB assign_yank_weapon                                                   
 
                     IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -3.0) (1 1 0 0 0)
                         //in air
@@ -117,13 +118,14 @@ main_loop:
                 ENDIF
             ENDIF
         ELSE
-            WAIT 1000
+            WAIT 500
             GOSUB readVars 
             IF toggleSpiderMod = 0           
                 REMOVE_AUDIO_STREAM sfx
                 REMOVE_ANIMATION "spider"
                 SET_PLAYER_FIRE_BUTTON player TRUE
                 SET_PLAYER_CYCLE_WEAPON_BUTTON player TRUE
+                CLEO_CALL enableGreenTriangles 0 ()
                 USE_TEXT_COMMANDS FALSE
                 //WAIT 0
                 //REMOVE_TEXTURE_DICTIONARY
@@ -2001,6 +2003,7 @@ set_camera_rotate_around_char:
     ENDIF
 CLEO_RETURN 0
 }
+
 //-------Hacks----------------------------------------------
 {
 //CLEO_CALL disableGreenTriangles 0 ()
@@ -2017,6 +2020,27 @@ ELSE
 ENDIF
 CLEO_RETURN 0
 }
+
+{
+//CLEO_CALL enableGreenTriangles 0 ()
+enableGreenTriangles:
+LVAR_INT ptr
+READ_MEMORY 0x53E20E BYTE 0 (ptr)
+IF ptr = 0x90
+    MAKE_NOP 0x53E20E 5
+    WRITE_STRUCT_OFFSET_MULTI 0x53E20E 0x0 5 1 (0xE8 0x6D 0xD8 0x0C 0x00)
+ELSE
+    READ_MEMORY 0x53E1E0 BYTE 0 (ptr)
+    IF ptr = 0x90
+        MAKE_NOP 0x53E1E0 5
+        WRITE_STRUCT_OFFSET_MULTI 0x53E1E0 0x0 5 1 (0xE8 0xE8 0x6D 0xD8 0x0C 0x00)
+    ENDIF
+ENDIF
+CLEO_RETURN 0
+}
+
+
+
 
 
 //-+---CONSTANTS--------------------
