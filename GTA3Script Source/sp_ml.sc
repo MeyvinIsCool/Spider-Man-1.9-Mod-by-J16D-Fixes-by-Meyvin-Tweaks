@@ -1,6 +1,6 @@
 // by J16D
 // Web zip (air / lamp / object)
-// Spider-Man Mod for GTA SA c.2018 - 2022
+// Spider-Man Mod for GTA SA c.2018 - 2026
 // Original Shine GUI by Junior_Djjr
 // Fixes by Meyvin Tweaks
 // Official Page: https://forum.mixmods.com.br/f16-utilidades/t694-shine-gui-crie-interfaces-personalizadas
@@ -236,7 +236,7 @@ main_loop:
 
     ENDIF
 
-    // Web Zip Behind (BETA) - Scripted By MeyvinIsCool 
+/*    // Web Zip Behind (BETA)
     IF IS_CHAR_REALLY_IN_AIR player_actor
         IF GOSUB is_not_player_playing_for_backzip
             IF GOSUB is_not_player_playing_swing_anims
@@ -299,7 +299,7 @@ main_loop:
             ENDIF
         ENDIF   
     ENDIF   
-
+*/
                 
     WAIT 0
 GOTO main_loop  
@@ -653,6 +653,9 @@ destroyTwoWebs:
     IF DOES_OBJECT_EXIST baseObject
         DELETE_OBJECT baseObject
     ENDIF
+    IF DOES_OBJECT_EXIST baseObjectR
+        DELETE_OBJECT baseObjectR
+    ENDIF    
 RETURN
 //-+----------------------------------------------------------
 
