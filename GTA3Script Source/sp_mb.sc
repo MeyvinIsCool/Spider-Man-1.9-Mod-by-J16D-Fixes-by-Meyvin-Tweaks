@@ -22,7 +22,6 @@ LVAR_FLOAT x y z fVelX fVelY fVelZ
 LVAR_FLOAT fCharSpeed fAmplitude fZAnglePlayerAir currentTime fRandomVal[1]
 
 GET_PLAYER_CHAR 0 player_actor
-SET_PLAYER_JUMP_BUTTON player FALSE
 
 start_check:
 GOSUB readVars
@@ -35,6 +34,9 @@ IF toggleSpiderMod = 0
         ENDIF
     ENDWHILE
 ENDIF
+
+// code executes after enabling the mod
+SET_PLAYER_JUMP_BUTTON player FALSE
 
 main_loop:
     IF IS_PLAYER_PLAYING player
