@@ -1,6 +1,6 @@
 <img width="1000" height="1000" alt="Github" src="https://github.com/user-attachments/assets/edbc1b77-6b96-446e-9a0e-a31cdbea3a28" />
 
-Spider-Man-1.9 Mod by J16D Fixes by Meyvin Tweaks
+Spider-Man v2.0 Mod by Meyvin Tweaks
 
 Changelog :
 - Added Functional Scrolling System On Menu + 20 New Suits Added ! (You Will Need To Reach Level 52 In Order To Unlock All 50 Suits)
