@@ -215,6 +215,9 @@ SET_CLEO_SHARED_VAR varMapLegendBackPack iTempVar    //Show: 1= enable   || 0= d
 iMinRowSuitQuantity = 1
 iMaxRowQuantity = 5         
 
+// Fix upon reloading a save
+GOSUB restoreWalkstyle
+
 //xCoord = 320.0
 //yCoord = 224.0
 //CLEO_CALL storeScreenCoords 0 xCoord yCoord
