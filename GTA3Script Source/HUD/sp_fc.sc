@@ -207,7 +207,7 @@ drawFocusBar:
             sy = 120.55 
             USE_TEXT_COMMANDS FALSE    
             SET_SPRITES_DRAW_BEFORE_FADE TRUE        
-            DRAW_SPRITE idFArrow (174.52 41.8) (sx sy) (255 255 255 255)  
+            //DRAW_SPRITE idFArrow (174.52 41.8) (sx sy) (255 255 255 255)  
         ENDIF
         DRAW_RECT (coordX[0] 57.95) (sizeX[0] sizeY[0]) (11 247 196 255) //focus charged - bar 1
     ENDIF    
@@ -232,7 +232,7 @@ drawFocusBar:
             sy = 120.55 
             USE_TEXT_COMMANDS FALSE    
             SET_SPRITES_DRAW_BEFORE_FADE TRUE         
-            DRAW_SPRITE idFArrow (210.9 41.8) (sx sy) (255 255 255 255)
+            //DRAW_SPRITE idFArrow (210.9 41.8) (sx sy) (255 255 255 255)
         ENDIF 
         DRAW_RECT (coordX[1] 57.95) (sizeX[1] sizeY[1]) (11 247 196 255) //focus charged - bar 2
     ENDIF
@@ -257,7 +257,7 @@ drawFocusBar:
             sy = 120.55    
             USE_TEXT_COMMANDS FALSE
             SET_SPRITES_DRAW_BEFORE_FADE TRUE          
-            DRAW_SPRITE idFArrow (248.0 41.8) (sx sy) (255 255 255 255)            
+            //DRAW_SPRITE idFArrow (248.0 41.8) (sx sy) (255 255 255 255)            
         ENDIF 
         DRAW_RECT (coordX[2] 57.95) (sizeX[2] sizeY[2]) (11 247 196 255) //focus charged - bar 3  
     ENDIF                   
