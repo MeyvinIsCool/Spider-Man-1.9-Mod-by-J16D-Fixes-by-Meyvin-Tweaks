@@ -8,18 +8,19 @@ SCRIPT_START
 {
 SCRIPT_NAME sp_fc
 LVAR_INT player_actor toggleSpiderMod isInMainMenu toggleHUD hud_mode is_in_interior
-LVAR_INT iTempVar iTempVar2 is_hud_enabled is_opening_door
+LVAR_INT iTempVar iTempVar2 iFocusUI is_hud_enabled is_opening_door
+LVAR_INT flag_player_hit_counter iFocusHit iFocus iLastCount
 LVAR_FLOAT sx sy fFocus fLastFocus coordX[3] sizeX[3] sizeY[3] coordArrow
-LVAR_INT iFocusHit iFocus iLastCount
-//LVAR_INT iFocusFull 
-LVAR_INT flag_player_hit_counter
 
 GET_PLAYER_CHAR 0 player_actor
+
+//Default Values 
 iFocusHit = 0
-iFocus = 0    
+iFocus = 0
 iTempVar2 = 0
 fLastFocus = 0.0
-//iFocusFull = 0
+iFocusUI = 0
+
 SET_CLEO_SHARED_VAR varFocusCount iFocusHit             //Focus Counter
 SET_CLEO_SHARED_VAR varUseFocus iFocus       //Hits Counter
 
@@ -261,24 +262,46 @@ drawFocusBar:
         DRAW_RECT (coordX[2] 57.95) (sizeX[2] sizeY[2]) (11 247 196 255) //focus charged - bar 3  
     ENDIF                   
 
+//-+------ Focus Bar Full UI - STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id}
+    IF iFocus >= 0
+    AND iFocus <= 14
+        iFocusUI = 0
+    ENDIF
+    IF iFocus >= 15
+        IF NOT iFocusUI >= 1
+            STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 10
+            iFocusUI = 1
+        ENDIF
+    ENDIF
+    IF iFocus >= 30
+        IF NOT iFocusUI >= 2
+            STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 10
+            iFocusUI = 2
+        ENDIF       
+    ENDIF 
+    IF iFocus >= 45
+        IF NOT iFocusUI >= 3
+            STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 10
+            iFocusUI = 3
+        ENDIF           
+    ENDIF    
     IF iFocus >= 0
         GET_CLEO_SHARED_VAR varUseFocus iFocus
         IF iFocus <= 14
-            iTempVar2 = 0
+            iFocusUI = 0
         ELSE
             IF iFocus >= 15
             AND iFocus <= 29
-                iTempVar2 = 1
+                iFocusUI = 1
             ELSE
                 IF iFocus >= 30
                 AND iFocus <= 44
-                    iTempVar2 = 2
+                    iFocusUI = 2
                 ENDIF
             ENDIF
         ENDIF    
-        //PRINT_FORMATTED_NOW "iFocus: %i iTempVar2: %i" 2000 iFocus iTempVar2
     ENDIF
-
+//-+----------------------------------------------------------
     // Focus Bar Use
     IF iFocus > 0
         IF IS_BUTTON_JUST_PRESSED PAD1 DPADLEFT
