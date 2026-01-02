@@ -274,7 +274,7 @@ loadHudTextures:
         //Health bar
         LOAD_SPRITE idHBa "h_bar1"
         LOAD_SPRITE idHB "h_bar"
-        LOAD_SPRITE idHBArrow "h0"
+        LOAD_SPRITE idHBArrow "h_arr"
         //Armour bar
         LOAD_SPRITE idWA "a_bar"
         LOAD_SPRITE idWA_a "a_bara"

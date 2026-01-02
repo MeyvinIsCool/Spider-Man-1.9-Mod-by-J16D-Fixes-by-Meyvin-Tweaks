@@ -1,5 +1,5 @@
 // by Meyvin Tweaks
-// Spider-Man Mod for GTA SA c.2018 - 2023
+// Spider-Man Mod for GTA SA c.2018 - 2026
 // Focus Bar - CLEO+
 // ALPHA Stage (need to polish more features)
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
@@ -8,15 +8,18 @@ SCRIPT_START
 {
 SCRIPT_NAME sp_fc
 LVAR_INT player_actor toggleSpiderMod isInMainMenu toggleHUD hud_mode is_in_interior
-LVAR_INT iTempVar iTempVar2 iTempVar3 is_hud_enabled is_opening_door
-LVAR_FLOAT sx sy
+LVAR_INT iTempVar iTempVar2 is_hud_enabled is_opening_door
+LVAR_FLOAT sx sy fFocus fLastFocus coordX[3] sizeX[3] sizeY[3] coordArrow
 LVAR_INT iFocusHit iFocus iLastCount
+//LVAR_INT iFocusFull 
 LVAR_INT flag_player_hit_counter
 
 GET_PLAYER_CHAR 0 player_actor
 iFocusHit = 0
-iFocus = 0
-iTempVar3 = 0
+iFocus = 0    
+iTempVar2 = 0
+fLastFocus = 0.0
+//iFocusFull = 0
 SET_CLEO_SHARED_VAR varFocusCount iFocusHit             //Focus Counter
 SET_CLEO_SHARED_VAR varUseFocus iFocus       //Hits Counter
 
@@ -63,6 +66,7 @@ main_loop:
                             GOSUB drawFocusBar    // Focus Bar 
                         ENDIF   
                         iLastCount = iFocusHit        // The Best Way I Could Find To Make This Script Work   
+                        fLastFocus = fFocus
 
                         IF NOT is_in_interior = 0   // Disables IF Player Is In Interior
                             USE_TEXT_COMMANDS FALSE
@@ -88,21 +92,21 @@ main_loop:
                     GOSUB readVars
                     IF isInMainMenu = 0
                         STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 10
-                        iTempVar3 = 1
+                        iTempVar2 = 1
                     ENDIF
                 ELSE
                     IF iFocus = 30
                         GOSUB readVars
                         IF isInMainMenu = 0
                             STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 10
-                            iTempVar3 = 2
+                            iTempVar2 = 2
                         ENDIF
                     ELSE
                         IF iFocus = 45
                             GOSUB readVars
                             IF isInMainMenu = 0
                                 STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" 10
-                                iTempVar3 = 3
+                                iTempVar2 = 3
                             ENDIF  
                         ENDIF
                     ENDIF
@@ -162,167 +166,117 @@ drawFocusBar:
             ENDIF        
         ENDIF    
     ENDIF
-    
+
     //GET_FIXED_XY_ASPECT_RATIO (400.0 100.0) (sx sy)    //(300.0 93.33)
     sx = 288.00 
     sy = 142.55        
     USE_TEXT_COMMANDS FALSE
     SET_SPRITES_DRAW_BEFORE_FADE TRUE
     IF flag_player_hit_counter = 1
-        IF iFocus = 0
-            DRAW_SPRITE idFBar0 (143.6 67.5) (sx sy) (255 255 255 255)    // focusbar_empty
-        ELSE    
-            IF iFocus >= 1
-            AND iFocus <= 3
-                DRAW_SPRITE idFBar1 (143.6 67.5) (sx sy) (255 255 255 255)              
-            ELSE
-                IF iFocus >= 4
-                AND iFocus <= 5
-                    DRAW_SPRITE idFBar2 (143.6 67.5) (sx sy) (255 255 255 255)   
-                ELSE
-                    IF iFocus >= 6
-                    AND iFocus <= 7
-                        DRAW_SPRITE idFBar3 (143.6 67.5) (sx sy) (255 255 255 255)   
-                    ELSE
-                        IF iFocus >= 8
-                        AND iFocus <= 9
-                            DRAW_SPRITE idFBar4 (143.6 67.5) (sx sy) (255 255 255 255)    
-                        ELSE
-                            IF iFocus >= 10
-                            AND iFocus <= 12
-                                DRAW_SPRITE idFBar5 (143.6 67.5) (sx sy) (255 255 255 255)    
-                            ELSE
-                                IF iFocus >= 13
-                                AND iFocus <= 14
-                                    DRAW_SPRITE idFBar6 (143.6 67.5) (sx sy) (255 255 255 255)    
-                                ELSE
-                                    IF iFocus = 15
-                                        DRAW_SPRITE idFBar7 (143.6 67.5) (sx sy) (255 255 255 255)  // focusbar_charged_1  
-                                        IF NOT iTempVar3 >= 1
-                                            iTempVar3 = 1
-                                            GOTO focusbar_UI
-                                        ENDIF                                                                            
-                                    ELSE                                        
-                                        IF iFocus >= 16
-                                        AND iFocus <= 17
-                                            DRAW_SPRITE idFBar8 (143.6 67.5) (sx sy) (255 255 255 255)    
-                                        ELSE  
-                                            IF iFocus >= 18
-                                            AND iFocus <= 19
-                                                DRAW_SPRITE idFBar9 (143.6 67.5) (sx sy) (255 255 255 255)    
-                                            ELSE     
-                                                IF iFocus >= 20
-                                                AND iFocus <= 21
-                                                    DRAW_SPRITE idFBar10 (143.6 67.5) (sx sy) (255 255 255 255)   
-                                                ELSE   
-                                                    IF iFocus >= 22
-                                                    AND iFocus <= 23
-                                                        DRAW_SPRITE idFBar11 (143.6 67.5) (sx sy) (255 255 255 255)    
-                                                    ELSE        
-                                                        IF iFocus = 24
-                                                            DRAW_SPRITE idFBar12 (143.6 67.5) (sx sy) (255 255 255 255)   
-                                                        ELSE   
-                                                            IF iFocus >= 25
-                                                            AND iFocus <= 26
-                                                                DRAW_SPRITE idFBar13 (143.6 67.5) (sx sy) (255 255 255 255)   
-                                                            ELSE       
-                                                                IF iFocus = 27
-                                                                    DRAW_SPRITE idFBar14 (143.6 67.5) (sx sy) (255 255 255 255)   
-                                                                ELSE          
-                                                                    IF iFocus >= 28
-                                                                    AND iFocus <= 29
-                                                                        DRAW_SPRITE idFBar15 (143.6 67.5) (sx sy) (255 255 255 255)   
-                                                                    ELSE    
-                                                                        IF iFocus = 30
-                                                                            DRAW_SPRITE idFBar16 (143.6 67.5) (sx sy) (255 255 255 255)    // focusbar_charged_2
-                                                                            IF iTempVar3 >= 1
-                                                                                IF NOT iTempVar3 >= 2
-                                                                                    iTempVar3 = 2
-                                                                                    GOTO focusbar_UI
-                                                                                ENDIF
-                                                                            ENDIF                                                                              
-                                                                        ELSE  
-                                                                            IF iFocus = 31
-                                                                                DRAW_SPRITE idFBar17 (143.6 67.5) (sx sy) (255 255 255 255)    
-                                                                            ELSE   
-                                                                                IF iFocus >= 32
-                                                                                AND iFocus <= 33
-                                                                                    DRAW_SPRITE idFBar18 (143.6 67.5) (sx sy) (255 255 255 255)    
-                                                                                ELSE        
-                                                                                    IF iFocus = 34
-                                                                                        DRAW_SPRITE idFBar19 (143.6 67.5) (sx sy) (255 255 255 255)    
-                                                                                    ELSE     
-                                                                                        IF iFocus >= 35
-                                                                                        AND iFocus <= 36
-                                                                                            DRAW_SPRITE idFBar20 (143.6 67.5) (sx sy) (255 255 255 255)    
-                                                                                        ELSE       
-                                                                                            IF iFocus = 36
-                                                                                                DRAW_SPRITE idFBar21 (143.6 67.5) (sx sy) (255 255 255 255)    
-                                                                                            ELSE   
-                                                                                                IF iFocus >= 37
-                                                                                                AND iFocus <= 38
-                                                                                                    DRAW_SPRITE idFBar22 (143.6 67.5) (sx sy) (255 255 255 255)    
-                                                                                                ELSE   
-                                                                                                    IF iFocus >= 39
-                                                                                                    AND iFocus <= 41
-                                                                                                        DRAW_SPRITE idFBar23 (143.6 67.5) (sx sy) (255 255 255 255)    
-                                                                                                    ELSE          
-                                                                                                        IF iFocus >= 42
-                                                                                                        AND iFocus <= 44
-                                                                                                            DRAW_SPRITE idFBar24 (143.6 67.5) (sx sy) (255 255 255 255)    
-                                                                                                        ELSE         
-                                                                                                            IF iFocus = 45                                                      
-                                                                                                                DRAW_SPRITE idFBar25 (143.6 67.5) (sx sy) (255 255 255 255)    // focusbar_charged_3 
-                                                                                                                IF iTempVar3 >= 1
-                                                                                                                    IF NOT iTempVar3 >= 3
-                                                                                                                        iTempVar3 = 3
-                                                                                                                        GOTO focusbar_UI
-                                                                                                                    ENDIF
-                                                                                                                ENDIF                                                                                                                   
-                                                                                                            ENDIF
-                                                                                                        ENDIF
-                                                                                                    ENDIF
-                                                                                                ENDIF
-                                                                                            ENDIF
-                                                                                        ENDIF
-                                                                                    ENDIF
-                                                                                ENDIF
-                                                                            ENDIF
-                                                                        ENDIF
-                                                                    ENDIF
-                                                                ENDIF
-                                                            ENDIF
-                                                        ENDIF
-                                                    ENDIF
-                                                ENDIF
-                                            ENDIF
-                                        ENDIF
-                                    ENDIF
-                                ENDIF
-                            ENDIF                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-                        ENDIF
-                    ENDIF
-                ENDIF
-            ENDIF
-        ENDIF
+        DRAW_SPRITE idFBar (143.6 67.5) (sx sy) (255 255 255 255)
+    ENDIF    
+    fFocus =# iFocus
+
+    IF fFocus >= 1.0
+    AND fFocus <= 14.0
+        CLEO_CALL barFunc_1 0 fFocus coordX[0] (sizeX[0] sizeY[0] coordArrow)   
+        IF fLastFocus < fFocus
+            DRAW_RECT (coordX[0] 57.95) (sizeX[0] sizeY[0]) (48 200 255 255)
+        ENDIF  
+        DRAW_RECT (coordX[0] 57.95) (sizeX[0] sizeY[0]) (255 255 255 120) 
+        sx = 300.00 
+        sy = 120.55   
+        USE_TEXT_COMMANDS FALSE   
+        SET_SPRITES_DRAW_BEFORE_FADE TRUE
+        DRAW_SPRITE idFArrow (coordArrow 41.8) (sx sy) (255 255 255 255)
+    ELSE
+        IF fFocus = 0.0
+            sx = 300.00 
+            sy = 120.55   
+            USE_TEXT_COMMANDS FALSE    
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE            
+            DRAW_SPRITE idFArrow (140.0 41.8) (sx sy) (255 255 255 255)
+        ENDIF              
     ENDIF
+
+    IF fFocus >= 15.0
+        IF fFocus = 15.0
+            CLEO_CALL barFunc_1 0 fFocus coordX[0] (sizeX[0] sizeY[0] coordArrow)
+            sx = 300.00 
+            sy = 120.55 
+            USE_TEXT_COMMANDS FALSE    
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE        
+            DRAW_SPRITE idFArrow (174.52 41.8) (sx sy) (255 255 255 255)  
+        ENDIF
+        DRAW_RECT (coordX[0] 57.95) (sizeX[0] sizeY[0]) (11 247 196 255) //focus charged - bar 1
+    ENDIF    
+    
+    IF fFocus >= 16.0
+    AND fFocus <= 29.0
+        CLEO_CALL barFunc_2 0 fFocus coordX[1] (sizeX[1] sizeY[1] coordArrow)   
+        IF fLastFocus < fFocus
+            DRAW_RECT (coordX[1] 57.95) (sizeX[1] sizeY[1]) (48 200 255 255)
+        ENDIF          
+        DRAW_RECT (coordX[1] 57.95) (sizeX[1] sizeY[1]) (255 255 255 120)  //bar     
+        sx = 300.00 
+        sy = 120.55   
+        USE_TEXT_COMMANDS FALSE    
+        SET_SPRITES_DRAW_BEFORE_FADE TRUE        
+        DRAW_SPRITE idFArrow (coordArrow 41.8) (sx sy) (255 255 255 255)         
+    ENDIF
+    IF fFocus >= 30.0
+        IF fFocus = 30.0
+            CLEO_CALL barFunc_2 0 fFocus coordX[1] (sizeX[1] sizeY[1] coordArrow) 
+            sx = 300.00 
+            sy = 120.55 
+            USE_TEXT_COMMANDS FALSE    
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE         
+            DRAW_SPRITE idFArrow (210.9 41.8) (sx sy) (255 255 255 255)
+        ENDIF 
+        DRAW_RECT (coordX[1] 57.95) (sizeX[1] sizeY[1]) (11 247 196 255) //focus charged - bar 2
+    ENDIF
+
+    IF fFocus >= 31.0
+    AND fFocus <= 44.0
+        CLEO_CALL barFunc_3 0 fFocus coordX[2] (sizeX[2] sizeY[2] coordArrow)   
+        IF fLastFocus < fFocus
+            DRAW_RECT (coordX[2] 57.95) (sizeX[2] sizeY[2]) (48 200 255 255)
+        ENDIF          
+        DRAW_RECT (coordX[2] 57.95) (sizeX[2] sizeY[2]) (255 255 255 120)  //bar  
+        sx = 300.00 
+        sy = 120.55   
+        USE_TEXT_COMMANDS FALSE
+        SET_SPRITES_DRAW_BEFORE_FADE TRUE
+        DRAW_SPRITE idFArrow (coordArrow 41.8) (sx sy) (255 255 255 255)                   
+    ENDIF
+    IF fFocus >= 45.0
+        IF fFocus = 45.0
+            CLEO_CALL barFunc_3 0 fFocus coordX[2] (sizeX[2] sizeY[2] coordArrow) 
+            sx = 300.00 
+            sy = 120.55    
+            USE_TEXT_COMMANDS FALSE
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE          
+            DRAW_SPRITE idFArrow (248.0 41.8) (sx sy) (255 255 255 255)            
+        ENDIF 
+        DRAW_RECT (coordX[2] 57.95) (sizeX[2] sizeY[2]) (11 247 196 255) //focus charged - bar 3  
+    ENDIF                   
 
     IF iFocus >= 0
         GET_CLEO_SHARED_VAR varUseFocus iFocus
         IF iFocus <= 14
-            iTempVar3 = 0
+            iTempVar2 = 0
         ELSE
             IF iFocus >= 15
             AND iFocus <= 29
-                iTempVar3 = 1
+                iTempVar2 = 1
             ELSE
                 IF iFocus >= 30
                 AND iFocus <= 44
-                    iTempVar3 = 2
+                    iTempVar2 = 2
                 ENDIF
             ENDIF
         ENDIF    
-        //PRINT_FORMATTED_NOW "iFocus: %i iTempVar3: %i" 2000 iFocus iTempVar3
+        //PRINT_FORMATTED_NOW "iFocus: %i iTempVar2: %i" 2000 iFocus iTempVar2
     ENDIF
 
     // Focus Bar Use
@@ -336,63 +290,11 @@ drawFocusBar:
 RETURN
 
 loadHudTextures:
-    //TEXTURES
-    CONST_INT idFBar0 15
-    CONST_INT idFBar1 16
-    CONST_INT idFBar2 17
-    CONST_INT idFBar3 18
-    CONST_INT idFBar4 19
-    CONST_INT idFBar5 20
-    CONST_INT idFBar6 21
-    CONST_INT idFBar7 22
-    CONST_INT idFBar8 23
-    CONST_INT idFBar9 24
-    CONST_INT idFBar10 25
-    CONST_INT idFBar11 26
-    CONST_INT idFBar12 27
-    CONST_INT idFBar13 28
-    CONST_INT idFBar14 29
-    CONST_INT idFBar15 30
-    CONST_INT idFBar16 31
-    CONST_INT idFBar17 32
-    CONST_INT idFBar18 33
-    CONST_INT idFBar19 34
-    CONST_INT idFBar20 35
-    CONST_INT idFBar21 36
-    CONST_INT idFBar22 37
-    CONST_INT idFBar23 38
-    CONST_INT idFBar24 39
-    CONST_INT idFBar25 40
-
     IF DOES_DIRECTORY_EXIST "CLEO\SpiderJ16D"
         LOAD_TEXTURE_DICTIONARY sphud
         //Focus Bar
-        LOAD_SPRITE idFBar0 "f_fbar0"     
-        LOAD_SPRITE idFBar1 "f_fbar1"  
-        LOAD_SPRITE idFBar2 "f_fbar2"  
-        LOAD_SPRITE idFBar3 "f_fbar3"  
-        LOAD_SPRITE idFBar4 "f_fbar4"     
-        LOAD_SPRITE idFBar5 "f_fbar5"  
-        LOAD_SPRITE idFBar6 "f_fbar6"  
-        LOAD_SPRITE idFBar7 "f_fbar7"  
-        LOAD_SPRITE idFBar8 "f_fbar8"     
-        LOAD_SPRITE idFBar9 "f_fbar9"  
-        LOAD_SPRITE idFBar10 "f_fbar10"  
-        LOAD_SPRITE idFBar11 "f_fbar11"  
-        LOAD_SPRITE idFBar12 "f_fbar12"     
-        LOAD_SPRITE idFBar13 "f_fbar13"  
-        LOAD_SPRITE idFBar14 "f_fbar14"  
-        LOAD_SPRITE idFBar15 "f_fbar15"    
-        LOAD_SPRITE idFBar16 "f_fbar16" 
-        LOAD_SPRITE idFBar17 "f_fbar17" 
-        LOAD_SPRITE idFBar18 "f_fbar18"                       
-        LOAD_SPRITE idFBar19 "f_fbar19" 
-        LOAD_SPRITE idFBar20 "f_fbar20" 
-        LOAD_SPRITE idFBar21 "f_fbar21" 
-        LOAD_SPRITE idFBar22 "f_fbar22" 
-        LOAD_SPRITE idFBar23 "f_fbar23" 
-        LOAD_SPRITE idFBar24 "f_fbar24" 
-        LOAD_SPRITE idFBar25 "f_fbar25"  
+        LOAD_SPRITE idFBar "sp_fbar"     
+        LOAD_SPRITE idFArrow "f_arr"
     ELSE
         PRINT_STRING_NOW "~r~ERROR: 'CLEO\SpiderJ16D' folder not found!" 6000
         timera = 0
@@ -423,9 +325,9 @@ hudCheck:
 RETURN
 
 openDoorCheck:
-    READ_MEMORY 0x96A7CC 4 FALSE (iTempVar2)
-    IF iTempVar2 = 1
-    OR iTempVar2 = 2
+    READ_MEMORY 0x96A7CC 4 FALSE (iTempVar)
+    IF iTempVar = 1
+    OR iTempVar = 2
         is_opening_door = TRUE
     ELSE
         is_opening_door = FALSE
@@ -436,6 +338,75 @@ RETURN
 SCRIPT_END
 
 //CALL SCM HELPERS
+
+//-+-----Focus Bar Function-+-------
+{
+//CLEO_CALL barFunc 0 /*size*/1000.0 /*pos*/posX (/*size*/sizeX sizeY)
+barFunc_1:
+    LVAR_FLOAT sizeBar   // In
+    LVAR_FLOAT var[2]
+    LVAR_FLOAT xSize ySize arrCoord
+    var[1] = sizeBar
+    var[1] /= 44.5 //fresX
+    //var[1] *= 300.0
+    //CLEO_CALL GetXYSizeInScreenScaleByUserResolution 0 (var[1] 12.0) (xSize ySize)  //var[1] = 100
+    var[1] *= 100.0
+    xSize = var[1]
+    ySize = 3.15
+    var[0] = xSize
+    var[0] /= 2.0
+    var[0] += 77.4 //77.4+(100/2)= 127.4
+    arrCoord = var[0]
+    arrCoord *= 2.0
+    arrCoord -= 14.5 
+CLEO_RETURN 0 var[0] xSize ySize arrCoord
+}
+{
+//CLEO_CALL barFunc 0 /*size*/1000.0 /*pos*/posX (/*size*/sizeX sizeY)
+barFunc_2:
+    LVAR_FLOAT sizeBar   // In
+    LVAR_FLOAT var[2]
+    LVAR_FLOAT xSize ySize arrCoord
+    var[1] = sizeBar
+    var[1] /= 44.5 //fresX
+    //var[1] *= 300.0
+    //CLEO_CALL GetXYSizeInScreenScaleByUserResolution 0 (var[1] 12.0) (xSize ySize)  //var[1] = 100
+    var[1] *= 100.0
+    xSize = var[1]
+    ySize = 3.15
+    var[0] = xSize
+    var[0] /= 2.0
+    var[0] += 97.35 //97.35+(100/2)= 147.35
+    arrCoord = var[0]
+    arrCoord *= 2.0
+    arrCoord -= 51.0       
+    xSize -= 33.7
+CLEO_RETURN 0 var[0] xSize ySize arrCoord
+}
+{
+//CLEO_CALL barFunc 0 /*size*/1000.0 /*pos*/posX (/*size*/sizeX sizeY)
+barFunc_3:
+    LVAR_FLOAT sizeBar   // In
+    LVAR_FLOAT var[2]
+    LVAR_FLOAT xSize ySize arrCoord
+    var[1] = sizeBar
+    var[1] /= 44.5 //fresX
+    //var[1] *= 300.0
+    //CLEO_CALL GetXYSizeInScreenScaleByUserResolution 0 (var[1] 12.0) (xSize ySize)  //var[1] = 100
+    var[1] *= 100.0
+    xSize = var[1]
+    ySize = 3.15
+    var[0] = xSize
+    var[0] /= 2.0
+    var[0] += 117.5 //117.5+(100/2)= 167.5
+    arrCoord = var[0]
+    arrCoord *= 2.0
+    arrCoord -= 88.05     
+    xSize -= 67.6
+CLEO_RETURN 0 var[0] xSize ySize arrCoord
+}
+//-+--------------------------------
+
 {
 //CLEO_CALL getHudRadar 0 (var)
 getHudRadar:
@@ -685,3 +656,10 @@ CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deacti
 
 CONST_INT varFocusCount         70    //sp_hit    || focus bar
 CONST_INT varUseFocus           71    //sp_hit    || focus bar
+
+
+
+
+//TEXTURES
+CONST_INT idFBar 1
+CONST_INT idFArrow 2
