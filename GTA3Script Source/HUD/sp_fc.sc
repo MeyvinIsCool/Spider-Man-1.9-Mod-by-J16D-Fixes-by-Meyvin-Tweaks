@@ -9,14 +9,15 @@ SCRIPT_START
 SCRIPT_NAME sp_fc
 LVAR_INT player_actor toggleSpiderMod isInMainMenu toggleHUD hud_mode is_in_interior
 LVAR_INT iTempVar iTempVar2 iFocusUI is_hud_enabled is_opening_door
-LVAR_INT flag_player_hit_counter iFocusHit iFocus iLastCount
+LVAR_INT flag_player_hit_counter iFocusHit iFocus iLastCount pl_health pl_max_health
 LVAR_FLOAT sx sy fFocus fLastFocus coordX[3] sizeX[3] sizeY[3] coordArrow
+LVAR_FLOAT fCurrentMaxHealth
 
 GET_PLAYER_CHAR 0 player_actor
 
 //Default Values 
 iFocusHit = 0
-iFocus = 15      //DEBUG
+iFocus = 0
 iTempVar2 = 0
 fLastFocus = 0.0
 iFocusUI = 0
@@ -178,89 +179,91 @@ drawFocusBar:
     ENDIF    
     fFocus =# iFocus
 
-    IF fFocus >= 1.0
-    AND fFocus <= 14.0
-        CLEO_CALL barFunc_1 0 fFocus coordX[0] (sizeX[0] sizeY[0] coordArrow)   
-        IF fLastFocus < fFocus
-            DRAW_RECT (coordX[0] 57.95) (sizeX[0] sizeY[0]) (48 200 255 255)
-        ENDIF  
-        DRAW_RECT (coordX[0] 57.95) (sizeX[0] sizeY[0]) (255 255 255 120) 
-        sx = 300.00 
-        sy = 120.55   
-        USE_TEXT_COMMANDS FALSE   
-        SET_SPRITES_DRAW_BEFORE_FADE TRUE
-        DRAW_SPRITE idFArrow (coordArrow 41.8) (sx sy) (255 255 255 255)
-    ELSE
-        IF fFocus = 0.0
+    IF flag_player_hit_counter = 1 
+        IF fFocus >= 1.0
+        AND fFocus <= 14.0
+            CLEO_CALL barFunc_1 0 fFocus coordX[0] (sizeX[0] sizeY[0] coordArrow)   
+            IF fLastFocus < fFocus
+                DRAW_RECT (coordX[0] 57.95) (sizeX[0] sizeY[0]) (48 200 255 255)
+            ENDIF  
+            DRAW_RECT (coordX[0] 57.95) (sizeX[0] sizeY[0]) (255 255 255 120) 
+            sx = 300.00 
+            sy = 120.55   
+            USE_TEXT_COMMANDS FALSE   
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_SPRITE idFArrow (coordArrow 41.8) (sx sy) (255 255 255 255)
+        ELSE
+            IF fFocus = 0.0
+                sx = 300.00 
+                sy = 120.55   
+                USE_TEXT_COMMANDS FALSE    
+                SET_SPRITES_DRAW_BEFORE_FADE TRUE            
+                DRAW_SPRITE idFArrow (140.0 41.8) (sx sy) (255 255 255 255)
+            ENDIF              
+        ENDIF
+
+        IF fFocus >= 15.0
+            IF fFocus = 15.0
+                CLEO_CALL barFunc_1 0 fFocus coordX[0] (sizeX[0] sizeY[0] coordArrow)
+                sx = 300.00 
+                sy = 120.55 
+                USE_TEXT_COMMANDS FALSE    
+                SET_SPRITES_DRAW_BEFORE_FADE TRUE        
+                //DRAW_SPRITE idFArrow (174.52 41.8) (sx sy) (255 255 255 255)  
+            ENDIF
+            DRAW_RECT (coordX[0] 57.95) (sizeX[0] sizeY[0]) (11 247 196 255) //focus charged - bar 1
+        ENDIF    
+        
+        IF fFocus >= 16.0
+        AND fFocus <= 29.0
+            CLEO_CALL barFunc_2 0 fFocus coordX[1] (sizeX[1] sizeY[1] coordArrow)   
+            IF fLastFocus < fFocus
+                DRAW_RECT (coordX[1] 57.95) (sizeX[1] sizeY[1]) (48 200 255 255)
+            ENDIF          
+            DRAW_RECT (coordX[1] 57.95) (sizeX[1] sizeY[1]) (255 255 255 120)  //bar     
             sx = 300.00 
             sy = 120.55   
             USE_TEXT_COMMANDS FALSE    
-            SET_SPRITES_DRAW_BEFORE_FADE TRUE            
-            DRAW_SPRITE idFArrow (140.0 41.8) (sx sy) (255 255 255 255)
-        ENDIF              
-    ENDIF
-
-    IF fFocus >= 15.0
-        IF fFocus = 15.0
-            CLEO_CALL barFunc_1 0 fFocus coordX[0] (sizeX[0] sizeY[0] coordArrow)
-            sx = 300.00 
-            sy = 120.55 
-            USE_TEXT_COMMANDS FALSE    
-            SET_SPRITES_DRAW_BEFORE_FADE TRUE        
-            //DRAW_SPRITE idFArrow (174.52 41.8) (sx sy) (255 255 255 255)  
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE           
+            DRAW_SPRITE idFArrow (coordArrow 41.8) (sx sy) (255 255 255 255)         
         ENDIF
-        DRAW_RECT (coordX[0] 57.95) (sizeX[0] sizeY[0]) (11 247 196 255) //focus charged - bar 1
-    ENDIF    
-    
-    IF fFocus >= 16.0
-    AND fFocus <= 29.0
-        CLEO_CALL barFunc_2 0 fFocus coordX[1] (sizeX[1] sizeY[1] coordArrow)   
-        IF fLastFocus < fFocus
-            DRAW_RECT (coordX[1] 57.95) (sizeX[1] sizeY[1]) (48 200 255 255)
-        ENDIF          
-        DRAW_RECT (coordX[1] 57.95) (sizeX[1] sizeY[1]) (255 255 255 120)  //bar     
-        sx = 300.00 
-        sy = 120.55   
-        USE_TEXT_COMMANDS FALSE    
-        SET_SPRITES_DRAW_BEFORE_FADE TRUE        
-        DRAW_SPRITE idFArrow (coordArrow 41.8) (sx sy) (255 255 255 255)         
-    ENDIF
-    IF fFocus >= 30.0
-        IF fFocus = 30.0
-            CLEO_CALL barFunc_2 0 fFocus coordX[1] (sizeX[1] sizeY[1] coordArrow) 
-            sx = 300.00 
-            sy = 120.55 
-            USE_TEXT_COMMANDS FALSE    
-            SET_SPRITES_DRAW_BEFORE_FADE TRUE         
-            //DRAW_SPRITE idFArrow (210.9 41.8) (sx sy) (255 255 255 255)
-        ENDIF 
-        DRAW_RECT (coordX[1] 57.95) (sizeX[1] sizeY[1]) (11 247 196 255) //focus charged - bar 2
-    ENDIF
+        IF fFocus >= 30.0
+            IF fFocus = 30.0
+                CLEO_CALL barFunc_2 0 fFocus coordX[1] (sizeX[1] sizeY[1] coordArrow) 
+                sx = 300.00 
+                sy = 120.55 
+                USE_TEXT_COMMANDS FALSE    
+                SET_SPRITES_DRAW_BEFORE_FADE TRUE         
+                //DRAW_SPRITE idFArrow (210.9 41.8) (sx sy) (255 255 255 255)
+            ENDIF 
+            DRAW_RECT (coordX[1] 57.95) (sizeX[1] sizeY[1]) (11 247 196 255) //focus charged - bar 2
+        ENDIF
 
-    IF fFocus >= 31.0
-    AND fFocus <= 44.0
-        CLEO_CALL barFunc_3 0 fFocus coordX[2] (sizeX[2] sizeY[2] coordArrow)   
-        IF fLastFocus < fFocus
-            DRAW_RECT (coordX[2] 57.95) (sizeX[2] sizeY[2]) (48 200 255 255)
-        ENDIF          
-        DRAW_RECT (coordX[2] 57.95) (sizeX[2] sizeY[2]) (255 255 255 120)  //bar  
-        sx = 300.00 
-        sy = 120.55   
-        USE_TEXT_COMMANDS FALSE
-        SET_SPRITES_DRAW_BEFORE_FADE TRUE
-        DRAW_SPRITE idFArrow (coordArrow 41.8) (sx sy) (255 255 255 255)                   
-    ENDIF
-    IF fFocus >= 45.0
-        IF fFocus = 45.0
-            CLEO_CALL barFunc_3 0 fFocus coordX[2] (sizeX[2] sizeY[2] coordArrow) 
+        IF fFocus >= 31.0
+        AND fFocus <= 44.0
+            CLEO_CALL barFunc_3 0 fFocus coordX[2] (sizeX[2] sizeY[2] coordArrow)   
+            IF fLastFocus < fFocus
+                DRAW_RECT (coordX[2] 57.95) (sizeX[2] sizeY[2]) (48 200 255 255)
+            ENDIF          
+            DRAW_RECT (coordX[2] 57.95) (sizeX[2] sizeY[2]) (255 255 255 120)  //bar  
             sx = 300.00 
-            sy = 120.55    
+            sy = 120.55   
             USE_TEXT_COMMANDS FALSE
-            SET_SPRITES_DRAW_BEFORE_FADE TRUE          
-            //DRAW_SPRITE idFArrow (248.0 41.8) (sx sy) (255 255 255 255)            
-        ENDIF 
-        DRAW_RECT (coordX[2] 57.95) (sizeX[2] sizeY[2]) (11 247 196 255) //focus charged - bar 3  
-    ENDIF                   
+            SET_SPRITES_DRAW_BEFORE_FADE TRUE
+            DRAW_SPRITE idFArrow (coordArrow 41.8) (sx sy) (255 255 255 255)                   
+        ENDIF
+        IF fFocus >= 45.0
+            IF fFocus = 45.0
+                CLEO_CALL barFunc_3 0 fFocus coordX[2] (sizeX[2] sizeY[2] coordArrow) 
+                sx = 300.00 
+                sy = 120.55    
+                USE_TEXT_COMMANDS FALSE
+                SET_SPRITES_DRAW_BEFORE_FADE TRUE          
+                //DRAW_SPRITE idFArrow (248.0 41.8) (sx sy) (255 255 255 255)            
+            ENDIF 
+            DRAW_RECT (coordX[2] 57.95) (sizeX[2] sizeY[2]) (11 247 196 255) //focus charged - bar 3  
+        ENDIF     
+    ENDIF              
 
 //-+------ Focus Bar Full UI - STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_prt.cs" {id}
     IF iFocus >= 0
@@ -304,12 +307,21 @@ drawFocusBar:
 //-+----------------------------------------------------------
     // Focus Bar Use
     IF iFocus > 0
+        GOSUB getCurrentHealth
         IF IS_BUTTON_JUST_PRESSED PAD1 DPADLEFT
-            STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lf.cs"     // Life Regeneration
+            IF NOT pl_health = pl_max_health
+                STREAM_CUSTOM_SCRIPT "SpiderJ16D\sp_lf.cs"     // Life Regeneration
+            ENDIF
         ENDIF
     ENDIF
 
     WAIT 0
+RETURN
+
+getCurrentHealth:
+    GET_CHAR_MAX_HEALTH player_actor (fCurrentMaxHealth)
+    pl_max_health =# fCurrentMaxHealth
+    GET_CHAR_HEALTH player_actor (pl_health)
 RETURN
 
 loadHudTextures:
@@ -651,6 +663,7 @@ CONST_INT varAimSetup           24    // 0:Manual Aim || 1:Auto Aim //sp_dw
 CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varThrowFix           28    //sp_thob          ||1= Activated     || 0= Deactivated
 
 CONST_INT varLevelChar          30    //sp_lvl    || Level
 CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)
@@ -662,6 +675,7 @@ CONST_INT varPowersProgress     35    //sp_po     || current power progress
 CONST_INT varHitCount           36    //sp_hit    || hitcounting
 CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting and focus bar
 CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
+CONST_INT varCrimeAlert         39 
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
@@ -677,10 +691,11 @@ CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
 
+//Additional Skills
+CONST_INT varSkill1a            59    //sp_dw    ||1= Activated     || 0= Deactivated
+
 CONST_INT varFocusCount         70    //sp_hit    || focus bar
 CONST_INT varUseFocus           71    //sp_hit    || focus bar
-
-
 
 
 //TEXTURES

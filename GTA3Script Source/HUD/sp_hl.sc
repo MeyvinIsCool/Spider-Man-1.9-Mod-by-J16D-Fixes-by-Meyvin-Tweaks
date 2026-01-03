@@ -505,6 +505,7 @@ CONST_INT varAimSetup           24    // 0:Manual Aim || 1:Auto Aim //sp_dw
 CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varThrowFix           28    //sp_thob          ||1= Activated     || 0= Deactivated
 
 CONST_INT varLevelChar          30    //sp_lvl    || Level
 CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)
@@ -514,8 +515,9 @@ CONST_INT varWeapAmmo           33    //sp_wep    ||store current weap ammo
 CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 - 12
 CONST_INT varPowersProgress     35    //sp_po     || current power progress
 CONST_INT varHitCount           36    //sp_hit    || hitcounting
-CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
+CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting and focus bar
 CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
+CONST_INT varCrimeAlert         39 
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
@@ -530,6 +532,9 @@ CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
+
+//Additional Skills
+CONST_INT varSkill1a            59    //sp_dw    ||1= Activated     || 0= Deactivated
 
 CONST_INT varFocusCount         70    //sp_hit    || focus bar
 CONST_INT varUseFocus           71    //sp_hit    || focus bar
