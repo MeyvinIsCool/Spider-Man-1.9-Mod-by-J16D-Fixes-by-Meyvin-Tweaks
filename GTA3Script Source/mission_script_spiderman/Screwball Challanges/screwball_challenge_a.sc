@@ -1259,34 +1259,25 @@ draw_total_score:
 RETURN
 
 draw_key_press:
-    CONST_INT JOYPAD 0
-    CONST_INT MOUSE 1
-    LVAR_INT idGXT inputType
-    CLEO_CALL getInputType 0 (inputType)  ///0=joypad; 1=mouse
-    IF inputType = JOYPAD   
-        idGXT = 154     // ~k~~PED_JUMPING~ CONTINUE
-    ELSE
-        IF inputType = MOUSE
-            idGXT = 164 // ~q~ CONTINUE
-        ENDIF
-    ENDIF
     CLEO_CALL GetXYSizeInScreen4x3ScaleBy640x480 0 (167.0 20.0) (sizeX sizeY)
     SET_SPRITES_DRAW_BEFORE_FADE TRUE
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (78.0 288.0) (sizeX sizeY) (19 18 13 100) (1.0) (0 0 0 0) (255 255 253 230) idGXT 9 0.0
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (78.0 288.0) (sizeX sizeY) (19 18 13 100) (1.0) (0 0 0 0) (255 255 253 230) 154 9 0.0
     USE_TEXT_COMMANDS FALSE   
 RETURN
 
 draw_interact_key_press:
+    CONST_INT JOYPAD 0
+    CONST_INT MOUSE 1
+
+    LVAR_INT idGXT inputType
+    
     CLEO_CALL getInputType 0 (inputType)  ///0=joypad; 1=mouse
-    IF inputType = JOYPAD   
-        idGXT = 156     // ~k~~PED_CYCLE_WEAPON_RIGHT~
+    IF IS_PC_USING_JOYPAD  
+        CLEO_CALL GUI_DrawBoxOutline_WithText 0 (537.0 128.45) (0.0 0.0) (0 0 0 0) (1.0) (0 0 0 0) (255 255 253 230) 166 8 0.0
     ELSE
-        IF inputType = MOUSE
-            idGXT = 166 // ~v~
-        ENDIF
+        CLEO_CALL GUI_DrawBoxOutline_WithText 0 (537.0 128.45) (0.0 0.0) 19 18 13 100 1.0 0 0 0 0 255 255 253 230 246 9 0.0   
     ENDIF
     //SET_SPRITES_DRAW_BEFORE_FADE TRUE
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 (537.0 128.45) (0.0 0.0) (0 0 0 0) (1.0) (0 0 0 0) (255 255 253 230) idGXT 8 0.0
     USE_TEXT_COMMANDS FALSE
 RETURN
 

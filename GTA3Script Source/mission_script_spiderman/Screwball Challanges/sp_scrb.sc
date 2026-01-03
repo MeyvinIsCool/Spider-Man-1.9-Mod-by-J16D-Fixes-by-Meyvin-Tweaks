@@ -66,8 +66,7 @@ WHILE TRUE
                             READ_INT_FROM_INI_FILE "CLEO\SpiderJ16D\config.ini" "score" "sc0" iTotalScore
                             CLEO_CALL getRewardsInfo 0 0 reward1 reward2 reward3
                             timera = 0
-                            WHILE LOCATE_CHAR_ANY_MEANS_3D player_actor (-2204.3181 -126.6313 61.81) 5.0 5.0 5.0 FALSE  
-                                WAIT 0      
+                            WHILE LOCATE_CHAR_ANY_MEANS_3D player_actor (-2204.3181 -126.6313 61.81) 5.0 5.0 5.0 FALSE       
                                 IF timera > 400
                                     GOSUB draw_mission_start
                                     GOSUB draw_key_press
@@ -95,7 +94,18 @@ WHILE TRUE
                                         ENDIF
                                     ENDIF
                                     // Second Challange
-                                ENDIF                        
+                                ENDIF   
+                                GOSUB readVars
+                                IF isInMainMenu = 1     //1:true 0: false
+                                    IF DOES_BLIP_EXIST iEventBlip
+                                        REMOVE_BLIP iEventBlip
+                                    ENDIF
+                                    USE_TEXT_COMMANDS FALSE
+                                    WAIT 0
+                                    //TERMINATE_THIS_CUSTOM_SCRIPT   
+                                    GOTO start_check  
+                                ENDIF
+                                WAIT 0                                                               
                             ENDWHILE
                         ELSE
                             PRINT_FORMATTED_NOW "Finish your current mission first!" 2000
@@ -108,8 +118,8 @@ WHILE TRUE
                     REMOVE_BLIP iEventBlip
                     WAIT 0
                     GOTO mission_trigger_check
-                ENDIF                           
-            ENDIF
+                ENDIF                             
+            ENDIF  
         ELSE
             IF DOES_BLIP_EXIST iEventBlip
                 REMOVE_BLIP iEventBlip
@@ -179,23 +189,9 @@ draw_mission_start:
 RETURN
 
 draw_key_press:
-    CONST_INT JOYPAD  0
-    CONST_INT MOUSE   1     
-    LVAR_INT idGXT inputType      
-        
-    CLEO_CALL getInputType 0 (inputType)      ///0=joypad; 1=mouse
-    IF  inputType = JOYPAD
-        idGXT = 151     // k~~VEHICLE_ENTER_EXIT~
-    ELSE
-        IF inputType = MOUSE
-        
-            idGXT = 161 // ~t~
-        ENDIF
-    ENDIF
     CLEO_CALL GetXYSizeInScreen4x3ScaleBy640x480 0 167.0 20.0 xSize ySize
-    SET_SPRITES_DRAW_BEFORE_FADE TRUE    
-    CLEO_CALL GUI_DrawBoxOutline_WithText 0 78.0 290.0 xSize ySize 19 18 13 100 1.0 0 0 0 0 255 255 253 230 idGXT 9 0.0
-    USE_TEXT_COMMANDS FALSE      
+    SET_SPRITES_DRAW_BEFORE_FADE TRUE
+    CLEO_CALL GUI_DrawBoxOutline_WithText 0 78.0 290.0 xSize ySize 19 18 13 100 1.0 0 0 0 0 255 255 253 230 96 9 0.0   
 RETURN
 
 readVars:
@@ -745,7 +741,9 @@ CONST_INT tPBSBack3         76
 CONST_INT tPBSBack1Active   77
 CONST_INT tPBSBack2Active   78
 CONST_INT tPBSBack3Active   79
-CONST_INT iconSuccess       80     
+CONST_INT iconSuccess       80   
+
+
 //-+---CONSTANTS--------------------
 //GLOBAL_CLEO_SHARED_VARS
 //100 slots - range 0 to 99
@@ -762,13 +760,16 @@ CONST_INT varHudBreath          8     //sp_hud    ||1= Activated     || 0= Deact
 CONST_INT varHudArmour          9     //sp_hud    ||1= Activated     || 0= Deactivated
 CONST_INT varHudWantedS         10    //sp_hud    ||1= Activated     || 0= Deactivated
 
-CONST_INT varOnmission          11    //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
+CONST_INT varOnmission          11    //0:Off ||1:on mission || 2:car chase || 3:thug hidouts || 4:street crimes || 5:boss2
 CONST_INT varCrimesProgress     12    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varPcampProgress      13    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varCarChaseProgress   14    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varScrewBallProgress  15    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varBackpacksProgress  16    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varLandmarksProgress  17    //for stadistics ||MSpiderJ16Dv7
+
+CONST_INT varBuildingZip        18    //sp_mlb           ||1= Activated     || 0= Deactivated
+CONST_INT varBuildingZipFlag    19    //sp_mlb           ||1= Activated     || 0= Deactivated
 
 CONST_INT varAlternativeSwing   20    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varSwingBuilding      21    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
@@ -778,6 +779,7 @@ CONST_INT varAimSetup           24    // 0:Manual Aim || 1:Auto Aim //sp_dw
 CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varThrowFix           28    //sp_thob          ||1= Activated     || 0= Deactivated
 
 CONST_INT varLevelChar          30    //sp_lvl    || Level
 CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)
@@ -786,10 +788,20 @@ CONST_INT varIdWebWeapon        32    //sp_mm     || 1-8 weap
 CONST_INT varWeapAmmo           33    //sp_wep    ||store current weap ammo
 CONST_INT varIdPowers           34    //MSpiderJ16Dv7 - sp_po     ||Id powers 1 - 12
 CONST_INT varPowersProgress     35    //sp_po     || current power progress
+CONST_INT varHitCount           36    //sp_hit    || hitcounting
+CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
+CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
+CONST_INT varCrimeAlert         39    
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
 CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
+
+CONST_INT varDrugDealProgress   45    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varAssaultProgress    46    //for stadistics ||MSpiderJ16Dv7 
+CONST_INT varMuggingProgress    47    //for stadistics ||MSpiderJ16Dv7 (Due to messy global shared vars , I have to add it here)
+
+CONST_INT varAudioActive     	49    // 0:OFF || 1:ON  ||global var to check -spech- audio playing
 
 CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated
@@ -800,5 +812,11 @@ CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
+
+//Additional Skills
+CONST_INT varSkill1a            59    //sp_dw    ||1= Activated     || 0= Deactivated
+
+CONST_INT varFocusCount         70    //sp_hit    || focus bar
+CONST_INT varUseFocus           71    //sp_hit    || focus bar
 
 //-+-----------------------------------------------------------------------------------------
