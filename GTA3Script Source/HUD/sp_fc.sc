@@ -16,7 +16,7 @@ GET_PLAYER_CHAR 0 player_actor
 
 //Default Values 
 iFocusHit = 0
-iFocus = 0
+iFocus = 15      //DEBUG
 iTempVar2 = 0
 fLastFocus = 0.0
 iFocusUI = 0
