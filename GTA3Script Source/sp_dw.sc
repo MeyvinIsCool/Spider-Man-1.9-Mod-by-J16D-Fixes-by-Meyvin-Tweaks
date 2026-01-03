@@ -75,7 +75,7 @@ main_loop:
                     GOSUB assign_task_webstrike
 
                     // dissarm enemies with weapons
-                    //GOSUB assign_yank_weapon                                                   
+                    GOSUB assign_yank_weapon                                                   
 
                     IF CLEO_CALL isClearInSight 0 player_actor (0.0 0.0 -3.0) (1 1 0 0 0)
                         //in air
@@ -118,7 +118,7 @@ main_loop:
                 ENDIF
             ENDIF
         ELSE
-            WAIT 500
+            WAIT 1000
             GOSUB readVars 
             IF toggleSpiderMod = 0           
                 REMOVE_AUDIO_STREAM sfx
@@ -765,6 +765,10 @@ process_yank_weapon:
                 GOSUB set_zAngle_on_ground
                 GOSUB assign_yank_weapon_ground_in
 
+                IF DOES_CHAR_EXIST iChar
+                    TASK_PLAY_ANIM_NON_INTERRUPTABLE iChar ("GUN_BUTT" "ped") 0.85 (0 0 0 0) -1        
+                ENDIF        
+
                 IF IS_CHAR_PLAYING_ANIM player_actor ("yank_weap" )
                     GOSUB delay_yank_weapon_ground_in
 
@@ -774,10 +778,9 @@ process_yank_weapon:
                             REMOVE_ALL_CHAR_WEAPONS iChar
                             CLEAR_CHAR_TASKS iChar
                             CLEAR_CHAR_TASKS_IMMEDIATELY iChar
-
-                            DAMAGE_CHAR iChar 3 TRUE    
                             CLEAR_CHAR_TASKS player_actor
                         ENDIF
+                
                         WAIT 0
                     ENDWHILE
 

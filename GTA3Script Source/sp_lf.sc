@@ -1,13 +1,14 @@
 // by J16D
 // Fixes by Meyvin Tweaks
 // Life Regeneration / Finisher (Not yet implemented) (WIP)
+// Controlled by sp_fc.cs script (HUD)
 // Spider-Man Mod for GTA SA c.2018 - 2026
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
 //-+---CONSTANTS--------------------
 
 //data
-CONST_INT inital_delay 50 //ms
+CONST_INT inital_delay 70 //ms
 CONST_FLOAT speed 0.05
 CONST_INT player 0
 
@@ -36,9 +37,9 @@ WAIT 0
 WAIT 0
 WAIT 0
 LVAR_INT player_actor toggleSpiderMod
-LVAR_INT iFocusCounter pl_health pl_max_health
+LVAR_INT iFocus pl_health pl_max_health
 LVAR_INT iHealPoint
-LVAR_FLOAT fCurrentMaxHealth
+LVAR_FLOAT fCurrentMaxHealth fCurrentHealth fHealPoint
  
 GET_PLAYER_CHAR 0 player_actor
 
@@ -46,14 +47,14 @@ main_loop:
     IF IS_PLAYER_PLAYING player
         IF NOT HAS_CHAR_BEEN_ARRESTED player_actor
             IF NOT IS_CHAR_DEAD player_actor
-                GET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                GET_CLEO_SHARED_VAR varUseFocus iFocus
                 GOSUB getCurrentHealth
                 IF pl_health < pl_max_health
                     GOSUB focus_heal
 
                     timera = 0
                     WHILE inital_delay >= timera
-                        GOSUB getHealthMath
+                        GOSUB setHealthMath
                         WAIT 0
                     ENDWHILE
 
@@ -68,7 +69,8 @@ main_loop:
                         TERMINATE_THIS_CUSTOM_SCRIPT    
                     ENDIF                        
                 ENDIF
-            ENDIF        
+            ENDIF
+            PRINT_FORMATTED_NOW "Health int %i Health Float %.3f" 2000 pl_health fCurrentHealth        
         ENDIF
     ENDIF
     WAIT 0
@@ -84,88 +86,881 @@ getCurrentHealth:
     GET_CHAR_HEALTH player_actor (pl_health)
 RETURN
 
-getHealthMath:
+setHealthMath:
     GET_CHAR_HEALTH player_actor (pl_health)
+    fCurrentHealth =# pl_health
     pl_health += iHealPoint
     SET_CHAR_HEALTH player_actor (pl_health)
 RETURN
 
 focus_heal:
-    IF iFocusCounter >= 15
-        iFocusCounter -= 15
-        iHealPoint = iFocusPoint_15
-        SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+    GOSUB getCurrentHealth
+
+    IF pl_health >= 173
+    AND pl_health <= 175
+        IF iFocus >= 1
+            iFocus -= 1
+            iHealPoint = iFocusPoint_1
+            SET_CLEO_SHARED_VAR varUseFocus iFocus
+        ENDIF
     ELSE
-        IF iFocusCounter = 14
-            iFocusCounter -= 14
-            iHealPoint = iFocusPoint_14
-            SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+        IF pl_health >= 170
+        AND pl_health <= 172
+            IF iFocus >= 2
+                iFocus -= 2
+                iHealPoint = iFocusPoint_2
+                SET_CLEO_SHARED_VAR varUseFocus iFocus
+            ELSE
+                IF iFocus >= 1
+                    iFocus -= 1
+                    iHealPoint = iFocusPoint_1
+                    SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                ENDIF
+            ENDIF             
         ELSE
-            IF iFocusCounter = 13
-                iFocusCounter -= 13
-                iHealPoint = iFocusPoint_13
-                SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
-            ELSE 
-                IF iFocusCounter = 12
-                    iFocusCounter -= 12
-                    iHealPoint = iFocusPoint_12
-                    SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
-                ELSE 
-                    IF iFocusCounter = 11
-                        iFocusCounter -= 11
-                        iHealPoint = iFocusPoint_11
-                        SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
-                    ELSE 
-                        IF iFocusCounter = 10
-                            iFocusCounter -= 10
-                            iHealPoint = iFocusPoint_10
-                            SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
-                        ELSE  
-                            IF iFocusCounter = 9
-                                iFocusCounter -= 9
-                                iHealPoint = iFocusPoint_9
-                                SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
-                            ELSE    
-                                IF iFocusCounter = 8
-                                    iFocusCounter -= 8
-                                    iHealPoint = iFocusPoint_8
-                                    SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
-                                ELSE    
-                                    IF iFocusCounter = 7
-                                        iFocusCounter -= 7
-                                        iHealPoint = iFocusPoint_7
-                                        SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+            IF pl_health >= 167
+            AND pl_health <= 169
+                IF iFocus >= 3
+                    iFocus -= 3
+                    iHealPoint = iFocusPoint_3
+                    SET_CLEO_SHARED_VAR varUseFocus iFocus
+                ELSE
+                    IF iFocus >= 2
+                        iFocus -= 2
+                        iHealPoint = iFocusPoint_2
+                        SET_CLEO_SHARED_VAR varUseFocus iFocus                     
+                    ELSE
+                        IF iFocus >= 1
+                            iFocus -= 1
+                            iHealPoint = iFocusPoint_1
+                            SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                        ENDIF
+                    ENDIF
+                ENDIF
+            ELSE
+                IF pl_health >= 163
+                AND pl_health <= 166
+                    IF iFocus >= 4
+                        iFocus -= 4
+                        iHealPoint = iFocusPoint_4
+                        SET_CLEO_SHARED_VAR varUseFocus iFocus
+                    ELSE
+                        IF iFocus >= 3
+                            iFocus -= 3
+                            iHealPoint = iFocusPoint_3
+                            SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                        ELSE                    
+                            IF iFocus >= 2
+                                iFocus -= 2
+                                iHealPoint = iFocusPoint_2
+                                SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                            ELSE
+                                IF iFocus >= 1
+                                    iFocus -= 1
+                                    iHealPoint = iFocusPoint_1
+                                    SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                ENDIF
+                            ENDIF
+                        ENDIF 
+                    ENDIF
+                ELSE
+                    IF pl_health >= 161
+                    AND pl_health <= 162
+                        IF iFocus >= 5
+                            iFocus -= 5
+                            iHealPoint = iFocusPoint_5
+                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                        ELSE                          
+                            IF iFocus >= 4
+                                iFocus -= 4
+                                iHealPoint = iFocusPoint_4
+                                SET_CLEO_SHARED_VAR varUseFocus iFocus
+                            ELSE
+                                IF iFocus >= 3
+                                    iFocus -= 3
+                                    iHealPoint = iFocusPoint_3
+                                    SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                    
+                                ELSE                    
+                                    IF iFocus >= 2
+                                        iFocus -= 2
+                                        iHealPoint = iFocusPoint_2
+                                        SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                        
+                                    ELSE
+                                        IF iFocus >= 1
+                                            iFocus -= 1
+                                            iHealPoint = iFocusPoint_1
+                                            SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                        ENDIF
+                                    ENDIF
+                                ENDIF 
+                            ENDIF
+                        ENDIF
+                    ELSE
+                        IF pl_health >= 152
+                        AND pl_health <= 160
+                            IF iFocus >= 6
+                                iFocus -= 6
+                                iHealPoint = iFocusPoint_6
+                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                            ELSE
+                                IF iFocus >= 5
+                                    iFocus -= 5
+                                    iHealPoint = iFocusPoint_5
+                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                ELSE                          
+                                    IF iFocus >= 4
+                                        iFocus -= 4
+                                        iHealPoint = iFocusPoint_4
+                                        SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                    ELSE
+                                        IF iFocus >= 3
+                                            iFocus -= 3
+                                            iHealPoint = iFocusPoint_3
+                                            SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                            
+                                        ELSE                    
+                                            IF iFocus >= 2
+                                                iFocus -= 2
+                                                iHealPoint = iFocusPoint_2
+                                                SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                
+                                            ELSE
+                                                IF iFocus >= 1
+                                                    iFocus -= 1
+                                                    iHealPoint = iFocusPoint_1
+                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                ENDIF
+                                            ENDIF
+                                        ENDIF 
+                                    ENDIF
+                                ENDIF
+                            ENDIF
+                        ELSE   
+                            IF pl_health >= 148
+                            AND pl_health <= 151
+                                IF iFocus >= 7
+                                    iFocus -= 7
+                                    iHealPoint = iFocusPoint_7
+                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                ELSE                            
+                                    IF iFocus >= 6
+                                        iFocus -= 6
+                                        iHealPoint = iFocusPoint_6
+                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                    ELSE
+                                        IF iFocus >= 5
+                                            iFocus -= 5
+                                            iHealPoint = iFocusPoint_5
+                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                        ELSE                          
+                                            IF iFocus >= 4
+                                                iFocus -= 4
+                                                iHealPoint = iFocusPoint_4
+                                                SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                            ELSE
+                                                IF iFocus >= 3
+                                                    iFocus -= 3
+                                                    iHealPoint = iFocusPoint_3
+                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                    
+                                                ELSE                    
+                                                    IF iFocus >= 2
+                                                        iFocus -= 2
+                                                        iHealPoint = iFocusPoint_2
+                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                        
+                                                    ELSE
+                                                        IF iFocus >= 1
+                                                            iFocus -= 1
+                                                            iHealPoint = iFocusPoint_1
+                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                        ENDIF
+                                                    ENDIF
+                                                ENDIF 
+                                            ENDIF
+                                        ENDIF
+                                    ENDIF
+                                ENDIF
+                            ELSE          
+                                IF pl_health >= 144
+                                AND pl_health <= 147
+                                    IF iFocus >= 8
+                                        iFocus -= 8
+                                        iHealPoint = iFocusPoint_8
+                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                    ELSE                             
+                                        IF iFocus >= 7
+                                            iFocus -= 7
+                                            iHealPoint = iFocusPoint_7
+                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                        ELSE                            
+                                            IF iFocus >= 6
+                                                iFocus -= 6
+                                                iHealPoint = iFocusPoint_6
+                                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                            ELSE
+                                                IF iFocus >= 5
+                                                    iFocus -= 5
+                                                    iHealPoint = iFocusPoint_5
+                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                ELSE                          
+                                                    IF iFocus >= 4
+                                                        iFocus -= 4
+                                                        iHealPoint = iFocusPoint_4
+                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                    ELSE
+                                                        IF iFocus >= 3
+                                                            iFocus -= 3
+                                                            iHealPoint = iFocusPoint_3
+                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                            
+                                                        ELSE                    
+                                                            IF iFocus >= 2
+                                                                iFocus -= 2
+                                                                iHealPoint = iFocusPoint_2
+                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                
+                                                            ELSE
+                                                                IF iFocus >= 1
+                                                                    iFocus -= 1
+                                                                    iHealPoint = iFocusPoint_1
+                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                ENDIF
+                                                            ENDIF
+                                                        ENDIF 
+                                                    ENDIF
+                                                ENDIF
+                                            ENDIF
+                                        ENDIF
+                                    ENDIF
+                                ELSE     
+                                    IF pl_health >= 140
+                                    AND pl_health <= 143
+                                        IF iFocus >= 9
+                                            iFocus -= 9
+                                            iHealPoint = iFocusPoint_9
+                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                        ELSE                                 
+                                            IF iFocus >= 8
+                                                iFocus -= 8
+                                                iHealPoint = iFocusPoint_8
+                                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                            ELSE                             
+                                                IF iFocus >= 7
+                                                    iFocus -= 7
+                                                    iHealPoint = iFocusPoint_7
+                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                ELSE                            
+                                                    IF iFocus >= 6
+                                                        iFocus -= 6
+                                                        iHealPoint = iFocusPoint_6
+                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                    ELSE
+                                                        IF iFocus >= 5
+                                                            iFocus -= 5
+                                                            iHealPoint = iFocusPoint_5
+                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                        ELSE                          
+                                                            IF iFocus >= 4
+                                                                iFocus -= 4
+                                                                iHealPoint = iFocusPoint_4
+                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                            ELSE
+                                                                IF iFocus >= 3
+                                                                    iFocus -= 3
+                                                                    iHealPoint = iFocusPoint_3
+                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                    
+                                                                ELSE                    
+                                                                    IF iFocus >= 2
+                                                                        iFocus -= 2
+                                                                        iHealPoint = iFocusPoint_2
+                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                        
+                                                                    ELSE
+                                                                        IF iFocus >= 1
+                                                                            iFocus -= 1
+                                                                            iHealPoint = iFocusPoint_1
+                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                        ENDIF
+                                                                    ENDIF
+                                                                ENDIF 
+                                                            ENDIF
+                                                        ENDIF
+                                                    ENDIF
+                                                ENDIF
+                                            ENDIF
+                                        ENDIF
                                     ELSE    
-                                        IF iFocusCounter = 6
-                                            iFocusCounter -= 6
-                                            iHealPoint = iFocusPoint_6
-                                            SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
-                                        ELSE       
-                                            IF iFocusCounter = 5
-                                                iFocusCounter -= 5
-                                                iHealPoint = iFocusPoint_5
-                                                SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
-                                            ELSE    
-                                                IF iFocusCounter = 4
-                                                    iFocusCounter -= 4
-                                                    iHealPoint = iFocusPoint_4
-                                                    SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
+                                        IF pl_health >= 136
+                                        AND pl_health <= 139
+                                            IF iFocus >= 10
+                                                iFocus -= 10
+                                                iHealPoint = iFocusPoint_10
+                                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                            ELSE                                            
+                                                IF iFocus >= 9
+                                                    iFocus -= 9
+                                                    iHealPoint = iFocusPoint_9
+                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                ELSE                                 
+                                                    IF iFocus >= 8
+                                                        iFocus -= 8
+                                                        iHealPoint = iFocusPoint_8
+                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                    ELSE                             
+                                                        IF iFocus >= 7
+                                                            iFocus -= 7
+                                                            iHealPoint = iFocusPoint_7
+                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                        ELSE                            
+                                                            IF iFocus >= 6
+                                                                iFocus -= 6
+                                                                iHealPoint = iFocusPoint_6
+                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                            ELSE
+                                                                IF iFocus >= 5
+                                                                    iFocus -= 5
+                                                                    iHealPoint = iFocusPoint_5
+                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                ELSE                          
+                                                                    IF iFocus >= 4
+                                                                        iFocus -= 4
+                                                                        iHealPoint = iFocusPoint_4
+                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                    ELSE
+                                                                        IF iFocus >= 3
+                                                                            iFocus -= 3
+                                                                            iHealPoint = iFocusPoint_3
+                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                            
+                                                                        ELSE                    
+                                                                            IF iFocus >= 2
+                                                                                iFocus -= 2
+                                                                                iHealPoint = iFocusPoint_2
+                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                
+                                                                            ELSE
+                                                                                IF iFocus >= 1
+                                                                                    iFocus -= 1
+                                                                                    iHealPoint = iFocusPoint_1
+                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                                ENDIF
+                                                                            ENDIF
+                                                                        ENDIF 
+                                                                    ENDIF
+                                                                ENDIF
+                                                            ENDIF
+                                                        ENDIF
+                                                    ENDIF
+                                                ENDIF
+                                            ENDIF
+                                        ELSE   
+                                            IF pl_health >= 132
+                                            AND pl_health <= 135
+                                                IF iFocus >= 11
+                                                    iFocus -= 11
+                                                    iHealPoint = iFocusPoint_11
+                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                ELSE                                          
+                                                    IF iFocus >= 10
+                                                        iFocus -= 10
+                                                        iHealPoint = iFocusPoint_10
+                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                    ELSE                                            
+                                                        IF iFocus >= 9
+                                                            iFocus -= 9
+                                                            iHealPoint = iFocusPoint_9
+                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                        ELSE                                 
+                                                            IF iFocus >= 8
+                                                                iFocus -= 8
+                                                                iHealPoint = iFocusPoint_8
+                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                            ELSE                             
+                                                                IF iFocus >= 7
+                                                                    iFocus -= 7
+                                                                    iHealPoint = iFocusPoint_7
+                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                ELSE                            
+                                                                    IF iFocus >= 6
+                                                                        iFocus -= 6
+                                                                        iHealPoint = iFocusPoint_6
+                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                    ELSE
+                                                                        IF iFocus >= 5
+                                                                            iFocus -= 5
+                                                                            iHealPoint = iFocusPoint_5
+                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                        ELSE                          
+                                                                            IF iFocus >= 4
+                                                                                iFocus -= 4
+                                                                                iHealPoint = iFocusPoint_4
+                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                            ELSE
+                                                                                IF iFocus >= 3
+                                                                                    iFocus -= 3
+                                                                                    iHealPoint = iFocusPoint_3
+                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                    
+                                                                                ELSE                    
+                                                                                    IF iFocus >= 2
+                                                                                        iFocus -= 2
+                                                                                        iHealPoint = iFocusPoint_2
+                                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                        
+                                                                                    ELSE
+                                                                                        IF iFocus >= 1
+                                                                                            iFocus -= 1
+                                                                                            iHealPoint = iFocusPoint_1
+                                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                                        ENDIF
+                                                                                    ENDIF
+                                                                                ENDIF 
+                                                                            ENDIF
+                                                                        ENDIF
+                                                                    ENDIF
+                                                                ENDIF
+                                                            ENDIF
+                                                        ENDIF
+                                                    ENDIF
+                                                ENDIF
+                                            ELSE     
+                                                IF pl_health >= 128
+                                                AND pl_health <= 131
+                                                    IF iFocus >= 12
+                                                        iFocus -= 12
+                                                        iHealPoint = iFocusPoint_12
+                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                    ELSE                                        
+                                                        IF iFocus >= 11
+                                                            iFocus -= 11
+                                                            iHealPoint = iFocusPoint_11
+                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                        ELSE                                          
+                                                            IF iFocus >= 10
+                                                                iFocus -= 10
+                                                                iHealPoint = iFocusPoint_10
+                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                            ELSE                                            
+                                                                IF iFocus >= 9
+                                                                    iFocus -= 9
+                                                                    iHealPoint = iFocusPoint_9
+                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                ELSE                                 
+                                                                    IF iFocus >= 8
+                                                                        iFocus -= 8
+                                                                        iHealPoint = iFocusPoint_8
+                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                    ELSE                             
+                                                                        IF iFocus >= 7
+                                                                            iFocus -= 7
+                                                                            iHealPoint = iFocusPoint_7
+                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                        ELSE                            
+                                                                            IF iFocus >= 6
+                                                                                iFocus -= 6
+                                                                                iHealPoint = iFocusPoint_6
+                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                            ELSE
+                                                                                IF iFocus >= 5
+                                                                                    iFocus -= 5
+                                                                                    iHealPoint = iFocusPoint_5
+                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                ELSE                          
+                                                                                    IF iFocus >= 4
+                                                                                        iFocus -= 4
+                                                                                        iHealPoint = iFocusPoint_4
+                                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                    ELSE
+                                                                                        IF iFocus >= 3
+                                                                                            iFocus -= 3
+                                                                                            iHealPoint = iFocusPoint_3
+                                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                            
+                                                                                        ELSE                    
+                                                                                            IF iFocus >= 2
+                                                                                                iFocus -= 2
+                                                                                                iHealPoint = iFocusPoint_2
+                                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                                
+                                                                                            ELSE
+                                                                                                IF iFocus >= 1
+                                                                                                    iFocus -= 1
+                                                                                                    iHealPoint = iFocusPoint_1
+                                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                                                ENDIF
+                                                                                            ENDIF
+                                                                                        ENDIF 
+                                                                                    ENDIF
+                                                                                ENDIF
+                                                                            ENDIF
+                                                                        ENDIF
+                                                                    ENDIF
+                                                                ENDIF
+                                                            ENDIF
+                                                        ENDIF
+                                                    ENDIF
                                                 ELSE    
-                                                    IF iFocusCounter = 3
-                                                        iFocusCounter -= 3
-                                                        iHealPoint = iFocusPoint_3
-                                                        SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
-                                                    ELSE   
-                                                        IF iFocusCounter = 2
-                                                            iFocusCounter -= 2
-                                                            iHealPoint = iFocusPoint_2
-                                                            SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
-                                                        ELSE    
-                                                            IF iFocusCounter = 1
-                                                                iFocusCounter -= 1
-                                                                iHealPoint = iFocusPoint_1
-                                                                SET_CLEO_SHARED_VAR varUseFocus iFocusCounter
-                                                            ENDIF  
+                                                    IF pl_health >= 125
+                                                    AND pl_health <= 127
+                                                        IF iFocus >= 13
+                                                            iFocus -= 13
+                                                            iHealPoint = iFocusPoint_13
+                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                        ELSE                                          
+                                                            IF iFocus >= 12
+                                                                iFocus -= 12
+                                                                iHealPoint = iFocusPoint_12
+                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                            ELSE                                        
+                                                                IF iFocus >= 11
+                                                                    iFocus -= 11
+                                                                    iHealPoint = iFocusPoint_11
+                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                ELSE                                          
+                                                                    IF iFocus >= 10
+                                                                        iFocus -= 10
+                                                                        iHealPoint = iFocusPoint_10
+                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                    ELSE                                            
+                                                                        IF iFocus >= 9
+                                                                            iFocus -= 9
+                                                                            iHealPoint = iFocusPoint_9
+                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                        ELSE                                 
+                                                                            IF iFocus >= 8
+                                                                                iFocus -= 8
+                                                                                iHealPoint = iFocusPoint_8
+                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                            ELSE                             
+                                                                                IF iFocus >= 7
+                                                                                    iFocus -= 7
+                                                                                    iHealPoint = iFocusPoint_7
+                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                ELSE                            
+                                                                                    IF iFocus >= 6
+                                                                                        iFocus -= 6
+                                                                                        iHealPoint = iFocusPoint_6
+                                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                    ELSE
+                                                                                        IF iFocus >= 5
+                                                                                            iFocus -= 5
+                                                                                            iHealPoint = iFocusPoint_5
+                                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                        ELSE                          
+                                                                                            IF iFocus >= 4
+                                                                                                iFocus -= 4
+                                                                                                iHealPoint = iFocusPoint_4
+                                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                            ELSE
+                                                                                                IF iFocus >= 3
+                                                                                                    iFocus -= 3
+                                                                                                    iHealPoint = iFocusPoint_3
+                                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                                    
+                                                                                                ELSE                    
+                                                                                                    IF iFocus >= 2
+                                                                                                        iFocus -= 2
+                                                                                                        iHealPoint = iFocusPoint_2
+                                                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                                        
+                                                                                                    ELSE
+                                                                                                        IF iFocus >= 1
+                                                                                                            iFocus -= 1
+                                                                                                            iHealPoint = iFocusPoint_1
+                                                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                                                        ENDIF
+                                                                                                    ENDIF
+                                                                                                ENDIF 
+                                                                                            ENDIF
+                                                                                        ENDIF
+                                                                                    ENDIF
+                                                                                ENDIF
+                                                                            ENDIF
+                                                                        ENDIF
+                                                                    ENDIF
+                                                                ENDIF
+                                                            ENDIF
+                                                        ENDIF
+                                                    
+                                                    ELSE    
+                                                        IF pl_health >= 120
+                                                        AND pl_health <= 124
+                                                            IF iFocus >= 14
+                                                                iFocus -= 14
+                                                                iHealPoint = iFocusPoint_14
+                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                            ELSE                                           
+                                                                IF iFocus >= 13
+                                                                    iFocus -= 13
+                                                                    iHealPoint = iFocusPoint_13
+                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                ELSE                                          
+                                                                    IF iFocus >= 12
+                                                                        iFocus -= 12
+                                                                        iHealPoint = iFocusPoint_12
+                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                    ELSE                                        
+                                                                        IF iFocus >= 11
+                                                                            iFocus -= 11
+                                                                            iHealPoint = iFocusPoint_11
+                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                        ELSE                                          
+                                                                            IF iFocus >= 10
+                                                                                iFocus -= 10
+                                                                                iHealPoint = iFocusPoint_10
+                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                            ELSE                                            
+                                                                                IF iFocus >= 9
+                                                                                    iFocus -= 9
+                                                                                    iHealPoint = iFocusPoint_9
+                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                ELSE                                 
+                                                                                    IF iFocus >= 8
+                                                                                        iFocus -= 8
+                                                                                        iHealPoint = iFocusPoint_8
+                                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                    ELSE                             
+                                                                                        IF iFocus >= 7
+                                                                                            iFocus -= 7
+                                                                                            iHealPoint = iFocusPoint_7
+                                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                        ELSE                            
+                                                                                            IF iFocus >= 6
+                                                                                                iFocus -= 6
+                                                                                                iHealPoint = iFocusPoint_6
+                                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                            ELSE
+                                                                                                IF iFocus >= 5
+                                                                                                    iFocus -= 5
+                                                                                                    iHealPoint = iFocusPoint_5
+                                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                                ELSE                          
+                                                                                                    IF iFocus >= 4
+                                                                                                        iFocus -= 4
+                                                                                                        iHealPoint = iFocusPoint_4
+                                                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                                    ELSE
+                                                                                                        IF iFocus >= 3
+                                                                                                            iFocus -= 3
+                                                                                                            iHealPoint = iFocusPoint_3
+                                                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                                            
+                                                                                                        ELSE                    
+                                                                                                            IF iFocus >= 2
+                                                                                                                iFocus -= 2
+                                                                                                                iHealPoint = iFocusPoint_2
+                                                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                                                
+                                                                                                            ELSE
+                                                                                                                IF iFocus >= 1
+                                                                                                                    iFocus -= 1
+                                                                                                                    iHealPoint = iFocusPoint_1
+                                                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                                                                ENDIF
+                                                                                                            ENDIF
+                                                                                                        ENDIF 
+                                                                                                    ENDIF
+                                                                                                ENDIF
+                                                                                            ENDIF
+                                                                                        ENDIF
+                                                                                    ENDIF
+                                                                                ENDIF
+                                                                            ENDIF
+                                                                        ENDIF
+                                                                    ENDIF
+                                                                ENDIF
+                                                            ENDIF
+                                                        ELSE      
+                                                            IF pl_health >= 116
+                                                            AND pl_health <= 119
+                                                                IF iFocus >= 15
+                                                                    iFocus -= 15
+                                                                    iHealPoint = iFocusPoint_15
+                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                ELSE                                          
+                                                                    IF iFocus >= 14
+                                                                        iFocus -= 14
+                                                                        iHealPoint = iFocusPoint_14
+                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                    ELSE                                           
+                                                                        IF iFocus >= 13
+                                                                            iFocus -= 13
+                                                                            iHealPoint = iFocusPoint_13
+                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                        ELSE                                          
+                                                                            IF iFocus >= 12
+                                                                                iFocus -= 12
+                                                                                iHealPoint = iFocusPoint_12
+                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                            ELSE                                        
+                                                                                IF iFocus >= 11
+                                                                                    iFocus -= 11
+                                                                                    iHealPoint = iFocusPoint_11
+                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                ELSE                                          
+                                                                                    IF iFocus >= 10
+                                                                                        iFocus -= 10
+                                                                                        iHealPoint = iFocusPoint_10
+                                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                    ELSE                                            
+                                                                                        IF iFocus >= 9
+                                                                                            iFocus -= 9
+                                                                                            iHealPoint = iFocusPoint_9
+                                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                        ELSE                                 
+                                                                                            IF iFocus >= 8
+                                                                                                iFocus -= 8
+                                                                                                iHealPoint = iFocusPoint_8
+                                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                            ELSE                             
+                                                                                                IF iFocus >= 7
+                                                                                                    iFocus -= 7
+                                                                                                    iHealPoint = iFocusPoint_7
+                                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                                ELSE                            
+                                                                                                    IF iFocus >= 6
+                                                                                                        iFocus -= 6
+                                                                                                        iHealPoint = iFocusPoint_6
+                                                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                                    ELSE
+                                                                                                        IF iFocus >= 5
+                                                                                                            iFocus -= 5
+                                                                                                            iHealPoint = iFocusPoint_5
+                                                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus 
+                                                                                                        ELSE                          
+                                                                                                            IF iFocus >= 4
+                                                                                                                iFocus -= 4
+                                                                                                                iHealPoint = iFocusPoint_4
+                                                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                                            ELSE
+                                                                                                                IF iFocus >= 3
+                                                                                                                    iFocus -= 3
+                                                                                                                    iHealPoint = iFocusPoint_3
+                                                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                                                    
+                                                                                                                ELSE                    
+                                                                                                                    IF iFocus >= 2
+                                                                                                                        iFocus -= 2
+                                                                                                                        iHealPoint = iFocusPoint_2
+                                                                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                                                        
+                                                                                                                    ELSE
+                                                                                                                        IF iFocus >= 1
+                                                                                                                            iFocus -= 1
+                                                                                                                            iHealPoint = iFocusPoint_1
+                                                                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus   
+                                                                                                                        ENDIF
+                                                                                                                    ENDIF
+                                                                                                                ENDIF 
+                                                                                                            ENDIF
+                                                                                                        ENDIF
+                                                                                                    ENDIF
+                                                                                                ENDIF
+                                                                                            ENDIF
+                                                                                        ENDIF
+                                                                                    ENDIF
+                                                                                ENDIF
+                                                                            ENDIF
+                                                                        ENDIF
+                                                                    ENDIF
+                                                                ENDIF
+                                                            ELSE                                                                                                                                                                                                                                                                                                                     
+                                                                IF pl_health <= 115
+                                                                    IF iFocus >= 15
+                                                                        iFocus -= 15
+                                                                        iHealPoint = iFocusPoint_15
+                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                    ELSE
+                                                                        IF iFocus = 14
+                                                                            iFocus -= 14
+                                                                            iHealPoint = iFocusPoint_14
+                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                        ELSE
+                                                                            IF iFocus = 13
+                                                                                iFocus -= 13
+                                                                                iHealPoint = iFocusPoint_13
+                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                            ELSE 
+                                                                                IF iFocus = 12
+                                                                                    iFocus -= 12
+                                                                                    iHealPoint = iFocusPoint_12
+                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                ELSE 
+                                                                                    IF iFocus = 11
+                                                                                        iFocus -= 11
+                                                                                        iHealPoint = iFocusPoint_11
+                                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                    ELSE 
+                                                                                        IF iFocus = 10
+                                                                                            iFocus -= 10
+                                                                                            iHealPoint = iFocusPoint_10
+                                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                        ELSE  
+                                                                                            IF iFocus = 9
+                                                                                                iFocus -= 9
+                                                                                                iHealPoint = iFocusPoint_9
+                                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                            ELSE    
+                                                                                                IF iFocus = 8
+                                                                                                    iFocus -= 8
+                                                                                                    iHealPoint = iFocusPoint_8
+                                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                                ELSE    
+                                                                                                    IF iFocus = 7
+                                                                                                        iFocus -= 7
+                                                                                                        iHealPoint = iFocusPoint_7
+                                                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                                    ELSE    
+                                                                                                        IF iFocus = 6
+                                                                                                            iFocus -= 6
+                                                                                                            iHealPoint = iFocusPoint_6
+                                                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                                        ELSE       
+                                                                                                            IF iFocus = 5
+                                                                                                                iFocus -= 5
+                                                                                                                iHealPoint = iFocusPoint_5
+                                                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                                            ELSE    
+                                                                                                                IF iFocus = 4
+                                                                                                                    iFocus -= 4
+                                                                                                                    iHealPoint = iFocusPoint_4
+                                                                                                                    SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                                                ELSE    
+                                                                                                                    IF iFocus = 3
+                                                                                                                        iFocus -= 3
+                                                                                                                        iHealPoint = iFocusPoint_3
+                                                                                                                        SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                                                    ELSE   
+                                                                                                                        IF iFocus = 2
+                                                                                                                            iFocus -= 2
+                                                                                                                            iHealPoint = iFocusPoint_2
+                                                                                                                            SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                                                        ELSE    
+                                                                                                                            IF iFocus = 1
+                                                                                                                                iFocus -= 1
+                                                                                                                                iHealPoint = iFocusPoint_1
+                                                                                                                                SET_CLEO_SHARED_VAR varUseFocus iFocus
+                                                                                                                            ENDIF  
+                                                                                                                        ENDIF
+                                                                                                                    ENDIF
+                                                                                                                ENDIF
+                                                                                                            ENDIF
+                                                                                                        ENDIF
+                                                                                                    ENDIF
+                                                                                                ENDIF
+                                                                                            ENDIF
+                                                                                        ENDIF
+                                                                                    ENDIF
+                                                                                ENDIF
+                                                                            ENDIF
+                                                                        ENDIF
+                                                                    ENDIF  
+                                                                ENDIF
+                                                            ENDIF
                                                         ENDIF
                                                     ENDIF
                                                 ENDIF
@@ -179,9 +974,8 @@ focus_heal:
                 ENDIF
             ENDIF
         ENDIF
-    ENDIF                                            
+    ENDIF
 RETURN
-
 }
 SCRIPT_END
 
