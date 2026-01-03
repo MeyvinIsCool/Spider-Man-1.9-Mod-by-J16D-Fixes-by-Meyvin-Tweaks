@@ -1,6 +1,6 @@
 <img width="1000" height="1000" alt="Github" src="https://github.com/user-attachments/assets/edbc1b77-6b96-446e-9a0e-a31cdbea3a28" />
 
-Spider-Man v2.0 Mod by Meyvin Tweaks
+Spider-Man v2.0 (Alpha) Mod by Meyvin Tweaks
 
 Changelog :
 - Added Functional Scrolling System On Menu + 20 New Suits Added ! (You Will Need To Reach Level 52 In Order To Unlock All 50 Suits)
@@ -24,7 +24,8 @@ Changelog :
 - Added More Crime Missions
 - Added Ground Crush When Falling From High Altitude (Planned to improve in the future)
 - Added Web Zip To Building (BETA)
-- Added Focus Bar (ALPHA)
+- Added Focus Bar
+- Added New Skill (Yank/Dissarm Enemies Weapons)
 - Script Improvements !
 - And MORE ....
 
