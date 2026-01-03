@@ -61,6 +61,7 @@ CONST_INT varPowersProgress     35    //sp_po     || current power progress
 CONST_INT varHitCount           36    //sp_hit    || hitcounting
 CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
 CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
+CONST_INT varCrimeAlert         39 
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
@@ -75,6 +76,9 @@ CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
+
+//Additional Skills
+CONST_INT varSkill1a            59    //sp_dw    ||1= Activated     || 0= Deactivated
 
 CONST_INT varFocusCount         70    //sp_hit    || focus bar
 CONST_INT varUseFocus           71    //sp_hit    || focus bar
@@ -2468,11 +2472,11 @@ tmp_start_check_internalThread:
 GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod)
 IF toggleSpiderMod = 0
     WHILE toggleSpiderMod = 0
-        WAIT 0
         GET_CLEO_SHARED_VAR varStatusSpiderMod (toggleSpiderMod) 
         IF toggleSpiderMod = 1
             BREAK
         ENDIF
+        WAIT 0
     ENDWHILE
 ENDIF
 

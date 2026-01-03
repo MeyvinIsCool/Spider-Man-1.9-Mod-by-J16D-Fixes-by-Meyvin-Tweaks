@@ -53,6 +53,7 @@ CONST_INT varPowersProgress     35    //sp_po     || current power progress
 CONST_INT varHitCount           36    //sp_hit    || hitcounting
 CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
 CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
+CONST_INT varCrimeAlert         39 
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
@@ -73,6 +74,12 @@ CONST_INT varSkill3b            55    //sp_me    ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
+
+//Additional Skills
+CONST_INT varSkill1a            59    //sp_dw    ||1= Activated     || 0= Deactivated
+
+CONST_INT varFocusCount         70    //sp_hit    || focus bar
+CONST_INT varUseFocus           71    //sp_hit    || focus bar
 
 //Main Title 100
 CONST_INT iUpStart      0
@@ -1054,11 +1061,14 @@ show_menu:
         CASE idSkills_l
 
             CLEO_CALL GetDataJoystickMatrix5x5 0 (5 1 iActiveCol)(3 1 iActiveRow) (iActiveCol iActiveRow)
-            IF iActiveCol = 1
-            OR iActiveCol = 3
+            // iActiveCol = Top Skill (Root)
+            // iActiveRow = Sub Skills (Branch)
+            IF iActiveCol = 3
+            //OR iActiveCol = 3
                 CLAMP_INT iActiveRow 1 1 (iActiveRow)   //Limit 1
             ENDIF
-            IF iActiveCol = 2
+            IF iActiveCol = 1
+            OR iActiveCol = 2
             OR iActiveCol = 4
                 CLAMP_INT iActiveRow 1 2 (iActiveRow)   //Limit 2
             ENDIF
@@ -1072,27 +1082,30 @@ show_menu:
                         GOSUB set_skill1
                         BREAK
                     CASE 2
+                        GOSUB set_skill1a
+                        BREAK                        
+                    CASE 3
                         GOSUB set_skill2
                         BREAK
-                    CASE 3
+                    CASE 4
                         GOSUB set_skill3
                         BREAK
-                    CASE 4
+                    CASE 5
                         GOSUB set_skill2a
                         BREAK
-                    CASE 5
+                    CASE 6
                         GOSUB set_skill3a
                         BREAK
-                    CASE 6
+                    CASE 7
                         GOSUB set_skill3b
                         BREAK
-                    CASE 7
+                    CASE 8
                         GOSUB set_skill3c
                         BREAK
-                    CASE 8
+                    CASE 9
                         GOSUB set_skill3c1
                         BREAK
-                    CASE 9
+                    CASE 10
                         GOSUB set_skill3c2
                         BREAK
                 ENDSWITCH
@@ -1468,6 +1481,16 @@ set_skill3:
         iTempVar = 1
     ENDIF
     SET_CLEO_SHARED_VAR varSkill3 iTempVar       // 0:OFF || 1:ON
+RETURN
+
+set_skill1a:
+    GET_CLEO_SHARED_VAR varSkill1a iTempVar
+    IF iTempVar = 1
+        iTempVar = 0
+    ELSE
+        iTempVar = 1
+    ENDIF
+    SET_CLEO_SHARED_VAR varSkill1a iTempVar       // 0:OFF || 1:ON
 RETURN
 
 set_skill2a:
@@ -5342,6 +5365,11 @@ ProcessGame_and_DrawItems_SKILLS:
 
     GET_FIXED_XY_ASPECT_RATIO (40.0 40.0) (xSize ySize)
 //Skill Tree # 1
+    xCoord = 90.5
+    yCoord = 175.0
+    USE_TEXT_COMMANDS FALSE
+    DRAW_RECT (xCoord yCoord) (0.5 20.0) (255 255 255 180) //center  
+
     USE_TEXT_COMMANDS FALSE
     SET_SPRITES_DRAW_BEFORE_FADE FALSE
     xCoord = 90.5
@@ -5352,12 +5380,22 @@ ProcessGame_and_DrawItems_SKILLS:
     ELSE
         DRAW_SPRITE idSkill1 (xCoord yCoord) (xSize ySize) (170 170 170 200)
     ENDIF
+    //-->
+        yCoord += 50.0
+        USE_TEXT_COMMANDS FALSE
+        SET_SPRITES_DRAW_BEFORE_FADE FALSE
+        GET_CLEO_SHARED_VAR varSkill1a (iTempVar)
+        IF iTempVar = 1 // 0:OFF || 1:ON
+            DRAW_SPRITE idSkill1a (xCoord yCoord) (xSize ySize) (41 190 240 245)
+        ELSE
+            DRAW_SPRITE idSkill1a (xCoord yCoord) (xSize ySize) (170 170 170 200)
+        ENDIF    
 
 //Skill Tree # 2
     xCoord = 251.5
     yCoord = 175.0
     USE_TEXT_COMMANDS FALSE
-    DRAW_RECT (xCoord yCoord) (0.25 20.0) (255 255 255 180)
+    DRAW_RECT (xCoord yCoord) (0.5 20.0) (255 255 255 180) //center  
 
     xCoord = 251.5
     yCoord = 150.0
@@ -5496,18 +5534,24 @@ DrawSelector_SKILLS:
                     yCoord = 150.0
                     DRAW_SPRITE selectSuit26 (xCoord yCoord) (xSize ySize) (255 255 255 255)
                     BREAK
+                CASE 2
+                    counter = 2   // Recicled var 
+                    xCoord = 90.5
+                    yCoord = 200.0
+                    DRAW_SPRITE selectSuit26 (xCoord yCoord) (xSize ySize) (255 255 255 255)
+                    BREAK                    
             ENDSWITCH
             BREAK
         CASE skill_column_b
             SWITCH iActiveRow   //Horizontal movement
                 CASE 1
-                    counter = 2 
+                    counter = 3 
                     xCoord = 251.5
                     yCoord = 150.0
                     DRAW_SPRITE selectSuit26 (xCoord yCoord) (xSize ySize) (255 255 255 255)      
                     BREAK
                 CASE 2
-                    counter = 4 
+                    counter = 5 
                     //yCoord = 150.0 + 50.0
                     xCoord = 251.5
                     yCoord = 200.0
@@ -5518,7 +5562,7 @@ DrawSelector_SKILLS:
         CASE skill_column_c
             SWITCH iActiveRow   //Horizontal movement
                 CASE 1
-                    counter = 5 
+                    counter = 6 
                     xCoord = 376.0
                     yCoord = 200.0
                     DRAW_SPRITE selectSuit26 (xCoord yCoord) (xSize ySize) (255 255 255 255)
@@ -5528,13 +5572,13 @@ DrawSelector_SKILLS:
         CASE skill_column_d
             SWITCH iActiveRow   //Horizontal movement
                 CASE 1
-                    counter = 3 
+                    counter = 4
                     xCoord = 412.5
                     yCoord = 150.0
                     DRAW_SPRITE selectSuit26 (xCoord yCoord) (xSize ySize) (255 255 255 255)
                     BREAK
                 CASE 2
-                    counter = 6 
+                    counter = 7
                     xCoord = 412.5
                     yCoord = 200.0
                     DRAW_SPRITE selectSuit26 (xCoord yCoord) (xSize ySize) (255 255 255 255)
@@ -5544,19 +5588,19 @@ DrawSelector_SKILLS:
         CASE skill_column_e
             SWITCH iActiveRow   //Horizontal movement
                 CASE 1
-                    counter = 7
+                    counter = 8
                     xCoord = 449.0
                     yCoord = 200.0
                     DRAW_SPRITE selectSuit26 (xCoord yCoord) (xSize ySize) (255 255 255 255)
                     BREAK
                 CASE 2
-                    counter = 8 
+                    counter = 9
                     xCoord = 449.0
                     yCoord = 250.0
                     DRAW_SPRITE selectSuit26 (xCoord yCoord) (xSize ySize) (255 255 255 255)
                     BREAK
                 CASE 3
-                    counter = 9 
+                    counter = 10 
                     xCoord = 449.0
                     yCoord = 300.0
                     DRAW_SPRITE selectSuit26 (xCoord yCoord) (xSize ySize) (255 255 255 255)
@@ -5666,48 +5710,54 @@ DrawInfo_SKILLS_RightPanel:
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (594.0 168.0) (136.0 30.0) (255 255 255 0) (0.5) (0 0 0 0) (31 181 240 200) 631 7 (0.0 0.0)   //DESCRIPTION
             BREAK
         CASE 2
+            iTempVar = idSkill1a     //Skill image
+            idTexture = idhsk01a     //Helper image
+            CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.0 133.0) (136.0 15.0) (42 190 240 200) (0.5) (0 0 0 0) (0 125 180 150) 750 5 (-60.0 0.0)   //NAME_SKILL_WITH_BLUE_BACKGROUND
+            CLEO_CALL GUI_DrawBoxOutline_WithText 0 (594.0 168.0) (136.0 30.0) (255 255 255 0) (0.5) (0 0 0 0) (31 181 240 200) 751 7 (0.0 0.0)   //DESCRIPTION
+            BREAK            
+        CASE 3
             iTempVar = idSkill2     //Skill image
             idTexture = idhsk02     //Helper image
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.0 133.0) (136.0 15.0) (42 190 240 200) (0.5) (0 0 0 0) (0 125 180 150) 632 5 (-60.0 0.0)   //NAME_SKILL_WITH_BLUE_BACKGROUND
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (594.0 168.0) (136.0 30.0) (255 255 255 0) (0.5) (0 0 0 0) (31 181 240 200) 633 7 (0.0 0.0)   //DESCRIPTION
             BREAK
-        CASE 3
+        CASE 4
             iTempVar = idSkill3     //Skill image
             idTexture = idhsk03     //Helper image
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.0 133.0) (136.0 15.0) (42 190 240 200) (0.5) (0 0 0 0) (0 125 180 150) 636 5 (-60.0 0.0)   //NAME_SKILL_WITH_BLUE_BACKGROUND
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (594.0 168.0) (136.0 30.0) (255 255 255 0) (0.5) (0 0 0 0) (31 181 240 200) 637 7 (0.0 0.0)   //DESCRIPTION
             BREAK
-        CASE 4
+        CASE 5
             iTempVar = idSkill2a     //Skill image
             idTexture = idhsk02a     //Helper image
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.0 133.0) (136.0 15.0) (42 190 240 200) (0.5) (0 0 0 0) (0 125 180 150) 634 5 (-60.0 0.0)   //NAME_SKILL_WITH_BLUE_BACKGROUND
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (594.0 168.0) (136.0 30.0) (255 255 255 0) (0.5) (0 0 0 0) (31 181 240 200) 635 7 (0.0 0.0)   //DESCRIPTION
             BREAK
-        CASE 5
+        CASE 6
             iTempVar = idSkill3a     //Skill image
             idTexture = idhsk03a     //Helper image
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.0 133.0) (136.0 15.0) (42 190 240 200) (0.5) (0 0 0 0) (0 125 180 150) 638 5 (-60.0 0.0)   //NAME_SKILL_WITH_BLUE_BACKGROUND
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (594.0 168.0) (136.0 30.0) (255 255 255 0) (0.5) (0 0 0 0) (31 181 240 200) 639 7 (0.0 0.0)   //DESCRIPTION
             BREAK
-        CASE 6
+        CASE 7
             iTempVar = idSkill3b     //Skill image
             idTexture = idhsk03b     //Helper image
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.0 133.0) (136.0 15.0) (42 190 240 200) (0.5) (0 0 0 0) (0 125 180 150) 640 5 (-60.0 0.0)   //NAME_SKILL_WITH_BLUE_BACKGROUND
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (594.0 168.0) (136.0 30.0) (255 255 255 0) (0.5) (0 0 0 0) (31 181 240 200) 641 7 (0.0 0.0)   //DESCRIPTION
             BREAK
-        CASE 7
+        CASE 8
             iTempVar = idSkill3c     //Skill image
             idTexture = idhsk03c     //Helper image
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.0 133.0) (136.0 15.0) (42 190 240 200) (0.5) (0 0 0 0) (0 125 180 150) 642 5 (-60.0 0.0)   //NAME_SKILL_WITH_BLUE_BACKGROUND
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (594.0 168.0) (136.0 30.0) (255 255 255 0) (0.5) (0 0 0 0) (31 181 240 200) 643 7 (0.0 0.0)   //DESCRIPTION
             BREAK
-        CASE 8
+        CASE 9
             iTempVar = idSkill3c1     //Skill image
             idTexture = idhsk03c1     //Helper image
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.0 133.0) (136.0 15.0) (42 190 240 200) (0.5) (0 0 0 0) (0 125 180 150) 644 5 (-60.0 0.0)   //NAME_SKILL_WITH_BLUE_BACKGROUND
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (594.0 168.0) (136.0 30.0) (255 255 255 0) (0.5) (0 0 0 0) (31 181 240 200) 645 7 (0.0 0.0)   //DESCRIPTION
             BREAK
-        CASE 9
+        CASE 10
             iTempVar = idSkill3c2     //Skill image
             idTexture = idhsk03c2     //Helper image
             CLEO_CALL GUI_DrawBoxOutline_WithText 0 (572.0 133.0) (136.0 15.0) (42 190 240 200) (0.5) (0 0 0 0) (0 125 180 150) 646 5 (-60.0 0.0)   //NAME_SKILL_WITH_BLUE_BACKGROUND
@@ -6700,6 +6750,11 @@ load_all_needed_files:
         CONST_INT idhsk03c1 153
         CONST_INT idhsk03c2 154
 
+        //Additional Skills
+        CONST_INT idSkill1a 155
+        CONST_INT idhsk01a 156
+
+//-+------------------------------------------
         CONST_INT bck300 300
         CONST_INT bck301 301
         CONST_INT bck302 302
@@ -6800,6 +6855,7 @@ load_all_needed_files:
         LOAD_SPRITE idConfSuitBck "csubck"
 
         LOAD_SPRITE idSkill1 "sk_1"
+        LOAD_SPRITE idSkill1a "sk_1a"
         LOAD_SPRITE idSkill2 "sk_2"
         LOAD_SPRITE idSkill2a "sk_2a"
         LOAD_SPRITE idSkill3 "sk_3"
@@ -6810,6 +6866,7 @@ load_all_needed_files:
         LOAD_SPRITE idSkill3c2 "sk_3c2"
 
         LOAD_SPRITE idhsk01 "hsk01"
+        LOAD_SPRITE idhsk01a "hsk01a"
         LOAD_SPRITE idhsk02 "hsk02"
         LOAD_SPRITE idhsk02a "hsk02a"
         LOAD_SPRITE idhsk03 "hsk03"
@@ -7001,7 +7058,7 @@ CLEO_RETURN 0
 //CLEO_CALL store_skills_on_ini 0 ()
 store_skills_on_ini:
     LVAR_INT iVarTextString
-    LVAR_INT a b c d e f g h i iTemp pActiveItem 
+    LVAR_INT a b c d e f g h i j iTemp pActiveItem 
     GET_LABEL_POINTER buffer_skills_bytes10 (pActiveItem)
     pActiveItem ++  //+1
     READ_MEMORY (pActiveItem) 1 FALSE (a)
@@ -7021,9 +7078,11 @@ store_skills_on_ini:
     READ_MEMORY (pActiveItem) 1 FALSE (h)
     pActiveItem ++
     READ_MEMORY (pActiveItem) 1 FALSE (i)
+    pActiveItem ++
+    READ_MEMORY (pActiveItem) 1 FALSE (j)    
 
     GET_LABEL_POINTER bytes32 (iVarTextString)
-    STRING_FORMAT (iVarTextString) "%d %d %d %d %d %d %d %d %d" a b c d e f g h i
+    STRING_FORMAT (iVarTextString) "%d %d %d %d %d %d %d %d %d %d" a b c d e f g h i j
     WRITE_STRING_TO_INI_FILE $iVarTextString "cleo\SpiderJ16D\config.ini" "skills" "m_sk"
 CLEO_RETURN 0
 }
@@ -7031,10 +7090,10 @@ CLEO_RETURN 0
 //CLEO_CALL get_skill_data_and_save_on_memory 0 ()
 get_skill_data_and_save_on_memory:
     LVAR_INT iVarTextString
-    LVAR_INT a b c d e f g h i iTemp pActiveItem 
+    LVAR_INT a b c d e f g h i j iTemp pActiveItem 
     GET_LABEL_POINTER bytes32 (iVarTextString)
     READ_STRING_FROM_INI_FILE "cleo\SpiderJ16D\config.ini" "skills" "m_sk" (iVarTextString)
-    IF NOT SCAN_STRING $iVarTextString "%d %d %d %d %d %d %d %d %d" iTemp (a b c d e f g h i)
+    IF NOT SCAN_STRING $iVarTextString "%d %d %d %d %d %d %d %d %d %d" iTemp (a b c d e f g h i j)
         PRINT_FORMATTED_NOW "ERROR reading file! reinstall! %i" 2000 iTemp
         WAIT 2000
         TERMINATE_THIS_CUSTOM_SCRIPT
@@ -7043,30 +7102,33 @@ get_skill_data_and_save_on_memory:
     pActiveItem ++  //+1
     WRITE_MEMORY pActiveItem 1 a FALSE
     SET_CLEO_SHARED_VAR varSkill1 a    // 0:OFF || 1:ON
-    pActiveItem ++
+    pActiveItem ++  
     WRITE_MEMORY pActiveItem 1 b FALSE
-    SET_CLEO_SHARED_VAR varSkill2 b    // 0:OFF || 1:ON
+    SET_CLEO_SHARED_VAR varSkill1a b    // 0:OFF || 1:ON    
     pActiveItem ++
     WRITE_MEMORY pActiveItem 1 c FALSE
-    SET_CLEO_SHARED_VAR varSkill3 c    // 0:OFF || 1:ON
+    SET_CLEO_SHARED_VAR varSkill2 c    // 0:OFF || 1:ON
     pActiveItem ++
     WRITE_MEMORY pActiveItem 1 d FALSE
-    SET_CLEO_SHARED_VAR varSkill2a d    // 0:OFF || 1:ON
+    SET_CLEO_SHARED_VAR varSkill3 d    // 0:OFF || 1:ON
     pActiveItem ++
     WRITE_MEMORY pActiveItem 1 e FALSE
-    SET_CLEO_SHARED_VAR varSkill3a e    // 0:OFF || 1:ON
+    SET_CLEO_SHARED_VAR varSkill2a e    // 0:OFF || 1:ON
     pActiveItem ++
     WRITE_MEMORY pActiveItem 1 f FALSE
-    SET_CLEO_SHARED_VAR varSkill3b f    // 0:OFF || 1:ON
+    SET_CLEO_SHARED_VAR varSkill3a f    // 0:OFF || 1:ON
     pActiveItem ++
     WRITE_MEMORY pActiveItem 1 g FALSE
-    SET_CLEO_SHARED_VAR varSkill3c g    // 0:OFF || 1:ON
+    SET_CLEO_SHARED_VAR varSkill3b g    // 0:OFF || 1:ON
     pActiveItem ++
     WRITE_MEMORY pActiveItem 1 h FALSE
-    SET_CLEO_SHARED_VAR varSkill3c1 h    // 0:OFF || 1:ON
+    SET_CLEO_SHARED_VAR varSkill3c h    // 0:OFF || 1:ON
     pActiveItem ++
     WRITE_MEMORY pActiveItem 1 i FALSE
-    SET_CLEO_SHARED_VAR varSkill3c2 i    // 0:OFF || 1:ON
+    SET_CLEO_SHARED_VAR varSkill3c1 i    // 0:OFF || 1:ON
+    pActiveItem ++
+    WRITE_MEMORY pActiveItem 1 j FALSE
+    SET_CLEO_SHARED_VAR varSkill3c2 j    // 0:OFF || 1:ON
 CLEO_RETURN 0
 }
 //-----------------------
@@ -8757,7 +8819,7 @@ ENDDUMP
 
 buffer_skills_bytes10:
 DUMP
-00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00
 ENDDUMP
 
 CoordsBuffer:
@@ -8840,7 +8902,7 @@ ENDDUMP
 
 buffer_landmarks_bytes10:
 DUMP
-00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00
 ENDDUMP
 
 buffer_crimes_bytes5:

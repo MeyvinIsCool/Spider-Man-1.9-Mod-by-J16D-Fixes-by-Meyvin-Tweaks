@@ -1,6 +1,6 @@
 // by J16D
-// Main Hud script (Unfinished, there are some code-fragments unused)
-// Spider-Man Mod for GTA SA c.2018 - 2022
+// Main Hud script
+// Spider-Man Mod for GTA SA c.2018 - 2026
 // Fixes by Meyvin Tweaks 
 // You need CLEO+: https://forum.mixmods.com.br/f141-gta3script-cleo/t5206-como-criar-scripts-com-cleo
 
@@ -421,77 +421,6 @@ RETURN
 
 //-+-------------------- Texture Load ----------------------
 loadHudTextures:
-    //TEXTURES
-    CONST_INT idHealthLow 10
-    CONST_INT idStars 11
-    //Health bar
-    CONST_INT idHB 15
-    CONST_INT idHBa 16
-    CONST_INT idHealthBar0 17
-    CONST_INT idHealthBar1 18
-    CONST_INT idHealthBar2 19
-    CONST_INT idHealthBar3 20
-    CONST_INT idHealthBar4 21
-    CONST_INT idHealthBar5 22
-    CONST_INT idHealthBar6 23
-    CONST_INT idHealthBar7 24
-    CONST_INT idHealthBar8 25
-    CONST_INT idHealthBar9 26
-    CONST_INT idHealthBar10 27
-    CONST_INT idHealthBar11 28
-    CONST_INT idHealthBar12 29
-    //Armour Bar
-    CONST_INT idWA 35
-    CONST_INT idWA_a 36
-    CONST_INT idWA_b 37
-    CONST_INT idWA_c 38
-    CONST_INT idAmmoW1 39
-    CONST_INT idAmmoW2 40
-    CONST_INT idAmmoW3 41
-    CONST_INT idAmmoW4 42
-    CONST_INT idAmmoW5 43
-    CONST_INT idAmmoW6 44
-    CONST_INT idAmmoW7 45
-    CONST_INT idAmmoW8 46
-    CONST_INT idAmmoW9 47
-    CONST_INT idAmmoW10 48
-    //Armour Weap
-    CONST_INT idWeap1 49
-    CONST_INT idWeap2 50
-    CONST_INT idWeap3 51
-    CONST_INT idWeap4 52
-    CONST_INT idWeap5 53
-    CONST_INT idWeap6 54
-    CONST_INT idWeap7 55
-    CONST_INT idWeap8 56
-    //Armour Power
-    CONST_INT idSPPowerBP 57
-    CONST_INT idSPPowerBPJ 58
-    CONST_INT idSPPowerDS 59
-    CONST_INT idSPPowerEP 60
-    CONST_INT idSPPowerHD 61
-    CONST_INT idSPPowerIA 62
-    CONST_INT idSPPowerLG 63
-    CONST_INT idSPPowerNS 64
-    CONST_INT idSPPowerRO 65
-    CONST_INT idSPPowerSB 66
-    CONST_INT idSPPowerSF 67
-    CONST_INT idSPPowerWB 68
-    CONST_INT idSPPowerQS 69
-    CONST_INT idSPPowerEQ 70
-    CONST_INT idSPPowerQD 71
-    CONST_INT idSPPowerKR 72
-    CONST_INT idSPPowerNULL 74
-    //Armour Power Circle
-    CONST_INT idPowerBar1 75
-    CONST_INT idPowerBar2 76
-    CONST_INT idPowerBar3 77
-    CONST_INT idPowerBar4 78
-    CONST_INT idPowerBar5 79
-    CONST_INT idPowerBar6 80
-    CONST_INT idPowerBar7 81
-    CONST_INT idPowerBar8 82
-
     IF DOES_DIRECTORY_EXIST "CLEO\SpiderJ16D"
         LOAD_TEXTURE_DICTIONARY sphud
         //wanted star & background red
@@ -572,136 +501,6 @@ loadHudTextures:
         ENDWHILE
         TERMINATE_THIS_CUSTOM_SCRIPT
     ENDIF
-RETURN
-//-+--------------------------------------------------------
-
-//-+-------------------- Health (OUTDATED -NOT USED) ----------------------------
-drawHealth:
-    GOSUB getHealthMath
-    GOSUB drawRedBackgroundDeath
-    GET_FIXED_XY_ASPECT_RATIO (400.0 100.0) (sx sy)    //(300.0 93.33)
-    sx = 300.00 
-    sy = 93.33
-    IF idHealthBar2 > idTex
-        USE_TEXT_COMMANDS FALSE
-        SET_SPRITES_DRAW_BEFORE_FADE TRUE
-        DRAW_SPRITE idHB (105.0 45.0) (sx sy) (155 30 30 255)
-    ELSE
-        USE_TEXT_COMMANDS FALSE
-        SET_SPRITES_DRAW_BEFORE_FADE TRUE
-        DRAW_SPRITE idHB (105.0 45.0) (sx sy) (255 255 255 255)
-    ENDIF
-    GOSUB drawHealthNumber
-    // Health bar ID'S (17 - 29)  ||TOTAL 13
-    counter = idHealthBar0  //17
-    WHILE idHealthBar12 >= counter      //79>=counter
-        IF counter = idTex  //draw health bar texture
-            USE_TEXT_COMMANDS FALSE
-            SET_SPRITES_DRAW_BEFORE_FADE TRUE
-            DRAW_SPRITE counter (105.0 45.0) (sx sy) (255 255 255 255)
-        ENDIF
-        counter ++
-    ENDWHILE
-RETURN
-
-getHealthMath:
-    GET_CHAR_HEALTH player_actor (iTempVar)
-    CSET_LVAR_FLOAT_TO_LVAR_INT (pl_health) iTempVar
-    GET_CHAR_MAX_HEALTH player_actor (pl_max_health)
-    pl_health /= pl_max_health
-    pl_health *= 100.0
-    iTempVar =# pl_health
-    IF 7.6923 > pl_health
-    AND pl_health >= 0.0
-        idTex = idHealthBar0
-    ELSE
-        IF 15.3846 > pl_health
-        AND pl_health >= 7.6923
-            idTex = idHealthBar1
-        ELSE
-            IF 23.0769 > pl_health
-            AND pl_health >= 15.3846
-                idTex = idHealthBar2
-            ELSE
-                IF 30.7692 > pl_health
-                AND pl_health >= 23.0769
-                    idTex = idHealthBar3
-                ELSE
-                    IF 38.4615 > pl_health
-                    AND pl_health >= 30.7692
-                        idTex = idHealthBar4
-                    ELSE
-                        IF 46.1538 > pl_health
-                        AND pl_health >= 38.4615
-                            idTex = idHealthBar5
-                        ELSE
-                            IF 53.8461 > pl_health
-                            AND pl_health >= 46.1538
-                                idTex = idHealthBar6
-                            ELSE
-                                IF 61.5384 > pl_health
-                                AND pl_health >= 53.8461
-                                    idTex = idHealthBar7
-                                ELSE
-                                    IF 69.2307 > pl_health
-                                    AND pl_health >= 61.5384
-                                        idTex = idHealthBar8
-                                    ELSE
-                                        IF 76.9230 > pl_health
-                                        AND pl_health >= 69.2307
-                                            idTex = idHealthBar9
-                                        ELSE
-                                            IF 84.6153 > pl_health
-                                            AND pl_health >= 76.9230
-                                                idTex = idHealthBar10
-                                            ELSE
-                                                IF 92.3076 > pl_health
-                                                AND pl_health >= 84.6153
-                                                    idTex = idHealthBar11
-                                                ELSE
-                                                    IF pl_health >= 92.3076
-                                                        idTex = idHealthBar12
-                                                    ENDIF
-                                                ENDIF
-                                            ENDIF
-                                        ENDIF
-                                    ENDIF
-                                ENDIF
-                            ENDIF
-                        ENDIF
-                    ENDIF
-                ENDIF
-            ENDIF
-        ENDIF
-    ENDIF
-    //PRINT_FORMATTED_NOW "H:%.2f MaxH: %.2f C:%i" 1 pl_health pl_max_health iTempVar   //debug
-RETURN
-
-drawRedBackgroundDeath:
-    IF idHealthBar2 >= idTex
-        CLEO_CALL getCurrentResolution 0 (sx sy) 
-        GET_FIXED_XY_ASPECT_RATIO (sx sy) (sx sy)    //(300.0 93.33)
-        USE_TEXT_COMMANDS FALSE
-        SET_SPRITES_DRAW_BEFORE_FADE TRUE
-        DRAW_SPRITE idHealthLow (320.0 224.0) (sx sy) (155 30 30 255)
-    ENDIF
-RETURN
-
-drawHealthNumber:
-    GET_CHAR_HEALTH player_actor (iTempVar)
-    SET_TEXT_FONT FONT_SUBTITLES
-    SET_TEXT_SCALE 0.24 1.17
-    SET_TEXT_WRAPX 640.0
-    IF 3 > idTex
-        SET_TEXT_COLOUR 155 30 30 255
-        SET_TEXT_EDGE 1 (95 18 18 100)
-    ELSE
-        SET_TEXT_COLOUR 215 225 235 255
-        SET_TEXT_EDGE 1 (94 120 137 100)
-    ENDIF
-    USE_TEXT_COMMANDS FALSE
-    SET_TEXT_DRAW_BEFORE_FADE TRUE
-    DISPLAY_TEXT_WITH_NUMBER 23.5 25.0 NUMBER iTempVar
 RETURN
 //-+--------------------------------------------------------
 
@@ -1522,13 +1321,16 @@ CONST_INT varHudBreath          8     //sp_hud    ||1= Activated     || 0= Deact
 CONST_INT varHudArmour          9     //sp_hud    ||1= Activated     || 0= Deactivated
 CONST_INT varHudWantedS         10    //sp_hud    ||1= Activated     || 0= Deactivated
 
-CONST_INT varOnmission          11    //0:Off ||1:on mission || 2:car chase || 3:criminal || 4:boss1 || 5:boss2
+CONST_INT varOnmission          11    //0:Off ||1:on mission || 2:car chase || 3:thug hidouts || 4:street crimes || 5:boss2
 CONST_INT varCrimesProgress     12    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varPcampProgress      13    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varCarChaseProgress   14    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varScrewBallProgress  15    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varBackpacksProgress  16    //for stadistics ||MSpiderJ16Dv7
 CONST_INT varLandmarksProgress  17    //for stadistics ||MSpiderJ16Dv7
+
+CONST_INT varBuildingZip        18    //sp_mlb           ||1= Activated     || 0= Deactivated
+CONST_INT varBuildingZipFlag    19    //sp_mlb           ||1= Activated     || 0= Deactivated
 
 CONST_INT varAlternativeSwing   20    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varSwingBuilding      21    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
@@ -1538,6 +1340,7 @@ CONST_INT varAimSetup           24    // 0:Manual Aim || 1:Auto Aim //sp_dw
 CONST_INT varPlayerCanDrive     25    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varFriendlyN          26    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
 CONST_INT varThrowVehDoors      27    //MSpiderJ16Dv7    ||1= Activated     || 0= Deactivated
+CONST_INT varThrowFix           28    //sp_thob          ||1= Activated     || 0= Deactivated
 
 CONST_INT varLevelChar          30    //sp_lvl    || Level
 CONST_INT varStatusLevelChar    31    //If value >0 automatically will add that number to Experience Points (Max Reward +2500)
@@ -1549,10 +1352,17 @@ CONST_INT varPowersProgress     35    //sp_po     || current power progress
 CONST_INT varHitCount           36    //sp_hit    || hitcounting
 CONST_INT varHitCountFlag       37    //sp_hit    || hitcounting  
 CONST_INT varReservoirInactive  38    //sp_res    || disable reservoirs 
+CONST_INT varCrimeAlert         39 
 
 CONST_INT varInMenu             40    //1= On Menu       || 0= Menu Closed
 CONST_INT varMapLegendLandMark  43    //Show: 1= enable   || 0= disable
 CONST_INT varMapLegendBackPack  44    //Show: 1= enable   || 0= disable
+
+CONST_INT varDrugDealProgress   45    //for stadistics ||MSpiderJ16Dv7
+CONST_INT varAssaultProgress    46    //for stadistics ||MSpiderJ16Dv7 
+CONST_INT varMuggingProgress    47    //for stadistics ||MSpiderJ16Dv7 (Due to messy global shared vars , I have to add it here)
+
+CONST_INT varAudioActive     	49    // 0:OFF || 1:ON  ||global var to check -spech- audio playing
 
 CONST_INT varSkill1             50    //sp_dw    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill2             51    //sp_ev    ||1= Activated     || 0= Deactivated
@@ -1564,8 +1374,82 @@ CONST_INT varSkill3c            56    //sp_main  ||1= Activated     || 0= Deacti
 CONST_INT varSkill3c1           57    //sp_mb    ||1= Activated     || 0= Deactivated
 CONST_INT varSkill3c2           58    //sp_mb    ||1= Activated     || 0= Deactivated
 
+//Additional Skills
+CONST_INT varSkill1a            59    //sp_dw    ||1= Activated     || 0= Deactivated
+
 CONST_INT varFocusCount         70    //sp_hit    || focus bar
 CONST_INT varUseFocus           71    //sp_hit    || focus bar
+
+//TEXTURES
+CONST_INT idHealthLow 10
+CONST_INT idStars 11
+//Health bar
+CONST_INT idHB 15
+CONST_INT idHBa 16
+CONST_INT idHealthBar0 17
+CONST_INT idHealthBar1 18
+CONST_INT idHealthBar2 19
+CONST_INT idHealthBar3 20
+CONST_INT idHealthBar4 21
+CONST_INT idHealthBar5 22
+CONST_INT idHealthBar6 23
+CONST_INT idHealthBar7 24
+CONST_INT idHealthBar8 25
+CONST_INT idHealthBar9 26
+CONST_INT idHealthBar10 27
+CONST_INT idHealthBar11 28
+CONST_INT idHealthBar12 29
+//Armour Bar
+CONST_INT idWA 35
+CONST_INT idWA_a 36
+CONST_INT idWA_b 37
+CONST_INT idWA_c 38
+CONST_INT idAmmoW1 39
+CONST_INT idAmmoW2 40
+CONST_INT idAmmoW3 41
+CONST_INT idAmmoW4 42
+CONST_INT idAmmoW5 43
+CONST_INT idAmmoW6 44
+CONST_INT idAmmoW7 45
+CONST_INT idAmmoW8 46
+CONST_INT idAmmoW9 47
+CONST_INT idAmmoW10 48
+//Armour Weap
+CONST_INT idWeap1 49
+CONST_INT idWeap2 50
+CONST_INT idWeap3 51
+CONST_INT idWeap4 52
+CONST_INT idWeap5 53
+CONST_INT idWeap6 54
+CONST_INT idWeap7 55
+CONST_INT idWeap8 56
+//Armour Power
+CONST_INT idSPPowerBP 57
+CONST_INT idSPPowerBPJ 58
+CONST_INT idSPPowerDS 59
+CONST_INT idSPPowerEP 60
+CONST_INT idSPPowerHD 61
+CONST_INT idSPPowerIA 62
+CONST_INT idSPPowerLG 63
+CONST_INT idSPPowerNS 64
+CONST_INT idSPPowerRO 65
+CONST_INT idSPPowerSB 66
+CONST_INT idSPPowerSF 67
+CONST_INT idSPPowerWB 68
+CONST_INT idSPPowerQS 69
+CONST_INT idSPPowerEQ 70
+CONST_INT idSPPowerQD 71
+CONST_INT idSPPowerKR 72
+CONST_INT idSPPowerNULL 74
+//Armour Power Circle
+CONST_INT idPowerBar1 75
+CONST_INT idPowerBar2 76
+CONST_INT idPowerBar3 77
+CONST_INT idPowerBar4 78
+CONST_INT idPowerBar5 79
+CONST_INT idPowerBar6 80
+CONST_INT idPowerBar7 81
+CONST_INT idPowerBar8 82
 
 
 /*
